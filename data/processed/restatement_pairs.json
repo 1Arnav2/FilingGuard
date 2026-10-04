@@ -1,0 +1,268 @@
+[
+  {
+    "ticker": "XOM",
+    "concept": "ResearchAndDevelopmentExpense",
+    "unit": "USD",
+    "period_start": "2023-01-01",
+    "period_end": "2023-12-31",
+    "original": {
+      "accession": "0000034088-25-000010",
+      "filed": "2025-02-19",
+      "value": 879000000.0
+    },
+    "restated": {
+      "accession": "0000034088-26-000045",
+      "filed": "2026-02-18",
+      "value": 900000000.0
+    },
+    "rel_change": 0.023890784982935155,
+    "kind": "rounding"
+  },
+  {
+    "ticker": "XOM",
+    "concept": "ResearchAndDevelopmentExpense",
+    "unit": "USD",
+    "period_start": "2024-01-01",
+    "period_end": "2024-12-31",
+    "original": {
+      "accession": "0000034088-25-000010",
+      "filed": "2025-02-19",
+      "value": 987000000.0
+    },
+    "restated": {
+      "accession": "0000034088-26-000045",
+      "filed": "2026-02-18",
+      "value": 1000000000.0
+    },
+    "rel_change": 0.013171225937183385,
+    "kind": "rounding"
+  },
+  {
+    "ticker": "BAC",
+    "concept": "Revenues",
+    "unit": "USD",
+    "period_start": "2023-01-01",
+    "period_end": "2023-12-31",
+    "original": {
+      "accession": "0000070858-25-000139",
+      "filed": "2025-02-25",
+      "value": 98581000000.0
+    },
+    "restated": {
+      "accession": "0000070858-26-000157",
+      "filed": "2026-02-25",
+      "value": 102769000000.0
+    },
+    "rel_change": 0.04248283137724308,
+    "kind": "restated"
+  },
+  {
+    "ticker": "BAC",
+    "concept": "Revenues",
+    "unit": "USD",
+    "period_start": "2024-01-01",
+    "period_end": "2024-12-31",
+    "original": {
+      "accession": "0000070858-25-000139",
+      "filed": "2025-02-25",
+      "value": 101887000000.0
+    },
+    "restated": {
+      "accession": "0000070858-26-000157",
+      "filed": "2026-02-25",
+      "value": 105856000000.0
+    },
+    "rel_change": 0.038954920647383866,
+    "kind": "restated"
+  },
+  {
+    "ticker": "BAC",
+    "concept": "NetIncomeLoss",
+    "unit": "USD",
+    "period_start": "2023-01-01",
+    "period_end": "2023-12-31",
+    "original": {
+      "accession": "0000070858-25-000139",
+      "filed": "2025-02-25",
+      "value": 26515000000.0
+    },
+    "restated": {
+      "accession": "0000070858-26-000157",
+      "filed": "2026-02-25",
+      "value": 26305000000.0
+    },
+    "rel_change": -0.00792004525740147,
+    "kind": "restated"
+  },
+  {
+    "ticker": "BAC",
+    "concept": "NetIncomeLoss",
+    "unit": "USD",
+    "period_start": "2024-01-01",
+    "period_end": "2024-12-31",
+    "original": {
+      "accession": "0000070858-25-000139",
+      "filed": "2025-02-25",
+      "value": 27132000000.0
+    },
+    "restated": {
+      "accession": "0000070858-26-000157",
+      "filed": "2026-02-25",
+      "value": 26973000000.0
+    },
+    "rel_change": -0.005860238832375055,
+    "kind": "restated"
+  },
+  {
+    "ticker": "BAC",
+    "concept": "Assets",
+    "unit": "USD",
+    "period_start": NaN,
+    "period_end": "2024-12-31",
+    "original": {
+      "accession": "0000070858-25-000139",
+      "filed": "2025-02-25",
+      "value": 3261519000000.0
+    },
+    "restated": {
+      "accession": "0000070858-26-000157",
+      "filed": "2026-02-25",
+      "value": 3261299000000.0
+    },
+    "rel_change": -6.745323268084595e-05,
+    "kind": "restated"
+  },
+  {
+    "ticker": "BAC",
+    "concept": "Liabilities",
+    "unit": "USD",
+    "period_start": NaN,
+    "period_end": "2024-12-31",
+    "original": {
+      "accession": "0000070858-25-000139",
+      "filed": "2025-02-25",
+      "value": 2965960000000.0
+    },
+    "restated": {
+      "accession": "0000070858-26-000157",
+      "filed": "2026-02-25",
+      "value": 2967336000000.0
+    },
+    "rel_change": 0.0004639307340624958,
+    "kind": "restated"
+  },
+  {
+    "ticker": "BAC",
+    "concept": "StockholdersEquity",
+    "unit": "USD",
+    "period_start": NaN,
+    "period_end": "2023-12-31",
+    "original": {
+      "accession": "0000070858-25-000139",
+      "filed": "2025-02-25",
+      "value": 291646000000.0
+    },
+    "restated": {
+      "accession": "0000070858-26-000157",
+      "filed": "2026-02-25",
+      "value": 290209000000.0
+    },
+    "rel_change": -0.004927206270615747,
+    "kind": "restated"
+  },
+  {
+    "ticker": "BAC",
+    "concept": "StockholdersEquity",
+    "unit": "USD",
+    "period_start": NaN,
+    "period_end": "2024-12-31",
+    "original": {
+      "accession": "0000070858-25-000139",
+      "filed": "2025-02-25",
+      "value": 295559000000.0
+    },
+    "restated": {
+      "accession": "0000070858-26-000157",
+      "filed": "2026-02-25",
+      "value": 293963000000.0
+    },
+    "rel_change": -0.005399937068402586,
+    "kind": "restated"
+  },
+  {
+    "ticker": "BAC",
+    "concept": "EarningsPerShareBasic",
+    "unit": "USD/shares",
+    "period_start": "2023-01-01",
+    "period_end": "2023-12-31",
+    "original": {
+      "accession": "0000070858-25-000139",
+      "filed": "2025-02-25",
+      "value": 3.1
+    },
+    "restated": {
+      "accession": "0000070858-26-000157",
+      "filed": "2026-02-25",
+      "value": 3.07
+    },
+    "rel_change": -0.00967741935483879,
+    "kind": "restated"
+  },
+  {
+    "ticker": "BAC",
+    "concept": "EarningsPerShareBasic",
+    "unit": "USD/shares",
+    "period_start": "2024-01-01",
+    "period_end": "2024-12-31",
+    "original": {
+      "accession": "0000070858-25-000139",
+      "filed": "2025-02-25",
+      "value": 3.25
+    },
+    "restated": {
+      "accession": "0000070858-26-000157",
+      "filed": "2026-02-25",
+      "value": 3.23
+    },
+    "rel_change": -0.006153846153846159,
+    "kind": "restated"
+  },
+  {
+    "ticker": "BAC",
+    "concept": "EarningsPerShareDiluted",
+    "unit": "USD/shares",
+    "period_start": "2023-01-01",
+    "period_end": "2023-12-31",
+    "original": {
+      "accession": "0000070858-25-000139",
+      "filed": "2025-02-25",
+      "value": 3.08
+    },
+    "restated": {
+      "accession": "0000070858-26-000157",
+      "filed": "2026-02-25",
+      "value": 3.05
+    },
+    "rel_change": -0.009740259740259822,
+    "kind": "restated"
+  },
+  {
+    "ticker": "BAC",
+    "concept": "EarningsPerShareDiluted",
+    "unit": "USD/shares",
+    "period_start": "2024-01-01",
+    "period_end": "2024-12-31",
+    "original": {
+      "accession": "0000070858-25-000139",
+      "filed": "2025-02-25",
+      "value": 3.21
+    },
+    "restated": {
+      "accession": "0000070858-26-000157",
+      "filed": "2026-02-25",
+      "value": 3.19
+    },
+    "rel_change": -0.006230529595015582,
+    "kind": "restated"
+  }
+]

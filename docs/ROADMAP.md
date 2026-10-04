@@ -14,11 +14,13 @@ One phase per working session. Each phase ends with: tests pass, roadmap ticked,
 - **Done when:** `pytest` runs and a cached test call to Gemini returns.
 
 ## Phase 1 — Data (1 day)
-- [ ] EDGAR client (throttle, cache, User-Agent)
-- [ ] Resolve CIKs; download latest 10-K and company facts for 25 companies
-- [ ] Parse and chunk 10-Ks; build index
-- [ ] Normalise facts; build concept map; find restatement pairs
-- [ ] Fill in the corpus card in `CORPUS.md`
+- [x] EDGAR client (throttle, cache, User-Agent)
+- [x] Resolve CIKs; download latest 10-K and company facts for 25 companies
+- [x] Parse and chunk 10-Ks; build index
+- [x] Normalise facts; build concept map; find restatement pairs
+- [x] Fill in the corpus card in `CORPUS.md`
+- [x] Added at phase start: retry with backoff in the LLM and EDGAR clients; fiscal
+      year-end and revenue-mapping flags per company in the corpus card; gold isolation test
 - **Done when:** corpus card is complete and a spot check of 10 facts matches the filings.
 
 ## Phase 2 — Target agent (1 to 2 days)

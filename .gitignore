@@ -3,6 +3,8 @@
 
 # data and caches
 data/raw/
+data/processed/text/
+data/processed/index/
 .cache/
 __pycache__/
 *.pyc

@@ -9,9 +9,20 @@ from typing import Any
 from dotenv import load_dotenv
 
 from filingguard.llm.cache import DiskCache, cache_key
+from filingguard.retry import RETRYABLE_STATUS, RetryPolicy, with_retry
 
 # A backend takes (model, prompt, params) and returns {"text": str, "raw": dict}.
 Backend = Callable[[str, str, dict[str, Any]], dict[str, Any]]
+
+
+def is_retryable_gemini_error(exc: Exception) -> bool:
+    """True for rate limits, server errors and network faults; False for bad requests."""
+    import httpx
+    from google.genai import errors
+
+    if isinstance(exc, errors.APIError):
+        return exc.code in RETRYABLE_STATUS
+    return isinstance(exc, httpx.TransportError)
 
 
 @dataclass(frozen=True)
@@ -22,21 +33,22 @@ class LLMResponse:
     raw: dict[str, Any]
 
 
-def gemini_backend(api_key: str) -> Backend:
-    """Build a backend that calls the Gemini API through the google-genai SDK."""
+def gemini_backend(api_key: str, policy: RetryPolicy = RetryPolicy()) -> Backend:
+    """Build a backend that calls the Gemini API, retrying transient errors with backoff."""
     from google import genai
     from google.genai import types
 
     client = genai.Client(api_key=api_key)
 
     def call(model: str, prompt: str, params: dict[str, Any]) -> dict[str, Any]:
-        response = client.models.generate_content(
-            model=model,
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
-                **params,
-            ),
+        config = types.GenerateContentConfig(
+            automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
+            **params,
+        )
+        response = with_retry(
+            lambda: client.models.generate_content(model=model, contents=prompt, config=config),
+            is_retryable_gemini_error,
+            policy,
         )
         return {"text": response.text or "", "raw": response.model_dump(mode="json", exclude_none=True)}
 

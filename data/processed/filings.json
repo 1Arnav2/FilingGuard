@@ -1,0 +1,1164 @@
+[
+  {
+    "ticker": "AAPL",
+    "name": "Apple Inc.",
+    "cik": 320193,
+    "cik_override": false,
+    "sector": "Tech",
+    "fiscal_year_end": "0926",
+    "latest_10k": {
+      "ticker": "AAPL",
+      "cik": 320193,
+      "accession": "0000320193-25-000079",
+      "form": "10-K",
+      "filed": "2025-10-31",
+      "report_date": "2025-09-27",
+      "primary_document": "aapl-20250927.htm",
+      "parsed": {
+        "chars": 209214,
+        "item_chars": {
+          "1": 15996,
+          "1A": 68043,
+          "7": 18173,
+          "7A": 3041,
+          "8": 62961
+        },
+        "labelled_share": 0.804
+      }
+    },
+    "prior_10k": {
+      "ticker": "AAPL",
+      "cik": 320193,
+      "accession": "0000320193-24-000123",
+      "form": "10-K",
+      "filed": "2024-11-01",
+      "report_date": "2024-09-28",
+      "primary_document": "aapl-20240928.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+    "revenue_status": "primary",
+    "unreported_concepts": [],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "MSFT",
+    "name": "MICROSOFT CORP",
+    "cik": 789019,
+    "cik_override": false,
+    "sector": "Tech",
+    "fiscal_year_end": "0630",
+    "latest_10k": {
+      "ticker": "MSFT",
+      "cik": 789019,
+      "accession": "0001193125-26-323660",
+      "form": "10-K",
+      "filed": "2026-07-29",
+      "report_date": "2026-06-30",
+      "primary_document": "msft-20260630.htm",
+      "parsed": {
+        "chars": 327259,
+        "item_chars": {
+          "1": 41209,
+          "1A": 81196,
+          "7": 51604,
+          "7A": 1968,
+          "8": 105656
+        },
+        "labelled_share": 0.861
+      }
+    },
+    "prior_10k": {
+      "ticker": "MSFT",
+      "cik": 789019,
+      "accession": "0000950170-25-100235",
+      "form": "10-K",
+      "filed": "2025-07-30",
+      "report_date": "2025-06-30",
+      "primary_document": "msft-20250630.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+    "revenue_status": "primary",
+    "unreported_concepts": [],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "NVDA",
+    "name": "NVIDIA CORP",
+    "cik": 1045810,
+    "cik_override": false,
+    "sector": "Tech",
+    "fiscal_year_end": "0131",
+    "latest_10k": {
+      "ticker": "NVDA",
+      "cik": 1045810,
+      "accession": "0001045810-26-000021",
+      "form": "10-K",
+      "filed": "2026-02-25",
+      "report_date": "2026-01-25",
+      "primary_document": "nvda-20260125.htm",
+      "parsed": {
+        "chars": 342859,
+        "item_chars": {
+          "1": 48257,
+          "1A": 114826,
+          "7": 34350,
+          "7A": 4254,
+          "8": 207
+        },
+        "labelled_share": 0.589
+      }
+    },
+    "prior_10k": {
+      "ticker": "NVDA",
+      "cik": 1045810,
+      "accession": "0001045810-25-000023",
+      "form": "10-K",
+      "filed": "2025-02-26",
+      "report_date": "2025-01-26",
+      "primary_document": "nvda-20250126.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "GOOGL",
+    "name": "Alphabet Inc.",
+    "cik": 1652044,
+    "cik_override": false,
+    "sector": "Tech",
+    "fiscal_year_end": "1231",
+    "latest_10k": {
+      "ticker": "GOOGL",
+      "cik": 1652044,
+      "accession": "0001652044-26-000018",
+      "form": "10-K",
+      "filed": "2026-02-05",
+      "report_date": "2025-12-31",
+      "primary_document": "goog-20251231.htm",
+      "parsed": {
+        "chars": 348120,
+        "item_chars": {
+          "1": 23815,
+          "1A": 85210,
+          "7": 52608,
+          "7A": 8023,
+          "8": 133979
+        },
+        "labelled_share": 0.872
+      }
+    },
+    "prior_10k": {
+      "ticker": "GOOGL",
+      "cik": 1652044,
+      "accession": "0001652044-25-000014",
+      "form": "10-K",
+      "filed": "2025-02-05",
+      "report_date": "2024-12-31",
+      "primary_document": "goog-20241231.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "GrossProfit"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "META",
+    "name": "Meta Platforms, Inc.",
+    "cik": 1326801,
+    "cik_override": false,
+    "sector": "Tech",
+    "fiscal_year_end": "1231",
+    "latest_10k": {
+      "ticker": "META",
+      "cik": 1326801,
+      "accession": "0001628280-26-003942",
+      "form": "10-K",
+      "filed": "2026-01-29",
+      "report_date": "2025-12-31",
+      "primary_document": "meta-20251231.htm",
+      "parsed": {
+        "chars": 518751,
+        "item_chars": {
+          "1": 24579,
+          "1A": 195711,
+          "7": 61045,
+          "7A": 5972,
+          "8": 145043
+        },
+        "labelled_share": 0.833
+      }
+    },
+    "prior_10k": {
+      "ticker": "META",
+      "cik": 1326801,
+      "accession": "0001326801-25-000017",
+      "form": "10-K",
+      "filed": "2025-01-30",
+      "report_date": "2024-12-31",
+      "primary_document": "meta-20241231.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "GrossProfit"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "ORCL",
+    "name": "ORACLE CORP",
+    "cik": 1341439,
+    "cik_override": false,
+    "sector": "Tech",
+    "fiscal_year_end": "0531",
+    "latest_10k": {
+      "ticker": "ORCL",
+      "cik": 1341439,
+      "accession": "0001193125-26-277521",
+      "form": "10-K",
+      "filed": "2026-06-22",
+      "report_date": "2026-05-31",
+      "primary_document": "orcl-20260531.htm",
+      "parsed": {
+        "chars": 423151,
+        "item_chars": {
+          "1": 56274,
+          "1A": 101724,
+          "7": 66035,
+          "7A": 3899,
+          "8": 179
+        },
+        "labelled_share": 0.539
+      }
+    },
+    "prior_10k": {
+      "ticker": "ORCL",
+      "cik": 1341439,
+      "accession": "0000950170-25-087926",
+      "form": "10-K",
+      "filed": "2025-06-18",
+      "report_date": "2025-05-31",
+      "primary_document": "orcl-20250531.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "GrossProfit",
+      "Liabilities",
+      "LongTermDebt"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "AMZN",
+    "name": "AMAZON COM INC",
+    "cik": 1018724,
+    "cik_override": false,
+    "sector": "Retail and consumer",
+    "fiscal_year_end": "1231",
+    "latest_10k": {
+      "ticker": "AMZN",
+      "cik": 1018724,
+      "accession": "0001018724-26-000004",
+      "form": "10-K",
+      "filed": "2026-02-06",
+      "report_date": "2025-12-31",
+      "primary_document": "amzn-20251231.htm",
+      "parsed": {
+        "chars": 286045,
+        "item_chars": {
+          "1": 13619,
+          "1A": 60688,
+          "7": 46546,
+          "7A": 6311,
+          "8": 124634
+        },
+        "labelled_share": 0.88
+      }
+    },
+    "prior_10k": {
+      "ticker": "AMZN",
+      "cik": 1018724,
+      "accession": "0001018724-25-000004",
+      "form": "10-K",
+      "filed": "2025-02-07",
+      "report_date": "2024-12-31",
+      "primary_document": "amzn-20241231.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "GrossProfit",
+      "Liabilities",
+      "ResearchAndDevelopmentExpense"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "WMT",
+    "name": "Walmart Inc.",
+    "cik": 104169,
+    "cik_override": false,
+    "sector": "Retail and consumer",
+    "fiscal_year_end": "0131",
+    "latest_10k": {
+      "ticker": "WMT",
+      "cik": 104169,
+      "accession": "0000104169-26-000055",
+      "form": "10-K",
+      "filed": "2026-03-13",
+      "report_date": "2026-01-31",
+      "primary_document": "wmt-20260131.htm",
+      "parsed": {
+        "chars": 362643,
+        "item_chars": {
+          "1": 37531,
+          "1A": 93178,
+          "7": 58576,
+          "7A": 5158,
+          "8": 110700
+        },
+        "labelled_share": 0.841
+      }
+    },
+    "prior_10k": {
+      "ticker": "WMT",
+      "cik": 104169,
+      "accession": "0000104169-25-000021",
+      "form": "10-K",
+      "filed": "2025-03-14",
+      "report_date": "2025-01-31",
+      "primary_document": "wmt-20250131.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "GrossProfit",
+      "Liabilities",
+      "ResearchAndDevelopmentExpense"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "COST",
+    "name": "COSTCO WHOLESALE CORP /NEW",
+    "cik": 909832,
+    "cik_override": false,
+    "sector": "Retail and consumer",
+    "fiscal_year_end": "0830",
+    "latest_10k": {
+      "ticker": "COST",
+      "cik": 909832,
+      "accession": "0000909832-25-000101",
+      "form": "10-K",
+      "filed": "2025-10-08",
+      "report_date": "2025-08-31",
+      "primary_document": "cost-20250831.htm",
+      "parsed": {
+        "chars": 209152,
+        "item_chars": {
+          "1": 20916,
+          "1A": 42470,
+          "7": 101,
+          "7A": 4474,
+          "8": 84775
+        },
+        "labelled_share": 0.73
+      }
+    },
+    "prior_10k": {
+      "ticker": "COST",
+      "cik": 909832,
+      "accession": "0000909832-24-000049",
+      "form": "10-K",
+      "filed": "2024-10-09",
+      "report_date": "2024-09-01",
+      "primary_document": "cost-20240901.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "GrossProfit",
+      "LongTermDebt",
+      "ResearchAndDevelopmentExpense"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "NKE",
+    "name": "NIKE, Inc.",
+    "cik": 320187,
+    "cik_override": false,
+    "sector": "Retail and consumer",
+    "fiscal_year_end": "0531",
+    "latest_10k": {
+      "ticker": "NKE",
+      "cik": 320187,
+      "accession": "0000320187-26-000088",
+      "form": "10-K",
+      "filed": "2026-07-15",
+      "report_date": "2026-05-31",
+      "primary_document": "nke-20260531.htm",
+      "parsed": {
+        "chars": 375065,
+        "item_chars": {
+          "1": 37096,
+          "1A": 97352,
+          "7": 71755,
+          "7A": 7306,
+          "8": 124825
+        },
+        "labelled_share": 0.902
+      }
+    },
+    "prior_10k": {
+      "ticker": "NKE",
+      "cik": 320187,
+      "accession": "0000320187-25-000047",
+      "form": "10-K",
+      "filed": "2025-07-17",
+      "report_date": "2025-05-31",
+      "primary_document": "nke-20250531.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "Liabilities",
+      "OperatingIncomeLoss",
+      "ResearchAndDevelopmentExpense"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "KO",
+    "name": "COCA COLA CO",
+    "cik": 21344,
+    "cik_override": false,
+    "sector": "Retail and consumer",
+    "fiscal_year_end": "1231",
+    "latest_10k": {
+      "ticker": "KO",
+      "cik": 21344,
+      "accession": "0001628280-26-010047",
+      "form": "10-K",
+      "filed": "2026-02-20",
+      "report_date": "2025-12-31",
+      "primary_document": "ko-20251231.htm",
+      "parsed": {
+        "chars": 605762,
+        "item_chars": {
+          "1": 55196,
+          "1A": 92252,
+          "7": 110031,
+          "7A": 6014,
+          "8": 237267
+        },
+        "labelled_share": 0.827
+      }
+    },
+    "prior_10k": {
+      "ticker": "KO",
+      "cik": 21344,
+      "accession": "0000021344-25-000011",
+      "form": "10-K",
+      "filed": "2025-02-20",
+      "report_date": "2024-12-31",
+      "primary_document": "ko-20241231.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "Liabilities",
+      "LongTermDebt",
+      "ResearchAndDevelopmentExpense"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "PG",
+    "name": "PROCTER & GAMBLE Co",
+    "cik": 80424,
+    "cik_override": false,
+    "sector": "Retail and consumer",
+    "fiscal_year_end": "0630",
+    "latest_10k": {
+      "ticker": "PG",
+      "cik": 80424,
+      "accession": "0000080424-26-000103",
+      "form": "10-K",
+      "filed": "2026-08-04",
+      "report_date": "2026-06-30",
+      "primary_document": "pg-20260630.htm",
+      "parsed": {
+        "chars": 309034,
+        "item_chars": {
+          "1": 14286,
+          "1A": 37866,
+          "7": 92446,
+          "7A": 275,
+          "8": 119321
+        },
+        "labelled_share": 0.855
+      }
+    },
+    "prior_10k": {
+      "ticker": "PG",
+      "cik": 80424,
+      "accession": "0000080424-25-000076",
+      "form": "10-K",
+      "filed": "2025-08-04",
+      "report_date": "2025-06-30",
+      "primary_document": "pg-20250630.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "CashAndCashEquivalentsAtCarryingValue",
+      "GrossProfit",
+      "LongTermDebt",
+      "StockholdersEquity"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "JNJ",
+    "name": "JOHNSON & JOHNSON",
+    "cik": 200406,
+    "cik_override": false,
+    "sector": "Healthcare",
+    "fiscal_year_end": "0103",
+    "latest_10k": {
+      "ticker": "JNJ",
+      "cik": 200406,
+      "accession": "0000200406-26-000016",
+      "form": "10-K",
+      "filed": "2026-02-11",
+      "report_date": "2025-12-28",
+      "primary_document": "jnj-20251228.htm",
+      "parsed": {
+        "chars": 425144,
+        "item_chars": {
+          "1": 34564,
+          "1A": 43338,
+          "7": 67020,
+          "7A": 506,
+          "8": 223817
+        },
+        "labelled_share": 0.869
+      }
+    },
+    "prior_10k": {
+      "ticker": "JNJ",
+      "cik": 200406,
+      "accession": "0000200406-25-000038",
+      "form": "10-K",
+      "filed": "2025-02-13",
+      "report_date": "2024-12-29",
+      "primary_document": "jnj-20241229.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "OperatingIncomeLoss",
+      "StockholdersEquity"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "PFE",
+    "name": "PFIZER INC",
+    "cik": 78003,
+    "cik_override": false,
+    "sector": "Healthcare",
+    "fiscal_year_end": "1231",
+    "latest_10k": {
+      "ticker": "PFE",
+      "cik": 78003,
+      "accession": "0000078003-26-000026",
+      "form": "10-K",
+      "filed": "2026-02-26",
+      "report_date": "2025-12-31",
+      "primary_document": "pfe-20251231.htm",
+      "parsed": {
+        "chars": 646128,
+        "item_chars": {
+          "1": 91998,
+          "1A": 87402,
+          "7": 106621,
+          "7A": 295,
+          "8": 268619
+        },
+        "labelled_share": 0.859
+      }
+    },
+    "prior_10k": {
+      "ticker": "PFE",
+      "cik": 78003,
+      "accession": "0000078003-25-000054",
+      "form": "10-K",
+      "filed": "2025-02-27",
+      "report_date": "2024-12-31",
+      "primary_document": "pfe-20241231.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "GrossProfit",
+      "LongTermDebt",
+      "OperatingIncomeLoss",
+      "ResearchAndDevelopmentExpense"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "UNH",
+    "name": "UNITEDHEALTH GROUP INC",
+    "cik": 731766,
+    "cik_override": false,
+    "sector": "Healthcare",
+    "fiscal_year_end": "1231",
+    "latest_10k": {
+      "ticker": "UNH",
+      "cik": 731766,
+      "accession": "0000731766-26-000062",
+      "form": "10-K",
+      "filed": "2026-03-02",
+      "report_date": "2025-12-31",
+      "primary_document": "unh-20251231.htm",
+      "parsed": {
+        "chars": 335483,
+        "item_chars": {
+          "1": 46880,
+          "1A": 66934,
+          "7": 49684,
+          "7A": 3064,
+          "8": 117081
+        },
+        "labelled_share": 0.845
+      }
+    },
+    "prior_10k": {
+      "ticker": "UNH",
+      "cik": 731766,
+      "accession": "0000731766-25-000063",
+      "form": "10-K",
+      "filed": "2025-02-27",
+      "report_date": "2024-12-31",
+      "primary_document": "unh-20241231.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "GrossProfit",
+      "LongTermDebt",
+      "ResearchAndDevelopmentExpense",
+      "StockholdersEquity"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "XOM",
+    "name": "EXXON MOBIL CORP",
+    "cik": 34088,
+    "cik_override": true,
+    "sector": "Energy and industrial",
+    "fiscal_year_end": "1231",
+    "latest_10k": {
+      "ticker": "XOM",
+      "cik": 34088,
+      "accession": "0000034088-26-000045",
+      "form": "10-K",
+      "filed": "2026-02-18",
+      "report_date": "2025-12-31",
+      "primary_document": "xom-20251231.htm",
+      "parsed": {
+        "chars": 436044,
+        "item_chars": {
+          "1": 6636,
+          "1A": 35815,
+          "7": 265,
+          "7A": 458,
+          "8": 706
+        },
+        "labelled_share": 0.101
+      }
+    },
+    "prior_10k": {
+      "ticker": "XOM",
+      "cik": 34088,
+      "accession": "0000034088-25-000010",
+      "form": "10-K",
+      "filed": "2025-02-19",
+      "report_date": "2024-12-31",
+      "primary_document": "xom-20241231.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "GrossProfit",
+      "LongTermDebt",
+      "OperatingIncomeLoss"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 2
+  },
+  {
+    "ticker": "CVX",
+    "name": "CHEVRON CORP",
+    "cik": 93410,
+    "cik_override": false,
+    "sector": "Energy and industrial",
+    "fiscal_year_end": "1231",
+    "latest_10k": {
+      "ticker": "CVX",
+      "cik": 93410,
+      "accession": "0000093410-26-000078",
+      "form": "10-K",
+      "filed": "2026-02-24",
+      "report_date": "2025-12-31",
+      "primary_document": "cvx-20251231.htm",
+      "parsed": {
+        "chars": 497763,
+        "item_chars": {
+          "1": 79271,
+          "1A": 34606,
+          "7": 242,
+          "7A": 354,
+          "8": 158
+        },
+        "labelled_share": 0.23
+      }
+    },
+    "prior_10k": {
+      "ticker": "CVX",
+      "cik": 93410,
+      "accession": "0000093410-25-000009",
+      "form": "10-K",
+      "filed": "2025-02-21",
+      "report_date": "2024-12-31",
+      "primary_document": "cvx-20241231.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "CashAndCashEquivalentsAtCarryingValue",
+      "GrossProfit",
+      "LongTermDebt",
+      "OperatingIncomeLoss"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "BA",
+    "name": "BOEING CO",
+    "cik": 12927,
+    "cik_override": false,
+    "sector": "Energy and industrial",
+    "fiscal_year_end": "1231",
+    "latest_10k": {
+      "ticker": "BA",
+      "cik": 12927,
+      "accession": "0001628280-26-004357",
+      "form": "10-K",
+      "filed": "2026-01-30",
+      "report_date": "2025-12-31",
+      "primary_document": "ba-20251231.htm",
+      "parsed": {
+        "chars": 424705,
+        "item_chars": {
+          "1": 18432,
+          "1A": 57231,
+          "7": 90921,
+          "7A": 2898,
+          "8": 204951
+        },
+        "labelled_share": 0.882
+      }
+    },
+    "prior_10k": {
+      "ticker": "BA",
+      "cik": 12927,
+      "accession": "0000012927-25-000015",
+      "form": "10-K",
+      "filed": "2025-02-03",
+      "report_date": "2024-12-31",
+      "primary_document": "ba-20241231.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "CAT",
+    "name": "CATERPILLAR INC",
+    "cik": 18230,
+    "cik_override": false,
+    "sector": "Energy and industrial",
+    "fiscal_year_end": "1231",
+    "latest_10k": {
+      "ticker": "CAT",
+      "cik": 18230,
+      "accession": "0000018230-26-000008",
+      "form": "10-K",
+      "filed": "2026-02-13",
+      "report_date": "2025-12-31",
+      "primary_document": "cat-20251231.htm",
+      "parsed": {
+        "chars": 443331,
+        "item_chars": {
+          "1": 39312,
+          "1A": 53426,
+          "7": 106418,
+          "7A": 674,
+          "8": 186306
+        },
+        "labelled_share": 0.871
+      }
+    },
+    "prior_10k": {
+      "ticker": "CAT",
+      "cik": 18230,
+      "accession": "0000018230-25-000008",
+      "form": "10-K",
+      "filed": "2025-02-14",
+      "report_date": "2024-12-31",
+      "primary_document": "cat-20241231.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "GrossProfit",
+      "LongTermDebt",
+      "NetIncomeLoss",
+      "StockholdersEquity"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "DIS",
+    "name": "Walt Disney Co",
+    "cik": 1744489,
+    "cik_override": false,
+    "sector": "Media and auto",
+    "fiscal_year_end": "1003",
+    "latest_10k": {
+      "ticker": "DIS",
+      "cik": 1744489,
+      "accession": "0001744489-25-000155",
+      "form": "10-K",
+      "filed": "2025-11-13",
+      "report_date": "2025-09-27",
+      "primary_document": "dis-20250927.htm",
+      "parsed": {
+        "chars": 447057,
+        "item_chars": {
+          "1": 66695,
+          "1A": 62832,
+          "7": 80193,
+          "7A": 5764,
+          "8": 120
+        },
+        "labelled_share": 0.482
+      }
+    },
+    "prior_10k": {
+      "ticker": "DIS",
+      "cik": 1744489,
+      "accession": "0001744489-24-000276",
+      "form": "10-K",
+      "filed": "2024-11-14",
+      "report_date": "2024-09-28",
+      "primary_document": "dis-20240928.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "GrossProfit",
+      "Liabilities",
+      "ResearchAndDevelopmentExpense"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "TSLA",
+    "name": "Tesla, Inc.",
+    "cik": 1318605,
+    "cik_override": false,
+    "sector": "Media and auto",
+    "fiscal_year_end": "1231",
+    "latest_10k": {
+      "ticker": "TSLA",
+      "cik": 1318605,
+      "accession": "0001628280-26-003952",
+      "form": "10-K",
+      "filed": "2026-01-29",
+      "report_date": "2025-12-31",
+      "primary_document": "tsla-20251231.htm",
+      "parsed": {
+        "chars": 398924,
+        "item_chars": {
+          "1": 45452,
+          "1A": 83733,
+          "7": 55800,
+          "7A": 1626,
+          "8": 173907
+        },
+        "labelled_share": 0.904
+      }
+    },
+    "prior_10k": {
+      "ticker": "TSLA",
+      "cik": 1318605,
+      "accession": "0001628280-25-003063",
+      "form": "10-K",
+      "filed": "2025-01-30",
+      "report_date": "2024-12-31",
+      "primary_document": "tsla-20241231.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "JPM",
+    "name": "JPMORGAN CHASE & CO",
+    "cik": 19617,
+    "cik_override": false,
+    "sector": "Financials",
+    "fiscal_year_end": "1231",
+    "latest_10k": {
+      "ticker": "JPM",
+      "cik": 19617,
+      "accession": "0001628280-26-008131",
+      "form": "10-K",
+      "filed": "2026-02-13",
+      "report_date": "2025-12-31",
+      "primary_document": "jpm-20251231.htm",
+      "parsed": {
+        "chars": 1200929,
+        "item_chars": {
+          "1": 39209,
+          "1A": 112128,
+          "7": 396,
+          "7A": 270,
+          "8": 369
+        },
+        "labelled_share": 0.127
+      }
+    },
+    "prior_10k": {
+      "ticker": "JPM",
+      "cik": 19617,
+      "accession": "0000019617-25-000270",
+      "form": "10-K",
+      "filed": "2025-02-14",
+      "report_date": "2024-12-31",
+      "primary_document": "jpm-20241231.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "CashAndCashEquivalentsAtCarryingValue",
+      "GrossProfit",
+      "LongTermDebt",
+      "OperatingIncomeLoss",
+      "ResearchAndDevelopmentExpense"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "GS",
+    "name": "GOLDMAN SACHS GROUP INC",
+    "cik": 886982,
+    "cik_override": false,
+    "sector": "Financials",
+    "fiscal_year_end": "1231",
+    "latest_10k": {
+      "ticker": "GS",
+      "cik": 886982,
+      "accession": "0000886982-26-000091",
+      "form": "10-K",
+      "filed": "2026-02-25",
+      "report_date": "2025-12-31",
+      "primary_document": "gs-20251231.htm",
+      "parsed": {
+        "chars": 1106422,
+        "item_chars": {
+          "1": 151979,
+          "1A": 141852,
+          "7": 313422,
+          "7A": 288,
+          "8": 458989
+        },
+        "labelled_share": 0.964
+      }
+    },
+    "prior_10k": {
+      "ticker": "GS",
+      "cik": 886982,
+      "accession": "0000886982-25-000005",
+      "form": "10-K",
+      "filed": "2025-02-27",
+      "report_date": "2024-12-31",
+      "primary_document": "gs-20241231.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "RevenuesNetOfInterestExpense",
+    "revenue_status": "fallback",
+    "unreported_concepts": [
+      "GrossProfit",
+      "LongTermDebt",
+      "OperatingIncomeLoss",
+      "ResearchAndDevelopmentExpense"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "BAC",
+    "name": "BANK OF AMERICA CORP /DE/",
+    "cik": 70858,
+    "cik_override": false,
+    "sector": "Financials",
+    "fiscal_year_end": "1231",
+    "latest_10k": {
+      "ticker": "BAC",
+      "cik": 70858,
+      "accession": "0000070858-26-000157",
+      "form": "10-K",
+      "filed": "2026-02-25",
+      "report_date": "2025-12-31",
+      "primary_document": "bac-20251231.htm",
+      "parsed": {
+        "chars": 902130,
+        "item_chars": {
+          "1": 38004,
+          "1A": 116889,
+          "7": 300241,
+          "7A": 218,
+          "8": 400460
+        },
+        "labelled_share": 0.949
+      }
+    },
+    "prior_10k": {
+      "ticker": "BAC",
+      "cik": 70858,
+      "accession": "0000070858-25-000139",
+      "form": "10-K",
+      "filed": "2025-02-25",
+      "report_date": "2024-12-31",
+      "primary_document": "bac-20241231.htm",
+      "in_corpus": true
+    },
+    "revenue_concept": "Revenues",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "CashAndCashEquivalentsAtCarryingValue",
+      "GrossProfit",
+      "OperatingIncomeLoss",
+      "ResearchAndDevelopmentExpense"
+    ],
+    "restatement_pairs": 12,
+    "rounding_pairs": 0
+  },
+  {
+    "ticker": "V",
+    "name": "VISA INC.",
+    "cik": 1403161,
+    "cik_override": false,
+    "sector": "Financials",
+    "fiscal_year_end": "0930",
+    "latest_10k": {
+      "ticker": "V",
+      "cik": 1403161,
+      "accession": "0001403161-25-000089",
+      "form": "10-K",
+      "filed": "2025-11-06",
+      "report_date": "2025-09-30",
+      "primary_document": "v-20250930.htm",
+      "parsed": {
+        "chars": 433935,
+        "item_chars": {
+          "1": 73556,
+          "1A": 82199,
+          "7": 48995,
+          "7A": 6155,
+          "8": 179275
+        },
+        "labelled_share": 0.899
+      }
+    },
+    "prior_10k": {
+      "ticker": "V",
+      "cik": 1403161,
+      "accession": "0001403161-24-000058",
+      "form": "10-K",
+      "filed": "2024-11-13",
+      "report_date": "2024-09-30",
+      "primary_document": "v-20240930.htm",
+      "in_corpus": false
+    },
+    "revenue_concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+    "revenue_status": "primary",
+    "unreported_concepts": [
+      "EarningsPerShareBasic",
+      "EarningsPerShareDiluted",
+      "GrossProfit",
+      "LongTermDebt",
+      "ResearchAndDevelopmentExpense",
+      "StockholdersEquity"
+    ],
+    "restatement_pairs": 0,
+    "rounding_pairs": 0
+  }
+]

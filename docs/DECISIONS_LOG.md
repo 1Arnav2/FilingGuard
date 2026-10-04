@@ -170,6 +170,118 @@ limits not checked yet.
 **Revisit if:** Phase 2 finds free-tier limits too tight for an overnight 300-item run, or
 the target and verifier should differ.
 
+### D-013 — Facts in `data/processed/`, gold labels alone in `data/gold/`
+**Date:** 2026-10-04 · **Phase:** 1
+**Context:** CORPUS §6 wrote normalised XBRL facts to `data/gold/facts.parquet`, but the
+verifier must check answers against XBRL facts, and nothing outside `eval/` may read
+`data/gold/`.
+**Options considered:** (1) facts in `data/processed/`, `data/gold/` holds only per-item
+labels; (2) keep facts in `data/gold/` and exempt the verifier; (3) verifier fetches facts
+from EDGAR itself.
+**Decision:** Option 1, chosen by me. CORPUS §4 and §6, TRD §1 and §2.1 updated.
+`tests/test_gold_isolation.py` fails if any module under `src/filingguard/agents/` imports
+`filingguard.eval`, names a `gold` path segment, or reads an item's `"gold"` key.
+**Why:** The verifier sees the same public facts any agent could look up, never the label
+attached to a test item. The rule stays simple enough to enforce with a test.
+**Trade-off accepted:** A gold label and a fact row can hold the same number. The separation
+is about which item is being tested, not about hiding public data.
+**Revisit if:** The red-team needs to live under `agents/` (see open question in BUILD_LOG).
+
+### D-014 — CIK override for XOM
+**Date:** 2026-10-04 · **Phase:** 1
+**Context:** SEC's ticker map now resolves XOM to ExxonMobil Holdings Corp (CIK 2115436), a
+successor issuer created on 2026-07-01 that has not filed a 10-K. See H-002.
+**Options considered:** Override XOM to Exxon Mobil Corp (CIK 34088); replace XOM with
+another energy company; run with 24 companies.
+**Decision:** One documented override, `CIK_OVERRIDES = {"XOM": 34088}` in
+`filings.py`. The pipeline now raises a clear error for any company with no 10-K.
+**Why:** CIK 34088 filed the FY2025 10-K and holds all XBRL history. Keeps the CORPUS list
+intact; the override is explicit and recorded in the corpus card.
+**Trade-off accepted:** One CIK is set by hand, against CORPUS §1's "resolved, not typed".
+**Revisit if:** The holding company files its first 10-K (expected early 2027).
+
+### D-015 — Shared retry with exponential backoff
+**Date:** 2026-10-04 · **Phase:** 1
+**Context:** H-001 showed transient 503s; long runs will hit rate limits.
+**Options considered:** Rely on the Gemini SDK's built-in retry; `tenacity`; a small shared
+helper.
+**Decision:** `filingguard/retry.py`: up to 6 attempts, full-jitter exponential backoff
+(2 s base, 60 s cap). Retries HTTP 408, 429, 500, 502, 503, 504 and network errors; fails fast
+on other 4xx. Used by the Gemini backend and the EDGAR client. Failed calls are never cached.
+**Why:** One tested policy for both clients, no extra dependency, injectable sleep for tests.
+**Trade-off accepted:** Stacks on top of the SDK's own short retry, so a hard outage takes a
+few minutes to surface.
+**Revisit if:** Phase 5 runs show long stalls; then add resume-from-checkpoint in the runner.
+
+### D-016 — Local embeddings (jina-v2-small) and exact numpy search
+**Date:** 2026-10-04 · **Phase:** 1
+**Context:** TRD §3 suggested Chroma or FAISS and left the embedding model open. FundClarity's
+choice could not be checked without reading its repo, which is consumed only through MCP.
+**Options considered:** Gemini embeddings via API; local `bge-small-en-v1.5` (512-token limit);
+local `jinaai/jina-embeddings-v2-small-en` (8,192 tokens, 512 dims); local
+`snowflake-arctic-embed-m-long` (2,048 tokens, slower). Store: Chroma, FAISS, or numpy.
+**Decision:** `jinaai/jina-embeddings-v2-small-en` through `fastembed` (ONNX, CPU), stored as
+`embeddings.npy` + `chunks.jsonl` with exact cosine search. TRD §3 updated.
+**Why:** No truncation of 800-token chunks; zero API quota spent on embeddings, so the Gemini
+free tier is kept for the target and verifier; deterministic and free to rebuild. About
+5,000 vectors do not need an approximate index.
+**Trade-off accepted:** Smaller model than the best available; retrieval quality is unproven.
+**Revisit if:** The Phase 2 smoke test shows retrieval misses; try arctic-embed-m-long first.
+
+### D-017 — Chunk size in characters
+**Date:** 2026-10-04 · **Phase:** 1
+**Context:** CORPUS §6 asks for about 800 tokens with 100 overlap; the embedding model's
+tokenizer is not the generation model's.
+**Options considered:** Count tokens with the embedding tokenizer; count characters.
+**Decision:** 3,200 characters with 400 overlap (about 4 characters per token), cut at line
+breaks or spaces, every chunk carrying exact character offsets into the saved text.
+**Why:** Simple, deterministic, model-independent, and offsets are what the span check needs.
+**Trade-off accepted:** Token counts vary a little per chunk (tables tokenise denser).
+**Revisit if:** Chunks overflow a model's context or retrieval suffers.
+
+### D-018 — Index the whole 10-K, label chunks by Item
+**Date:** 2026-10-04 · **Phase:** 1
+**Context:** TRD §2.1 said split by Item 1, 1A, 7, 7A, 8. In practice several filers keep
+financial statements or MD&A outside those headings. See H-003.
+**Options considered:** Index only the five Items; add per-company layout rules; index the
+whole document and label each chunk with its Item or `other`.
+**Decision:** Whole document. Each chunk is labelled with the Item it falls in when that Item
+is one of the five, otherwise `other`. Item detection keeps the longest section per Item and
+ignores bare `Item N` running headers. TRD §2.1 updated.
+**Why:** No company loses its financial statements; no per-company special cases.
+**Trade-off accepted:** About 15% more chunks, and item labels are weak for six filers.
+**Revisit if:** Retrieval is diluted by cover pages and exhibits lists.
+
+### D-019 — Fact table fields and revenue fallbacks
+**Date:** 2026-10-04 · **Phase:** 1
+**Context:** SEC's `fy`/`fp` describe the filing, not the period (Apple's FY2023 revenue has
+`fy=2025`). TRD named the columns `fiscal_year`, `fiscal_period`. Some companies tag revenue
+with concepts outside CORPUS §4.
+**Options considered:** Keep TRD names; rename; derive the period's fiscal year.
+**Decision:** Columns `filing_fy`, `filing_fp`, plus `period_days` and `frame`. Keep every
+original-10-K row for the tracked concepts (all years). Revenue is mapped from CORPUS §4
+first, then `RevenuesNetOfInterestExpense`,
+`RevenueFromContractWithCustomerIncludingAssessedTax`, `SalesRevenueNet`, and the status
+(`primary`, `fallback`, `unmapped`) is recorded per company. TRD §2.1 updated.
+**Why:** The renamed fields cannot be mistaken for the period's fiscal year, which the
+period-mismatch attack depends on.
+**Trade-off accepted:** Consumers must derive a period's fiscal year from `period_end` and the
+company's fiscal year-end.
+**Revisit if:** Phase 3 needs a period fiscal-year column; add it then.
+
+### D-020 — What corpus output is committed
+**Date:** 2026-10-04 · **Phase:** 1
+**Context:** Reproducibility and repo size.
+**Options considered:** Commit everything; commit nothing; commit small derived files only.
+**Decision:** Commit `data/processed/{facts.parquet, concept_map.json, filings.json,
+restatement_pairs.json, corpus_card.json, spot_check.json}`. Git-ignore `data/raw/`,
+`data/processed/text/` and `data/processed/index/`; they rebuild from cached or public data
+with `python -m filingguard.data.build_corpus`, with no API key.
+**Why:** The committed files back every corpus-card number; the large files are
+deterministic to rebuild.
+**Trade-off accepted:** A fresh clone must re-download from SEC and re-embed (minutes).
+**Revisit if:** Deploy needs the index (it should not; the dashboard reads results only).
+
 ---
 
 ## Hurdles
@@ -186,3 +298,72 @@ nothing bad was stored.
 **Lesson:** A long overnight run will hit this. The Phase 5 runner needs retry with backoff
 and must resume from completed items rather than restart.
 **Linked decision:** D-012
+
+### H-002 — XOM ticker resolves to a company with no 10-K
+**Date:** 2026-10-04
+**Phase:** 1
+**What happened:** The first full pull crashed at XOM. SEC's ticker map points XOM to
+ExxonMobil Holdings Corp (CIK 2115436), which became the listed entity on 2026-07-01
+(8-K12B) and has filed only S-8 POS, 8-K and similar forms.
+**Impact:** About 15 minutes. No scope change.
+**What I tried:** Listed every form type for CIK 2115436 (no 10-K on any page); checked the
+predecessor Exxon Mobil Corp, CIK 34088, which filed the FY2025 10-K on 2026-02-18 and has
+full company facts.
+**Resolution:** CIK override for XOM, and a clear error for any company without a 10-K.
+**Lesson:** Ticker maps follow the listed entity, not the filer of record. Corporate
+reorganisations will break "ticker → latest 10-K" for other companies over time.
+**Linked decision:** D-014
+
+### H-003 — 10-K Item structure is not reliable across filers
+**Date:** 2026-10-04
+**Phase:** 1
+**What happened:** First parse of all 25 latest 10-Ks: 16 companies had 80–96% of text inside
+Items 1, 1A, 7, 7A, 8. MSFT had 7%: it prints a bare "Item 7" running header on every page,
+and each one cut the section. NVDA, ORCL and DIS put financial statements after Item 15
+(Item 8 says "see page F-1"). XOM, CVX and JPM keep MD&A and statements in a separate
+financial section after Item 16, or use a cross-reference index.
+**Impact:** About an hour. Item labels for six filers are weak; no text is lost.
+**What I tried:** Longest-section-per-Item to skip the table of contents; a 150-character
+heading length limit to skip prose such as "see Item 7"; requiring punctuation after the Item
+number, which fixed MSFT (7% → 86%); inspected XOM's heading lines and found the
+"FINANCIAL SECTION" outside the Item structure.
+**Resolution:** Index the whole document and label chunks by Item or `other`.
+**Lesson:** Item labels are useful metadata but not a safe filter. The target agent should
+search the whole filing.
+**Linked decision:** D-018
+
+### H-004 — Too few restatement pairs for the `restated` attack
+**Date:** 2026-10-04
+**Phase:** 1
+**What happened:** Comparing the prior and latest 10-K for every mapped concept found 14 pairs
+from 2 companies (BAC 12, XOM 2), against the 40 items EVAL §2 plans for `restated`. Reading
+them showed the 2 XOM pairs are not restatements: R&D was tagged 879m and 987m originally and
+900m and 1,000m ("$0.9 billion", "$1.0 billion") as comparatives in the next 10-K. Only the
+12 BAC pairs are real restatements (revenue, net income, EPS, equity, assets, liabilities move
+together, consistent with a retrospective accounting change).
+**Impact:** The `restated` attack cannot reach 40 items from this corpus. Changing the counts
+alters the test set's composition, so it is the owner's decision (pending).
+**What I tried:** Checked every mapped concept for every company, instant and full-year
+periods; confirmed most companies simply did not restate between the two filings. Added a
+rounding rule (`is_rounding` in `facts.py`, tested) that tags precision-only changes as
+`rounding`; they stay in `restatement_pairs.json` with that tag but are not counted.
+**Resolution:** Pending: 12 usable pairs, from one company. Options listed in the Phase 1
+summary. CORPUS §4 already says to reduce the count and log it if fewer than 40 pairs exist.
+**Lesson:** Restatements are rare in a one-year window for large caps; this attack needs a
+wider window or a broader definition to reach 40.
+**Linked decision:** none yet
+
+### H-005 — Embedding run used 8.5 GB of RAM
+**Date:** 2026-10-04
+**Phase:** 1
+**What happened:** The first index build embedded in batches of 32. The process grew to
+8.5 GB and left 0.8 GB free on a 15.3 GB machine.
+**Impact:** About 20 minutes and one discarded run. No data lost (SEC downloads were cached).
+**What I tried:** Stopped the process; timed batch size 4 on the 64 most number-dense chunks
+(13.8 s); added a background guard that kills the build above 6 GB.
+**Resolution:** Batch size 4, and a per-chunk embedding cache in `.cache/embeddings/` written
+every 64 chunks so an interrupted build resumes. Peak memory over the full run fell to
+2.2 GB; the run took about 10 minutes for 5,397 chunks. A cached rebuild takes 11 seconds.
+**Lesson:** Attention memory scales with batch size times sequence length squared, and
+financial tables tokenise densely. Measure on the worst chunks before a full run.
+**Linked decision:** D-016

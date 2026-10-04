@@ -1,0 +1,23 @@
+{
+  "date_pulled": "2026-10-04",
+  "companies": 25,
+  "filings": 26,
+  "chunks": 5215,
+  "embedding_model": "jinaai/jina-embeddings-v2-small-en",
+  "fact_rows": 16411,
+  "fact_rows_latest_10k": 720,
+  "restatement_pairs": 12,
+  "restatement_companies": [
+    "BAC"
+  ],
+  "rounding_pairs_excluded": 2,
+  "revenue_fallback": [
+    "GS"
+  ],
+  "revenue_unmapped": [],
+  "cik_overrides": {
+    "XOM": 34088
+  },
+  "exclusions": [],
+  "sec_network_requests_this_run": 0
+}

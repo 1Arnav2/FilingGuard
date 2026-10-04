@@ -1,0 +1,182 @@
+[
+  {
+    "ticker": "ORCL",
+    "accession": "0001193125-26-277521",
+    "concept": "EarningsPerShareBasic",
+    "unit": "USD/shares",
+    "period_start": "2025-06-01",
+    "period_end": "2026-05-31",
+    "value": 5.94,
+    "found": true,
+    "match": {
+      "rendering": "5.94",
+      "offset": 269729,
+      "context": "idends | 103 | — | —\nNet income available to common shareholders | $16,984 | $12,443 | $10,467\nEarnings per share attributable to common shareholders:\nBasic | $5.94 | $4.46 | $3.82\nDiluted | $5.83 | $4.34 | $3.71\nWeighted average common shares outstanding:\nBasic | 2,860 | 2,789 | 2,744\nDiluted | 2,914 | 2,866 | 2,823\n(1)\nE"
+    },
+    "verdict": "match",
+    "note": "EPS table, Basic row, FY2026 is the first column.",
+    "reviewed_by": "manual review of context snippet, 2026-10-04"
+  },
+  {
+    "ticker": "MSFT",
+    "accession": "0001193125-26-323660",
+    "concept": "EarningsPerShareDiluted",
+    "unit": "USD/shares",
+    "period_start": "2025-07-01",
+    "period_end": "2026-06-30",
+    "value": 17.95,
+    "found": true,
+    "match": {
+      "rendering": "17.95",
+      "offset": 153877,
+      "context": "1,724 | 18%\nGross margin | 225,465 | 193,893 | 16%\nOperating income | 155,237 | 128,528 | 21%\nNet income | 133,749 | 101,832 | 31%\nDiluted earnings per share | 17.95 | 13.64 | 32%\nAdjusted net income (non-GAAP) | 128,786 | 105,452 | 22%\nAdjusted diluted earnings per share (non-GAAP) | 17.28 | 14.13 | 22%\nAdjusted net income"
+    },
+    "verdict": "match",
+    "note": "MD&A highlights table, FY2026 is the first column.",
+    "reviewed_by": "manual review of context snippet, 2026-10-04"
+  },
+  {
+    "ticker": "NKE",
+    "accession": "0000320187-26-000088",
+    "concept": "CashAndCashEquivalentsAtCarryingValue",
+    "unit": "USD",
+    "period_start": NaN,
+    "period_end": "2026-05-31",
+    "value": 7563000000.0,
+    "found": true,
+    "match": {
+      "rendering": "7,563",
+      "offset": 247413,
+      "context": ".\n2026 FORM 10-K 56\nTable of Contents\nNIKE, INC.\nCONSOLIDATED BALANCE SHEETS\nMAY 31,\n(In millions) | 2026 | 2025\nASSETS\nCurrent assets:\nCash and equivalents | $7,563 | $7,464\nShort-term investments | 1,464 | 1,687\nAccounts receivable, net | 5,931 | 4,717\nInventories | 7,501 | 7,489\nPrepaid expenses and other current assets "
+    },
+    "verdict": "match",
+    "note": "Consolidated balance sheet, May 31 2026 column.",
+    "reviewed_by": "manual review of context snippet, 2026-10-04"
+  },
+  {
+    "ticker": "JNJ",
+    "accession": "0000200406-26-000016",
+    "concept": "Assets",
+    "unit": "USD",
+    "period_start": NaN,
+    "period_end": "2025-12-28",
+    "value": 199210000000.0,
+    "found": true,
+    "match": {
+      "rendering": "199,210",
+      "offset": 179444,
+      "context": "| 50,403 | 37,618\nGoodwill (Notes 1 and 5) | 48,772 | 44,200\nDeferred taxes on income (Note 8) | 6,874 | 10,461\nOther assets | 14,368 | 11,414\nTotal assets | $ 199,210 | 180,104\nLiabilities and Shareholders’ Equity\nCurrent liabilities\nLoans and notes payable (Note 7) | $ 8,495 | 5,983\nAccounts payable | 11,991 | 10,311\nAccrue"
+    },
+    "verdict": "match",
+    "note": "Consolidated balance sheet, total assets, 2025 column.",
+    "reviewed_by": "manual review of context snippet, 2026-10-04"
+  },
+  {
+    "ticker": "COST",
+    "accession": "0000909832-25-000101",
+    "concept": "Assets",
+    "unit": "USD",
+    "period_start": NaN,
+    "period_end": "2025-08-31",
+    "value": 77099000000.0,
+    "found": true,
+    "match": {
+      "rendering": "77,099",
+      "offset": 124992,
+      "context": "ASSETS\nProperty and equipment, net | 31,909 | 29,032\nOperating lease right-of-use assets | 2,725 | 2,617\nOther long-term assets | 4,085 | 3,936\nTOTAL ASSETS | $77,099 | $69,831\nLIABILITIES AND EQUITY\nCURRENT LIABILITIES\nAccounts payable | $19,783 | $19,421\nAccrued salaries and benefits | 5,205 | 4,794\nAccrued member rewards "
+    },
+    "verdict": "match",
+    "note": "Consolidated balance sheet, total assets, 2025 column.",
+    "reviewed_by": "manual review of context snippet, 2026-10-04"
+  },
+  {
+    "ticker": "CVX",
+    "accession": "0000093410-26-000078",
+    "concept": "NetIncomeLoss",
+    "unit": "USD",
+    "period_start": "2025-01-01",
+    "period_end": "2025-12-31",
+    "value": 12299000000.0,
+    "found": true,
+    "match": {
+      "rendering": "12,299",
+      "offset": 151576,
+      "context": "e of Contents\nKey Financial Results\nMillions of dollars, except per-share amounts | 2025 | 2024 | 2023\nNet Income (Loss) Attributable to Chevron Corporation | $12,299 | $17,661 | $21,369\nPer Share Amounts:\nNet Income (Loss) Attributable to Chevron Corporation\n– Basic | $6.65 | $9.76 | $11.41\n– Diluted | $6.63 | $9.72 | $11.3"
+    },
+    "verdict": "match",
+    "note": "Key financial results, net income attributable to Chevron, 2025 column.",
+    "reviewed_by": "manual review of context snippet, 2026-10-04"
+  },
+  {
+    "ticker": "AMZN",
+    "accession": "0001018724-26-000004",
+    "concept": "Assets",
+    "unit": "USD",
+    "period_start": NaN,
+    "period_end": "2025-12-31",
+    "value": 818042000000.0,
+    "found": true,
+    "match": {
+      "rendering": "818,042",
+      "offset": 151730,
+      "context": "and equipment, net | 252,665 | 357,025\nOperating leases | 76,141 | 86,054\nGoodwill | 23,074 | 23,273\nOther assets | 82,147 | 122,607\nTotal assets | $624,894 | $818,042\nLIABILITIES AND STOCKHOLDERS’ EQUITY\nCurrent liabilities:\nAccounts payable | $94,363 | $121,909\nAccrued expenses and other | 66,965 | 75,520\nUnearned revenue |"
+    },
+    "verdict": "match",
+    "note": "Consolidated balance sheet; AMZN lists the older year first, so the value is in the second (2025) column.",
+    "reviewed_by": "manual review of context snippet, 2026-10-04"
+  },
+  {
+    "ticker": "META",
+    "accession": "0001628280-26-003942",
+    "concept": "OperatingIncomeLoss",
+    "unit": "USD",
+    "period_start": "2025-01-01",
+    "period_end": "2025-12-31",
+    "value": 83276000000.0,
+    "found": true,
+    "match": {
+      "rendering": "83,276",
+      "offset": 292774,
+      "context": "6,290 | 75,246 | 28% | 21,400 | 19,875 | 8% | 117,690 | 95,121 | 24%\nIncome (loss) from operations | $102,469 | $87,109 | 18% | $(19,193) | $(17,729) | (8)% | $83,276 | $69,380 | 20%\nOperating margin | 52% | 54% | (870)% | (826)% | 41% | 42%\n•Net income was $60.46 billion, with diluted earnings per share (EPS) of $23.49 for "
+    },
+    "verdict": "match",
+    "note": "Segment results table, consolidated total column for 2025.",
+    "reviewed_by": "manual review of context snippet, 2026-10-04"
+  },
+  {
+    "ticker": "XOM",
+    "accession": "0000034088-26-000045",
+    "concept": "StockholdersEquity",
+    "unit": "USD",
+    "period_start": NaN,
+    "period_end": "2025-12-31",
+    "value": 259386000000.0,
+    "found": true,
+    "match": {
+      "rendering": "259,386",
+      "offset": 111215,
+      "context": " | 41,710 | 41,573\nDebt to capital (percent) | 14.0 | 13.4 | 16.4\nNet debt to capital (percent) (2) | 11.0 | 6.5 | 4.5\nExxonMobil share of equity at year-end | 259,386 | 263,705 | 204,802\nExxonMobil share of equity per common share (dollars) | 62.07 | 60.58 | 51.57\nWeighted-average number of common shares outstanding (million"
+    },
+    "verdict": "match",
+    "note": "Key ratios table, ExxonMobil share of equity at year-end, 2025 column.",
+    "reviewed_by": "manual review of context snippet, 2026-10-04"
+  },
+  {
+    "ticker": "BA",
+    "accession": "0001628280-26-004357",
+    "concept": "StockholdersEquity",
+    "unit": "USD",
+    "period_start": NaN,
+    "period_end": "2025-12-31",
+    "value": 5454000000.0,
+    "found": true,
+    "match": {
+      "rendering": "5,454",
+      "offset": 195406,
+      "context": "28,029 ) | ( 32,386 )\nRetained earnings | 17,252 | 15,362\nAccumulated other comprehensive loss | ( 10,277 ) | ( 10,915 )\nTotal shareholders' equity/(deficit) | 5,454 | ( 3,908 )\nNoncontrolling interests | 3 | ( 6 )\nTotal equity | 5,457 | ( 3,914 )\nTotal liabilities and equity | $ 168,235 | $ 156,363\nSee Notes to the Consoli"
+    },
+    "verdict": "match",
+    "note": "Consolidated balance sheet, total shareholders' equity, 2025 column.",
+    "reviewed_by": "manual review of context snippet, 2026-10-04"
+  }
+]

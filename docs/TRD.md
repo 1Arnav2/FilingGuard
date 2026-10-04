@@ -8,11 +8,12 @@
 flowchart LR
   subgraph Data
     E[SEC EDGAR 10-K text] --> C[Chunk + embed]
-    X[XBRL company facts] --> G[Gold facts store]
+    X[XBRL company facts] --> F[Facts store: data/processed]
   end
-  G --> R[Red-team agent]
+  F --> R[Red-team agent]
   E --> R
   R --> T[(Test set: ~300 items)]
+  R --> G[Gold labels: data/gold]
   T --> H[Eval harness]
   H --> A[Target agent adapter]
   A --> A1[10-K RAG agent]
@@ -20,7 +21,7 @@ flowchart LR
   A1 --> V[Verifier agent]
   A2 --> V
   C --> V
-  X --> V
+  F --> V
   V --> H
   G -.gold, eval only.-> H
   H --> S[(results/ SQLite + JSONL)]
@@ -29,8 +30,11 @@ flowchart LR
 ```
 
 Two rules that the diagram encodes:
-- The verifier reads filing text and XBRL facts, never the gold label for a test item.
-- The harness is the only component that reads gold labels.
+- The verifier reads filing text and the normalised XBRL facts in `data/processed/`, never
+  the gold label for a test item.
+- The harness is the only component that reads gold labels in `data/gold/`. A test
+  (`tests/test_gold_isolation.py`) fails if any module under `src/filingguard/agents/`
+  references `data/gold` (D-013).
 
 ## 2. Components
 
@@ -40,9 +44,18 @@ Two rules that the diagram encodes:
   - Filing index: `https://data.sec.gov/submissions/CIK{cik10}.json`
   - Facts: `https://data.sec.gov/api/xbrl/companyfacts/CIK{cik10}.json`
   - Filing documents: `https://www.sec.gov/Archives/edgar/data/{cik}/{accession}/{doc}`
-- `parse_10k.py`: HTML to clean text, split by Item (1, 1A, 7, 7A, 8), keep tables as text.
-- `facts.py`: normalise XBRL facts to rows of `(company, concept, period_start, period_end,
-  fiscal_year, fiscal_period, unit, value, form, filed, accession)`.
+- `filings.py`: company list, CIK resolution (with documented overrides, D-014), and
+  latest/prior 10-K selection across all submissions pages.
+- `parse_10k.py`: HTML to clean text, tables kept as pipe-separated rows. The whole document
+  is indexed; each chunk is labelled with its Item (1, 1A, 7, 7A, 8) or `other` (D-018).
+- `chunk.py`: 3,200-character chunks with 400 overlap and exact character offsets (D-017).
+- `index.py`: local embeddings (`jinaai/jina-embeddings-v2-small-en`) with exact cosine
+  search, filterable by company or filing (D-016).
+- `build_corpus.py`: runs the whole Phase 1 pipeline; `spot_check.py` checks 10 facts.
+- `facts.py`: normalise XBRL facts to rows of `(ticker, cik, concept, unit, period_start,
+  period_end, period_days, value, filing_fy, filing_fp, form, filed, accession, frame)`,
+  written to `data/processed/facts.parquet`. `filing_fy`/`filing_fp` describe the filing, not
+  the period (D-019). Also maps each company's concepts and finds restatement pairs.
 
 ### 2.2 Target agents (`src/agents/targets/`)
 Common interface:
@@ -123,7 +136,7 @@ The dashboard reads committed results only. It makes no live LLM calls.
 |---|---|---|
 | Language | Python 3.11 | |
 | LLM | Gemini API | Exact model IDs pinned in `.env`; check current free-tier limits in Phase 2 |
-| Embeddings + vector store | Local store (Chroma or FAISS) | Mirror FundClarity's choice unless there is a reason not to; log the decision |
+| Embeddings + vector store | `jinaai/jina-embeddings-v2-small-en` via fastembed; numpy exact cosine search | D-016 |
 | API | FastAPI | Target agent endpoint |
 | Storage | SQLite + JSONL | |
 | Dashboard | Next.js (React, TypeScript), Recharts, static export | Served by FastAPI; same pattern as FundClarity's new UI |
