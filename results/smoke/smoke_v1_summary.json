@@ -1,0 +1,39 @@
+{
+  "agent": "tenk_rag",
+  "model": "gemini-3.8-flash",
+  "retriever": {
+    "name": "interleaved",
+    "k": 20
+  },
+  "questions": 10,
+  "run": 7,
+  "not_run": [
+    {
+      "id": "SM-08",
+      "error": "429 RESOURCE_EXHAUSTED"
+    },
+    {
+      "id": "SM-09",
+      "error": "429 RESOURCE_EXHAUSTED"
+    },
+    {
+      "id": "SM-10",
+      "error": "429 RESOURCE_EXHAUSTED"
+    }
+  ],
+  "answered": 7,
+  "with_citations": 7,
+  "citations_total": 12,
+  "quotes_found_verbatim": 12,
+  "mentions_expected": 7,
+  "parse_errors": 0,
+  "latency_s": [
+    3.669,
+    3.934,
+    6.472,
+    13.977,
+    14.845,
+    19.905,
+    19.939
+  ]
+}

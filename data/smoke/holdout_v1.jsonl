@@ -1,0 +1,10 @@
+{"id": "HO-01", "company": "META", "question": "How much did Meta spend on research and development in 2025?", "expected": ["57,372"], "note": "Income statement R&D line"}
+{"id": "HO-02", "company": "WMT", "question": "How many people does Walmart employ worldwide?", "expected": ["2.1 million associates"], "note": "Item 1 human capital text"}
+{"id": "HO-03", "company": "PG", "question": "What was P&G's diluted EPS in fiscal 2026?", "expected": ["6.62"], "note": "Diluted net earnings per common share, FY2026"}
+{"id": "HO-04", "company": "JPM", "question": "How large was JPMorgan's loan book at the end of 2025?", "expected": ["1,493,429"], "note": "Firmwide total loans; segment tables show smaller totals"}
+{"id": "HO-05", "company": "GS", "question": "What did Goldman earn after tax in 2025?", "expected": ["17,176"], "note": "Net earnings, firmwide"}
+{"id": "HO-06", "company": "BAC", "question": "How much did Bank of America hold in customer deposits at year-end 2025?", "expected": ["2,018,729"], "note": "Balance sheet total deposits"}
+{"id": "HO-07", "company": "UNH", "question": "How much money did UnitedHealth Group bring in during 2025?", "expected": ["447,567"], "note": "Total revenues"}
+{"id": "HO-08", "company": "DIS", "question": "How much cash did Disney's operations generate in fiscal 2025?", "expected": ["18,101", "18.1 billion"], "note": "Cash provided by operations"}
+{"id": "HO-09", "company": "CAT", "question": "What was Caterpillar's profit per share on a diluted basis in 2025?", "expected": ["18.81"], "note": "Profit per common share, diluted"}
+{"id": "HO-10", "company": "V", "question": "How many payment transactions did Visa process in fiscal 2025?", "expected": ["257,545"], "note": "Visa processed transactions (millions)"}

@@ -1,0 +1,10 @@
+{"id": "HV-01", "company": "AMZN", "question": "How much did Amazon's cloud computing business sell in 2025?", "expected": ["128,725"], "note": "AWS segment net sales; AMZN lists the older year first"}
+{"id": "HV-02", "company": "ORCL", "question": "What was Oracle's bottom line in fiscal 2026?", "expected": ["17,087"], "note": "Net income (net income available to common is 16,984)"}
+{"id": "HV-03", "company": "NKE", "question": "How much merchandise did Nike have on hand at the end of fiscal 2026?", "expected": ["7,501"], "note": "Balance sheet inventories"}
+{"id": "HV-04", "company": "JNJ", "question": "What did Johnson & Johnson spend on R&D in 2025?", "expected": ["14,665"], "note": "Research and development expense"}
+{"id": "HV-05", "company": "PFE", "question": "How much long-term borrowing did Pfizer carry at the end of 2025?", "expected": ["61,641"], "note": "Balance sheet long-term debt"}
+{"id": "HV-06", "company": "CVX", "question": "How much oil and gas did Chevron produce per day in 2025?", "expected": ["3.7 million barrels per day"], "note": "MD&A production text"}
+{"id": "HV-07", "company": "BA", "question": "How many commercial airplanes did Boeing hand over to customers in 2025?", "expected": ["88 | 600"], "note": "Commercial airplanes delivery table, 2025 total 600"}
+{"id": "HV-08", "company": "GOOGL", "question": "How much did Google make from advertising on YouTube in 2025?", "expected": ["40,367"], "note": "YouTube ads; GOOGL lists the older year first"}
+{"id": "HV-09", "company": "JPM", "question": "How many people worked at JPMorgan at the end of 2025?", "expected": ["318,512"], "note": "Employees at year-end"}
+{"id": "HV-10", "company": "BAC", "question": "What was Bank of America's profit per diluted share in 2025?", "expected": ["3.81"], "note": "Diluted earnings per common share"}

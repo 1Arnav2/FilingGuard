@@ -1,6 +1,7 @@
 """Gemini client that checks the disk cache before every API call."""
 
 import os
+import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
@@ -16,11 +17,16 @@ Backend = Callable[[str, str, dict[str, Any]], dict[str, Any]]
 
 
 def is_retryable_gemini_error(exc: Exception) -> bool:
-    """True for rate limits, server errors and network faults; False for bad requests."""
+    """True for per-minute rate limits, server errors and network faults.
+
+    False for bad requests and for exhausted daily quotas, which no backoff can fix (H-006).
+    """
     import httpx
     from google.genai import errors
 
     if isinstance(exc, errors.APIError):
+        if exc.code == 429 and "PerDay" in str(exc):
+            return False
         return exc.code in RETRYABLE_STATUS
     return isinstance(exc, httpx.TransportError)
 
@@ -31,6 +37,7 @@ class LLMResponse:
     model: str
     cached: bool
     raw: dict[str, Any]
+    latency_s: float | None  # wall time of the original API call, also on cache replays
 
 
 def gemini_backend(api_key: str, policy: RetryPolicy = RetryPolicy()) -> Backend:
@@ -68,10 +75,12 @@ class LLMClient:
         key = cache_key({"model": self.model, "prompt": prompt, "params": params})
         hit = self.cache.get(key)
         if hit is not None:
-            return LLMResponse(text=hit["text"], model=self.model, cached=True, raw=hit["raw"])
+            return LLMResponse(hit["text"], self.model, True, hit["raw"], hit.get("latency_s"))
+        started = time.perf_counter()
         result = self.backend(self.model, prompt, params)
-        self.cache.put(key, {"model": self.model, "prompt": prompt, "params": params, **result})
-        return LLMResponse(text=result["text"], model=self.model, cached=False, raw=result["raw"])
+        latency_s = round(time.perf_counter() - started, 3)
+        self.cache.put(key, {"model": self.model, "prompt": prompt, "params": params, "latency_s": latency_s, **result})
+        return LLMResponse(result["text"], self.model, False, result["raw"], latency_s)
 
 
 def client_from_env(model_var: str = "TARGET_MODEL") -> LLMClient:

@@ -24,12 +24,17 @@ One phase per working session. Each phase ends with: tests pass, roadmap ticked,
 - **Done when:** corpus card is complete and a spot check of 10 facts matches the filings.
 
 ## Phase 2 — Target agent (1 to 2 days)
-- [ ] `TargetAgent` interface and `AgentAnswer` schema
-- [ ] 10-K RAG agent with citations, behind FastAPI
-- [ ] Smoke test on 10 hand-written questions
+- [x] `TargetAgent` interface and `AgentAnswer` schema
+- [x] 10-K RAG agent with citations, behind FastAPI
+- [ ] Smoke test on 10 hand-written questions (7/10 run; blocked by H-006)
+- [x] Added: retrieval hit rate on smoke + two held-out sets; keyword search added (D-023)
+- [ ] Owner confirms model/quota (H-006) and retriever (D-023); re-run smoke; freeze target
 - **Done when:** the agent answers the smoke set with citations and logs a trace.
 
 ## Phase 3 — Red-team and test set (2 days)
+- [ ] Download the third 10-K per company; find pairs; tag restatement / reclassification /
+      stock split; apply D-021 caps; update EVAL §2 counts before generating anything
+- [ ] Red-team package in `src/filingguard/redteam/` (D-022)
 - [ ] One generator per attack type, built from gold facts
 - [ ] Generate about 500 candidates; dedupe and filter to 300
 - [ ] Assign frozen dev/test split

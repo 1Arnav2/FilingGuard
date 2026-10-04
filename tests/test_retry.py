@@ -60,6 +60,8 @@ def test_delays_stay_within_exponential_cap():
     [
         (errors.ServerError(503, {"error": {"message": "high demand"}}), True),
         (errors.ClientError(429, {"error": {"message": "quota"}}), True),
+        (errors.ClientError(429, {"error": {"message": "x", "details": [
+            {"violations": [{"quotaId": "GenerateRequestsPerDayPerProjectPerModel-FreeTier"}]}]}}), False),
         (errors.ClientError(400, {"error": {"message": "bad"}}), False),
         (errors.ClientError(404, {"error": {"message": "no model"}}), False),
         (httpx.ConnectError("down"), True),

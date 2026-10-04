@@ -1,0 +1,10 @@
+{"id": "SM-01", "company": "AAPL", "question": "What were Apple's total net sales for fiscal 2025?", "expected": ["416,161", "416.2 billion"], "note": "Item 7/8, total net sales, FY ended 2025-09-27"}
+{"id": "SM-02", "company": "NVDA", "question": "What was NVIDIA's Data Center revenue in fiscal year 2026?", "expected": ["193,737", "193.7 billion"], "note": "Segment/market revenue table, FY ended 2026-01-25"}
+{"id": "SM-03", "company": "TSLA", "question": "How many consumer vehicles did Tesla deliver in 2025?", "expected": ["1.64 million"], "note": "Item 1 text only, no XBRL fact"}
+{"id": "SM-04", "company": "COST", "question": "How many warehouses did Costco operate worldwide at August 31, 2025?", "expected": ["914 warehouses"], "note": "Item 1 text only"}
+{"id": "SM-05", "company": "KO", "question": "Approximately how many employees did Coca-Cola have at the end of 2025?", "expected": ["65,900"], "note": "Item 1 human capital text"}
+{"id": "SM-06", "company": "JPM", "question": "What was JPMorgan Chase's total net revenue for 2025?", "expected": ["182,447", "182.4 billion"], "note": "Reported basis, not managed basis (185,581); financial section outside Item labels"}
+{"id": "SM-07", "company": "BAC", "question": "What was Bank of America's net income in 2025?", "expected": ["30,509", "30.5 billion"], "note": "Income statement and MD&A"}
+{"id": "SM-08", "company": "GS", "question": "What were Goldman Sachs's total net revenues in 2025?", "expected": ["58,283", "58.28 billion"], "note": "Firmwide total, not segment totals"}
+{"id": "SM-09", "company": "XOM", "question": "What were ExxonMobil's total revenues and other income in 2025?", "expected": ["332,238"], "note": "Financial section after Item 16"}
+{"id": "SM-10", "company": "BAC", "question": "What was Bank of America's CET1 capital ratio under the Standardized approach at the end of 2025?", "expected": ["11.4 percent"], "note": "MD&A capital management text"}

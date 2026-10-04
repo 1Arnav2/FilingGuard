@@ -282,6 +282,56 @@ deterministic to rebuild.
 **Trade-off accepted:** A fresh clone must re-download from SEC and re-embed (minutes).
 **Revisit if:** Deploy needs the index (it should not; the dashboard reads results only).
 
+### D-021 — Widen the restatement window; rules for the `restated` count
+**Date:** 2026-10-04 · **Phase:** 2 (decided), applied at the start of Phase 3
+**Context:** H-004: 12 usable pairs, all BAC, against 40 planned. A count over three 10-Ks
+per company found up to 27 candidate pairs from BAC, NVDA, PFE and GOOGL.
+**Options considered:** (A) keep 12 BAC items and move 28 elsewhere; (B) widen to three
+10-Ks per company; (C) drop the attack type.
+**Decision:** Option B, chosen by me, with these rules:
+- Tag each pair `restatement`, `reclassification` or `stock_split`. Keep split adjustments
+  only where the question can name the filing unambiguously; otherwise drop them.
+- No single company supplies more than half of the `restated` items.
+- Use however many usable pairs result, up to 40. Spread the shortfall evenly across the
+  other five attack types. Controls stay at 60; the total stays at 300.
+- Update the counts table in EVAL §2 before any item is generated, and state there that the
+  `restated` result is descriptive only because of the small count. This is the only EVAL.md
+  change approved.
+- The extra downloads happen at the start of Phase 3.
+**Why:** More companies and pairs make the `restated` result less about one bank.
+**Trade-off accepted:** The `restated` count will still be below 40 and its interval wide.
+**Revisit if:** Never for this test set version.
+
+### D-022 — Red-team lives outside `agents/`
+**Date:** 2026-10-04 · **Phase:** 2
+**Context:** TRD placed the red-team in `agents/redteam/`, but it must write gold labels, and
+the gold isolation test forbids anything under `agents/` from touching `data/gold`.
+**Options considered:** (A) move it to `src/filingguard/redteam/`; (B) exempt
+`agents/redteam/` from the test; (C) red-team writes items without gold, `eval/` attaches it.
+**Decision:** Option A, chosen by me. `agents/` holds only the target and verifier; the
+isolation test stays strict. TRD §1, §2.3 and §4 updated.
+**Why:** The red-team builds the test set; it is not an agent under test, so it belongs with
+the data side, not with the agents that must never see gold.
+**Trade-off accepted:** None material.
+**Revisit if:** Never.
+
+### D-023 — Target retrieval: interleaved keyword + dense, k = 20 (provisional)
+**Date:** 2026-10-04 · **Phase:** 2
+**Context:** Owner's rule: the target must be a fair baseline; report retrieval hit rate and
+add keyword search if it is poor. Dense-only hit@8 on the smoke set was 80% (hit@3 50%).
+**Options considered:** Dense; BM25; equal-weight reciprocal rank fusion (RRF); interleaved
+union of BM25 and dense; each at k = 10 or 20. See H-007 for the order of events.
+**Decision:** `InterleavedRetriever(BM25, dense)` with k = 20 (top 10 of each), BM25
+k1 = 1.2, b = 0.75, no tuning. Provisional: the owner confirms before the target is frozen.
+**Why:** Window size mattered far more than method; at k = 20 dense, RRF and interleaved are
+within one question of each other on 30 questions. Interleaving keeps exact-figure matches
+(keyword) and paraphrase matches (dense) both in the context.
+**Trade-off accepted:** About 16k tokens of context per question. On the fresh held-out set
+the committed design scored 7/10 while dense alone scored 10/10 (in hindsight).
+**Revisit if:** The owner prefers dense-only or a larger k; any change gets a new held-out set.
+
+---
+
 ---
 
 ## Hurdles
@@ -367,3 +417,38 @@ every 64 chunks so an interrupted build resumes. Peak memory over the full run f
 **Lesson:** Attention memory scales with batch size times sequence length squared, and
 financial tables tokenise densely. Measure on the worst chunks before a full run.
 **Linked decision:** D-016
+
+### H-006 — Free tier allows 20 requests per day for gemini-3.8-flash
+**Date:** 2026-10-04
+**Phase:** 2
+**What happened:** The smoke run stopped at question 6 of 10 with `429 RESOURCE_EXHAUSTED`,
+quota `GenerateRequestsPerDayPerProjectPerModel-FreeTier`, limit 20. Google's rate-limit page
+does not publish free-tier numbers; they show only in AI Studio.
+**Impact:** The smoke test is incomplete (7/10 run and cached). The full project needs
+roughly 1,500 LLM calls (red-team phrasing, dev tuning, test run, judge), which is about 75
+days at 20 per day. Blocks Phase 2 completion and every later phase until resolved.
+**What I tried:** Read the error's quota details; checked the rate-limits docs page (limits
+not listed). The retry layer was retrying this 429 with backoff, which cannot help a daily
+quota; it now fails fast on per-day quota errors (tested) and still retries per-minute ones.
+**Resolution:** Pending owner decision on model or billing (options in the Phase 2 summary).
+**Lesson:** Check quotas, not just model names, before pinning a model. D-012 picked the
+newest stable Flash without knowing its daily limit.
+**Linked decision:** D-012
+
+### H-007 — Retrieval choice nearly overfit to my own smoke questions
+**Date:** 2026-10-04
+**Phase:** 2
+**What happened:** Dense-only retrieval was weak on the smoke set (hit@5 60%). BM25 scored
+100% at k = 5, but I had written the smoke questions after grepping the filings for their
+answers, so their wording echoed the text and favoured keyword search.
+**Impact:** About two hours. Two extra held-out sets written.
+**What I tried:** (1) Committed to interleaved k = 10 before testing it on held-out set 1
+(10 paraphrased questions, hash recorded before any retrieval ran): 7/10 at k = 10; every
+method's misses sat just outside the window. (2) Committed to interleaved k = 20, wrote
+held-out set 2 (hash `b5502f78…`) before running it: 7/10. Across all 30 questions at k = 20:
+dense 28/30 (95% CI 79–98%), interleaved 27/30 (74–97%), RRF 27/30, BM25 23/30.
+**Resolution:** Stopped iterating; the choice goes to the owner (D-023). All results are in
+`results/smoke/retrieval.json`.
+**Lesson:** Questions for a retrieval check must be written without looking at the target
+text, and a design must be fixed before its held-out set is scored.
+**Linked decision:** D-023

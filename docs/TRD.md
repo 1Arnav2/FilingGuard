@@ -13,7 +13,7 @@ flowchart LR
   F --> R[Red-team agent]
   E --> R
   R --> T[(Test set: ~300 items)]
-  R --> G[Gold labels: data/gold]
+  R --> G[Gold labels: data/gold, written by redteam/ outside agents/]
   T --> H[Eval harness]
   H --> A[Target agent adapter]
   A --> A1[10-K RAG agent]
@@ -57,7 +57,7 @@ Two rules that the diagram encodes:
   written to `data/processed/facts.parquet`. `filing_fy`/`filing_fp` describe the filing, not
   the period (D-019). Also maps each company's concepts and finds restatement pairs.
 
-### 2.2 Target agents (`src/agents/targets/`)
+### 2.2 Target agents (`src/filingguard/agents/targets/`)
 Common interface:
 
 ```python
@@ -79,7 +79,9 @@ class AgentAnswer:
   baseline is honest.
 - `fundclarity_mcp.py` (stretch): calls `ask_fund_question` on the existing MCP server.
 
-### 2.3 Red-team agent (`src/agents/redteam/`)
+### 2.3 Red-team agent (`src/filingguard/redteam/`)
+Lives outside `agents/` because it writes gold labels; `agents/` holds only the target and
+verifier, which must never see them (D-022).
 Builds items from gold facts first, then asks the LLM only to phrase the question. This keeps
 the gold answer independent of any model. One generator per attack type (see `EVAL.md`).
 
@@ -95,7 +97,7 @@ Item schema:
 }
 ```
 
-### 2.4 Verifier agent (`src/agents/verifier/`)
+### 2.4 Verifier agent (`src/filingguard/agents/verifier/`)
 Pipeline, cheapest check first:
 1. **Claim extraction:** pull each number, unit, period, and entity from the answer.
 2. **Span check:** does the cited span exist and contain the claim?
@@ -154,7 +156,8 @@ FilingGuard/
   src/
     filingguard/
       data/    edgar_client.py parse_10k.py facts.py
-      agents/  targets/ redteam/ verifier/
+      agents/  schema.py targets/ verifier/   (never reads gold)
+      redteam/ generators, phrasing, split    (writes data/gold/, D-022)
       eval/    run.py score.py stats.py taxonomy.py
       llm/     client.py cache.py
       api/     main.py routes.py

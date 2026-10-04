@@ -25,6 +25,7 @@ def test_second_identical_call_is_cached(tmp_path):
     assert backend.calls == 1
     assert not first.cached and second.cached
     assert second.text == first.text and second.raw == first.raw
+    assert first.latency_s is not None and second.latency_s == first.latency_s
 
 
 def test_rerun_with_fresh_client_makes_zero_calls(tmp_path):

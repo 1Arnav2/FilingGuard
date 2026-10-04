@@ -16,6 +16,29 @@ of every session.
 
 ---
 
+## 2026-10-04 — Phase 2: Target agent (paused, not complete)
+**Built:** `agents/schema.py` (`TargetAgent`, `AgentAnswer`, `Claim`, `Citation`).
+`retrieval.py` (dense, BM25, RRF hybrid, interleaved). `agents/targets/tenk_rag.py` (standard
+RAG prompt, JSON output, quotes mapped to filing character offsets, full trace including the
+raw response). `api/main.py` (`POST /api/target/answer`). `eval/smoke.py` (hit rate per
+question and retriever, agent run). LLM client now stores original API latency in the cache.
+Retry fails fast on per-day quota errors. Docs: D-021, D-022 (TRD §1, §2.3, §4; ROADMAP
+Phase 3), D-023, H-006, H-007.
+**Tests:** 63 offline tests pass (new: retrieval, agent with fake LLM, API, daily-quota
+classification). Gold isolation test passes with the agent under `agents/`.
+**Broken or unfinished:**
+- Smoke test 7/10 run: the gemini-3.8-flash free tier allows 20 requests per day (H-006).
+  All 7 gave the expected figure with citations; all 12 quotes were found verbatim; 0 parse
+  errors (`results/smoke/smoke_v1_summary.json`). SM-08 to SM-10 need quota.
+- Retriever choice is provisional pending the owner (D-023).
+**Numbers worth keeping:** Retrieval hit@20 over 30 questions (smoke + two held-out sets):
+dense 28/30, interleaved 27/30, RRF 27/30, BM25 23/30; committed interleaved k = 20 scored
+7/10 on the fresh held-out set (95% CI 40–89%). Source: `results/smoke/retrieval.json`.
+Final hit rate for the frozen target: not yet recorded (target not frozen).
+**Next session starts with:** Owner decisions on model/quota and retriever; finish the smoke
+run; record the final hit rate; freeze the target.
+**Commit:** Phase 2 (partial): target agent, hybrid retrieval, smoke harness
+
 ## 2026-10-04 — Phase 1: Data
 **Built:** `filingguard.retry` (shared backoff, D-015), used by the Gemini backend and a new
 EDGAR client (User-Agent, 5 requests/s, disk cache in `data/raw/sec/`, failures uncached).
