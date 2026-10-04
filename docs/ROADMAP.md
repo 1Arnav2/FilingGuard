@@ -4,13 +4,13 @@ One phase per working session. Each phase ends with: tests pass, roadmap ticked,
 `BUILD_LOG.md` and `DECISIONS_LOG.md` updated, commit made, and my approval to continue.
 
 ## Phase 0 — Setup (0.5 day)
-- [ ] Create repo and folder; copy docs into `docs/`
-- [ ] `pyproject.toml`, `.env.example`, pytest skeleton
-- [ ] `.gitignore` covers `.env`, `data/raw/`, caches; local tooling files go in
+- [x] Create repo and folder; copy docs into `docs/`
+- [x] `pyproject.toml`, `.env.example`, pytest skeleton
+- [x] `.gitignore` covers `.env`, `data/raw/`, caches; local tooling files go in
       `.git/info/exclude`
-- [ ] Confirm `git config user.name` and `user.email` are mine; install the `commit-msg`
+- [x] Confirm `git config user.name` and `user.email` are mine; install the `commit-msg`
       hook from `setup/`; make one test commit and check the message is clean
-- [ ] LLM client with disk cache
+- [x] LLM client with disk cache
 - **Done when:** `pytest` runs and a cached test call to Gemini returns.
 
 ## Phase 1 — Data (1 day)

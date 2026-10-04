@@ -131,16 +131,20 @@ The dashboard reads committed results only. It makes no live LLM calls.
 | Deploy | Render free tier, Docker, one service | FastAPI serves the API and the static dashboard |
 
 ## 4. Repo layout
+All Python code lives in one installable package, `filingguard`, under `src/` (D-009).
+Section 2 paths such as `src/data/` mean `src/filingguard/data/`.
+
 ```
 FilingGuard/
   README.md  .env.example  .gitignore  pyproject.toml  Dockerfile
   docs/      PRD.md TRD.md EVAL.md CORPUS.md ROADMAP.md BUILD_LOG.md DECISIONS_LOG.md
   src/
-    data/    edgar_client.py parse_10k.py facts.py
-    agents/  targets/ redteam/ verifier/
-    eval/    run.py score.py stats.py taxonomy.py
-    llm/     client.py cache.py
-    api/     main.py routes.py
+    filingguard/
+      data/    edgar_client.py parse_10k.py facts.py
+      agents/  targets/ redteam/ verifier/
+      eval/    run.py score.py stats.py taxonomy.py
+      llm/     client.py cache.py
+      api/     main.py routes.py
   web/       Next.js app (app/, components/, lib/)
   data/      raw/ (git-ignored)  processed/  gold/  testset/
   results/   runs/*.jsonl  summary.json
@@ -154,11 +158,22 @@ TARGET_MODEL=
 VERIFIER_MODEL=
 SEC_USER_AGENT="Name email@example.com"
 NUMERIC_REL_TOLERANCE=0.005
+CACHE_DIR=.cache
 ```
+
+`TARGET_MODEL` and `VERIFIER_MODEL` are both pinned to `gemini-3.8-flash` (D-012), to be
+revisited in Phase 2. The SDK is `google-genai` (D-011).
 
 ## 6. Non-functional
 - **Reproducibility:** fixed seeds, pinned model IDs, cached calls, every run tagged with a
   git commit hash.
+  - The LLM and SEC caches under `.cache/` are local and git-ignored. They save cost while
+    building; they are not the reproducibility record.
+  - Every run writes the raw model response for each item, under each condition, to
+    `results/runs/*.jsonl`, which is committed.
+  - Scoring (`eval/score.py`, `eval/stats.py`) reads only those files plus gold labels and
+    must re-run with zero API calls. Every number in `results/summary.json` can be rebuilt
+    this way from a fresh clone (D-010).
 - **Cost:** zero. Free tiers only.
 - **Runtime:** a full 300-item run should finish overnight on the free tier.
 

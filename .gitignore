@@ -6,9 +6,12 @@ data/raw/
 .cache/
 __pycache__/
 *.pyc
+*.egg-info/
 .pytest_cache/
 .venv/
 
 # web
 web/node_modules/
+web/.next/
+web/out/
 web/dist/
