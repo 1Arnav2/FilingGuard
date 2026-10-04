@@ -1,0 +1,14 @@
+# secrets and local config
+.env
+
+# data and caches
+data/raw/
+.cache/
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# web
+web/node_modules/
+web/dist/

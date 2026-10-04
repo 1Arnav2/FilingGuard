@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Copy to .git/hooks/commit-msg and make executable (chmod +x).
+# Removes attribution lines from every commit message.
+sed -i -E '/^Co-Authored-By:/Id; /Generated with/Id' "$1"
