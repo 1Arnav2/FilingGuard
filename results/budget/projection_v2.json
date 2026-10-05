@@ -1,0 +1,58 @@
+{
+  "derived_from": "results/budget/projection_v1.json (S1 and S3 rows) and results/spend/total.json",
+  "decision": "D-025: S3 without S2; Batch API for target answers only; verifier, red-team and judge on the standard API",
+  "notes": [
+    "Batch rows assume 50% of the standard price, as in projection_v1 S3; to be confirmed against the pricing page before the first batch.",
+    "Dev verifier keeps the S1 range; the 3-version limit makes its high end conservative.",
+    "Latency-sample verifier cost is the S1 test-verifier range scaled from 210 to 30 items.",
+    "The high end passes the $7 hard cap; the cap stops calls before that happens."
+  ],
+  "parts_usd": {
+    "smoke (3 target, actual spend)": [
+      0.054545,
+      0.054545
+    ],
+    "red-team phrasing, 400 candidates, standard": [
+      0.27,
+      0.69
+    ],
+    "dev target (90), Batch API": [
+      0.52,
+      1.13
+    ],
+    "dev verifier, up to 3 prompt versions, standard": [
+      0.12,
+      0.93
+    ],
+    "dev judge, standard": [
+      0.04,
+      0.25
+    ],
+    "test target (210), Batch API": [
+      1.21,
+      2.65
+    ],
+    "test verifier, standard": [
+      0.1,
+      0.72
+    ],
+    "test judge, standard": [
+      0.1,
+      0.25
+    ],
+    "latency sample: 30 target calls, standard": [
+      0.35,
+      0.76
+    ],
+    "latency sample: verifier on 30 items, standard": [
+      0.0143,
+      0.1029
+    ]
+  },
+  "total_usd": [
+    2.78,
+    7.54
+  ],
+  "warn_usd": 5.0,
+  "cap_usd": 7.0
+}

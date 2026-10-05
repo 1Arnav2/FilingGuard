@@ -352,6 +352,45 @@ $9.27 shared with the live FundClarity app.
 up to about $0.25 of headroom left.
 **Revisit if:** Work runs into 2027 (prices double), or the projection needs more than $7.
 
+### D-025 — Budget plan: Batch API for target answers, deterministic-first verifier
+**Date:** 2026-10-04 · **Phase:** Between 2 and 3 (logged before any Phase 3 model call)
+**Context:** H-008: projected spend $6.80–$21.94 under the original plan, against a $5
+warning and a $7 hard cap. The target alone is about $5.37 at the measured mean on the
+standard API. Four scenarios were priced in `results/budget/projection_v1.json`.
+**Options considered:** S1 (verifier rules first, 400 red-team candidates; $4.14–$10.49);
+S2 (S1 plus target thinking set low; $3.91–$8.19); S3 (S1 plus S2 plus the Batch API for dev
+and test runs, latency from a 30-call sample; $2.64–$6.64).
+**Decision:** S3 without S2, chosen by me. S2 is rejected: the target's settings do not
+change from `target-v1`.
+- **Batch scope:** the Batch API is used only for the target's answers: one batch for the 90
+  dev items, one for the 210 test items, with the same model, prompt and settings as
+  `target-v1`. Target answers are generated once per split, stored, and reused for every
+  verifier version. Verifier, red-team and judge calls stay on the standard API.
+- Batch responses go through the same cache and spend ledger, priced at the batch rate.
+- If a batch job fails or returns partial results, only the missing items are re-submitted,
+  and this is logged.
+- The test-split batch is not submitted without my approval.
+- **S1, all parts:** the verifier uses rules first and calls the model only when rules cannot
+  settle a claim; at most 3 verifier prompt versions on dev, each recorded with its dev
+  result; the red-team generates 400 candidates, and if any attack type falls short of its
+  planned count after filtering, more are generated for that type only, with the extra cost
+  reported to me first.
+- **Latency (EVAL §4 changed):** measured on a 30-item sample on the standard API, under both
+  conditions. The 30 are chosen by seed, stratified by attack type, and their IDs recorded
+  before any run. Reported everywhere as "measured on a 30-item sample". This and the
+  restated-count change (D-021) are the only two approved EVAL.md changes.
+- **Budget:** warning $5, hard cap $7, unchanged.
+**Why:** Batch pricing halves the largest cost (the target's 300 answers) without touching the
+target, so the baseline stays exactly the frozen `target-v1`. Batch turnaround times are not
+real-time latency, so latency needs a standard-API sample; a 30-item sample costs about
+$0.35–$0.76 instead of re-running 300 items on the standard API.
+**Trade-off accepted:** Latency rests on 30 items, so its median and p95 are rough. Projection
+under this plan (`results/budget/projection_v2.json`): $2.78–$7.54, so the high end passes
+the cap and the cap would stop calls first. Batch price assumed at 50% of standard, to be
+confirmed from the pricing page and added to `config/pricing.json` before the first batch.
+**Revisit if:** Measured spend after Phase 3 or the dev batch tracks toward the high end, or
+the batch price is not half of standard.
+
 ---
 
 ---
@@ -489,7 +528,9 @@ under $5 at standard prices.
 unchanged: verifier deterministic-first with 400 red-team candidates ($4.14–$10.49); plus
 target thinking set low ($3.91–$8.19); plus the Batch API at half price for dev and test runs,
 with latency measured on a 30-call standard sample ($2.64–$6.64).
-**Resolution:** Pending owner decision.
+**Resolution:** Owner chose S3 without S2 (D-025): Batch API for target answers only,
+deterministic-first verifier, 400 candidates, latency on a 30-item standard-API sample.
+Projection $2.78–$7.54 (`results/budget/projection_v2.json`).
 **Lesson:** Context size (20 chunks, about 17.6k tokens) dominates cost; price the
 retrieval window together with the hit rate.
-**Linked decision:** D-024
+**Linked decision:** D-024, D-025

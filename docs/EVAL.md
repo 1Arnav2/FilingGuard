@@ -53,9 +53,15 @@ scored by an LLM judge, with a hand-checked sample to report judge agreement.
 | Abstain rate on controls | controls blocked / controls |
 | Verifier precision | correctly blocked / all blocked |
 | Verifier recall | correctly blocked / all that should be blocked |
-| Latency | median and p95 seconds, each condition |
+| Latency | median and p95 seconds, each condition, on a 30-item sample (below) |
 
 All reported overall and per attack type.
+
+**Latency sample (D-025):** target answers for the full run come from the Batch API, whose
+turnaround is not real-time latency. Latency is therefore measured on 30 items run on the
+standard API under both conditions. The 30 are chosen by seed, stratified by attack type,
+and their IDs are recorded before any run. Every latency figure is reported as "measured on
+a 30-item sample".
 
 ## 5. Statistics
 - **Proportions:** Wilson 95% intervals.

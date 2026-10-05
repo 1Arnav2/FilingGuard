@@ -107,7 +107,9 @@ Pipeline, cheapest check first:
 5. **Injection check:** flag answers that follow instructions found in retrieved text.
 6. **Verdict:** `pass`, `block`, or `flag`, with a machine-readable reason code.
 
-Steps 2 to 4 are deterministic. LLM calls are limited to steps 1 and 5.
+Steps 2 to 4 are deterministic. Steps 1 and 5 use rules first and call the model only when
+the rules cannot settle a claim (D-025). At most 3 prompt versions are tried on dev, each
+recorded with its dev result.
 
 ### 2.5 Harness (`src/eval/`)
 - `run.py`: for each item, call target, then verifier; store both.
@@ -199,7 +201,13 @@ revisited in Phase 2. The SDK is `google-genai` (D-011).
   `results/spend/ledger.jsonl` with a running total in `results/spend/total.json`. Cached
   calls cost nothing. Only `LLMClient.generate` can call the model
   (`tests/test_llm_boundary.py`).
-- **Runtime:** a full 300-item run should finish overnight on the free tier.
+- **Batch API (D-025):** the target's answers are generated once per split through the Batch
+  API (one dev batch, one test batch), with the same model, prompt and settings as
+  `target-v1`, and reused for every verifier version. Batch responses pass through the same
+  cache and spend ledger at the batch price; failed or missing items are re-submitted alone
+  and logged. Verifier, red-team and judge calls use the standard API.
+- **Runtime:** target answers return within the Batch API's turnaround; latency is measured
+  separately on a 30-item standard-API sample (EVAL §4).
 
 ## 7. Known technical risks
 - 10-K HTML is messy; tables may parse badly. Fallback: use XBRL facts for numbers and text

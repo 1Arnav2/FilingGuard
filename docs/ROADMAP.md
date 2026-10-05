@@ -38,7 +38,8 @@ One phase per working session. Each phase ends with: tests pass, roadmap ticked,
       stock split; apply D-021 caps; update EVAL §2 counts before generating anything
 - [ ] Red-team package in `src/filingguard/redteam/` (D-022)
 - [ ] One generator per attack type, built from gold facts
-- [ ] Generate about 500 candidates; dedupe and filter to 300
+- [ ] Generate 400 candidates; dedupe and filter to 300; top up a short attack type only
+      after reporting the extra cost (D-025)
 - [ ] Assign frozen dev/test split
 - [ ] Hand-check 60 items; fix or drop faulty ones; record the fault rate
 - **Done when:** `data/testset/v1.jsonl` is frozen and tagged.
