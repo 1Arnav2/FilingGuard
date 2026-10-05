@@ -16,6 +16,23 @@ of every session.
 
 ---
 
+## 2026-10-05 — Phase 3: pre-review checks on draft v3 (no model calls)
+**Checks (H-024, `data/gold/draft/prescreen_v3_checks.json`):** multi-filing ambiguity 0 items;
+absence search over every corpus filing 2 hits (FG-0082, FG-0084, both PFE, neither figure in
+any filing); old-period header-cell table check 0 of 19; trap within 2% of gold in 7
+`period_mismatch` items (FG-0188 inside the 0.5% tolerance); 6 false-premise rows with a
+second figure, all contradicted by both lines.
+**Applied (D-040):** false-premise sheet note corrected for the 5 rows that do not name their
+line; "<Company>'s" dropped before a printed label that already names the company (16 draft
+questions; 4 in the sheet: FG-0032, FG-0192, FG-0278, FG-0287); EVAL §8 style limitation. Split
+stays non-sticky and is assigned once at freeze with seed and item-set hash (H-023).
+**Not applied, awaiting the owner:** trap-distance replacements (7) and the two absence hits.
+`review/review_v3.xlsx` rebuilt: same items, splits, sample, extra checks and latency IDs; only
+those question texts and notes changed.
+**Tests:** 94 offline tests pass.
+**Spend so far:** $0.4220 (no calls this step).
+**Commit:** Phase 3: pre-review checks on draft v3; sheet notes and possessive edit
+
 ## 2026-10-05 — Phase 3: v2 withdrawn, pre-screen fixes, draft v3 and review sheet v3
 **Review v2:** withdrawn before review after a pre-screen; no fault rate recorded for it
 (H-017, `data/gold/draft/review_v2_withdrawn.json`).

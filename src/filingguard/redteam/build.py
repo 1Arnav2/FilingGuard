@@ -22,7 +22,7 @@ from filingguard.redteam.counts import ATTACK_TYPES, allocate_counts, candidate_
 from filingguard.redteam.corpus import Corpus
 from filingguard.redteam.generators import GENERATORS
 from filingguard.redteam.generators.common import GenContext
-from filingguard.redteam.phrasing import BATCH_SIZE, check_question, phrase_batch
+from filingguard.redteam.phrasing import BATCH_SIZE, check_question, drop_redundant_possessive, phrase_batch
 from filingguard.redteam.generators.restated import usable_pairs
 from filingguard.redteam.restated import select_pairs
 from filingguard.redteam.spec import ItemSpec
@@ -121,7 +121,10 @@ def assemble_draft(seed: int = SEED) -> dict:
     companies = list(corpus.companies)
     specs = [ItemSpec(**row) for row in _read_jsonl(CANDIDATES)]
     phrased = {r["spec_id"]: r for r in _read_jsonl(PHRASED)}
-    questions = {k: r["question"] for k, r in phrased.items()}
+    by_spec = {s.spec_id: s for s in specs}
+    questions = {k: drop_redundant_possessive(r["question"], by_spec[k].company, by_spec[k].gold.get("metric") or "")
+                 if k in by_spec and r["question"] else r["question"] for k, r in phrased.items()}
+    possessives_dropped = sum(questions[k] != r["question"] for k, r in phrased.items() if k in by_spec)
 
     failed = {s.spec_id for s in specs if s.spec_id not in phrased or phrased[s.spec_id]["problems"]}
     passing = [s for s in specs if s.spec_id not in failed]
@@ -174,6 +177,7 @@ def assemble_draft(seed: int = SEED) -> dict:
         "review_sample_by_type": _by_type(sample, split),
         "review_extra": sorted(ids[s.spec_id] for s in extra),
         "v1_draft_items_dropped": dropped_v1,
+        "possessives_dropped_among_candidates": possessives_dropped,
         "latency_sample": latency_ids,
         "review_sample": sorted(ids[s.spec_id] for s in sample),
         "injection_delivery_rank": {ids[k]: r for k, r in ranks.items() if k in ids},

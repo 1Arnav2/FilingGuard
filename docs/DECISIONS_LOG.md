@@ -663,6 +663,22 @@ read as negative, not flipped. Negative-gold questions name the filing's printed
 (D-037), so their wording carries the filing's own sign words.
 **Revisit if:** Never for this test set version.
 
+### D-040 — Pre-review checks on draft v3; style limitation recorded (EVAL §8)
+**Date:** 2026-10-05 · **Phase:** 3
+**Context:** Owner asked for six checks before the hand review (H-024), no model calls.
+**Decision:** Results recorded in `data/gold/draft/prescreen_v3_checks.json`. Applied now: the
+review-sheet note for false-premise rows whose question does not name the line (5 rows,
+FG-0225, 0235, 0238, 0239, 0242: "the question does not name the line; both lines contradict
+the premise", checked true for all five; FG-0229 names its line), and dropping "<Company>'s"
+before a printed label that already names the company (a string edit at assembly, 16 draft
+questions). EVAL §8 now records that `false_premise` items are the only driver-style
+questions (edit made 2026-10-05, before any target run on the dev or the test split).
+Proposed, not applied: trap-distance replacements (7 items) and the two cross-filing
+absence hits (FG-0082, FG-0084); see H-024.
+**Why:** Fixes that change no item are applied; fixes that change items wait for the owner.
+**Trade-off accepted:** None.
+**Revisit if:** The owner approves the proposed replacements.
+
 ### D-039 — EVAL.md edits after the v2 pre-screen (all before any target run)
 **Date:** 2026-10-05 · **Phase:** 3
 **Decision:** Approved by me; made on 2026-10-05, before any target run on the dev or the test
@@ -1002,7 +1018,41 @@ items in both draft v2 and draft v3, 76 changed split; 97 items are new.
 split will be assigned once, at freeze, from the final set (EVAL §2: "assigned once by seed and
 then frozen"), and recorded with the tag.
 **What I tried:** Counted the changes against the committed v2 draft.
-**Resolution:** Reported to the owner. Option if wanted: make assignment sticky (keep each
-surviving item's earlier split where the per-type quotas allow, fill new items by seed).
+**Resolution:** Owner's decision (2026-10-05): leave it as is, not sticky. The split is assigned
+once, at freeze, stratified by attack type (and spread across companies within each type),
+from the final item set; the seed and a SHA-256 hash of the sorted item IDs and spec IDs are
+recorded with the freeze tag. Draft splits before freeze carry no meaning.
 **Lesson:** Say plainly which outputs are recomputed on every rebuild.
 **Linked decision:** D-005
+
+### H-024 — Pre-review checks on draft v3
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** Six checks before the hand review, no model calls
+(`data/gold/draft/prescreen_v3_checks.json`):
+1. Multi-filing ambiguity (NVDA, GOOGL, PFE, BAC, non-restated items, including both years of
+   false-premise items): 0 items have a different value at printed precision in another corpus
+   filing.
+2. (a) Absence search over every corpus filing: 10 unanswerable items have more than one filing;
+   2 get a hit. FG-0082 (PFE, Q1 fiscal 2025 basic EPS): the FY2024 10-K has "Selected Quarterly
+   Financial Data", but for 2024 quarters only, not 2025. FG-0084 (PFE, fiscal 2019 total
+   revenue): the FY2023 10-K mentions "royalties on net sales" in a note within 300 characters
+   of "2019". Neither figure is in any filing, but both fail the absence rule as written. (b)
+   Old-period table check: a loose version (any cell containing the year) flagged FG-0084 in
+   all three PFE filings, from the glossary table ("COVID-19 | novel coronavirus disease of
+   2019"); with the year required as a header cell, 0 of 19 old-period items fail.
+3. Trap distance: scorer tolerance is 0.5% relative (EVAL §3). 7 `period_mismatch` items have a
+   trap value within 2% of gold: FG-0188 (PG revenue, 0.29%, inside the tolerance), FG-0153
+   and FG-0154 (AAPL EPS, 0.8%), FG-0186 and FG-0187 (PG EPS, 1.2% and 1.7%), FG-0194 (V net
+   income, 1.6%), FG-0175 (WMT operating cash flow, 2.0%). None is equal at 3 significant
+   figures. Five are in the review sheet (FG-0153, 0186, 0187, 0188, 0194).
+4. False-premise rows with a second figure: 6; 5 do not name the line; for all 6 the second
+   line also contradicts the premise.
+5. Possessive before a label that names the company: 16 draft questions (4 in the sheet).
+6. Style limitation logged in EVAL §8.
+**Resolution:** Applied: 4, 5, 6 (D-040). Proposed, pending the owner: for 3, require the trap
+value to differ from gold by more than 2% and at 3 significant figures, and replace the 7 from
+the same subtype's pool; for 2a, either apply the absence rule to every corpus filing as
+written (replace FG-0082 and FG-0084 from the old-period pool) or restrict the search to the
+asked period. No item changed.
+**Linked decision:** D-040

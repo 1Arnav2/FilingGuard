@@ -185,6 +185,10 @@ Each unsupported claim gets one label:
   (D-030). Such a row can be in an MD&A summary table rather than the primary statement; the
   value is the same, but "on a primary statement line" is approximated by the row label, not
   proven.
+- Question style (D-040): `false_premise` items are the only driver-style questions ("what
+  drove…", "what factors…"); every other type asks for a figure. A system could tell the type
+  from the question's style alone, so `false_premise` results may partly reflect that cue
+  rather than a check of the premise. No true-premise driver questions are in this test set.
 
 ## 9. Optional: timed user study (v1.1 if time is short)
 Five to eight participants, ten answers each, half with verifier evidence shown. Measure

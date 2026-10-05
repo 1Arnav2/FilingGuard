@@ -9,6 +9,7 @@ import re
 from typing import Any
 
 from filingguard.llm.client import LLMClient
+from filingguard.redteam.corpus import COMPANY_NAMES
 from filingguard.redteam.spec import ItemSpec
 
 PHRASING_VERSION = "redteam_phrasing_v1"
@@ -72,6 +73,18 @@ def phrase_batch(llm: LLMClient, batch: list[ItemSpec]) -> tuple[dict[str, str],
             questions[spec_id] = row["question"].strip()
     usage = response.raw.get("usage_metadata", {})
     return questions, {"cached": response.cached, "usage": usage, "prompt_version": PHRASING_VERSION}
+
+
+def drop_redundant_possessive(question: str, company: str, label: str) -> str:
+    """Remove "<Company>'s " before a metric label that already names the company ("What was
+    Walmart's Total Walmart shareholders' equity" -> "What was Total Walmart shareholders' equity").
+    A string edit only; nothing else in the question changes."""
+    if not any(name.lower() in label.lower() for name in COMPANY_NAMES[company]):
+        return question
+    for alias in COMPANY_NAMES[company]:
+        question = re.sub(rf"{re.escape(alias)}['\u2019]s\s+(?={re.escape(label[:12])})", "", question,
+                          count=1, flags=re.IGNORECASE)
+    return question
 
 
 def check_question(spec: ItemSpec, question: str | None) -> list[str]:

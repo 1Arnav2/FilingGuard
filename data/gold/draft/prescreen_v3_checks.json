@@ -1,0 +1,343 @@
+{
+  "multi_filing_ambiguous": [],
+  "absence_hits_other_filings": [
+    {
+      "id": "FG-0082",
+      "subtype": "single_quarter",
+      "company": "PFE",
+      "filing": "0000078003-25-000054",
+      "hit": "quarterly financial",
+      "context": "ot agree to the total for the year.\nPfizer Inc. | 2024 Form 10-K | 105\nSelected Quarterly Financial Data (Unaudited)\nPfizer Inc. and Subsidiary Companies\nQuarte",
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0084",
+      "subtype": "old_period",
+      "company": "PFE",
+      "filing": "0000078003-24-000039",
+      "hit": "net sales",
+      "context": " of the agreement or estimated commercial life of the product, and royalties on net sales will be recorded as Cost of sales when incurred.\nNote 3. Restructuring",
+      "in_review_sheet": false
+    }
+  ],
+  "absence_items_checked_in_other_filings": 10,
+  "old_period_items_checked": 19,
+  "old_period_table_failures": [
+    {
+      "id": "FG-0084",
+      "company": "PFE",
+      "year": "2019",
+      "filing": "0000078003-26-000026",
+      "table_first_lines": [
+        "* | Indicates calculation not meaningful or results are greater than 100%",
+        "Form 10-K | This Annual Report on Form 10-K for the fiscal year ended December 31, 2025",
+        "2024 Form 10-K | Our Annual Report on Form 10-K for the fiscal year ended December 31, 2024"
+      ],
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0084",
+      "company": "PFE",
+      "year": "2019",
+      "filing": "0000078003-25-000054",
+      "table_first_lines": [
+        "* | Indicates calculation not meaningful or results are greater than 100%",
+        "Form 10-K | This Annual Report on Form 10-K for the fiscal year ended December 31, 2024",
+        "2023 Form 10-K | Our Annual Report on Form 10-K for the fiscal year ended December 31, 2023"
+      ],
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0084",
+      "company": "PFE",
+      "year": "2019",
+      "filing": "0000078003-24-000039",
+      "table_first_lines": [
+        "Form 10-K | This Annual Report on Form 10-K for the fiscal year ended December 31, 2023",
+        "2022 Form 10-K | Our Annual Report on Form 10-K for the fiscal year ended December 31, 2022",
+        "Proxy Statement | Proxy Statement for the 2024 Annual Meeting of Shareholders, which will be filed no later than 120 days after December 31, 2023"
+      ],
+      "in_review_sheet": false
+    }
+  ],
+  "scorer_tolerance": 0.005,
+  "trap_too_close": [
+    {
+      "id": "FG-0153",
+      "subtype": "calendar_wording",
+      "company": "AAPL",
+      "metric": "diluted earnings per share",
+      "gold": 6.13,
+      "trap": 6.08,
+      "trap_fiscal_year": "2024-09-28",
+      "rel_diff": 0.0082,
+      "within_tolerance": false,
+      "same_at_3sf": false,
+      "in_review_sheet": true
+    },
+    {
+      "id": "FG-0154",
+      "subtype": "calendar_wording",
+      "company": "AAPL",
+      "metric": "basic earnings per share",
+      "gold": 6.16,
+      "trap": 6.11,
+      "trap_fiscal_year": "2024-09-28",
+      "rel_diff": 0.0081,
+      "within_tolerance": false,
+      "same_at_3sf": false,
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0175",
+      "subtype": "calendar_wording",
+      "company": "WMT",
+      "metric": "net cash provided by operating activities",
+      "gold": 36443000000.0,
+      "trap": 35726000000.0,
+      "trap_fiscal_year": "2024-01-31",
+      "rel_diff": 0.0197,
+      "within_tolerance": false,
+      "same_at_3sf": false,
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0186",
+      "subtype": "start_month",
+      "company": "PG",
+      "metric": "basic earnings per share",
+      "gold": 6.75,
+      "trap": 6.67,
+      "trap_fiscal_year": 2025,
+      "rel_diff": 0.0119,
+      "within_tolerance": false,
+      "same_at_3sf": false,
+      "in_review_sheet": true
+    },
+    {
+      "id": "FG-0187",
+      "subtype": "start_month",
+      "company": "PG",
+      "metric": "diluted earnings per share",
+      "gold": 6.62,
+      "trap": 6.51,
+      "trap_fiscal_year": 2025,
+      "rel_diff": 0.0166,
+      "within_tolerance": false,
+      "same_at_3sf": false,
+      "in_review_sheet": true
+    },
+    {
+      "id": "FG-0188",
+      "subtype": "start_month",
+      "company": "PG",
+      "metric": "total revenue",
+      "gold": 84284000000.0,
+      "trap": 84039000000.0,
+      "trap_fiscal_year": 2024,
+      "rel_diff": 0.0029,
+      "within_tolerance": true,
+      "same_at_3sf": false,
+      "in_review_sheet": true
+    },
+    {
+      "id": "FG-0194",
+      "subtype": "start_month",
+      "company": "V",
+      "metric": "net income",
+      "gold": 20058000000.0,
+      "trap": 19743000000.0,
+      "trap_fiscal_year": 2024,
+      "rel_diff": 0.0157,
+      "within_tolerance": false,
+      "same_at_3sf": false,
+      "in_review_sheet": true
+    }
+  ],
+  "false_premise_second_figure_rows": [
+    {
+      "id": "FG-0225",
+      "subtype": "sign_flip",
+      "company": "WMT",
+      "question_names_line": false,
+      "gold_line": "Consolidated net income attributable to Walmart",
+      "gold_values": {
+        "2025": 19436000000.0,
+        "2026": 21893000000.0
+      },
+      "other_line_values": {
+        "2025": 20157000000.0,
+        "2026": 22270000000.0
+      },
+      "other_line_contradicts_premise": true,
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0229",
+      "subtype": "direction_flip",
+      "company": "KO",
+      "question_names_line": true,
+      "gold_line": "Net Income Attributable to Shareowners of The Coca-Cola Company",
+      "gold_values": {
+        "2024": 10631000000.0,
+        "2025": 13107000000.0
+      },
+      "other_line_values": {
+        "2024": 10649000000.0,
+        "2025": 13137000000.0
+      },
+      "other_line_contradicts_premise": true,
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0235",
+      "subtype": "sign_flip",
+      "company": "PFE",
+      "question_names_line": false,
+      "gold_line": "Net income attributable to Pfizer Inc. common shareholders",
+      "gold_values": {
+        "2023": 2119000000.0,
+        "2024": 8031000000.0
+      },
+      "other_line_values": {
+        "2023": 2158000000.0,
+        "2024": 8062000000.0
+      },
+      "other_line_contradicts_premise": true,
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0238",
+      "subtype": "sign_flip",
+      "company": "XOM",
+      "question_names_line": false,
+      "gold_line": "Net income (loss) attributable to ExxonMobil",
+      "gold_values": {
+        "2024": 33680000000.0,
+        "2025": 28844000000.0
+      },
+      "other_line_values": {
+        "2024": 35063000000.0,
+        "2025": 29764000000.0
+      },
+      "other_line_contradicts_premise": true,
+      "in_review_sheet": true
+    },
+    {
+      "id": "FG-0239",
+      "subtype": "sign_flip",
+      "company": "CVX",
+      "question_names_line": false,
+      "gold_line": "Net Income (Loss) Attributable to Chevron Corporation",
+      "gold_values": {
+        "2024": 17661000000.0,
+        "2025": 12299000000.0
+      },
+      "other_line_values": {
+        "2024": 17749000000.0,
+        "2025": 12485000000.0
+      },
+      "other_line_contradicts_premise": true,
+      "in_review_sheet": true
+    },
+    {
+      "id": "FG-0242",
+      "subtype": "sign_flip",
+      "company": "BA",
+      "question_names_line": false,
+      "gold_line": "Net earnings/(loss) attributable to Boeing shareholders",
+      "gold_values": {
+        "2023": -2222000000.0,
+        "2024": -11817000000.0
+      },
+      "other_line_values": {
+        "2023": -2242000000.0,
+        "2024": -11829000000.0
+      },
+      "other_line_contradicts_premise": true,
+      "in_review_sheet": true
+    }
+  ],
+  "possessive_before_company_label": [
+    {
+      "id": "FG-0019",
+      "question": "What was Walmart's Total Walmart shareholders' equity as of the end of fiscal 2026?",
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0032",
+      "question": "What was Pfizer's Total Pfizer Inc. shareholders' equity as of the end of fiscal 2024?",
+      "in_review_sheet": true
+    },
+    {
+      "id": "FG-0036",
+      "question": "What was ExxonMobil's net income (loss) attributable to ExxonMobil for fiscal 2023?",
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0037",
+      "question": "What was ExxonMobil's net income (loss) attributable to ExxonMobil for fiscal 2024?",
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0117",
+      "question": "What was Oracle's Total Oracle Corporation stockholders' equity as of the end of fiscal 2026, expressed in billions of dollars?",
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0128",
+      "question": "What was Procter & Gamble's net earnings attributable to Procter & Gamble for fiscal 2025, expressed in dollars?",
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0132",
+      "question": "In billions of dollars, what was Pfizer's net income attributable to Pfizer Inc. common shareholders for fiscal 2023?",
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0135",
+      "question": "In thousands of dollars, what was UnitedHealth's net earnings attributable to UnitedHealth Group common shareholders for fiscal 2023?",
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0143",
+      "question": "What was Disney's net income attributable to The Walt Disney Company (Disney) for fiscal 2023, expressed in billions of dollars?",
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0192",
+      "question": "What was Disney's net income attributable to Disney for the fiscal year that began in October 2023?",
+      "in_review_sheet": true
+    },
+    {
+      "id": "FG-0229",
+      "question": "What primary factors drove the decline in Coca-Cola's Net Income Attributable to Shareowners of The Coca-Cola Company in fiscal 2025 compared with fiscal 2024?",
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0275",
+      "question": "What was Coca-Cola's Total Equity Attributable to Shareowners of The Coca-Cola Company as of the end of fiscal 2025?",
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0278",
+      "question": "What were Procter & Gamble's net earnings attributable to Procter & Gamble for fiscal 2026?",
+      "in_review_sheet": true
+    },
+    {
+      "id": "FG-0281",
+      "question": "What was Pfizer's net income attributable to Pfizer Inc. common shareholders for fiscal 2025?",
+      "in_review_sheet": false
+    },
+    {
+      "id": "FG-0287",
+      "question": "What was Chevron's Total Chevron Corporation Stockholders' Equity as of the end of fiscal 2025?",
+      "in_review_sheet": true
+    },
+    {
+      "id": "FG-0292",
+      "question": "What was Disney's Total Disney Shareholders' equity as of the end of fiscal 2025?",
+      "in_review_sheet": false
+    }
+  ]
+}

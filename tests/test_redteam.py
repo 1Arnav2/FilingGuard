@@ -222,3 +222,11 @@ def test_locate_prefers_a_full_label_to_a_bare_one():
             "Net cash provided by operating activities | 1,234 | 1,100\n")
     hit = locate(text, 1_234_000_000, "USD", METRICS["NetCashProvidedByUsedInOperatingActivities"])
     assert hit.row_label == "Net cash provided by operating activities"
+
+
+def test_possessive_is_dropped_only_before_a_label_that_names_the_company():
+    from filingguard.redteam.phrasing import drop_redundant_possessive as drop
+    assert drop("What was Walmart's Total Walmart shareholders' equity at the end of fiscal 2026?", "WMT",
+                "Total Walmart shareholders' equity") == "What was Total Walmart shareholders' equity at the end of fiscal 2026?"
+    assert drop("What was Apple's total revenue for fiscal 2025?", "AAPL", "total revenue") == \
+        "What was Apple's total revenue for fiscal 2025?"

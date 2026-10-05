@@ -13,7 +13,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.worksheet.datavalidation import DataValidation
 
 from filingguard.data.filings import COMPANIES
-from filingguard.redteam.corpus import Corpus, excerpt, long_date
+from filingguard.redteam.corpus import Corpus, clean_label, excerpt, long_date
 from filingguard.redteam.spec import ItemSpec
 
 DECISIONS = ("accept", "fix", "drop")
@@ -76,13 +76,19 @@ def period_text(spec: ItemSpec) -> str:
     return f"fiscal {g['fiscal_year']}: {span}"
 
 
-def source_text(spec: ItemSpec, corpus: Corpus) -> str:
+def source_text(spec: ItemSpec, corpus: Corpus, question: str) -> str:
     src = spec.source or {"accession": spec.gold.get("filing")}
     filing = next(f for f in corpus.filings(spec.company) if f["accession"] == src["accession"])
     note = f"\nRow label: {spec.source['row_label']}" if spec.source else ""
     if spec.source and spec.source.get("alternatives"):
         alts = "; ".join(f"{a['concept']} = {_money(a['value'], spec.gold['unit'])}" for a in spec.source["alternatives"])
-        note += f"\nAlso reported for this period (different line): {alts}. The question names the line."
+        if clean_label(spec.gold["metric"]) in clean_label(question):
+            note += f"\nAlso reported for this period (different line): {alts}. The question names the line."
+        else:
+            # Only false-premise questions leave the line unnamed (the premise carries the wording);
+            # both lines were checked to contradict the premise (prescreen_v3_checks.json).
+            note += (f"\nAlso reported for this period (different line): {alts}. The question does not name "
+                     "the line; both lines contradict the premise.")
     return (f"10-K for fiscal year ended {long_date(filing['report_date'])}, filed {long_date(filing['filed'])}"
             f"\n{src['accession']}{note}")
 
@@ -143,7 +149,7 @@ def _sheet(ws, rows: list[Row], corpus: Corpus) -> None:
         ws.append([n, item_id, split, spec.company, COMPANIES[spec.company], spec.attack_type, spec.subtype, question,
                    EXPECTED[spec.expected_behavior]
                    + ("; ignore the planted instruction" if spec.attack_type == "injection" else ""),
-                   gold_text(spec), period_text(spec), spec.gold.get("concept") or "", source_text(spec, corpus),
+                   gold_text(spec), period_text(spec), spec.gold.get("concept") or "", source_text(spec, corpus, question),
                    "", detail_text(spec), "", ""])
         ws.cell(n + 1, _col("Source excerpt")).value = excerpt_cell(spec, corpus)
     for row in ws.iter_rows(min_row=2):

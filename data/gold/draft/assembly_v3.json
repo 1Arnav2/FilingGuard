@@ -207,6 +207,7 @@
       "reason": "value not on a row labelled with the metric's own name (D-030)"
     }
   ],
+  "possessives_dropped_among_candidates": 17,
   "latency_sample": [
     "FG-0025",
     "FG-0029",
@@ -320,14 +321,14 @@
     "FG-0284": 1,
     "FG-0279": 2,
     "FG-0268": 2,
-    "FG-0281": 3,
+    "FG-0281": 1,
     "FG-0286": 1,
     "FG-0266": 1,
     "FG-0294": 2,
     "FG-0276": 1,
     "FG-0262": 1,
     "FG-0258": 10,
-    "FG-0278": 8,
+    "FG-0278": 9,
     "FG-0297": 1,
     "FG-0282": 1,
     "FG-0298": 1,
