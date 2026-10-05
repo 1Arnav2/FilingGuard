@@ -26,9 +26,11 @@ One phase per working session. Each phase ends with: tests pass, roadmap ticked,
 ## Phase 2 — Target agent (1 to 2 days)
 - [x] `TargetAgent` interface and `AgentAnswer` schema
 - [x] 10-K RAG agent with citations, behind FastAPI
-- [ ] Smoke test on 10 hand-written questions (7/10 run; blocked by H-006)
+- [x] Smoke test on 10 hand-written questions (10/10 with citations)
 - [x] Added: retrieval hit rate on smoke + two held-out sets; keyword search added (D-023)
-- [ ] Owner confirms model/quota (H-006) and retriever (D-023); re-run smoke; freeze target
+- [x] Owner confirms model/quota (D-024) and retriever (D-023); finish smoke; freeze target
+      (tag `target-v1`)
+- [x] Added: spend tracker with $5 warning and $7 hard cap; pricing config (D-024)
 - **Done when:** the agent answers the smoke set with citations and logs a trace.
 
 ## Phase 3 — Red-team and test set (2 days)

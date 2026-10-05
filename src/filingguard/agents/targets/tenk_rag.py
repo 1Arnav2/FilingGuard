@@ -147,6 +147,7 @@ class TenKRagAgent:
         prompt = INSTRUCTIONS.format(company=company, question=question, excerpts=format_excerpts(hits, self.report_dates))
         response = self.llm.generate(
             prompt,
+            purpose="target",
             temperature=0,
             response_mime_type="application/json",
             response_json_schema=RESPONSE_SCHEMA,

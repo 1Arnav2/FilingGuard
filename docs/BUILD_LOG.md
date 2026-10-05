@@ -16,6 +16,29 @@ of every session.
 
 ---
 
+## 2026-10-04 — Phase 2 complete: smoke test finished, target frozen
+**Built:** Ran smoke questions SM-08 to SM-10 on the standard API (the first 7 replayed from
+cache at no cost). Added a `"target"` label to the agent's spend-ledger entries; it is not
+part of the cache key (replay confirmed: 10/10 cached, spend unchanged).
+**Tests:** 72 offline tests pass.
+**Final smoke results** (`results/smoke/smoke_v1_summary.json`): 10/10 answered, 10/10 with
+citations, 10/10 give the expected figure, 16/16 quotes found verbatim in the filing text,
+0 parse errors, 0 abstentions. Latency 2.6–19.9 s per question (original API time).
+**Final retrieval hit rate of the frozen target** (interleaved keyword + dense, k = 20;
+`results/smoke/retrieval.json`): smoke 10/10, held-out set 1 10/10, held-out set 2 (fresh)
+7/10; all 30 questions 27/30 (95% CI 74–97%).
+**Target frozen** at git tag `target-v1`. From here on the target agent's model
+(`gemini-3.8-flash`), prompt (`tenk_rag_v1`), retriever (interleaved BM25 + dense, k = 20,
+BM25 k1 = 1.2, b = 0.75, `jinaai/jina-embeddings-v2-small-en` index) and settings
+(temperature 0, JSON output schema, default thinking) do not change.
+**Broken or unfinished:** The S1/S2/S3 budget decision (H-008) is still open and must be
+settled before any Phase 3 model call.
+**Numbers worth keeping:** Smoke cost $0.0545 for 3 paid calls (59,852 input tokens, 2,575
+output tokens).
+**Spend so far:** $0.0545 (`results/spend/total.json`); warning $5, hard cap $7.
+**Next session starts with:** The owner's S1/S2/S3 budget decision; then Phase 3.
+**Commit:** Phase 2: smoke test complete, target frozen (tag target-v1)
+
 ## 2026-10-04 — Phase 2 continued: budget controls (paused, not complete)
 **Built:** `config/pricing.json` (gemini-3.8-flash $0.75 / $3.75 per 1M input / output tokens
 to 2026-12-31, $1.50 / $7.50 from 2027-01-01; source ai.google.dev/gemini-api/docs/pricing).

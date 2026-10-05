@@ -6,34 +6,24 @@
     "k": 20
   },
   "questions": 10,
-  "run": 7,
-  "not_run": [
-    {
-      "id": "SM-08",
-      "error": "429 RESOURCE_EXHAUSTED"
-    },
-    {
-      "id": "SM-09",
-      "error": "429 RESOURCE_EXHAUSTED"
-    },
-    {
-      "id": "SM-10",
-      "error": "429 RESOURCE_EXHAUSTED"
-    }
-  ],
-  "answered": 7,
-  "with_citations": 7,
-  "citations_total": 12,
-  "quotes_found_verbatim": 12,
-  "mentions_expected": 7,
+  "run": 10,
+  "not_run": [],
+  "answered": 10,
+  "with_citations": 10,
+  "citations_total": 16,
+  "quotes_found_verbatim": 16,
+  "mentions_expected": 10,
   "parse_errors": 0,
   "latency_s": [
-    3.669,
-    3.934,
-    6.472,
+    2.624,
+    2.838,
+    3.668,
+    3.92,
+    3.935,
+    6.471,
     13.977,
     14.845,
-    19.905,
-    19.939
+    19.906,
+    19.94
   ]
 }
