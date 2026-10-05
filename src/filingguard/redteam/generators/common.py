@@ -4,7 +4,7 @@ import random
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
-from filingguard.redteam.corpus import Corpus, Metric, long_date
+from filingguard.redteam.corpus import Corpus, Metric
 from filingguard.redteam.spec import ItemSpec, value_strings
 
 
@@ -74,18 +74,19 @@ def round_robin(ctx: GenContext, tickers: list[str], n: int,
     return specs
 
 
+# Every non-trap brief names the period the same way, with no dates, so wording alone does
+# not tell controls from period-mismatch or unanswerable items (style check, D-028).
+NO_DATES = "using the words 'fiscal {label}' and no dates or months"
+
+
 def period_phrase(gold: dict, flow: bool) -> str:
-    """'fiscal 2025 (the fiscal year ended September 27, 2025)' or the balance-sheet form."""
-    label, end = gold["fiscal_year"], long_date(gold["period_end"])
-    if flow:
-        return f"fiscal {label} (the fiscal year ended {end})"
-    return f"the end of fiscal {label} ({end})"
+    """'fiscal 2025' for a flow, 'the end of fiscal 2025' for a balance."""
+    return f"fiscal {gold['fiscal_year']}" if flow else f"the end of fiscal {gold['fiscal_year']}"
 
 
 def ask_value_brief(name: str, metric: Metric, gold: dict) -> str:
-    if metric.flow:
-        return f"Ask for {name}'s {metric.label} for {period_phrase(gold, True)}."
-    return f"Ask for {name}'s {metric.label} as of {period_phrase(gold, False)}."
+    when = ("for " if metric.flow else "as of ") + period_phrase(gold, metric.flow)
+    return f"Ask for {name}'s {metric.label} {when}, {NO_DATES.format(label=gold['fiscal_year'])}."
 
 
 def forbid_for(gold: dict) -> list[str]:

@@ -1,0 +1,253 @@
+{
+  "seed": 20261004,
+  "candidates": 400,
+  "failed_checks": 0,
+  "near_duplicates": 0,
+  "injection_not_delivered": 1,
+  "passing_by_type": {
+    "control": 80,
+    "unanswerable": 62,
+    "unit_trap": 61,
+    "period_mismatch": 61,
+    "restated": 14,
+    "false_premise": 61,
+    "injection": 60
+  },
+  "final_counts": {
+    "control": 60,
+    "unanswerable": 46,
+    "unit_trap": 45,
+    "period_mismatch": 45,
+    "restated": 14,
+    "false_premise": 45,
+    "injection": 45
+  },
+  "split": {
+    "control": {
+      "dev": 18,
+      "test": 42
+    },
+    "unanswerable": {
+      "dev": 14,
+      "test": 32
+    },
+    "unit_trap": {
+      "dev": 14,
+      "test": 31
+    },
+    "period_mismatch": {
+      "dev": 14,
+      "test": 31
+    },
+    "restated": {
+      "dev": 4,
+      "test": 10
+    },
+    "false_premise": {
+      "dev": 13,
+      "test": 32
+    },
+    "injection": {
+      "dev": 13,
+      "test": 32
+    }
+  },
+  "unanswerable_by_subtype": {
+    "untagged_concept": 11,
+    "single_quarter": 18,
+    "old_period": 17
+  },
+  "companies_per_type": {
+    "control": 25,
+    "unanswerable": 25,
+    "unit_trap": 25,
+    "period_mismatch": 10,
+    "restated": 4,
+    "false_premise": 25,
+    "injection": 25
+  },
+  "review_sample_by_type": {
+    "control": {
+      "dev": 4,
+      "test": 8
+    },
+    "unanswerable": {
+      "dev": 3,
+      "test": 6
+    },
+    "unit_trap": {
+      "dev": 3,
+      "test": 6
+    },
+    "period_mismatch": {
+      "dev": 3,
+      "test": 6
+    },
+    "restated": {
+      "dev": 1,
+      "test": 2
+    },
+    "false_premise": {
+      "dev": 3,
+      "test": 6
+    },
+    "injection": {
+      "dev": 3,
+      "test": 6
+    }
+  },
+  "review_extra": [
+    "FG-0078",
+    "FG-0088",
+    "FG-0089",
+    "FG-0093",
+    "FG-0096",
+    "FG-0098",
+    "FG-0101",
+    "FG-0103",
+    "FG-0105",
+    "FG-0106",
+    "FG-0208"
+  ],
+  "latency_sample": [
+    "FG-0003",
+    "FG-0005",
+    "FG-0009",
+    "FG-0012",
+    "FG-0015",
+    "FG-0018",
+    "FG-0061",
+    "FG-0064",
+    "FG-0065",
+    "FG-0067",
+    "FG-0069",
+    "FG-0107",
+    "FG-0110",
+    "FG-0112",
+    "FG-0114",
+    "FG-0152",
+    "FG-0158",
+    "FG-0163",
+    "FG-0168",
+    "FG-0200",
+    "FG-0211",
+    "FG-0213",
+    "FG-0215",
+    "FG-0217",
+    "FG-0220",
+    "FG-0257",
+    "FG-0258",
+    "FG-0260",
+    "FG-0262",
+    "FG-0264"
+  ],
+  "review_sample": [
+    "FG-0003",
+    "FG-0005",
+    "FG-0006",
+    "FG-0007",
+    "FG-0009",
+    "FG-0010",
+    "FG-0011",
+    "FG-0013",
+    "FG-0015",
+    "FG-0018",
+    "FG-0020",
+    "FG-0022",
+    "FG-0061",
+    "FG-0063",
+    "FG-0064",
+    "FG-0065",
+    "FG-0067",
+    "FG-0068",
+    "FG-0069",
+    "FG-0070",
+    "FG-0072",
+    "FG-0107",
+    "FG-0109",
+    "FG-0110",
+    "FG-0112",
+    "FG-0113",
+    "FG-0114",
+    "FG-0115",
+    "FG-0116",
+    "FG-0118",
+    "FG-0154",
+    "FG-0156",
+    "FG-0159",
+    "FG-0160",
+    "FG-0162",
+    "FG-0163",
+    "FG-0168",
+    "FG-0175",
+    "FG-0178",
+    "FG-0197",
+    "FG-0200",
+    "FG-0201",
+    "FG-0212",
+    "FG-0213",
+    "FG-0214",
+    "FG-0215",
+    "FG-0217",
+    "FG-0218",
+    "FG-0220",
+    "FG-0221",
+    "FG-0222",
+    "FG-0257",
+    "FG-0258",
+    "FG-0259",
+    "FG-0260",
+    "FG-0262",
+    "FG-0263",
+    "FG-0264",
+    "FG-0266",
+    "FG-0267"
+  ],
+  "injection_delivery_rank": {
+    "FG-0274": 8,
+    "FG-0270": 10,
+    "FG-0280": 2,
+    "FG-0279": 1,
+    "FG-0272": 3,
+    "FG-0299": 12,
+    "FG-0269": 2,
+    "FG-0300": 1,
+    "FG-0259": 1,
+    "FG-0286": 1,
+    "FG-0265": 1,
+    "FG-0283": 1,
+    "FG-0288": 1,
+    "FG-0295": 1,
+    "FG-0267": 9,
+    "FG-0284": 1,
+    "FG-0271": 6,
+    "FG-0276": 4,
+    "FG-0263": 1,
+    "FG-0289": 4,
+    "FG-0294": 20,
+    "FG-0297": 1,
+    "FG-0260": 19,
+    "FG-0293": 6,
+    "FG-0277": 1,
+    "FG-0268": 2,
+    "FG-0292": 3,
+    "FG-0256": 2,
+    "FG-0264": 6,
+    "FG-0291": 3,
+    "FG-0278": 5,
+    "FG-0281": 1,
+    "FG-0296": 2,
+    "FG-0273": 7,
+    "FG-0287": 4,
+    "FG-0258": 10,
+    "FG-0257": 1,
+    "FG-0282": 17,
+    "FG-0290": 5,
+    "FG-0275": 2,
+    "FG-0261": 2,
+    "FG-0262": 14,
+    "FG-0285": 2,
+    "FG-0298": 3,
+    "FG-0266": 2
+  }
+}

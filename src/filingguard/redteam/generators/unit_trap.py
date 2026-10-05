@@ -1,6 +1,6 @@
 """`unit_trap`: ask for a figure in a scale other than the one the filing prints it in."""
 
-from filingguard.redteam.generators.common import GenContext, claim, cycle, forbid_for, located_facts, period_phrase, round_robin
+from filingguard.redteam.generators.common import NO_DATES, GenContext, claim, cycle, forbid_for, located_facts, period_phrase, round_robin
 from filingguard.redteam.spec import ItemSpec
 
 # requested scale -> (divisor from base units, wording for the brief, phrases the question must use)
@@ -32,7 +32,8 @@ def generate(ctx: GenContext, n: int) -> list[ItemSpec]:
         return ItemSpec(
             attack_type="unit_trap", subtype=f"{gold['printed_scale']}_to_{requested}", company=ticker,
             expected_behavior="answer", gold=gold, source=fact["source"],
-            brief=f"Ask for {name}'s {metric.label} {when}, and ask for the figure expressed in {wording}.",
+            brief=f"Ask for {name}'s {metric.label} {when}, {NO_DATES.format(label=gold['fiscal_year'])}, and ask "
+                  f"for the figure expressed in {wording}.",
             must_include=[[str(gold["fiscal_year"])], phrases],
             forbid=forbid_for(gold) + [f"{in_requested:,.0f}", f"{in_requested:,.1f}", f"{in_requested:,.2f}"],
         )

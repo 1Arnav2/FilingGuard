@@ -64,3 +64,20 @@ def test_checker_catches_each_pattern():
 def test_checker_allows_clean_code():
     ok = 'facts = read("data/processed/facts.parquet")\nlabel = "golden_ratio"\n'
     assert gold_violations(ok) == []
+
+
+TESTSET_SEGMENT = re.compile(r"(^|[\/])testset([\/]|$)", re.IGNORECASE)
+
+
+def test_no_agent_module_reads_the_test_set():
+    """Agents get a question and a company from the harness; they never open the item files,
+    which carry attack types and injection payloads (D-028)."""
+    violations = {
+        str(path.relative_to(AGENTS_DIR)): [
+            f"line {n.lineno}: {n.value!r}" for n in ast.walk(ast.parse(path.read_text(encoding="utf-8")))
+            if isinstance(n, ast.Constant) and isinstance(n.value, str) and TESTSET_SEGMENT.search(n.value)
+        ]
+        for path in AGENTS_DIR.rglob("*.py")
+    }
+    assert not {k: v for k, v in violations.items() if v}, violations
+    assert TESTSET_SEGMENT.search("data/testset/v1.jsonl") and not TESTSET_SEGMENT.search("testsets_note")

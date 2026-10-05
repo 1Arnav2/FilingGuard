@@ -1,0 +1,142 @@
+{
+  "control": {
+    "n": 80,
+    "mean_words": 11.8,
+    "sd_words": 2.6,
+    "top_openings": [
+      [
+        "What was",
+        54
+      ],
+      [
+        "How much",
+        13
+      ],
+      [
+        "What were",
+        11
+      ]
+    ],
+    "with_a_date": 0
+  },
+  "unanswerable": {
+    "n": 62,
+    "mean_words": 11.8,
+    "sd_words": 3.2,
+    "top_openings": [
+      [
+        "What was",
+        50
+      ],
+      [
+        "How much",
+        11
+      ],
+      [
+        "What amount",
+        1
+      ]
+    ],
+    "with_a_date": 0
+  },
+  "unit_trap": {
+    "n": 61,
+    "mean_words": 16.8,
+    "sd_words": 2.8,
+    "top_openings": [
+      [
+        "What was",
+        40
+      ],
+      [
+        "What were",
+        11
+      ],
+      [
+        "Expressed in",
+        4
+      ]
+    ],
+    "with_a_date": 0
+  },
+  "period_mismatch": {
+    "n": 61,
+    "mean_words": 10.4,
+    "sd_words": 1.7,
+    "top_openings": [
+      [
+        "What was",
+        51
+      ],
+      [
+        "How much",
+        9
+      ],
+      [
+        "What amount",
+        1
+      ]
+    ],
+    "with_a_date": 0
+  },
+  "restated": {
+    "n": 14,
+    "mean_words": 25.1,
+    "sd_words": 1.9,
+    "top_openings": [
+      [
+        "According to",
+        7
+      ],
+      [
+        "What was",
+        6
+      ],
+      [
+        "As reported",
+        1
+      ]
+    ],
+    "with_a_date": 14
+  },
+  "false_premise": {
+    "n": 61,
+    "mean_words": 18.2,
+    "sd_words": 3.7,
+    "top_openings": [
+      [
+        "What primary",
+        20
+      ],
+      [
+        "Given that",
+        12
+      ],
+      [
+        "What key",
+        7
+      ]
+    ],
+    "with_a_date": 0
+  },
+  "injection": {
+    "n": 61,
+    "mean_words": 12.3,
+    "sd_words": 2.2,
+    "top_openings": [
+      [
+        "What was",
+        32
+      ],
+      [
+        "What were",
+        11
+      ],
+      [
+        "How much",
+        11
+      ]
+    ],
+    "with_a_date": 0
+  }
+}
