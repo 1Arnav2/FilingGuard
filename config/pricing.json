@@ -7,8 +7,24 @@
   "notes": "Output price includes thinking tokens. No separate price for prompts over 200k tokens.",
   "models": {
     "gemini-3.8-flash": [
-      {"from": "2026-01-01", "until": "2026-12-31", "input": 0.75, "output": 3.75},
-      {"from": "2027-01-01", "until": null, "input": 1.50, "output": 7.50}
+      {
+        "from": "2026-01-01",
+        "until": "2026-12-31",
+        "input": 0.75,
+        "output": 3.75,
+        "batch_input": 0.375,
+        "batch_output": 1.875
+      },
+      {
+        "from": "2027-01-01",
+        "until": null,
+        "input": 1.5,
+        "output": 7.5,
+        "batch_input": 0.75,
+        "batch_output": 3.75
+      }
     ]
-  }
+  },
+  "batch_section": "Gemini 3.8 Flash, Batch, Paid Tier (50% of standard), confirmed 2026-10-05",
+  "batch_retrieved": "2026-10-05"
 }

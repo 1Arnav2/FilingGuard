@@ -35,14 +35,18 @@ class Price:
     output_per_1m: float
 
 
-def price_for(model: str, on: date, pricing_path: Path = PRICING_PATH) -> Price:
-    """Price in force for `model` on `on`. Raises if the model or date is not priced."""
+def price_for(model: str, on: date, pricing_path: Path = PRICING_PATH, batch: bool = False) -> Price:
+    """Price in force for `model` on `on`, standard or Batch API (D-025). Raises if the model,
+    date or mode is not priced."""
     pricing = json.loads(Path(pricing_path).read_text(encoding="utf-8"))
+    prefix = "batch_" if batch else ""
     for band in pricing["models"].get(model, []):
         start = date.fromisoformat(band["from"])
         end = date.fromisoformat(band["until"]) if band["until"] else date.max
         if start <= on <= end:
-            return Price(band["input"], band["output"])
+            if f"{prefix}input" not in band:
+                raise KeyError(f"no batch price for {model} on {on}; update {pricing_path}")
+            return Price(band[f"{prefix}input"], band[f"{prefix}output"])
     raise KeyError(f"no price for {model} on {on}; update {pricing_path}")
 
 
@@ -91,25 +95,30 @@ class SpendLedger:
             return json.loads(self._total_path.read_text(encoding="utf-8"))
         return {"calls": 0, "input_tokens": 0, "output_tokens": 0, "cost_usd": 0.0}
 
-    def estimate(self, model: str, prompt: str) -> float:
+    def estimate(self, model: str, prompt: str, batch: bool = False) -> float:
         """Worst-case cost of one call, used for the pre-call check."""
-        price = price_for(model, self.today(), self.pricing_path)
+        price = price_for(model, self.today(), self.pricing_path, batch)
         return call_cost(price, int(len(prompt) / CHARS_PER_TOKEN_FLOOR) + 1, MAX_OUTPUT_TOKENS_ESTIMATE)
 
     def check(self, model: str, prompt: str) -> None:
         """Refuse the call if it could take spend past the hard cap."""
+        self.check_many(model, [prompt])
+
+    def check_many(self, model: str, prompts: list[str], batch: bool = False) -> None:
+        """Refuse a set of calls (one batch job) if their summed worst case could pass the cap."""
         spent = self.total()["cost_usd"]
-        worst = self.estimate(model, prompt)
+        worst = sum(self.estimate(model, p, batch) for p in prompts)
         if spent + worst > self.cap_usd:
             raise BudgetExceeded(
-                f"spend ${spent:.4f} + worst case ${worst:.4f} for this call would pass the "
+                f"spend ${spent:.4f} + worst case ${worst:.4f} for {len(prompts)} call(s) would pass the "
                 f"${self.cap_usd:.2f} cap; stopping"
             )
 
-    def record(self, model: str, raw: dict[str, Any], cache_key: str, purpose: str | None = None) -> float:
+    def record(self, model: str, raw: dict[str, Any], cache_key: str, purpose: str | None = None,
+               batch: bool = False) -> float:
         """Log one paid call and update the running total. Returns its cost."""
         input_tokens, output_tokens = usage_tokens(raw)
-        price = price_for(model, self.today(), self.pricing_path)
+        price = price_for(model, self.today(), self.pricing_path, batch)
         cost = call_cost(price, input_tokens, output_tokens)
         before = self.total()
         after = {
@@ -128,6 +137,8 @@ class SpendLedger:
             "price_per_1m": [price.input_per_1m, price.output_per_1m], "cost_usd": round(cost, 6),
             "running_total_usd": after["cost_usd"],
         }
+        if batch:
+            entry["mode"] = "batch"
         with (self.dir / "ledger.jsonl").open("a", encoding="utf-8") as f:
             f.write(json.dumps(entry) + "\n")
         tmp = self._total_path.with_suffix(".tmp")

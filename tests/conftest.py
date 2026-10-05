@@ -5,7 +5,7 @@ import pytest
 
 from filingguard.llm.spend import SpendLedger
 
-TEST_PRICES = {"input": 1.0, "output": 2.0}  # USD per 1M tokens, for fake models only
+TEST_PRICES = {"input": 1.0, "output": 2.0, "batch_input": 0.5, "batch_output": 1.0}  # USD per 1M, fake models only
 
 
 @pytest.fixture

@@ -47,6 +47,10 @@ One phase per working session. Each phase ends with: tests pass, roadmap ticked,
 - **Done when:** `data/testset/v1.jsonl` is frozen and tagged.
 
 ## Phase 4 — Verifier (1 to 2 days)
+- [ ] Step 1, dev baseline: scorer and §3 tests written before any answer (D-047); dev target
+      batch, 90 items (D-046); premise judge on the 16 dev premise items; baseline dev report
+      and the 90-row score sheet; **owner spot-checks the sheet before anything else**
+- [ ] Owner approves `docs/INJECTION_DETECTOR.md` and the robustness set
 - [ ] Claim extraction
 - [ ] Span, numeric, period, and injection checks with reason codes
 - [ ] Unit tests for every deterministic check
@@ -54,6 +58,12 @@ One phase per working session. Each phase ends with: tests pass, roadmap ticked,
 - **Done when:** verifier is frozen and tagged; dev results logged.
 
 ## Phase 5 — Eval run (1 day)
+**Budget risk (D-051), to be decided by the owner before Phase 5:** projected Phase 5 spend is
+about $3.2–$4.9 (test batch $1.9–$2.7, latency sample about $0.6, judge about $0.25, verifier
+on test $0.4–$1.3). With Phase 4 at about $1.1–$2.8, the project ends near $4.7–$8.2: the $5
+warning will likely trip in Phase 5 and the high end reaches the $7 cap. Options include one
+verifier model call per answer on test, or the test verifier calls through the Batch API.
+Re-projected from measured dev spend at the end of Phase 4.
 - [ ] Baseline and treatment on test split, once
 - [ ] Metrics, intervals, McNemar, bootstrap by type
 - [ ] Failure taxonomy labels

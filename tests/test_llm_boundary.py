@@ -35,3 +35,20 @@ def test_backend_is_only_called_from_generate_after_cache_and_ledger():
     order = [generate.index(s) for s in ("self.cache.get", "self.ledger.check", "self.backend(", "self.ledger.record", "self.cache.put")]
     assert order == sorted(order), "generate must check cache, then ledger, then call, then record and cache"
     assert source.count("self.backend(") == 1
+
+
+def test_batch_path_checks_cache_then_ledger_then_submits_then_records():
+    source = CLIENT.read_text(encoding="utf-8")
+    batch = source[source.index("def generate_batch"):source.index("def batch_answer")]
+    order = [batch.index(s) for s in ("self.cache.get", "self.ledger.check_many", "batch_backend.submit(",
+                                      "self.ledger.record", "self.cache.put")]
+    assert order == sorted(order), "generate_batch must check cache, then ledger, then submit, then record and cache"
+    assert source.count("batch_backend.submit(") == 1
+
+
+def test_replay_and_recorder_never_reach_a_backend():
+    source = CLIENT.read_text(encoding="utf-8")
+    for cls in ("class BatchReplayClient", "class PromptRecorder"):
+        body = source[source.index(cls):]
+        body = body[:body.index("\n\n\n")]
+        assert "backend" not in body and "generate_batch" not in body, cls

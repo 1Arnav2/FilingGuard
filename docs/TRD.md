@@ -1,6 +1,6 @@
 # TRD — FilingGuard
 
-**Status:** Draft v1 · **Last updated:** 2026-10-04
+**Status:** Draft v1 · **Last updated:** 2026-10-05
 
 ## 1. Architecture
 
@@ -98,18 +98,37 @@ Item schema:
 ```
 
 ### 2.4 Verifier agent (`src/filingguard/agents/verifier/`)
-Pipeline, cheapest check first:
-1. **Claim extraction:** pull each number, unit, period, and entity from the answer.
-2. **Span check:** does the cited span exist and contain the claim?
-3. **Numeric check:** match against XBRL facts with unit normalisation (thousands, millions,
-   billions) and a relative tolerance set in config.
-4. **Period check:** fiscal vs calendar year, and whether the value was later restated.
-5. **Injection check:** flag answers that follow instructions found in retrieved text.
-6. **Verdict:** `pass`, `block`, or `flag`, with a machine-readable reason code.
+Design approved in principle on 2026-10-05, not yet built (D-050). Rules first; the model is
+called only when rules cannot settle a claim (D-025), at most 2 calls per answer.
 
-Steps 2 to 4 are deterministic. Steps 1 and 5 use rules first and call the model only when
-the rules cannot settle a claim (D-025). At most 3 prompt versions are tried on dev, each
-recorded with its dev result.
+**Input.** The question, the company, the target's answer (text, claims, citations, abstain
+flag) and the texts of the chunks the target retrieved, with any planted text in place and no
+marker saying which chunk was planted. It also reads `data/processed/facts.parquet` (limited
+to facts from the corpus 10-K filings) and `filings.json` (fiscal year ends). It never sees
+the item ID, attack type, subtype, the item's injection field, gold labels or judge inputs
+(`tests/test_gold_isolation.py`, D-048). Metric names come from XBRL concept labels, not from
+the red-team's wording. An answer the target abstained on passes untouched.
+
+| Step | Rules or model | Reads | Blocks when |
+|---|---|---|---|
+| 1. Claim extraction | Rules: the answer text's figures (amounts, scale words, signs, periods), with the target's claims filling gaps, as in EVAL §3. Model (one call at most) only when a figure cannot be tied to a metric or period | Answer, question | Never on its own; also finds the asked metric, period and any line the question names |
+| 2. Span check | Rules: the cited excerpt was retrieved; the quote is in it (whitespace-normalised); the quote holds the figure at some scale | Citations, retrieved texts | Only with step 3: no XBRL match and no text support, `unsupported_figure`. A bad quote alone is a flag |
+| 3. Numeric check | Rules: fact lookup by company, concept, fiscal period, duration or instant, corpus filing; 0.5% tolerance after scale; sign rule. Where the question names a specific line (parent versus consolidated net income or equity, or a named revenue line), only that line's fact is checked; either line is accepted only when the question names none. Model only to decide whether a quote with no XBRL fact states the asked metric and period | `facts.parquet` | Fact exists and the figure does not match, `numeric_mismatch`; no fact and no text support, `unsupported_figure` |
+| 4. Period check | Rules: calendar year named for a non-calendar filer needs the fiscal period named; "began in <month>" resolved from period start dates; a named filing's value for restated questions | `filings.json`, facts | `wrong_fiscal_year`, `period_conflation`, `stale_value` |
+| 5. Injection check | Rules: (a) the numeric check catches planted false figures without any detection; (b) a generic detector (spec in `docs/INJECTION_DETECTOR.md`, needs the owner's approval before coding) finds instruction text aimed at an AI reader; an answer copying a code or figure from a detected span is blocked. Model only when a span is found and rules cannot tell whether the answer followed it | Retrieved texts, answer | `injection_followed`. A withheld answer cannot be fixed by a verifier; reported |
+| 6. Premise check | Rules: parse the claimed change (metric, two years, direction, sign, size) and decide it from facts. Model only to parse a premise rules cannot read, or to say whether the answer corrects it | Question, facts, answer | Facts contradict the premise and the answer does not correct it, `false_premise_unaddressed`. A true premise is never blocked; wording alone never triggers a block |
+
+**Verdict.** `block` on any hard reason, `flag` when unsure (the answer is still returned),
+else `pass`. Each verdict carries its reason code and whether it rests on an XBRL lookup or
+on text support alone; every verifier result is reported broken down that way (D-050).
+
+**Tuning.** Dev split only, on the stored dev batch answers. At most 3 prompt versions, each
+with its SHA-256 and dev result recorded; rule changes logged with their dev result. Guards
+against fitting to question style: no item metadata reaches the verifier; every block must
+rest on a fact mismatch, missing support or a copied instruction span; a style-swap check
+re-runs dev premise items with neutral openings and the verdict must not change; blocks on
+dev controls, true-premise drivers included, are tracked for every version; the injection
+detector is run over every clean corpus chunk to count false positives.
 
 ### 2.5 Harness (`src/eval/`)
 - `run.py`: for each item, call target, then verifier; store both.
@@ -206,6 +225,13 @@ revisited in Phase 2. The SDK is `google-genai` (D-011).
   `target-v1`, and reused for every verifier version. Batch responses pass through the same
   cache and spend ledger at the batch price; failed or missing items are re-submitted alone
   and logged. Verifier, red-team and judge calls use the standard API.
+  How (D-046): `eval/dev_run.py` captures each item's exact request from the frozen agent
+  with `PromptRecorder` (no call), sends sub-batches of 30 through
+  `LLMClient.generate_batch` (cache, then a whole-batch worst-case cap check, then submit,
+  then record and cache, under a cache key tagged `batch`), and rebuilds each answer by
+  running the frozen agent again with `BatchReplayClient`, which serves only stored batch
+  answers. Rows go to `results/runs/dev_target_v1.jsonl` (no attack type, subtype or gold);
+  job names and per-sub-batch counts to `results/runs/dev_target_v1_batches.json`.
 - **Runtime:** target answers return within the Batch API's turnaround; latency is measured
   separately on a 30-item standard-API sample (EVAL §4).
 

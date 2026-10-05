@@ -92,3 +92,44 @@ def test_no_agent_can_read_the_premise_judge_inputs():
     for path in AGENTS_DIR.rglob("*.py"):
         text = path.read_text(encoding="utf-8")
         assert "judge_inputs" not in text and "premise_judge" not in text, path
+
+
+# Item metadata the harness holds and agents must never see (D-048): an agent gets a question, a
+# company and retrieved text, never what kind of item it is answering or checking.
+ITEM_METADATA = ("attack_type", "subtype", "injection", "canary", "spec_id", "expected_behavior", "poisoned")
+
+
+def item_metadata_violations(source: str) -> list[str]:
+    """Names of item metadata in string literals or attribute/variable names, and red-team imports."""
+    found = []
+    for node in ast.walk(ast.parse(source)):
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            hits = [m for m in ITEM_METADATA if m in node.value.lower()]
+        elif isinstance(node, ast.Name):
+            hits = [m for m in ITEM_METADATA if m in node.id.lower()]
+        elif isinstance(node, ast.Attribute):
+            hits = [m for m in ITEM_METADATA if m in node.attr.lower()]
+        elif isinstance(node, (ast.Import, ast.ImportFrom)):
+            names = [a.name for a in node.names] + ([node.module] if isinstance(node, ast.ImportFrom) and node.module else [])
+            hits = [n for n in names if n.startswith("filingguard.redteam")]
+        else:
+            continue
+        found += [f"line {getattr(node, 'lineno', '?')}: {h}" for h in hits]
+    return found
+
+
+def test_no_agent_module_sees_item_metadata_or_the_red_team():
+    violations = {
+        str(path.relative_to(AGENTS_DIR)): v
+        for path in AGENTS_DIR.rglob("*.py")
+        if (v := item_metadata_violations(path.read_text(encoding="utf-8")))
+    }
+    assert not violations, f"agents must not see item metadata: {violations}"
+
+
+def test_item_metadata_checker_catches_each_pattern():
+    for src in ('t = item["attack_type"]', "x = row.subtype", 'if chunk.get("poisoned"): pass',
+                "from filingguard.redteam.corpus import METRICS", "import filingguard.redteam.injection",
+                "canary = 1"):
+        assert item_metadata_violations(src), f"missed: {src}"
+    assert item_metadata_violations('question = "What was revenue?"') == []
