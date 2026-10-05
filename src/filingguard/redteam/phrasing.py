@@ -101,7 +101,11 @@ def check_question(spec: ItemSpec, question: str | None) -> list[str]:
     for group in spec.must_include:
         if not any(p.lower() in lowered for p in group):
             reasons.append(f"missing:{group[0]}")
-    for s in spec.forbid:
-        if re.search(rf"(?<![\d.,]){re.escape(s)}(?![\d])", question):
-            reasons.append(f"leaks:{s}")
+    reasons += [f"leaks:{s}" for s in leaked(spec.forbid, question)]
     return reasons
+
+
+def leaked(forbid: list[str], question: str) -> list[str]:
+    """The forbidden strings (printed forms of the answer) that appear in the question as a
+    whole number, not inside a longer one ("2" is not leaked by "2023")."""
+    return [s for s in forbid if re.search(rf"(?<![\d.,]){re.escape(s)}(?![\d])", question)]

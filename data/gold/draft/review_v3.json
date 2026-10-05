@@ -1,0 +1,471 @@
+{
+  "Fault-rate sample": [
+    {
+      "id": "FG-0001",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0027",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0029",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0030",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0032",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0034",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0038",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0042",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0051",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0055",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0058",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0059",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0065",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0067",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0076",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0077",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0078",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0092",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0094",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0095",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0098",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0114",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0115",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0116",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0118",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0119",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0120",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0122",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0139",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0151",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0160",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0171",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0176",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0179",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0184",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0191",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0192",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0198",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0199",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0203",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0206",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0234",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0237",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0238",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0239",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0242",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0244",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0251",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0252",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0253",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0257",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0259",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0272",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0278",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0279",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0284",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0287",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0295",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0296",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0315",
+      "decision": "accept",
+      "note": ""
+    }
+  ],
+  "Extra checks": [
+    {
+      "id": "FG-0070",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0074",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0086",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0097",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0101",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0103",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0105",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0157",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0159",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0161",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0163",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0167",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0168",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0169",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0170",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0172",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0183",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0185",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0190",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0195",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0301",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0302",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0303",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0304",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0305",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0306",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0307",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0308",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0309",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0310",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0318",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0319",
+      "decision": "accept",
+      "note": ""
+    },
+    {
+      "id": "FG-0320",
+      "decision": "accept",
+      "note": ""
+    }
+  ]
+}

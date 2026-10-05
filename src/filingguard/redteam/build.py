@@ -7,6 +7,8 @@
     python -m filingguard.redteam.build assemble        # filter, select, split, latency IDs, review sheet
     python -m filingguard.redteam.build review-apply    # read the owner's decisions back
     python -m filingguard.redteam.build judge-inputs    # premise-judge inputs (data/gold/, eval only)
+    python -m filingguard.redteam.build freeze          # split, latency sample, frozen files, checks, manifest
+    python -m filingguard.redteam.build review-record --edgar-rows N --hours H --date "<date or range>"
 
 Candidates and gold go under `data/gold/`, which only the red-team and `eval/` read. The
 draft test set goes to `data/testset/draft/`; it is frozen only after review (D-028).
@@ -256,8 +258,12 @@ def _dropped_draft_items(corpus: Corpus) -> list[dict]:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("step", choices=["candidates", "revise", "phrase", "assemble", "review-apply", "judge-inputs"])
+    parser.add_argument("step", choices=["candidates", "revise", "phrase", "assemble", "review-apply", "judge-inputs",
+                                         "freeze", "review-record"])
     parser.add_argument("--pilot", action="store_true", help="phrase only the first batch")
+    parser.add_argument("--edgar-rows", type=int, help="review-record: rows the owner checked on EDGAR")
+    parser.add_argument("--hours", type=float, help="review-record: owner's review time in hours")
+    parser.add_argument("--date", help="review-record: review date or date range, as stated by the owner")
     args = parser.parse_args()
 
     if args.step == "candidates":
@@ -301,6 +307,20 @@ def main() -> None:
         with_reasons = sum(bool(v["reasons"]) for v in data["items"].values())
         print(json.dumps({"items": len(data["items"]), "with_reasons": with_reasons,
                           "prompt_sha256": data["prompt_sha256"]}, indent=2))
+    elif args.step == "freeze":
+        from filingguard.redteam.freeze import freeze
+
+        manifest = freeze(DRAFT_ITEMS / "items_v1.jsonl", DRAFT_GOLD / "gold_v1.jsonl", CANDIDATES,
+                          DRAFT_GOLD / "review_v3.json", SEED)
+        print(json.dumps({k: manifest[k] for k in ("item_set_sha256", "files", "counts")}, indent=2))
+    elif args.step == "review-record":
+        from filingguard.redteam.review import RECORD, review_record
+
+        if None in (args.edgar_rows, args.hours, args.date):
+            raise SystemExit("review-record needs --edgar-rows, --hours and --date (as stated by the owner)")
+        decisions = json.loads((DRAFT_GOLD / "review_v3.json").read_text(encoding="utf-8"))
+        _write_json(RECORD, review_record(decisions, REVIEW_BOOK, args.edgar_rows, args.hours, args.date))
+        print(RECORD.read_text(encoding="utf-8"))
     elif args.step == "assemble":
         stats = assemble_draft()
         skip = ("latency_sample", "review_sample", "injection_delivery_rank")

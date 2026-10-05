@@ -1,0 +1,267 @@
+{
+  "version": "testset-v1",
+  "seed": 20261004,
+  "split_seed": "20261004-split",
+  "latency_seed": "20261004-latency",
+  "item_set_sha256": "6248316c4ac48a4eb034eb129498f4e133d8537433e444985f825fa70473bba2",
+  "item_set_hash_input": "sorted lines of '<item id>\\t<spec id>', joined by \\n, UTF-8",
+  "files": {
+    "data/testset/v1.jsonl": "e728c60ee547f204f6db11f0ffc544e1e6a5b19c519e1d4249cbe7c0718038fc",
+    "data/gold/gold_v1.jsonl": "e9084549d983e2688e0b38706a84e3bde4dd9490bd1cce208cce00d85ae760df",
+    "data/gold/judge_inputs_v1.json": "06d13a07787ef5b1465e607dba46078220efbde186d98e7280a4d60c882e32bd",
+    "data/testset/poisoned_chunks_v1.jsonl": "a2d8ecbfc810b3f3656653c835f0081b2cd60587cdd6da6f75eb119d06fa61d1",
+    "data/testset/latency_sample_v1.json": "97f0e37915ca3ff027d5c341cf654ed353477b86637c7d83228154686b8ab21a"
+  },
+  "premise_judge_prompt_sha256": "62aa410a202a875eef7ef9978e74e6bda92e80a0cffc730fbf360a14fb86838b",
+  "counts": {
+    "total": 300,
+    "by_type": {
+      "control": 60,
+      "unanswerable": 46,
+      "unit_trap": 46,
+      "period_mismatch": 46,
+      "restated": 12,
+      "false_premise": 45,
+      "injection": 45
+    },
+    "by_subtype": {
+      "control": {
+        "current_year": 15,
+        "prior_year": 35,
+        "true_premise_driver": 10
+      },
+      "unanswerable": {
+        "old_period": 19,
+        "single_quarter": 20,
+        "untagged_concept": 7
+      },
+      "unit_trap": {
+        "millions_to_billions": 13,
+        "millions_to_dollars": 14,
+        "millions_to_thousands": 12,
+        "per_share_to_cents": 7
+      },
+      "period_mismatch": {
+        "calendar_wording": 23,
+        "start_month": 23
+      },
+      "restated": {
+        "reclassification": 2,
+        "restatement": 6,
+        "stock_split": 4
+      },
+      "false_premise": {
+        "direction_flip": 15,
+        "magnitude": 16,
+        "sign_flip": 14
+      },
+      "injection": {
+        "false_figure": 17,
+        "marker": 15,
+        "withhold": 13
+      }
+    },
+    "split_by_type": {
+      "control": {
+        "dev": 18,
+        "test": 42
+      },
+      "unanswerable": {
+        "dev": 14,
+        "test": 32
+      },
+      "unit_trap": {
+        "dev": 14,
+        "test": 32
+      },
+      "period_mismatch": {
+        "dev": 14,
+        "test": 32
+      },
+      "restated": {
+        "dev": 4,
+        "test": 8
+      },
+      "false_premise": {
+        "dev": 13,
+        "test": 32
+      },
+      "injection": {
+        "dev": 13,
+        "test": 32
+      }
+    },
+    "split": {
+      "test": 210,
+      "dev": 90
+    },
+    "per_company": {
+      "AAPL": 14,
+      "AMZN": 9,
+      "BA": 10,
+      "BAC": 16,
+      "CAT": 10,
+      "COST": 17,
+      "CVX": 12,
+      "DIS": 13,
+      "GOOGL": 10,
+      "GS": 9,
+      "JNJ": 10,
+      "JPM": 11,
+      "KO": 10,
+      "META": 11,
+      "MSFT": 14,
+      "NKE": 12,
+      "NVDA": 21,
+      "ORCL": 14,
+      "PFE": 11,
+      "PG": 10,
+      "TSLA": 11,
+      "UNH": 9,
+      "V": 12,
+      "WMT": 16,
+      "XOM": 8
+    },
+    "companies_per_type": {
+      "control": 25,
+      "unanswerable": 25,
+      "unit_trap": 25,
+      "period_mismatch": 10,
+      "restated": 3,
+      "false_premise": 25,
+      "injection": 25
+    }
+  },
+  "latency_sample": {
+    "ids": [
+      "FG-0012",
+      "FG-0015",
+      "FG-0024",
+      "FG-0037",
+      "FG-0054",
+      "FG-0081",
+      "FG-0086",
+      "FG-0094",
+      "FG-0095",
+      "FG-0106",
+      "FG-0113",
+      "FG-0130",
+      "FG-0137",
+      "FG-0139",
+      "FG-0151",
+      "FG-0157",
+      "FG-0167",
+      "FG-0180",
+      "FG-0192",
+      "FG-0207",
+      "FG-0234",
+      "FG-0236",
+      "FG-0243",
+      "FG-0248",
+      "FG-0259",
+      "FG-0269",
+      "FG-0278",
+      "FG-0298",
+      "FG-0302",
+      "FG-0316"
+    ],
+    "by_type": {
+      "control": 6,
+      "unanswerable": 5,
+      "unit_trap": 5,
+      "period_mismatch": 5,
+      "restated": 1,
+      "false_premise": 4,
+      "injection": 4
+    }
+  },
+  "checks": {
+    "counts_as_specified": true,
+    "split_equals_draft": true,
+    "latency_equals_draft": true,
+    "multi_filing": {
+      "items_checked": 38,
+      "conflicts": []
+    },
+    "absence": {
+      "items_checked": 46,
+      "failures": []
+    },
+    "trap_distance": {
+      "items_checked": 46,
+      "failures": []
+    },
+    "injection_delivery": {
+      "items": 45,
+      "delivered": 45,
+      "median_rank": 2,
+      "worst_rank": 19,
+      "not_delivered": [],
+      "ranks": {
+        "FG-0256": 4,
+        "FG-0257": 1,
+        "FG-0258": 10,
+        "FG-0259": 2,
+        "FG-0260": 19,
+        "FG-0261": 2,
+        "FG-0262": 1,
+        "FG-0263": 15,
+        "FG-0264": 6,
+        "FG-0265": 3,
+        "FG-0266": 1,
+        "FG-0267": 9,
+        "FG-0268": 2,
+        "FG-0269": 2,
+        "FG-0270": 10,
+        "FG-0271": 3,
+        "FG-0272": 7,
+        "FG-0273": 8,
+        "FG-0274": 2,
+        "FG-0275": 1,
+        "FG-0276": 1,
+        "FG-0277": 6,
+        "FG-0278": 9,
+        "FG-0279": 2,
+        "FG-0280": 1,
+        "FG-0281": 1,
+        "FG-0282": 1,
+        "FG-0283": 2,
+        "FG-0284": 1,
+        "FG-0285": 4,
+        "FG-0286": 1,
+        "FG-0287": 4,
+        "FG-0288": 1,
+        "FG-0289": 3,
+        "FG-0290": 3,
+        "FG-0291": 2,
+        "FG-0292": 15,
+        "FG-0293": 1,
+        "FG-0294": 2,
+        "FG-0295": 1,
+        "FG-0296": 1,
+        "FG-0297": 1,
+        "FG-0298": 1,
+        "FG-0299": 12,
+        "FG-0300": 7
+      }
+    },
+    "gold_separation": {
+      "item_keys": [
+        "attack_type",
+        "company",
+        "id",
+        "injection",
+        "question",
+        "split",
+        "subtype"
+      ],
+      "unexpected_item_keys": [],
+      "questions_printing_gold": [],
+      "gold_ids_match_items": true,
+      "gold_path": "data/gold/gold_v1.jsonl",
+      "judge_inputs_path": "data/gold/judge_inputs_v1.json"
+    },
+    "judge_inputs_rebuilt_equal": true,
+    "human_checked": 93
+  }
+}

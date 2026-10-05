@@ -779,6 +779,36 @@ split:
   plus older 10-Ks for NVDA, GOOGL, PFE and BAC where they supply restated pairs).
 **Revisit if:** Never for this test set version.
 
+### D-044 — Freeze test set v1: split, latency sample, frozen files and their hashes
+**Date:** 2026-10-05 · **Phase:** 3
+**Context:** Review v3 found 0 of 60 faulty (bar 3 of 60); the owner approved the freeze.
+**Options considered:** For the split seed: (A) reuse `20261004-split`, the seed every draft
+used; (B) a new seed at freeze. For injection items: (A) keep only the item's insert position
+and planted text, rebuilt against the local index at run time; (B) also freeze the exact
+poisoned chunk text.
+**Decision:** Seed (A): the split is assigned once from the final 300 with
+`assign_split(seed 20261004-split)`, stratified by type and spread across companies within
+type; the latency sample is drawn from its test split with `20261004-latency`. Both equal the
+draft's, so the Split column the owner reviewed is the frozen split. Injection (B): each
+item's poisoned text is written to `data/testset/poisoned_chunks_v1.jsonl` with a SHA-256 of
+the clean chunk, since the index itself is git-ignored. Frozen: `data/testset/v1.jsonl`,
+`data/gold/gold_v1.jsonl` (`human_checked` true for the 93 reviewed items),
+`data/gold/judge_inputs_v1.json` (unchanged), the poisoned chunks, and
+`data/testset/latency_sample_v1.json`. The manifest `data/testset/freeze_v1.json` records the
+seeds, the item-set hash (SHA-256 of sorted "item id, tab, spec id" lines:
+`6248316c4ac48a4eb034eb129498f4e133d8537433e444985f825fa70473bba2`), each file's SHA-256, the
+prompt hash and the re-run checks. `tests/test_testset_frozen.py` pins the manifest's hash.
+`freeze` refuses to run if a frozen set exists. Tagged `testset-v1` locally. The fault-rate
+record across all three rounds is `results/testset/fault_rate_v1.json`.
+**Why:** The owner reviewed items with their split shown; a new seed would have moved items
+between splits after review for no gain. Freezing the poisoned text means a rebuilt index
+cannot silently change what an injection item delivers.
+**Trade-off accepted:** The split is stratified by type, not by subtype, so subtype shares
+differ between dev and test (for example untagged concept 4 dev, 3 test). The 0-of-60 rate
+meets the count bar, but its Wilson 95% upper bound (6.0%) is above 5%: with 60 items the check
+cannot show the true fault rate is below 5%.
+**Revisit if:** Never for test set v1; any change makes a v2 with its own tag.
+
 ---
 
 ---
@@ -1179,3 +1209,17 @@ Neither file, no commit message and no file name in the history names the coding
 commit replayed (now 8018400). Final tree unchanged; neither file in `git log --name-only main`.
 **Lesson:** Run scratch scripts with their output directed to the scratch directory.
 **Linked decision:** none
+
+### H-027 — Freeze leak check flagged three questions on a digit inside a year
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** The freeze's gold-separation check first matched each item's `forbid`
+strings as plain substrings. FG-0132, FG-0137 and FG-0143 (unit_trap, millions to billions)
+forbid the value rounded to billions ("2", "0"), which appears inside "2023".
+**Impact:** None; caught on a dry run against the draft, before any frozen file was written.
+**What I tried:** Compared with the phrasing check, which matches a forbidden string only as a
+whole number.
+**Resolution:** The whole-number rule moved into `phrasing.leaked`, used by both checks;
+0 questions print their answer. Test added.
+**Lesson:** Reuse the existing rule instead of writing a second version of it.
+**Linked decision:** D-044

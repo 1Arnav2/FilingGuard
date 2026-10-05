@@ -34,14 +34,16 @@ One phase per working session. Each phase ends with: tests pass, roadmap ticked,
 - **Done when:** the agent answers the smoke set with citations and logs a trace.
 
 ## Phase 3 — Red-team and test set (2 days)
-- [ ] Download the third 10-K per company; find pairs; tag restatement / reclassification /
+- [x] Download the third 10-K per company; find pairs; tag restatement / reclassification /
       stock split; apply D-021 caps; update EVAL §2 counts before generating anything
-- [ ] Red-team package in `src/filingguard/redteam/` (D-022)
-- [ ] One generator per attack type, built from gold facts
-- [ ] Generate 400 candidates; dedupe and filter to 300; top up a short attack type only
+- [x] Red-team package in `src/filingguard/redteam/` (D-022)
+- [x] One generator per attack type, built from gold facts
+- [x] Generate 400 candidates; dedupe and filter to 300; top up a short attack type only
       after reporting the extra cost (D-025)
-- [ ] Assign frozen dev/test split
-- [ ] Hand-check 60 items; fix or drop faulty ones; record the fault rate
+- [x] Assign frozen dev/test split
+- [x] Hand-check 60 items; fix or drop faulty ones; record the fault rate (first: at least 7 of 60,
+      halted; final: 0 of 60, `results/testset/fault_rate_v1.json`)
+- [x] Freeze: split, latency sample, file hashes, frozen-file test; tag `testset-v1` (D-044)
 - **Done when:** `data/testset/v1.jsonl` is frozen and tagged.
 
 ## Phase 4 — Verifier (1 to 2 days)

@@ -1,0 +1,66 @@
+{
+  "bar": "at most 3 of 60 marked fix or drop (EVAL §2; §6: at or below 5%)",
+  "first_fault_rate": {
+    "round": "v1",
+    "result": "at least 7 of 60, review halted once the bar was exceeded"
+  },
+  "final_fault_rate": {
+    "round": "v3",
+    "faulty": 0,
+    "reviewed": 60,
+    "wilson_95": [
+      0.0,
+      0.0602
+    ],
+    "bar_met": true
+  },
+  "rounds": [
+    {
+      "round": "v1",
+      "record": "data/gold/draft/review_v1_first_pass.json",
+      "workbook": "review/review_v1.xlsx",
+      "date": "2026-10-05",
+      "result": "at least 7 of 60, review halted once the bar was exceeded",
+      "bar_met": false
+    },
+    {
+      "round": "v2",
+      "record": "data/gold/draft/review_v2_withdrawn.json",
+      "workbook": "review/review_v2.xlsx",
+      "date": "2026-10-05",
+      "result": "v2 sheet withdrawn before review after a pre-screen; no fault rate recorded for it",
+      "bar_met": null
+    },
+    {
+      "round": "v3",
+      "record": "data/gold/draft/review_v3.json",
+      "workbook": "review/review_v3.xlsx",
+      "workbook_sha256": "f163f470492c22fe52777fe83f772042332e124f3a306447b19cd2e82fe7d6b4",
+      "fault_rate_sample": {
+        "reviewed": 60,
+        "faulty": 0,
+        "rate": 0.0,
+        "bar_met": true,
+        "wilson_95": [
+          0.0,
+          0.0602
+        ]
+      },
+      "extra_checks": {
+        "reviewed": 33,
+        "faulty": 0,
+        "rate": 0.0,
+        "wilson_95": [
+          0.0,
+          0.1043
+        ],
+        "counts_toward_fault_rate": false
+      },
+      "stated_by_owner": {
+        "date": "2026-10-04 to 2026-10-05",
+        "hours": 2.0,
+        "rows_verified_on_edgar": 93
+      }
+    }
+  ]
+}

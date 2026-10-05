@@ -16,6 +16,59 @@ of every session.
 
 ---
 
+## 2026-10-05 — Phase 3 complete: review v3 applied, test set v1 frozen (no model calls)
+**Review v3:** owner's `review/review_v3.xlsx` read back with `review-apply`: 93 Decision cells
+filled, all "accept", no notes; a cell-by-cell comparison with the committed sheet found no
+change outside Decision and Note. Fault-rate sample 0 of 60 faulty against the bar of 3 of 60
+(met; Wilson 95% 0.0% to 6.0%). Extra checks 0 of 33 (Wilson 95% 0.0% to 10.4%), reported
+separately, not in the fault rate. As stated by the owner: all 93 rows verified against the
+filing on EDGAR, about 2 hours, reviewed 2026-10-04 to 2026-10-05. Record:
+`results/testset/fault_rate_v1.json` (step `review-record`), which also lists the v1 and v2
+rounds from their unchanged records.
+**Freeze (D-044):** step `freeze` (`redteam/freeze.py`). Split assigned once from the final 300,
+stratified by type and spread across companies within type, seed `20261004-split`; latency
+sample of 30 drawn from the test split, seed `20261004-latency`. Both equal the draft's
+assignment, so the review sheet's Split column holds. Frozen files: `data/testset/v1.jsonl`,
+`data/gold/gold_v1.jsonl` (93 rows `human_checked`), `data/gold/judge_inputs_v1.json`
+(unchanged; rebuilt from the frozen gold and found equal), `data/testset/poisoned_chunks_v1.jsonl`
+(45 exact poisoned texts plus the clean chunk's hash), `data/testset/latency_sample_v1.json`.
+Manifest `data/testset/freeze_v1.json`: seeds, item-set hash `6248316c…bba2`, file hashes,
+counts and check results. `tests/test_testset_frozen.py` pins the manifest hash; the manifest
+pins each file (checked by altering a copy of the gold file: the test failed; restored).
+**Checks re-run on the frozen 300:** counts as specified; multi-filing ambiguity 0 of 38 items
+checked; absence failures 0 of 46; trap too close 0 of 46; injection delivery 45/45 (median
+rank 2, worst 19); gold separation: item rows carry only id, company, type, subtype, question,
+split and injection, no question prints its answer, gold and judge inputs under `data/gold/`,
+isolation tests pass. The leak check first flagged 3 questions on a digit inside "2023"
+(H-027); it now uses the phrasing check's whole-number rule.
+**Phase 3 summary: three review rounds.**
+- Round 1 (`review_v1.xlsx`, 2026-10-05): halted at at least 7 of 60 faulty (H-009). Changed:
+  strict row-label rule (D-030), company- and sector-balanced review sample (D-031), derivable
+  untagged concepts removed (D-032), plainer unit and quarter briefs (D-033), start-month wording
+  replaces fiscal-label wording (D-034), EVAL edits (D-035). Became draft v2.
+- Round 2 (`review_v2.xlsx`): withdrawn before review after the owner's pre-screen, no fault
+  rate (H-017). Changed: start-month rule relaxed to the last two days of a month (D-034
+  amended), trap year shown and stored (D-036), questions name the printed line where a second
+  figure exists (D-037), sign rule (D-038), label holes closed, EVAL edits (D-039). Became draft
+  v3. Before review v3: pre-review checks (D-040), absence over every filing, trap distance and
+  10 true-premise driver controls (D-041), driver scoring and fixed judge prompt (D-042),
+  no-figure rule (D-043).
+- Round 3 (`review_v3.xlsx`): 0 of 60 faulty, 0 of 33 extra checks; no item changed; frozen.
+**Final counts (dev / test):** control 60 (18 / 42): current-year 15, prior-year 35, true-premise
+driver 10. unanswerable 46 (14 / 32): untagged concept 7, single quarter 20, old period 19.
+unit_trap 46 (14 / 32): millions to billions 13, to dollars 14, to thousands 12, per share to
+cents 7. period_mismatch 46 (14 / 32): start-month 23 (NKE 4, ORCL 4, MSFT 3, NVDA 3, COST 2,
+DIS 2, WMT 2, AAPL 1, PG 1, V 1), calendar wording 23 (COST 5, AAPL 4, NVDA 4, WMT 4, DIS 3, V 3).
+restated 12 (4 / 8): restatement 6 (BAC), stock split 4 (NVDA), reclassification 2 (PFE).
+false_premise 45 (13 / 32): direction 15, magnitude 16, sign 14. injection 45 (13 / 32): false
+figure 17, marker 15, withhold 13. Total 300: dev 90, test 210. The split is stratified by
+type, not subtype, so subtype shares between dev and test vary (untagged concept 4 / 3).
+Items per company: min 8 (XOM), max 21 (NVDA). Latency sample: 6 / 5 / 5 / 5 / 1 / 4 / 4.
+**Tests:** 106 offline tests pass (new: frozen files, Wilson interval, leak check).
+**Spend so far:** $0.4397 (82 calls; none this session).
+**Next session starts with:** Phase 4, the verifier, tuned on the dev split only.
+**Commit:** Phase 3 complete: review v3 applied (0 of 60), test set v1 frozen
+
 ## 2026-10-05 — Phase 3: no-figure rule; local history squashed (no model calls)
 **Built (D-043):** EVAL §3: Correct needs at least one figure for the asked item on the
 figure-scored rows (control, unit_trap, start-month period_mismatch, restated, injection); a

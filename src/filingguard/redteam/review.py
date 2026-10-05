@@ -207,3 +207,45 @@ def fault_rate(decisions: list[dict]) -> dict:
     faulty = [d for d in decisions if d["decision"] != "accept"]
     return {"reviewed": len(decisions), "faulty": len(faulty), "rate": len(faulty) / len(decisions) if decisions else None,
             "bar_met": len(faulty) <= 3}
+
+
+RECORD = Path("results/testset/fault_rate_v1.json")
+EARLIER_ROUNDS = (Path("data/gold/draft/review_v1_first_pass.json"), Path("data/gold/draft/review_v2_withdrawn.json"))
+BAR = "at most 3 of 60 marked fix or drop (EVAL §2; §6: at or below 5%)"
+
+
+def _counted(decisions: list[dict]) -> dict:
+    from filingguard.eval.stats import wilson
+
+    rate = fault_rate(decisions)
+    low, high = wilson(rate["faulty"], rate["reviewed"])
+    return rate | {"wilson_95": [round(low, 4), round(high, 4)]}
+
+
+def review_record(decisions: dict[str, list[dict]], workbook: Path, edgar_rows: int, hours: float, date: str) -> dict:
+    """The fault-rate record across all review rounds: the earlier rounds as recorded, and this
+    round's sample and extra checks counted from the owner's decisions."""
+    import hashlib
+    import json
+
+    v1, v2 = (json.loads(p.read_text(encoding="utf-8")) for p in EARLIER_ROUNDS)
+    sample = _counted(decisions["Fault-rate sample"])
+    return {
+        "bar": BAR,
+        "first_fault_rate": {"round": "v1", "result": v1["fault_rate_first"]},
+        "final_fault_rate": {"round": "v3", "faulty": sample["faulty"], "reviewed": sample["reviewed"],
+                             "wilson_95": sample["wilson_95"], "bar_met": sample["bar_met"]},
+        "rounds": [
+            {"round": "v1", "record": EARLIER_ROUNDS[0].as_posix(), "workbook": v1["workbook"], "date": v1["date"],
+             "result": v1["fault_rate_first"], "bar_met": v1["bar_met"]},
+            {"round": "v2", "record": EARLIER_ROUNDS[1].as_posix(), "workbook": v2["workbook"], "date": v2["date"],
+             "result": v2["status"], "bar_met": None},
+            {"round": "v3", "record": "data/gold/draft/review_v3.json", "workbook": workbook.as_posix(),
+             "workbook_sha256": hashlib.sha256(workbook.read_bytes()).hexdigest(),
+             "fault_rate_sample": sample,
+             # The 3-of-60 bar applies to the sample only.
+             "extra_checks": {k: v for k, v in _counted(decisions["Extra checks"]).items() if k != "bar_met"}
+             | {"counts_toward_fault_rate": False},
+             "stated_by_owner": {"date": date, "hours": hours, "rows_verified_on_edgar": edgar_rows}},
+        ],
+    }

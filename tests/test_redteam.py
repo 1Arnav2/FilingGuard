@@ -282,3 +282,10 @@ def test_premise_judge_prompt_matches_its_recorded_hash():
     assert inputs["prompt_sha256"] == recorded["sha256"]
     assert len(inputs["items"]) == 55
     assert all(set(v) == {"draft_id", "premise", "values", "reasons"} for v in inputs["items"].values())
+
+
+def test_leak_check_matches_whole_numbers_only():
+    from filingguard.redteam.phrasing import leaked
+    assert leaked(["2"], "What was net income for fiscal 2023, in billions?") == []
+    assert leaked(["2"], "Was net income 2 billion dollars in fiscal 2023?") == ["2"]
+    assert leaked(["29,943"], "Was it $29,943 million?") == ["29,943"]
