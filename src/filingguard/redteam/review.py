@@ -211,6 +211,7 @@ def fault_rate(decisions: list[dict]) -> dict:
 
 RECORD = Path("results/testset/fault_rate_v1.json")
 EARLIER_ROUNDS = (Path("data/gold/draft/review_v1_first_pass.json"), Path("data/gold/draft/review_v2_withdrawn.json"))
+SPOT_CHECK = Path("data/gold/draft/edgar_spot_check_v3.json")   # owner's post-review EDGAR check
 BAR = "at most 3 of 60 marked fix or drop (EVAL §2; §6: at or below 5%)"
 
 
@@ -233,7 +234,13 @@ def review_record(decisions: dict[str, list[dict]], workbook: Path, edgar_rows: 
     reviewed = sum(len(rows) for rows in decisions.values())
     if not 0 <= edgar_rows <= reviewed:
         raise ValueError(f"EDGAR rows must be between 0 and {reviewed}")
-    return {
+    spot = json.loads(SPOT_CHECK.read_text(encoding="utf-8")) if SPOT_CHECK.exists() else None
+    if spot:
+        ids = spot["absence_confirmed"] + spot["gold_value_row_column_year_confirmed"]
+        in_review = {d["id"] for rows in decisions.values() for d in rows}
+        if len(ids) != spot["rows_verified"] or not set(ids) <= in_review:
+            raise ValueError("spot-check rows must be reviewed items and match rows_verified")
+    record = {
         "bar": BAR,
         "first_fault_rate": {"round": "v1", "result": v1["fault_rate_first"]},
         "final_fault_rate": {"round": "v3", "faulty": sample["faulty"], "reviewed": sample["reviewed"],
@@ -257,3 +264,6 @@ def review_record(decisions: dict[str, list[dict]], workbook: Path, edgar_rows: 
                                         "in the sheet"}},
         ],
     }
+    if spot:
+        record["post_review_spot_check"] = {"record": SPOT_CHECK.as_posix()} | spot
+    return record

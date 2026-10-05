@@ -824,6 +824,10 @@ judge prompt and its hash, the scoring rules, the pass bars and the split are un
 **Trade-off accepted:** Agreement on driver controls rests on 3 items, too few for a separate
 kappa; it is reported within the 16.
 **Revisit if:** Never for test set v1.
+**Amended 2026-10-05, chosen by me (before any target run):** the hand-check covers both
+conditions: the judge's decisions on the baseline and the treatment answer of each of the 16
+items, up to 32 decisions. Agreement is reported overall and per condition. EVAL §5 and §10
+edited.
 
 ---
 

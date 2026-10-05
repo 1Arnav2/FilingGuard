@@ -65,5 +65,29 @@
         "how": "0 of 93 rows verified against the filing on EDGAR; the other 93 checked against the source excerpt in the sheet"
       }
     }
-  ]
+  ],
+  "post_review_spot_check": {
+    "record": "data/gold/draft/edgar_spot_check_v3.json",
+    "stated_by_owner": true,
+    "date": "2026-10-05",
+    "when": "after the review v3 hand-check",
+    "source": "the filing on sec.gov",
+    "method": "text search in each filing was tool-assisted; the owner read every hit and made each call",
+    "rows_verified": 8,
+    "faults": 0,
+    "absence_confirmed": [
+      "FG-0070",
+      "FG-0076",
+      "FG-0077",
+      "FG-0098",
+      "FG-0103"
+    ],
+    "gold_value_row_column_year_confirmed": [
+      "FG-0034",
+      "FG-0203",
+      "FG-0244"
+    ],
+    "accession_matched_sheet": true,
+    "note": "separate from the review record, which stays at 0 of 93 rows verified on EDGAR at review time"
+  }
 }

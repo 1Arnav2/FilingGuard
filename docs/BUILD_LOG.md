@@ -16,6 +16,22 @@ of every session.
 
 ---
 
+## 2026-10-05 — Phase 3: EDGAR spot check recorded; judge hand-check pinned to both conditions
+**Post-review EDGAR spot check (owner, 2026-10-05, after the review):** 8 rows verified
+against the filing on sec.gov, 0 faults. Text search in each filing was tool-assisted; the
+owner read every hit and made each call. Absence confirmed: FG-0070, FG-0076, FG-0077, FG-0098,
+FG-0103. Gold value, row, column and year confirmed: FG-0034, FG-0203, FG-0244. Each filing's
+accession number matched the sheet. Recorded separately in `results/testset/fault_rate_v1.json`
+(`post_review_spot_check`, input `data/gold/draft/edgar_spot_check_v3.json`); the review record
+itself is unchanged (0 of 93 rows verified on EDGAR at review time).
+**Judge hand-check (D-045 amended):** all 16 dev premise items, baseline and treatment answers,
+up to 32 decisions; agreement reported overall and per condition (EVAL §5, §10).
+**Unchanged:** frozen files, manifest and the `testset-v1` tag; the frozen-file test passes.
+**Tests:** 106 offline tests pass.
+**Spend so far:** $0.4397 (no calls).
+**Next session starts with:** Phase 4, the verifier, tuned on the dev split only.
+**Commit:** Phase 3: EDGAR spot check recorded; judge hand-check covers both conditions (D-045)
+
 ## 2026-10-05 — Phase 3 corrections after freeze (no model calls)
 **Corrected:** review record (`results/testset/fault_rate_v1.json`, step `review-record` now
 records both counts): reviewed 2026-10-05 only, about 2 hours, 0 of 93 rows verified against
