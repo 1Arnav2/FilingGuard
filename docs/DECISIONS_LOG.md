@@ -619,7 +619,7 @@ a trap answer `wrong_period`.
 **Trade-off accepted:** Start-month specs change, so all 30 are phrased afresh.
 **Revisit if:** Never.
 
-### D-037 — Parent versus consolidated lines: name the line in the question (proposed)
+### D-037 — Parent versus consolidated lines: name the printed line in the question
 **Date:** 2026-10-05 · **Phase:** 3
 **Context:** H-018. Where XBRL reports a second figure for the same filing and period that a
 reader could take for the metric (net income including noncontrolling interests, total equity
@@ -628,9 +628,19 @@ differs by more than 0.5%, a question that says only "net income" has two defens
 **Options considered:** (A) the question names the line: "net income attributable to
 <company>", "stockholders' equity attributable to <company>", or the gold row's own label for
 revenue; (B) both values are accepted as correct (an EVAL §3 change).
-**Decision:** Recommended (A), pending my choice. Implemented in code so the effect could be
-counted: 27 of the 366 v3 candidates name their line (net income 15, equity 7, revenue 5);
-the alternative values are stored with each item's source either way.
+**Decision:** (A), chosen by me, with two conditions: (a) the question uses the filing's own
+printed row label for that item, not a template phrase (title case kept as printed, an
+all-capitals label lower-cased, a bare label such as "Operating activities" joined to the
+heading printed above it); (b) a second figure is flagged at any difference at the printed
+precision, not only beyond 0.5%. Negative gold values also use the printed row label (D-038).
+An item whose second figure is printed under the very same row label is dropped, since no
+line name separates the two. Result: 31 candidates name their line because of a second figure
+(net income 18, equity 8, revenue 5); 5 of these are caught only by the printed-precision rule
+(KO net income twice, PFE equity, PFE net income, BA net loss); 1 candidate (ORCL net income)
+is dropped as same-label. The second figures are stored with each item's source. Earlier
+count reconciled: the 27 of the first pass were 22 revised v1 items, 2 new restated items and
+3 new start-month items; the "24" quoted with the cost was 54 phrasing specs minus the 30
+start-month specs (22 + 2), so the 3 start-month items were inside the 30, not missing.
 **Why:** (A) keeps one gold value per item and leaves the scoring rules unchanged; (B) would
 score a consolidated figure as correct for a question that, read strictly, asks for the
 parent's.
@@ -642,9 +652,16 @@ property of the filing, not of the attack type.
 **Date:** 2026-10-05 · **Phase:** 3
 **Context:** H-022. EVAL §3 does not say how a negative value is recognised in an answer; 9
 v3 candidates have negative gold (operating cash outflows, a net loss, loss per share).
-**Decision:** Proposed wording for EVAL §3 shared definitions, pending approval; EVAL.md not
-yet edited.
-**Revisit if:** The owner changes the wording.
+**Decision:** Approved by me on 2026-10-05 with two additions, and added to the EVAL §3 shared
+definitions on that date, before any target run on the dev or the test split: parentheses,
+a minus sign, or words such as "used", "outflow", "loss" or "negative" mark a negative figure;
+negative gold matches only a negative figure of matching size and positive only positive;
+the wrong sign is Unsupported (`wrong_number`). Additions: (1) if the question itself names
+the sign ("net loss", "cash used", "loss per share"), a bare figure of matching size counts as
+matching; (2) a figure marked negative more than once ("a net loss of ($11.8) billion") is
+read as negative, not flipped. Negative-gold questions name the filing's printed row label
+(D-037), so their wording carries the filing's own sign words.
+**Revisit if:** Never for this test set version.
 
 ### D-039 — EVAL.md edits after the v2 pre-screen (all before any target run)
 **Date:** 2026-10-05 · **Phase:** 3
@@ -971,5 +988,21 @@ on 41 candidates, all value rows under a section heading.
 **What happened:** FG-0147 (GS operating cash flow, −12,587, printed "( 12,587 )" on "Net cash
 used for operating activities"). EVAL §3 converts a figure by its scale but says nothing about
 sign. 9 v3 candidates have negative gold.
-**Resolution:** Proposed wording (D-038), pending.
+**Resolution:** Wording approved with two additions and added to EVAL §3 (D-038).
 **Linked decision:** D-038
+
+### H-023 — Split is reassigned whenever the draft is rebuilt
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** Asked to confirm the split stayed stable after the new fact-priority order.
+It did not: `assign_split` orders each type's items by company and a seeded key, then spreads
+dev slots evenly over that order, so adding or removing items shifts positions. Of the 203
+items in both draft v2 and draft v3, 76 changed split; 97 items are new.
+**Impact:** None on results: nothing is frozen and no target run exists on either split. The
+split will be assigned once, at freeze, from the final set (EVAL §2: "assigned once by seed and
+then frozen"), and recorded with the tag.
+**What I tried:** Counted the changes against the committed v2 draft.
+**Resolution:** Reported to the owner. Option if wanted: make assignment sticky (keep each
+surviving item's earlier split where the per-type quotas allow, fill new items by seed).
+**Lesson:** Say plainly which outputs are recomputed on every rebuild.
+**Linked decision:** D-005

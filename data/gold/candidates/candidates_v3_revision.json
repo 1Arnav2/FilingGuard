@@ -2,24 +2,24 @@
   "stats": {
     "seed": 20261004,
     "v1": 400,
-    "v1_kept": 324,
+    "v1_kept": 323,
     "added": 42,
-    "v3": 366,
+    "v3": 365,
     "v1_outcomes": [
       {
         "type": "control",
         "reason": "kept",
-        "count": 70
+        "count": 67
       },
       {
         "type": "injection",
         "reason": "kept",
-        "count": 51
+        "count": 50
       },
       {
         "type": "false_premise",
         "reason": "kept",
-        "count": 47
+        "count": 42
       },
       {
         "type": "unanswerable",
@@ -29,7 +29,7 @@
       {
         "type": "unit_trap",
         "reason": "kept",
-        "count": 37
+        "count": 36
       },
       {
         "type": "period_mismatch",
@@ -54,7 +54,22 @@
       {
         "type": "unit_trap",
         "reason": "dollars wording changed (D-033)",
-        "count": 14
+        "count": 13
+      },
+      {
+        "type": "false_premise",
+        "reason": "line named in the question (D-037)",
+        "count": 9
+      },
+      {
+        "type": "control",
+        "reason": "line named in the question (D-037)",
+        "count": 8
+      },
+      {
+        "type": "injection",
+        "reason": "line named in the question (D-037)",
+        "count": 7
       },
       {
         "type": "false_premise",
@@ -64,26 +79,11 @@
       {
         "type": "unit_trap",
         "reason": "line named in the question (D-037)",
-        "count": 6
-      },
-      {
-        "type": "injection",
-        "reason": "line named in the question (D-037)",
-        "count": 6
-      },
-      {
-        "type": "false_premise",
-        "reason": "line named in the question (D-037)",
-        "count": 5
+        "count": 7
       },
       {
         "type": "period_mismatch",
         "reason": "fact taken by a new restated or start-month item",
-        "count": 4
-      },
-      {
-        "type": "control",
-        "reason": "line named in the question (D-037)",
         "count": 4
       },
       {
@@ -107,13 +107,13 @@
         "count": 3
       },
       {
-        "type": "control",
-        "reason": "fact taken by a new restated or start-month item",
+        "type": "false_premise",
+        "reason": "value not on a row labelled with the metric's own name (D-030)",
         "count": 2
       },
       {
-        "type": "false_premise",
-        "reason": "value not on a row labelled with the metric's own name (D-030)",
+        "type": "unit_trap",
+        "reason": "fact taken by a new restated or start-month item",
         "count": 2
       },
       {
@@ -127,52 +127,57 @@
         "count": 1
       },
       {
-        "type": "unit_trap",
+        "type": "false_premise",
+        "reason": "a second figure is printed under the same row label (D-037)",
+        "count": 1
+      },
+      {
+        "type": "control",
         "reason": "fact taken by a new restated or start-month item",
         "count": 1
       }
     ],
     "v3_by_type": {
-      "unanswerable": 58,
-      "false_premise": 52,
-      "control": 74,
+      "unit_trap": 56,
+      "false_premise": 51,
+      "control": 75,
+      "period_mismatch": 56,
       "injection": 57,
-      "unit_trap": 57,
-      "restated": 12,
-      "period_mismatch": 56
+      "unanswerable": 58,
+      "restated": 12
     },
     "v3_by_subtype": {
-      "unanswerable/single_quarter": 20,
-      "false_premise/magnitude": 16,
-      "control/prior_year": 56,
-      "injection/marker": 18,
-      "injection/withhold": 19,
-      "unit_trap/per_share_to_cents": 11,
-      "restated/restatement": 6,
-      "period_mismatch/calendar_wording": 26,
-      "unanswerable/old_period": 31,
-      "injection/false_figure": 20,
-      "period_mismatch/start_month": 30,
-      "unit_trap/millions_to_dollars": 15,
-      "unit_trap/millions_to_thousands": 16,
-      "control/current_year": 18,
-      "unanswerable/untagged_concept": 7,
-      "restated/reclassification": 2,
-      "false_premise/direction_flip": 19,
       "unit_trap/millions_to_billions": 15,
+      "false_premise/magnitude": 16,
+      "control/current_year": 19,
+      "period_mismatch/start_month": 30,
+      "false_premise/direction_flip": 18,
+      "control/prior_year": 56,
       "false_premise/sign_flip": 17,
-      "restated/stock_split": 4
+      "unit_trap/millions_to_dollars": 15,
+      "injection/marker": 18,
+      "unanswerable/old_period": 31,
+      "period_mismatch/calendar_wording": 26,
+      "restated/restatement": 6,
+      "unit_trap/per_share_to_cents": 10,
+      "unanswerable/untagged_concept": 7,
+      "unanswerable/single_quarter": 20,
+      "restated/reclassification": 2,
+      "injection/false_figure": 20,
+      "unit_trap/millions_to_thousands": 16,
+      "restated/stock_split": 4,
+      "injection/withhold": 19
     },
     "start_month_by_company": {
+      "WMT": 3,
       "V": 3,
-      "NKE": 3,
-      "MSFT": 3,
       "AAPL": 3,
+      "NKE": 3,
       "PG": 3,
+      "MSFT": 3,
       "NVDA": 3,
       "DIS": 3,
       "COST": 3,
-      "WMT": 3,
       "ORCL": 3
     }
   },
@@ -222,8 +227,8 @@
     "false_premise-BAC-896e8e78": {
       "type": "false_premise",
       "subtype": "direction_flip",
-      "reason": "kept",
-      "v3_spec_id": "false_premise-BAC-896e8e78"
+      "reason": "line named in the question (D-037)",
+      "v3_spec_id": "false_premise-BAC-93f48f95"
     },
     "period_mismatch-NVDA-92c4e24e": {
       "type": "period_mismatch",
@@ -331,13 +336,13 @@
       "type": "control",
       "subtype": "prior_year",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "control-PG-824d9846"
+      "v3_spec_id": "control-PG-bb4ca92a"
     },
     "false_premise-UNH-bd5eaa5c": {
       "type": "false_premise",
       "subtype": "sign_flip",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "false_premise-UNH-67549c66"
+      "v3_spec_id": "false_premise-UNH-82f7403a"
     },
     "unanswerable-XOM-3662b051": {
       "type": "unanswerable",
@@ -349,7 +354,7 @@
       "type": "control",
       "subtype": "current_year",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "control-WMT-63b1d353"
+      "v3_spec_id": "control-WMT-bda63505"
     },
     "injection-JNJ-2b2693e2": {
       "type": "injection",
@@ -366,8 +371,8 @@
     "control-BA-2b74d63e": {
       "type": "control",
       "subtype": "prior_year",
-      "reason": "kept",
-      "v3_spec_id": "control-BA-2b74d63e"
+      "reason": "line named in the question (D-037)",
+      "v3_spec_id": "control-BA-503500a7"
     },
     "period_mismatch-MSFT-e83f685a": {
       "type": "period_mismatch",
@@ -379,7 +384,7 @@
       "type": "control",
       "subtype": "prior_year",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "control-XOM-1abda7c4"
+      "v3_spec_id": "control-XOM-e8f41207"
     },
     "control-NVDA-f9a81c1c": {
       "type": "control",
@@ -420,8 +425,8 @@
     "injection-GS-477a88f3": {
       "type": "injection",
       "subtype": "withhold",
-      "reason": "kept",
-      "v3_spec_id": "injection-GS-477a88f3"
+      "reason": "line named in the question (D-037)",
+      "v3_spec_id": "injection-GS-8ee19046"
     },
     "injection-PG-d2867b80": {
       "type": "injection",
@@ -516,8 +521,8 @@
     "control-ORCL-ff197a8e": {
       "type": "control",
       "subtype": "current_year",
-      "reason": "fact taken by a new restated or start-month item",
-      "v3_spec_id": null
+      "reason": "kept",
+      "v3_spec_id": "control-ORCL-ff197a8e"
     },
     "unanswerable-V-31403d44": {
       "type": "unanswerable",
@@ -558,8 +563,8 @@
     "false_premise-KO-fa2eeb87": {
       "type": "false_premise",
       "subtype": "direction_flip",
-      "reason": "kept",
-      "v3_spec_id": "false_premise-KO-fa2eeb87"
+      "reason": "line named in the question (D-037)",
+      "v3_spec_id": "false_premise-KO-0cb88677"
     },
     "false_premise-COST-752d4863": {
       "type": "false_premise",
@@ -648,8 +653,8 @@
     "control-BA-656c33b3": {
       "type": "control",
       "subtype": "prior_year",
-      "reason": "kept",
-      "v3_spec_id": "control-BA-656c33b3"
+      "reason": "line named in the question (D-037)",
+      "v3_spec_id": "control-BA-4ffb0c99"
     },
     "false_premise-JNJ-a072c0cb": {
       "type": "false_premise",
@@ -768,8 +773,8 @@
     "control-PFE-9e49f012": {
       "type": "control",
       "subtype": "prior_year",
-      "reason": "kept",
-      "v3_spec_id": "control-PFE-9e49f012"
+      "reason": "line named in the question (D-037)",
+      "v3_spec_id": "control-PFE-eee6dd05"
     },
     "false_premise-GS-95a1986c": {
       "type": "false_premise",
@@ -787,7 +792,7 @@
       "type": "unit_trap",
       "subtype": "millions_to_billions",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "unit_trap-ORCL-f5c9b17a"
+      "v3_spec_id": "unit_trap-ORCL-f5fcb310"
     },
     "injection-XOM-69b9168f": {
       "type": "injection",
@@ -895,7 +900,7 @@
       "type": "false_premise",
       "subtype": "sign_flip",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "false_premise-CVX-60f74071"
+      "v3_spec_id": "false_premise-CVX-7458fbc5"
     },
     "control-TSLA-e9f8bc78": {
       "type": "control",
@@ -912,8 +917,8 @@
     "unit_trap-GS-296d758f": {
       "type": "unit_trap",
       "subtype": "millions_to_dollars",
-      "reason": "dollars wording changed (D-033)",
-      "v3_spec_id": "unit_trap-GS-08cd8081"
+      "reason": "line named in the question (D-037)",
+      "v3_spec_id": "unit_trap-GS-de8090d2"
     },
     "control-KO-7a43f770": {
       "type": "control",
@@ -1207,7 +1212,7 @@
       "type": "unit_trap",
       "subtype": "millions_to_thousands",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "unit_trap-UNH-5574a7c0"
+      "v3_spec_id": "unit_trap-UNH-eeacdbd9"
     },
     "injection-UNH-6f80fe71": {
       "type": "injection",
@@ -1302,8 +1307,8 @@
     "false_premise-ORCL-a683f916": {
       "type": "false_premise",
       "subtype": "direction_flip",
-      "reason": "line named in the question (D-037)",
-      "v3_spec_id": "false_premise-ORCL-0604b578"
+      "reason": "a second figure is printed under the same row label (D-037)",
+      "v3_spec_id": null
     },
     "unanswerable-JPM-53211953": {
       "type": "unanswerable",
@@ -1435,7 +1440,7 @@
       "type": "unit_trap",
       "subtype": "millions_to_billions",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "unit_trap-PFE-fdc3c2ac"
+      "v3_spec_id": "unit_trap-PFE-18fe9588"
     },
     "false_premise-CAT-e1b871db": {
       "type": "false_premise",
@@ -1453,7 +1458,7 @@
       "type": "injection",
       "subtype": "marker",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "injection-KO-07d60be8"
+      "v3_spec_id": "injection-KO-c0ab3d70"
     },
     "false_premise-JPM-696fe08a": {
       "type": "false_premise",
@@ -1507,13 +1512,13 @@
       "type": "injection",
       "subtype": "marker",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "injection-CVX-2e73d894"
+      "v3_spec_id": "injection-CVX-ffed36b7"
     },
     "unit_trap-PG-f8ea5726": {
       "type": "unit_trap",
       "subtype": "millions_to_dollars",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "unit_trap-PG-9e9f58aa"
+      "v3_spec_id": "unit_trap-PG-8c0cd692"
     },
     "unit_trap-NKE-71fef79b": {
       "type": "unit_trap",
@@ -1543,7 +1548,7 @@
       "type": "injection",
       "subtype": "withhold",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "injection-DIS-7e7a61a4"
+      "v3_spec_id": "injection-DIS-befd9998"
     },
     "unit_trap-NKE-78815f77": {
       "type": "unit_trap",
@@ -1693,7 +1698,7 @@
       "type": "false_premise",
       "subtype": "sign_flip",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "false_premise-WMT-13f6bbc2"
+      "v3_spec_id": "false_premise-WMT-1e5774f8"
     },
     "period_mismatch-NVDA-67c65f7d": {
       "type": "period_mismatch",
@@ -1716,8 +1721,8 @@
     "false_premise-PFE-fdf68713": {
       "type": "false_premise",
       "subtype": "sign_flip",
-      "reason": "kept",
-      "v3_spec_id": "false_premise-PFE-fdf68713"
+      "reason": "line named in the question (D-037)",
+      "v3_spec_id": "false_premise-PFE-a74db423"
     },
     "unit_trap-BAC-5efd47c4": {
       "type": "unit_trap",
@@ -1764,8 +1769,8 @@
     "false_premise-KO-a4fb2a1d": {
       "type": "false_premise",
       "subtype": "sign_flip",
-      "reason": "kept",
-      "v3_spec_id": "false_premise-KO-a4fb2a1d"
+      "reason": "line named in the question (D-037)",
+      "v3_spec_id": "false_premise-KO-cf1ef12d"
     },
     "period_mismatch-WMT-28de89c8": {
       "type": "period_mismatch",
@@ -1776,8 +1781,8 @@
     "unit_trap-ORCL-2ccf4b40": {
       "type": "unit_trap",
       "subtype": "per_share_to_cents",
-      "reason": "kept",
-      "v3_spec_id": "unit_trap-ORCL-2ccf4b40"
+      "reason": "fact taken by a new restated or start-month item",
+      "v3_spec_id": null
     },
     "unanswerable-MSFT-e59a6d6c": {
       "type": "unanswerable",
@@ -1812,8 +1817,8 @@
     "injection-JPM-271a1f34": {
       "type": "injection",
       "subtype": "marker",
-      "reason": "kept",
-      "v3_spec_id": "injection-JPM-271a1f34"
+      "reason": "line named in the question (D-037)",
+      "v3_spec_id": "injection-JPM-8258e0db"
     },
     "false_premise-GOOGL-513466c7": {
       "type": "false_premise",
@@ -1848,8 +1853,8 @@
     "false_premise-BA-1abfdf00": {
       "type": "false_premise",
       "subtype": "sign_flip",
-      "reason": "kept",
-      "v3_spec_id": "false_premise-BA-1abfdf00"
+      "reason": "line named in the question (D-037)",
+      "v3_spec_id": "false_premise-BA-9b6d8eb6"
     },
     "unanswerable-KO-7b551655": {
       "type": "unanswerable",
@@ -2029,7 +2034,7 @@
       "type": "false_premise",
       "subtype": "sign_flip",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "false_premise-XOM-43e5c5e6"
+      "v3_spec_id": "false_premise-XOM-0b1de80a"
     },
     "control-TSLA-c7b48d4b": {
       "type": "control",
@@ -2077,19 +2082,19 @@
       "type": "unit_trap",
       "subtype": "millions_to_billions",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "unit_trap-DIS-7f8cc282"
+      "v3_spec_id": "unit_trap-DIS-7968f87c"
     },
     "control-XOM-29424a34": {
       "type": "control",
       "subtype": "prior_year",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "control-XOM-6cb17263"
+      "v3_spec_id": "control-XOM-d6ca02d5"
     },
     "control-BA-fec6c13d": {
       "type": "control",
       "subtype": "prior_year",
-      "reason": "kept",
-      "v3_spec_id": "control-BA-fec6c13d"
+      "reason": "line named in the question (D-037)",
+      "v3_spec_id": "control-BA-133aafa2"
     },
     "period_mismatch-MSFT-2f9e054b": {
       "type": "period_mismatch",
@@ -2173,7 +2178,7 @@
       "type": "injection",
       "subtype": "withhold",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "injection-PG-d90fd17f"
+      "v3_spec_id": "injection-PG-5c1a20f2"
     },
     "false_premise-DIS-20aea032": {
       "type": "false_premise",
@@ -2214,8 +2219,8 @@
     "unit_trap-TSLA-c1dd0c6f": {
       "type": "unit_trap",
       "subtype": "millions_to_thousands",
-      "reason": "line named in the question (D-037)",
-      "v3_spec_id": "unit_trap-TSLA-19c14fb6"
+      "reason": "kept",
+      "v3_spec_id": "unit_trap-TSLA-c1dd0c6f"
     },
     "false_premise-PFE-0056b8a1": {
       "type": "false_premise",
@@ -2268,8 +2273,8 @@
     "injection-TSLA-2cbea2e1": {
       "type": "injection",
       "subtype": "withhold",
-      "reason": "line named in the question (D-037)",
-      "v3_spec_id": "injection-TSLA-b6b00ed8"
+      "reason": "kept",
+      "v3_spec_id": "injection-TSLA-2cbea2e1"
     },
     "control-NVDA-ae592c46": {
       "type": "control",
@@ -2419,7 +2424,7 @@
       "type": "injection",
       "subtype": "marker",
       "reason": "line named in the question (D-037)",
-      "v3_spec_id": "injection-PFE-c66456c1"
+      "v3_spec_id": "injection-PFE-19f1c57a"
     },
     "unanswerable-NKE-7015ec39": {
       "type": "unanswerable",
@@ -2442,8 +2447,8 @@
     "unit_trap-GS-e0a392da": {
       "type": "unit_trap",
       "subtype": "millions_to_billions",
-      "reason": "kept",
-      "v3_spec_id": "unit_trap-GS-e0a392da"
+      "reason": "line named in the question (D-037)",
+      "v3_spec_id": "unit_trap-GS-92e2fbda"
     },
     "injection-NKE-2ea4f71f": {
       "type": "injection",

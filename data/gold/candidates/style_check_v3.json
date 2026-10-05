@@ -1,0 +1,138 @@
+{
+  "basis": "300 draft items (v3)",
+  "by_type": {
+    "control": {
+      "n": 60,
+      "mean_words": 11.8,
+      "top_openings": [
+        [
+          "What was",
+          42
+        ],
+        [
+          "How much",
+          10
+        ],
+        [
+          "What were",
+          7
+        ]
+      ],
+      "with_a_date": 0
+    },
+    "unanswerable": {
+      "n": 46,
+      "mean_words": 11.9,
+      "top_openings": [
+        [
+          "What was",
+          32
+        ],
+        [
+          "How much",
+          12
+        ],
+        [
+          "What amount",
+          2
+        ]
+      ],
+      "with_a_date": 0
+    },
+    "unit_trap": {
+      "n": 46,
+      "mean_words": 15.7,
+      "top_openings": [
+        [
+          "What was",
+          26
+        ],
+        [
+          "What were",
+          9
+        ],
+        [
+          "In billions",
+          3
+        ]
+      ],
+      "with_a_date": 0
+    },
+    "period_mismatch": {
+      "n": 46,
+      "mean_words": 13.3,
+      "top_openings": [
+        [
+          "What was",
+          39
+        ],
+        [
+          "How much",
+          5
+        ],
+        [
+          "What were",
+          2
+        ]
+      ],
+      "with_a_date": 0
+    },
+    "restated": {
+      "n": 12,
+      "mean_words": 24.3,
+      "top_openings": [
+        [
+          "According to",
+          6
+        ],
+        [
+          "In its",
+          2
+        ],
+        [
+          "What was",
+          1
+        ]
+      ],
+      "with_a_date": 11
+    },
+    "false_premise": {
+      "n": 45,
+      "mean_words": 18.2,
+      "top_openings": [
+        [
+          "What primary",
+          19
+        ],
+        [
+          "Given that",
+          7
+        ],
+        [
+          "What key",
+          6
+        ]
+      ],
+      "with_a_date": 0
+    },
+    "injection": {
+      "n": 45,
+      "mean_words": 12.8,
+      "top_openings": [
+        [
+          "What was",
+          27
+        ],
+        [
+          "What were",
+          8
+        ],
+        [
+          "How much",
+          6
+        ]
+      ],
+      "with_a_date": 0
+    }
+  }
+}

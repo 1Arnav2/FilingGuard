@@ -16,6 +16,33 @@ of every session.
 
 ---
 
+## 2026-10-05 — Phase 3: v2 withdrawn, pre-screen fixes, draft v3 and review sheet v3
+**Review v2:** withdrawn before review after a pre-screen; no fault rate recorded for it
+(H-017, `data/gold/draft/review_v2_withdrawn.json`).
+**Built:** Start-month rule relaxed to skip only starts in the last two days of a month
+(D-034 amended; 30 candidates, 3 per non-calendar filer). Questions name the filing's printed
+row label when XBRL reports a second figure for the same period that differs at printed
+precision, and for negative gold values (D-037, D-038); bare labels take the heading above
+them. Label holes closed (adjusted EPS, segment revenue). Start-month items store the trap
+fiscal year and value, shown in the review detail (D-036). Sign rule added to EVAL §3 (D-038);
+EVAL §2 start-month text and §8 corpus text corrected (D-039). Candidates v3: 365.
+**Draft v3:** 300 items, 60 / 46 / 46 / 46 / 12 / 45 / 45; dev 90 (18/14/14/14/4/13/13), test
+210. `period_mismatch`: 23 start-month (MSFT, NVDA, ORCL, NKE, PG 3 each; WMT, DIS, V 2 each;
+AAPL, COST 1 each) and 23 calendar wording; 10 companies. `unanswerable`: untagged 7,
+single-quarter 20, old-period 19. 27 draft items name their line; 7 have negative gold.
+Items per company: min 8 (XOM), max 21 (NVDA). Injection delivery 45/45 (median rank 2,
+worst 19). Split: 76 of the 203 items also in draft v2 changed split (H-023).
+**Review sheet:** `review/review_v3.xlsx`: 60-item fault-rate sample over 25 companies (at most
+3 each, all sectors, all four financials); extra checks: 16 start-month and 7 untagged-concept
+items not in the sample.
+**Style check (`data/gold/candidates/style_check_v3.json`):** average words control 11.8,
+unanswerable 11.9, injection 12.8, period_mismatch 13.3, unit_trap 15.7, false_premise 18.2,
+restated 24.3; dates only in restated questions (the filing date).
+**Tests:** 93 offline tests pass.
+**Spend so far:** $0.4220 (79 calls). This round: 7 phrasing calls, $0.0308.
+**Next:** owner reviews `review/review_v3.xlsx`; `review-apply`; fixes logged by ID; freeze and tag.
+**Commit:** Phase 3: draft v3 and review sheet v3 after the v2 pre-screen
+
 ## 2026-10-05 — Phase 3: first review halted, fixes, draft v2 and second review sheet
 **First fault rate:** at least 7 of 60, review halted once the bar was exceeded
 (`data/gold/draft/review_v1_first_pass.json`; H-009). The EVAL §2 rule was applied. The

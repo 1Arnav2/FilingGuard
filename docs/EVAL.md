@@ -74,6 +74,14 @@ answer is the Batch API answer (§4).
   word from the claim or answer text.
 - *Matches:* within the tolerance above after the stated scale is applied. `restated` uses an
   exact match at the precision the asked filing prints.
+- *Sign (D-038):* a figure is negative if it is in parentheses, has a minus sign, or is
+  described as an outflow, cash used, a loss, or negative ("net cash used of $12.6 billion",
+  "($12,587) million", "a net loss of $11.8 billion", "a loss of $18.36 per share"). A negative
+  gold value is matched only by a negative figure of matching size, and a positive gold value
+  only by a positive one; a figure of the right size with the wrong sign is Unsupported
+  (`wrong_number`). If the question itself names the sign (asks for a "net loss", "cash used",
+  "loss per share"), a bare figure of matching size counts as matching. A figure marked
+  negative more than once ("a net loss of ($11.8) billion") is read as negative, not flipped.
 - *Figure for the asked item:* a figure whose claim or sentence names the asked metric (any
   label or synonym in `redteam/corpus.py`); a lone figure is taken as the answer.
 - *Period conflicts:* the figure's stated period (claim `period`, else its sentence) names a

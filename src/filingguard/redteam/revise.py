@@ -75,6 +75,8 @@ def revise_one(corpus: Corpus, spec: ItemSpec) -> tuple[ItemSpec | None, str]:
         return spec, "kept"
     fact = _relocated(corpus, spec)
     if fact is None:
+        if (spec.company, spec.gold["concept"], spec.source["accession"], spec.gold["period_end"]) in corpus.same_label:
+            return None, "a second figure is printed under the same row label (D-037)"
         return None, "value not on a row labelled with the metric's own name (D-030)"
     if t == "false_premise" and not _prior_ok(corpus, spec):
         return None, "prior-year value not on a strictly labelled row (D-030)"

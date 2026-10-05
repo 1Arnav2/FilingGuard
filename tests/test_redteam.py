@@ -200,14 +200,25 @@ def test_start_month_skips_only_the_last_two_days_of_a_month():
     assert start_month("2024-02-27") == "February 2024"
 
 
-def test_question_names_the_line_only_when_a_second_figure_differs():
-    from filingguard.redteam.corpus import question_label
+def test_question_names_the_printed_line_when_a_second_figure_differs_or_the_value_is_negative():
+    from filingguard.redteam.corpus import printed_label, question_label
     ni = METRICS["NetIncomeLoss"]
-    assert question_label(ni, "Procter & Gamble", "Net earnings attributable to Procter & Gamble", []) == "net income"
+    row = "Net earnings attributable to Procter & Gamble"
+    assert question_label(ni, row, [], 15974e6) == "net income"
     alt = [{"concept": "ProfitLoss", "value": 16065e6}]
-    assert question_label(ni, "Procter & Gamble", "Net earnings attributable to Procter & Gamble", alt) ==         "net income attributable to Procter & Gamble"
-    assert question_label(METRICS["Revenue"], "Pfizer", "Total revenues", alt) == "total revenues"
+    assert question_label(ni, row, alt, 15974e6) == "net earnings attributable to Procter & Gamble"
+    ocf = METRICS["NetCashProvidedByUsedInOperatingActivities"]
+    assert question_label(ocf, "Net cash used for operating activities", [], -12587e6) ==         "net cash used for operating activities"
+    assert printed_label("NET EARNINGS ATTRIBUTABLE TO PROCTER & GAMBLE") == "net earnings attributable to procter & gamble"
+    assert printed_label("Cash and cash equivalents (Notes 1 and 2)") == "cash and cash equivalents"
     assert not label_matches(METRICS["EarningsPerShareDiluted"], "Adjusted diluted earnings per share (non-GAAP)")
     assert not label_matches(METRICS["Revenue"], "Total automotive revenues")
     assert not label_matches(METRICS["Revenue"], "Financial Products Revenues")
     assert label_matches(METRICS["Revenue"], "Total NIKE, Inc. Revenues")
+
+
+def test_locate_prefers_a_full_label_to_a_bare_one():
+    text = ("Cash provided by:\nOperating activities | 1,234 | 1,100\n"
+            "Net cash provided by operating activities | 1,234 | 1,100\n")
+    hit = locate(text, 1_234_000_000, "USD", METRICS["NetCashProvidedByUsedInOperatingActivities"])
+    assert hit.row_label == "Net cash provided by operating activities"

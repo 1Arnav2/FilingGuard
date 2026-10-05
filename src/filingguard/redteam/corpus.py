@@ -87,6 +87,8 @@ COMPANY_NAMES = {
 }
 
 SCALES = (("millions", 1e6), ("thousands", 1e3), ("units", 1.0))
+# Row labels that only make sense under a section heading; a fuller label is preferred.
+BARE_LABELS = {"basic", "diluted", "operating activities", "revenue", "revenues", "earnings"}
 
 
 def fiscal_label(period_end: str) -> int:
@@ -159,8 +161,11 @@ def locate(text: str, value: float, unit: str, metric: Metric) -> Located | None
     """Where the filing prints `value` in a table row whose label is the metric's own name.
 
     Only a value cell of a table row counts (not prose, not the label cell), and the row label
-    must match `metric.row_label` (D-030). Returns the first such match, or None.
+    must match `metric.row_label` (D-030). Returns the first such match whose label says more
+    than a bare word under a section heading ("Basic", "Operating activities"); failing that,
+    the first bare match; or None.
     """
+    bare = None
     for rendering, scale in renderings(value, unit):
         for m in re.finditer(re.escape(rendering), text):
             if not _number_at(text, m.start(), m.end()):
@@ -170,8 +175,48 @@ def locate(text: str, value: float, unit: str, metric: Metric) -> Located | None
             if bar == -1 or m.start() < bar:
                 continue
             if label_matches(metric, text[lo:bar]):
-                return Located(m.start(), m.end(), rendering, scale, text[lo:bar].strip())
-    return None
+                hit = Located(m.start(), m.end(), rendering, scale, text[lo:bar].strip())
+                if clean_label(hit.row_label) not in BARE_LABELS:
+                    return hit
+                bare = bare or hit
+    return bare
+
+
+def heading_label(text: str, start: int) -> str:
+    """For a bare row label ("Basic", "Operating activities"), the label with the heading the
+    filing prints above it ("Net cash provided by/ (used in) operating activities"); otherwise
+    the row label itself."""
+    lo, hi = _line_bounds(text, start)
+    bar = text.find("|", lo, hi)
+    label = text[lo:bar].strip()
+    if clean_label(label) not in BARE_LABELS:
+        return label
+    pos = lo
+    for _ in range(6):
+        if pos == 0:
+            break
+        p_lo, p_hi = _line_bounds(text, pos - 1)
+        line = text[p_lo:p_hi]
+        pos = p_lo
+        if not re.search(r"\|\s*[$(]?\s*\d", line) and line.strip():
+            heading = line.split("|")[0].strip().rstrip(":").strip()
+            return f"{heading} {label[0].lower() + label[1:]}"
+    return label
+
+
+def printed_matches(text: str, value: float, unit: str, scale: str) -> list[str]:
+    """Clean labels of every table row that prints `value` at `scale` in a value cell."""
+    divisor = dict(SCALES).get(scale, 1.0)
+    rendering = f"{abs(value):.2f}" if unit == "USD/shares" else f"{abs(round(value / divisor)):,}"
+    labels = []
+    for m in re.finditer(re.escape(rendering), text):
+        if not _number_at(text, m.start(), m.end()):
+            continue
+        lo, hi = _line_bounds(text, m.start())
+        bar = text.find("|", lo, hi)
+        if bar != -1 and m.start() > bar:
+            labels.append(clean_label(text[lo:bar]))
+    return labels
 
 
 # XBRL concepts for the other line a reader could take for the same metric.
@@ -183,25 +228,38 @@ ALTERNATIVE_CONCEPTS = {
     "NetCashProvidedByUsedInOperatingActivities": ("NetCashProvidedByUsedInOperatingActivitiesContinuingOperations",),
     **{c: tuple(o for o in REVENUE_CONCEPTS if o != c) for c in REVENUE_CONCEPTS},
 }
-TOLERANCE = 0.005
 
 
-def question_label(metric: Metric, name: str, row_label: str, alternatives: list[dict]) -> str:
-    """How a question names the metric: its usual label, or, when the filing also reports a
-    differing figure a reader could take for it, the line the gold value is on (D-037)."""
-    if not alternatives:
-        return metric.label
-    parent = {
-        "NetIncomeLoss": f"net income attributable to {name}",
-        "StockholdersEquity": f"stockholders' equity attributable to {name}",
-        "EarningsPerShareBasic": "basic earnings per share (net income, including any discontinued operations)",
-        "EarningsPerShareDiluted": "diluted earnings per share (net income, including any discontinued operations)",
-        "NetCashProvidedByUsedInOperatingActivities": "net cash provided by operating activities (including any discontinued operations)",
-    }
-    if metric.key in parent:
-        return parent[metric.key]
-    text = clean_label(row_label)
-    return text[0].lower() + text[1:] if text else metric.label
+def _printed(value: float, unit: str, scale: str) -> float:
+    """`value` rounded to the precision the filing prints it at."""
+    if unit == "USD/shares":
+        return round(value, 2)
+    return round(value / dict(SCALES).get(scale, 1.0))
+
+
+def printed_label(row_label: str) -> str:
+    """A row label as the filing prints it, for use inside a question: footnote marks, bullets
+    and trailing colons dropped, apostrophes straightened, first letter lower-cased (an
+    all-capitals label is lower-cased whole)."""
+    text = normalise_text(row_label)
+    text = re.sub(r"\((?:\d+|[a-zA-Z]|[Nn]otes? [^)]*)\)", " ", text)
+    text = re.sub(r"[^A-Za-z0-9()]+$", "", re.sub(r"^[^A-Za-z0-9(]+", "", text))
+    text = re.sub(r"\s+\d+$", "", text)
+    text = re.sub(r"\s+", " ", text).strip(" :")
+    if text.isupper():
+        return text.lower()
+    words = text.split()
+    sentence_case = len(words) < 2 or not words[1][:1].isupper()
+    return text[0].lower() + text[1:] if text and sentence_case else text
+
+
+def question_label(metric: Metric, row_label: str, alternatives: list[dict], value: float) -> str:
+    """How a question names the metric: its usual label; or the gold row's own printed label
+    when the filing also reports a differing figure a reader could take for it (D-037), or
+    when the gold value is negative, so the question carries the filing's sign wording (D-038)."""
+    if alternatives or value < 0:
+        return printed_label(row_label) or metric.label
+    return metric.label
 
 
 def excerpt(text: str, start: int, end: int, width: int = EXCERPT_CHARS) -> dict:
@@ -237,6 +295,9 @@ class Corpus:
         self.pairs = json.loads((self.processed / "restatement_pairs.json").read_text(encoding="utf-8"))
         self._text: dict[str, str] = {}
         self._companyfacts: dict[str, dict] = {}
+        # (ticker, concept, accession, period_end) of facts refused because another figure for the
+        # same period is printed under the same row label (D-037).
+        self.same_label: set[tuple] = set()
 
     @cached_property
     def chunks(self) -> list[dict]:
@@ -293,11 +354,17 @@ class Corpus:
             return None
         filing = next(f for f in self.filings(ticker) if f["accession"] == accession)
         period_start = r["period_start"] if isinstance(r["period_start"], str) else None
-        alternatives = self.alternatives(ticker, r["concept"], accession, period_start, r["period_end"], float(r["value"]))
+        alternatives = self.alternatives(ticker, r["concept"], accession, period_start, r["period_end"],
+                                         float(r["value"]), r["unit"], loc.printed_scale)
+        gold_label = clean_label(loc.row_label)
+        if any(gold_label in printed_matches(text, a["value"], r["unit"], loc.printed_scale) for a in alternatives):
+            # The other figure is printed under the same label: no line name tells them apart.
+            self.same_label.add((ticker, r["concept"], accession, r["period_end"]))
+            return None
         return {
             "gold": {
                 "value": float(r["value"]), "unit": r["unit"], "concept": r["concept"],
-                "metric": question_label(metric, self.name(ticker), loc.row_label, alternatives),
+                "metric": question_label(metric, heading_label(text, loc.start), alternatives, float(r["value"])),
                 "period_start": r["period_start"] if isinstance(r["period_start"], str) else None,
                 "period_end": r["period_end"], "fiscal_year": fiscal_label(r["period_end"]),
                 "printed_scale": loc.printed_scale, "printed_as": loc.rendering,
@@ -309,9 +376,9 @@ class Corpus:
         }
 
     def alternatives(self, ticker: str, concept: str, accession: str, period_start: str | None,
-                     period_end: str, value: float) -> list[dict]:
+                     period_end: str, value: float, unit: str, scale: str) -> list[dict]:
         """Other XBRL figures in the same filing and period that a reader could take for this
-        metric and that differ from `value` by more than the tolerance."""
+        metric and that differ from `value` at the precision the filing prints it (D-037)."""
         if ticker not in self._companyfacts:
             from filingguard.data.edgar_client import companyfacts_url, edgar_client_from_env
 
@@ -323,7 +390,7 @@ class Corpus:
             for entries in gaap.get(other, {}).get("units", {}).values():
                 for e in entries:
                     if (e.get("accn") == accession and e["end"] == period_end and e.get("start") == period_start
-                            and abs(float(e["val"]) - value) > TOLERANCE * abs(value)):
+                            and _printed(float(e["val"]), unit, scale) != _printed(value, unit, scale)):
                         out.append({"concept": other, "value": float(e["val"])})
         return [dict(t) for t in {tuple(sorted(a.items())) for a in out}]
 
