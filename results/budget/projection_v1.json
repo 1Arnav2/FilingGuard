@@ -1,0 +1,314 @@
+{
+  "model": "gemini-3.8-flash",
+  "prices_per_1m": {
+    "input": 0.75,
+    "output_incl_thinking": 3.75
+  },
+  "rows": [
+    {
+      "item": "Phase 2: remaining smoke target calls",
+      "calls": [
+        3,
+        3
+      ],
+      "tokens": [
+        40188,
+        68742
+      ],
+      "cost_usd": [
+        0.03,
+        0.08
+      ]
+    },
+    {
+      "item": "Phase 3: red-team phrasing, 400-500 candidates, 10 per call",
+      "calls": [
+        40,
+        50
+      ],
+      "tokens": [
+        120000,
+        350000
+      ],
+      "cost_usd": [
+        0.27,
+        0.86
+      ]
+    },
+    {
+      "item": "Phase 4: target on 90 dev items (once; cached after)",
+      "calls": [
+        90,
+        90
+      ],
+      "tokens": [
+        1205640,
+        2062260
+      ],
+      "cost_usd": [
+        1.04,
+        2.27
+      ]
+    },
+    {
+      "item": "Phase 4: verifier LLM steps, 2 per item, 90 dev items x 3-6 prompt versions",
+      "calls": [
+        540,
+        1080
+      ],
+      "tokens": [
+        1080000,
+        5940000
+      ],
+      "cost_usd": [
+        1.62,
+        9.32
+      ]
+    },
+    {
+      "item": "Phase 4: false-premise judge on dev, ~15 items x 1-3 versions",
+      "calls": [
+        15,
+        45
+      ],
+      "tokens": [
+        30000,
+        157500
+      ],
+      "cost_usd": [
+        0.04,
+        0.25
+      ]
+    },
+    {
+      "item": "Phase 5: target on 210 test items (once)",
+      "calls": [
+        210,
+        210
+      ],
+      "tokens": [
+        2813160,
+        4811940
+      ],
+      "cost_usd": [
+        2.43,
+        5.29
+      ]
+    },
+    {
+      "item": "Phase 5: verifier LLM steps, 2 per item, 210 test items",
+      "calls": [
+        420,
+        420
+      ],
+      "tokens": [
+        840000,
+        2310000
+      ],
+      "cost_usd": [
+        1.26,
+        3.62
+      ]
+    },
+    {
+      "item": "Phase 5: false-premise judge on test + kappa sample",
+      "calls": [
+        35,
+        45
+      ],
+      "tokens": [
+        70000,
+        157500
+      ],
+      "cost_usd": [
+        0.1,
+        0.25
+      ]
+    }
+  ],
+  "total": {
+    "calls": [
+      1353,
+      1943
+    ],
+    "tokens": [
+      6198988,
+      15857942
+    ],
+    "cost_usd": [
+      6.8,
+      21.94
+    ]
+  },
+  "target_call_cost_usd": {
+    "lo": 0.0116,
+    "mid": 0.0177,
+    "hi": 0.0252
+  },
+  "scenarios": {
+    "S0 current plan (2 verifier LLM calls per item, 3-6 dev versions, 500 candidates)": {
+      "parts": {
+        "smoke (3 target)": [
+          0.03,
+          0.08
+        ],
+        "red-team phrasing": [
+          0.27,
+          0.86
+        ],
+        "dev target (90)": [
+          1.04,
+          2.27
+        ],
+        "dev verifier": [
+          1.62,
+          9.32
+        ],
+        "dev judge": [
+          0.04,
+          0.25
+        ],
+        "test target (210)": [
+          2.43,
+          5.29
+        ],
+        "test verifier": [
+          1.26,
+          3.62
+        ],
+        "test judge": [
+          0.1,
+          0.25
+        ]
+      },
+      "total_usd": [
+        6.8,
+        21.94
+      ]
+    },
+    "S1 verifier deterministic-first + 400 candidates (target unchanged)": {
+      "parts": {
+        "smoke (3 target)": [
+          0.03,
+          0.08
+        ],
+        "red-team phrasing": [
+          0.27,
+          0.69
+        ],
+        "dev target (90)": [
+          1.04,
+          2.27
+        ],
+        "dev verifier": [
+          0.12,
+          0.93
+        ],
+        "dev judge": [
+          0.04,
+          0.25
+        ],
+        "test target (210)": [
+          2.43,
+          5.29
+        ],
+        "test verifier": [
+          0.1,
+          0.72
+        ],
+        "test judge": [
+          0.1,
+          0.25
+        ]
+      },
+      "total_usd": [
+        4.14,
+        10.49
+      ]
+    },
+    "S2 = S1 + target thinking set low": {
+      "parts": {
+        "smoke (3 target)": [
+          0.03,
+          0.05
+        ],
+        "red-team phrasing": [
+          0.27,
+          0.69
+        ],
+        "dev target (90)": [
+          0.97,
+          1.59
+        ],
+        "dev verifier": [
+          0.12,
+          0.93
+        ],
+        "dev judge": [
+          0.04,
+          0.25
+        ],
+        "test target (210)": [
+          2.27,
+          3.7
+        ],
+        "test verifier": [
+          0.1,
+          0.72
+        ],
+        "test judge": [
+          0.1,
+          0.25
+        ]
+      },
+      "total_usd": [
+        3.91,
+        8.19
+      ]
+    },
+    "S3 = S1 + Batch API for dev/test runs (latency from 30-call sample)": {
+      "parts": {
+        "smoke (3 target)": [
+          0.03,
+          0.08
+        ],
+        "red-team phrasing": [
+          0.27,
+          0.69
+        ],
+        "dev target (90)": [
+          0.52,
+          1.13
+        ],
+        "dev verifier": [
+          0.06,
+          0.47
+        ],
+        "dev judge": [
+          0.04,
+          0.25
+        ],
+        "test target (210)": [
+          1.21,
+          2.65
+        ],
+        "test verifier": [
+          0.05,
+          0.36
+        ],
+        "test judge": [
+          0.1,
+          0.25
+        ],
+        "latency sample (30 target, standard)": [
+          0.35,
+          0.76
+        ]
+      },
+      "total_usd": [
+        2.64,
+        6.64
+      ]
+    }
+  }
+}

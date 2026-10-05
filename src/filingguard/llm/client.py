@@ -10,6 +10,7 @@ from typing import Any
 from dotenv import load_dotenv
 
 from filingguard.llm.cache import DiskCache, cache_key
+from filingguard.llm.spend import SpendLedger, ledger_from_env
 from filingguard.retry import RETRYABLE_STATUS, RetryPolicy, with_retry
 
 # A backend takes (model, prompt, params) and returns {"text": str, "raw": dict}.
@@ -63,22 +64,34 @@ def gemini_backend(api_key: str, policy: RetryPolicy = RetryPolicy()) -> Backend
 
 
 class LLMClient:
-    """Generates text for one pinned model. Identical requests are served from the cache."""
+    """Generates text for one pinned model.
 
-    def __init__(self, model: str, cache: DiskCache, backend: Backend) -> None:
+    Identical requests are served from the cache at no cost. Every cache miss is checked
+    against the spend ledger before it is sent and recorded after it returns. The ledger is a
+    required argument so no client can be built that spends without tracking.
+    """
+
+    def __init__(self, model: str, cache: DiskCache, backend: Backend, *, ledger: SpendLedger) -> None:
         self.model = model
         self.cache = cache
         self.backend = backend
+        self.ledger = ledger
 
-    def generate(self, prompt: str, **params: Any) -> LLMResponse:
-        """Return the model's reply, calling the API only on a cache miss."""
+    def generate(self, prompt: str, *, purpose: str | None = None, **params: Any) -> LLMResponse:
+        """Return the model's reply, calling the API only on a cache miss.
+
+        `purpose` labels the ledger entry and is not part of the cache key.
+        Raises `BudgetExceeded` before a call that could pass the hard cap.
+        """
         key = cache_key({"model": self.model, "prompt": prompt, "params": params})
         hit = self.cache.get(key)
         if hit is not None:
             return LLMResponse(hit["text"], self.model, True, hit["raw"], hit.get("latency_s"))
+        self.ledger.check(self.model, prompt)
         started = time.perf_counter()
         result = self.backend(self.model, prompt, params)
         latency_s = round(time.perf_counter() - started, 3)
+        self.ledger.record(self.model, result["raw"], key, purpose)
         self.cache.put(key, {"model": self.model, "prompt": prompt, "params": params, "latency_s": latency_s, **result})
         return LLMResponse(result["text"], self.model, False, result["raw"], latency_s)
 
@@ -93,4 +106,4 @@ def client_from_env(model_var: str = "TARGET_MODEL") -> LLMClient:
     if not model:
         raise RuntimeError(f"{model_var} is not set in .env")
     cache_dir = Path(os.environ.get("CACHE_DIR", ".cache")) / "llm"
-    return LLMClient(model=model, cache=DiskCache(cache_dir), backend=gemini_backend(api_key))
+    return LLMClient(model, DiskCache(cache_dir), gemini_backend(api_key), ledger=ledger_from_env())

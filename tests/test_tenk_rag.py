@@ -31,8 +31,8 @@ def reply(payload):
     return backend
 
 
-def agent(tmp_path, payload):
-    llm = LLMClient("m", DiskCache(tmp_path), reply(payload))
+def agent(tmp_path, payload, ledger):
+    llm = LLMClient("m", DiskCache(tmp_path / "cache"), reply(payload), ledger=ledger)
     return TenKRagAgent(llm, FixedRetriever(), DATES, k=2)
 
 
@@ -44,8 +44,8 @@ GOOD = {
 }
 
 
-def test_answer_maps_quote_to_filing_offsets_and_logs_trace(tmp_path):
-    a = agent(tmp_path, GOOD).answer("What were total net sales?", "AAPL")
+def test_answer_maps_quote_to_filing_offsets_and_logs_trace(tmp_path, ledger):
+    a = agent(tmp_path, GOOD, ledger).answer("What were total net sales?", "AAPL")
     assert not a.abstained and a.claims[0].value == 416161
     cite = a.citations[a.claims[0].citation_index]
     assert (cite.doc_id, cite.chunk_id, cite.quote_found) == ("0001-25-1", "0001-25-1:7", True)
@@ -55,15 +55,15 @@ def test_answer_maps_quote_to_filing_offsets_and_logs_trace(tmp_path):
     assert a.latency_s >= 0
 
 
-def test_second_call_is_cached_and_keeps_original_latency(tmp_path):
-    first = agent(tmp_path, GOOD).answer("q", "AAPL")
-    second = agent(tmp_path, GOOD).answer("q", "AAPL")
+def test_second_call_is_cached_and_keeps_original_latency(tmp_path, ledger):
+    first = agent(tmp_path, GOOD, ledger).answer("q", "AAPL")
+    second = agent(tmp_path, GOOD, ledger).answer("q", "AAPL")
     assert second.trace["llm_cached"] is True
     assert second.trace["llm_latency_s"] == first.trace["llm_latency_s"]
 
 
-def test_abstention_is_passed_through(tmp_path):
-    a = agent(tmp_path, {"answer": "Not in the filings provided.", "abstain": True, "claims": []}).answer("q", "AAPL")
+def test_abstention_is_passed_through(tmp_path, ledger):
+    a = agent(tmp_path, {"answer": "Not in the filings provided.", "abstain": True, "claims": []}, ledger).answer("q", "AAPL")
     assert a.abstained and a.claims == [] and a.citations == []
 
 

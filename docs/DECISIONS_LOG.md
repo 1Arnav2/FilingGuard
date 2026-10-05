@@ -322,13 +322,35 @@ add keyword search if it is poor. Dense-only hit@8 on the smoke set was 80% (hit
 **Options considered:** Dense; BM25; equal-weight reciprocal rank fusion (RRF); interleaved
 union of BM25 and dense; each at k = 10 or 20. See H-007 for the order of events.
 **Decision:** `InterleavedRetriever(BM25, dense)` with k = 20 (top 10 of each), BM25
-k1 = 1.2, b = 0.75, no tuning. Provisional: the owner confirms before the target is frozen.
+k1 = 1.2, b = 0.75, no tuning. Confirmed by me (option A), as committed before scoring.
 **Why:** Window size mattered far more than method; at k = 20 dense, RRF and interleaved are
 within one question of each other on 30 questions. Interleaving keeps exact-figure matches
 (keyword) and paraphrase matches (dense) both in the context.
 **Trade-off accepted:** About 16k tokens of context per question. On the fresh held-out set
 the committed design scored 7/10 while dense alone scored 10/10 (in hindsight).
-**Revisit if:** The owner prefers dense-only or a larger k; any change gets a new held-out set.
+**Revisit if:** Never for this target version; any change needs a new held-out set.
+
+### D-024 — Paid tier with a hard spend cap
+**Date:** 2026-10-04 · **Phase:** 2
+**Context:** The free tier allows 20 requests per day for gemini-3.8-flash (H-006); the
+project needs roughly 1,400–1,900 calls. TRD §6 said "Cost: zero. Free tiers only."
+**Options considered:** (A) switch to a model with a larger free quota; (B) enable billing
+and keep gemini-3.8-flash; (C) mix: cheap model for red-team and judge, 3.8-flash for target
+and verifier.
+**Decision:** Option B, chosen by me. Billing on for the FilingGuard project; gemini-3.8-flash
+for every role so the target stays a fair baseline. Paid limits: 1,000 requests/minute, 2M
+tokens/minute, 10,000 requests/day. Budget: $7.00 hard cap (also set in AI Studio, which can
+lag), warning at $5.00. Enforced in code: `llm/spend.py` refuses any uncached call whose
+worst case (prompt length plus the model's 65,536-token output limit) would pass the cap,
+and logs every paid call from the API's token counts. `LLMClient` cannot be built without a
+ledger. Prices in `config/pricing.json`: $0.75 / $3.75 per 1M input / output tokens through
+2026-12-31, doubling on 2027-01-01 (source: ai.google.dev/gemini-api/docs/pricing, page
+updated 2026-10-01). TRD §3, §5, §6 updated.
+**Why:** Keeps the model fixed across roles and phases; the cap protects a prepaid balance of
+$9.27 shared with the live FundClarity app.
+**Trade-off accepted:** The project is no longer free. The worst-case check stops calls with
+up to about $0.25 of headroom left.
+**Revisit if:** Work runs into 2027 (prices double), or the projection needs more than $7.
 
 ---
 
@@ -430,7 +452,7 @@ days at 20 per day. Blocks Phase 2 completion and every later phase until resolv
 **What I tried:** Read the error's quota details; checked the rate-limits docs page (limits
 not listed). The retry layer was retrying this 429 with backoff, which cannot help a daily
 quota; it now fails fast on per-day quota errors (tested) and still retries per-minute ones.
-**Resolution:** Pending owner decision on model or billing (options in the Phase 2 summary).
+**Resolution:** Billing enabled with a $7 hard cap enforced in code (D-024).
 **Lesson:** Check quotas, not just model names, before pinning a model. D-012 picked the
 newest stable Flash without knowing its daily limit.
 **Linked decision:** D-012
@@ -447,8 +469,27 @@ answers, so their wording echoed the text and favoured keyword search.
 method's misses sat just outside the window. (2) Committed to interleaved k = 20, wrote
 held-out set 2 (hash `b5502f78…`) before running it: 7/10. Across all 30 questions at k = 20:
 dense 28/30 (95% CI 79–98%), interleaved 27/30 (74–97%), RRF 27/30, BM25 23/30.
-**Resolution:** Stopped iterating; the choice goes to the owner (D-023). All results are in
-`results/smoke/retrieval.json`.
+**Resolution:** Stopped iterating; the owner chose the committed design (D-023). All results
+are in `results/smoke/retrieval.json`.
 **Lesson:** Questions for a retrieval check must be written without looking at the target
 text, and a design must be fixed before its held-out set is scored.
 **Linked decision:** D-023
+
+### H-008 — Projected spend is above the $5 warning level
+**Date:** 2026-10-04
+**Phase:** 2
+**What happened:** Projection from the 7 measured target calls (12,890–20,243 input tokens,
+506–2,671 output tokens including thinking; $0.012–0.025 per call) through Phase 5:
+1,353–1,943 calls, 6.2M–15.9M tokens, $6.80–$21.94 under the current plan. The target alone
+(303 calls) is about $5.37 at the measured mean, so no verifier-side saving brings the total
+under $5 at standard prices.
+**Impact:** Model calls paused until the owner picks cuts. Projection and scenarios are in
+`results/budget/projection_v1.json`.
+**What I tried:** Priced four scenarios that keep the test set at 300 and the scoring rules
+unchanged: verifier deterministic-first with 400 red-team candidates ($4.14–$10.49); plus
+target thinking set low ($3.91–$8.19); plus the Batch API at half price for dev and test runs,
+with latency measured on a 30-call standard sample ($2.64–$6.64).
+**Resolution:** Pending owner decision.
+**Lesson:** Context size (20 chunks, about 17.6k tokens) dominates cost; price the
+retrieval window together with the hit rate.
+**Linked decision:** D-024

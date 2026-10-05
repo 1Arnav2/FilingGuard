@@ -16,6 +16,42 @@ of every session.
 
 ---
 
+## 2026-10-04 — Phase 2 continued: budget controls (paused, not complete)
+**Built:** `config/pricing.json` (gemini-3.8-flash $0.75 / $3.75 per 1M input / output tokens
+to 2026-12-31, $1.50 / $7.50 from 2027-01-01; source ai.google.dev/gemini-api/docs/pricing).
+`llm/spend.py`: per-call ledger (`results/spend/ledger.jsonl`), running total
+(`results/spend/total.json`), warning at $5, hard cap $7 checked before every uncached call
+against a worst case that includes the model's full output limit. `LLMClient` now requires a
+ledger. `tests/test_llm_boundary.py` fails if anything but `LLMClient.generate` can reach the
+model, and checks the order cache → ledger check → call → record → cache. Projection in
+`results/budget/projection_v1.json`. Docs: TRD §3, §5, §6; D-023 confirmed; D-024; H-006
+resolved; H-008.
+**Tests:** 72 offline tests pass (new: costing, cap never passed, warning once, failed call
+free, both price bands, cap above $7 rejected, model-access boundary).
+**Retrieval report (D-023, H-007):** hit@20 = a chunk containing the answer is in the top 20
+for the question's company. Source: `results/smoke/retrieval.json`.
+
+| Retriever | Smoke (10) | Held-out 1 (10) | Held-out 2, fresh (10) | All 30 (95% CI) |
+|---|---|---|---|---|
+| Dense (embeddings) | 9 | 9 | 10 | 28 (79–98%) |
+| Keyword (BM25) | 10 | 8 | 5 | 23 (59–88%) |
+| RRF fusion | 10 | 9 | 8 | 27 (74–97%) |
+| **Interleaved keyword + dense (chosen)** | 10 | 10 | 7 | **27 (74–97%)** |
+
+Biased-question correction: the 10 smoke questions were written after searching the filings
+for their answers, so their wording echoed the text and favoured keyword search (BM25 10/10
+there, 5/10 on fresh paraphrased questions). Two held-out sets of paraphrased questions were
+then written and their hashes recorded before any retrieval ran on them; the design (and
+k = 20) was committed before held-out set 2 was scored. Window size mattered more than method:
+at k = 10 every method was at 70–90%.
+**Broken or unfinished:** Model calls paused: projected spend $6.80–$21.94 is above $5
+(H-008); owner to choose cuts. Smoke test still 7/10; target not frozen.
+**Spend so far:** $0.00 tracked. All 9 model calls to date (2 Phase 0 tests, 7 smoke answers)
+ran on the free tier before billing was enabled; the ledger starts at zero.
+**Next session starts with:** Owner's choice of cuts; then smoke SM-08 to SM-10, final hit
+rate, freeze target.
+**Commit:** Phase 2 (partial): spend cap, pricing config, cost projection
+
 ## 2026-10-04 — Phase 2: Target agent (paused, not complete)
 **Built:** `agents/schema.py` (`TargetAgent`, `AgentAnswer`, `Claim`, `Citation`).
 `retrieval.py` (dense, BM25, RRF hybrid, interleaved). `agents/targets/tenk_rag.py` (standard
@@ -30,7 +66,7 @@ classification). Gold isolation test passes with the agent under `agents/`.
 - Smoke test 7/10 run: the gemini-3.8-flash free tier allows 20 requests per day (H-006).
   All 7 gave the expected figure with citations; all 12 quotes were found verbatim; 0 parse
   errors (`results/smoke/smoke_v1_summary.json`). SM-08 to SM-10 need quota.
-- Retriever choice is provisional pending the owner (D-023).
+- Retriever choice was provisional pending the owner (since confirmed, D-023).
 **Numbers worth keeping:** Retrieval hit@20 over 30 questions (smoke + two held-out sets):
 dense 28/30, interleaved 27/30, RRF 27/30, BM25 23/30; committed interleaved k = 20 scored
 7/10 on the fresh held-out set (95% CI 40–89%). Source: `results/smoke/retrieval.json`.

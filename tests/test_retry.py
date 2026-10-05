@@ -72,7 +72,7 @@ def test_gemini_retryable_classification(exc, expected):
     assert is_retryable_gemini_error(exc) is expected
 
 
-def test_failed_call_is_not_cached(tmp_path):
+def test_failed_call_is_not_cached(tmp_path, ledger):
     calls = []
 
     def backend(model, prompt, params):
@@ -81,9 +81,9 @@ def test_failed_call_is_not_cached(tmp_path):
             raise RuntimeError("503 after retries")
         return {"text": "ok", "raw": {}}
 
-    client = LLMClient("m", DiskCache(tmp_path), backend)
+    client = LLMClient("m", DiskCache(tmp_path / "cache"), backend, ledger=ledger)
     with pytest.raises(RuntimeError):
         client.generate("hi")
-    assert not list(tmp_path.rglob("*.json"))
+    assert not list((tmp_path / "cache").rglob("*.json"))
     assert client.generate("hi").cached is False
     assert len(calls) == 2

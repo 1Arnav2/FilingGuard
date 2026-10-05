@@ -137,7 +137,7 @@ The dashboard reads committed results only. It makes no live LLM calls.
 | Layer | Choice | Note |
 |---|---|---|
 | Language | Python 3.11 | |
-| LLM | Gemini API | Exact model IDs pinned in `.env`; check current free-tier limits in Phase 2 |
+| LLM | Gemini API, paid tier | `gemini-3.8-flash` for every role, pinned in `.env` (D-012, D-024) |
 | Embeddings + vector store | `jinaai/jina-embeddings-v2-small-en` via fastembed; numpy exact cosine search | D-016 |
 | API | FastAPI | Target agent endpoint |
 | Storage | SQLite + JSONL | |
@@ -175,6 +175,8 @@ VERIFIER_MODEL=
 SEC_USER_AGENT="Name email@example.com"
 NUMERIC_REL_TOLERANCE=0.005
 CACHE_DIR=.cache
+SPEND_WARN_USD=5.00
+SPEND_CAP_USD=7.00
 ```
 
 `TARGET_MODEL` and `VERIFIER_MODEL` are both pinned to `gemini-3.8-flash` (D-012), to be
@@ -190,7 +192,13 @@ revisited in Phase 2. The SDK is `google-genai` (D-011).
   - Scoring (`eval/score.py`, `eval/stats.py`) reads only those files plus gold labels and
     must re-run with zero API calls. Every number in `results/summary.json` can be rebuilt
     this way from a fresh clone (D-010).
-- **Cost:** zero. Free tiers only.
+- **Cost:** capped budget, not zero (D-024). Gemini runs on the paid tier because the free
+  tier allows 20 requests per day (H-006). Hard cap $7.00, warning at $5.00, enforced in code
+  before every uncached call (`llm/spend.py`) and also set in AI Studio. Prices live in
+  `config/pricing.json` with their source; every paid call is logged to
+  `results/spend/ledger.jsonl` with a running total in `results/spend/total.json`. Cached
+  calls cost nothing. Only `LLMClient.generate` can call the model
+  (`tests/test_llm_boundary.py`).
 - **Runtime:** a full 300-item run should finish overnight on the free tier.
 
 ## 7. Known technical risks
