@@ -1,9 +1,9 @@
 {
-  "calls": 82,
-  "input_tokens": 119469,
-  "output_tokens": 93361,
-  "cost_usd": 0.439704,
+  "calls": 172,
+  "input_tokens": 1815900,
+  "output_tokens": 232501,
+  "cost_usd": 1.336756,
   "warn_usd": 5.0,
   "cap_usd": 7.0,
-  "updated": "2026-10-05T07:30:21+00:00"
+  "updated": "2026-10-05T23:24:18+00:00"
 }

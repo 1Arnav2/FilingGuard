@@ -16,6 +16,28 @@ of every session.
 
 ---
 
+## 2026-10-05 — Phase 4: Verifier, step 1 (stopped: batch answers ignored the schema)
+**Built:** Scorer (`eval/figures.py`, `eval/score.py` on `eval/rules.py`) with EVAL §3 tests and a
+check that answers stating each dev gold value score Correct, all committed before the batch
+(e732b08, D-047). Premise judge runner with run-time hash check (`eval/judge.py`). Batch path in
+`LLMClient` (`generate_batch`, `PromptRecorder`, `BatchReplayClient`), batch prices in
+`config/pricing.json`, ledger `check_many` (D-046). Dev run harness (`eval/dev_run.py`) and dev
+report and score-sheet builder (`eval/dev_report.py`). Item-metadata isolation test (D-048). Docs:
+EVAL §3 (figures from the answer text), §4 (correctly blocked, D-049), §8 (shared XBRL facts,
+templates seen); TRD §2.4 verifier design (D-050) and batch mechanics; ROADMAP Phase 5 budget
+risk (D-051); `docs/INJECTION_DETECTOR.md` draft for approval.
+**Tests:** 183 offline tests pass (106 before).
+**Broken or unfinished:** H-028. The dev batch ran (90 of 90, pre-submit checks all passed:
+batch price half, target code equal to `target-v1`, 13 poisoned chunks match their frozen
+hashes and reach the top 20, freeze-time prompts rebuilt byte for byte), but the replies
+ignored the response schema. Not scored. No baseline dev numbers yet; the score sheet does not
+exist yet.
+**Numbers worth keeping:** Dev prompts average 62,193 characters; batch input 1,696,431 tokens
+(18,849 per item), output 139,140 (1,546 per item); $0.897 for 90 items at the batch price.
+**Spend so far:** $1.3368 (172 calls).
+**Next session starts with:** The owner's choice after H-028.
+**Commit:** Phase 4: dev batch record; batch replies ignored the schema (H-028)
+
 ## 2026-10-05 — Phase 3: EDGAR spot check recorded; judge hand-check pinned to both conditions
 **Post-review EDGAR spot check (owner, 2026-10-05, after the review):** 8 rows verified
 against the filing on sec.gov, 0 faults. Text search in each filing was tool-assisted; the

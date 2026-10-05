@@ -1364,3 +1364,28 @@ whole number.
 0 questions print their answer. Test added.
 **Lesson:** Reuse the existing rule instead of writing a second version of it.
 **Linked decision:** D-044
+
+### H-028 — Batch API answers ignored the target's JSON schema; dev batch not usable as baseline
+**Date:** 2026-10-05
+**Phase:** 4
+**What happened:** The dev batch (3 sub-batches of 30, jobs in
+`results/runs/dev_target_v1_batches.json`) returned 90 of 90 answers with no errors, but the
+replies do not follow the target's response schema (`answer`, `abstain`, `claims` as objects
+with `excerpt` and `quote`). Of 90 replies, 10 have the schema's keys with an empty claims
+list and the rest come in more than 30 shapes: claims as plain strings, invented keys such as
+`total_revenue` or `analysis`, or no claims at all. The frozen parser crashed on the first
+reply whose claims were strings. Every standard-API target call so far (smoke test, freeze)
+followed the schema.
+**Impact:** The batch answers were not produced under `target-v1`'s settings, so they cannot be
+the baseline (D-025 requires the same model, prompt and settings). $0.897 spent (90 calls,
+1,696,431 input and 139,140 output tokens at the batch price, about $0.010 per item, within the
+plan's estimate); total spend $1.3368. No run file was written; nothing was scored or judged.
+**What I tried:** Checked the SDK (google-genai 2.28.0, `batches._GenerateContentConfig_to_mldev`):
+it does put `responseJsonSchema` into each inline request, next to `responseMimeType` (which
+the replies did honour: all are JSON). Read one job back (a free status call): the service does
+not return the stored request, so where the schema was dropped cannot be shown.
+**Resolution:** Stopped before scoring. The owner chooses the next step (dev standard-API run,
+or a small paid probe of the batch path with the schema in another form or a file-based job).
+**Lesson:** A settings check before submitting compared requests, not replies. A one-item probe
+batch, with its reply checked against the schema, should precede any full batch.
+**Linked decision:** D-025, D-046
