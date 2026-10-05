@@ -16,6 +16,31 @@ of every session.
 
 ---
 
+## 2026-10-04 — Phase 3 checkpoint: restated pairs, corpus change, generators, pilot
+**Built:** Restated pairs across the last three 10-Ks (`facts.find_restatements`, kinds
+`restatement` / `reclassification` / `stock_split`, plus excluded `rounding` / `ambiguous`).
+Older 10-Ks indexed only where they supply a usable pair (D-026). Red-team package
+`src/filingguard/redteam/` (corpus helpers, one generator per attack type, injection
+templates and sandbox retriever, phrasing, build command). EVAL §2 counts updated before
+generation (D-021); EVAL §2 fault-rate rule and §4 latency wording (D-025, D-026).
+**Corpus changed, not the target.** Index: 26 → 32 filings, 5,215 → 6,311 chunks, content
+hash `26b682ae…` → `66f2d712…`. Multi-year indexed: NVDA, GOOGL, PFE (three years), BAC (two).
+Target code, prompt, retriever and settings are identical to tag `target-v1`. The only
+change the target sees beyond the extra chunks is the excerpt header date for third-year
+filings, supplied by the harness (D-027).
+**Retrieval re-check (no model calls):** hit@20 unchanged at 27/30 (smoke 10/10, held-out 1
+10/10, held-out 2 7/10; `results/smoke/retrieval_corpus_v2.json`). Ranks moved within the
+window for SM-02 NVDA (2→5), HV-05 PFE (4→8), HV-08 GOOGL (4→10). No smoke re-run needed.
+**Numbers worth keeping:** 19 usable restated pairs (BAC 12, NVDA 4, PFE 2, GOOGL 1), 14 used
+after the half cap. 400 candidates generated. Unanswerable absence search removed 53 of 115
+candidates checked (untagged concept 41/52, single quarter 11/31, old period 1/32). Pilot
+phrasing: 1 call, 10 questions, 0 rule failures, $0.0072.
+**Tests:** 75 offline tests pass.
+**Spend so far:** $0.0618.
+**Next:** remaining phrasing, filtering, injection delivery check, split, latency IDs, review
+sheet, scoring-rule draft.
+**Commit:** Phase 3 checkpoint: restated pairs, corpus change, red-team generators, pilot
+
 ## 2026-10-04 — Phase 2 complete: smoke test finished, target frozen
 **Built:** Ran smoke questions SM-08 to SM-10 on the standard API (the first 7 replayed from
 cache at no cost). Added a `"target"` label to the agent's spend-ledger entries; it is not

@@ -5,6 +5,7 @@ Run with `python -m filingguard.data.build_corpus`. Every SEC request is cached 
 """
 
 import json
+from collections import Counter
 from datetime import date
 from pathlib import Path
 
@@ -12,13 +13,15 @@ import pandas as pd
 
 from filingguard.data.chunk import chunk_filing
 from filingguard.data.edgar_client import EdgarClient, companyfacts_url, document_url, edgar_client_from_env, submissions_url
-from filingguard.data.facts import find_restatements, map_concepts, normalise_company_facts
+from filingguard.data.facts import USABLE_KINDS, find_restatements, map_concepts, normalise_company_facts
 from filingguard.data.filings import CIK_OVERRIDES, COMPANIES, Filing, resolve_ciks, ten_k_filings
-from filingguard.data.index import EMBED_MODEL, VectorIndex, cached_embed_fn, fastembed_fn, index_is_current
+from filingguard.data.index import EMBED_MODEL, VectorIndex, cached_embed_fn, content_hash, fastembed_fn, index_is_current
 from filingguard.data.parse_10k import KEEP_ITEMS, html_to_text, label_segments, split_items
 from filingguard.llm.cache import DiskCache
 
 PROCESSED = Path("data/processed")
+# Three 10-Ks per company are searched for restated pairs (D-021).
+FILINGS_PER_COMPANY = 3
 
 
 def _write_json(path: Path, obj) -> None:
@@ -54,20 +57,28 @@ def build(
     companies, fact_frames, concept_map, pairs, chunks = [], [], {}, [], []
     for ticker, cik in ciks.items():
         submissions = client.get_json(submissions_url(cik))
-        latest, prior = ten_k_filings(client, ticker, cik, submissions, limit=2)
+        filings = ten_k_filings(client, ticker, cik, submissions, limit=FILINGS_PER_COMPANY)
+        latest, prior, older = (filings + [None, None])[:3]
         facts = normalise_company_facts(ticker, cik, client.get_json(companyfacts_url(cik)))
         fact_frames.append(facts)
         concept_map[ticker] = map_concepts(facts, latest)
-        company_pairs = find_restatements(facts, latest, prior, concept_map[ticker])
+        company_pairs = find_restatements(facts, filings, concept_map[ticker])
         pairs.extend(company_pairs)
-        restated = [p for p in company_pairs if p["kind"] == "restated"]
+        restated = [p for p in company_pairs if p["kind"] in USABLE_KINDS]
 
-        corpus_filings = [latest] + ([prior] if restated else [])
+        # Index an older 10-K only when it supplies a usable restated pair (D-021, D-026).
+        in_pairs = {p[side]["accession"] for p in restated for side in ("original", "restated")}
+        corpus_filings = [f for f in filings if f is latest or f.accession in in_pairs]
         parsed = {}
         for filing in corpus_filings:
             text, stats = _parse_filing(client, filing, out_dir)
             chunks.extend(c.to_dict() for c in chunk_filing(ticker, filing.accession, text, label_segments(text)))
             parsed[filing.accession] = stats
+
+        def older_entry(filing: Filing | None) -> dict | None:
+            if filing is None:
+                return None
+            return filing.to_dict() | {"in_corpus": filing.accession in parsed}
 
         companies.append({
             "ticker": ticker,
@@ -77,12 +88,15 @@ def build(
             "sector": COMPANIES[ticker],
             "fiscal_year_end": submissions["fiscalYearEnd"],
             "latest_10k": latest.to_dict() | {"parsed": parsed[latest.accession]},
-            "prior_10k": prior.to_dict() | {"in_corpus": bool(restated)},
+            "prior_10k": older_entry(prior),
+            "older_10k": older_entry(older),
+            "indexed_report_dates": sorted((f.report_date for f in corpus_filings), reverse=True),
             "revenue_concept": concept_map[ticker]["Revenue"],
             "revenue_status": concept_map[ticker]["revenue_status"],
             "unreported_concepts": sorted(k for k, v in concept_map[ticker].items() if v is None),
             "restatement_pairs": len(restated),
-            "rounding_pairs": len(company_pairs) - len(restated),
+            "restatement_pairs_by_kind": dict(Counter(p["kind"] for p in restated)),
+            "excluded_pairs": dict(Counter(p["kind"] for p in company_pairs if p["kind"] not in USABLE_KINDS)),
         })
 
     facts_all = pd.concat(fact_frames, ignore_index=True)
@@ -101,18 +115,24 @@ def build(
         )
         VectorIndex.build(chunks, embed, EMBED_MODEL).save(index_dir)
 
-    corpus_filing_count = sum(1 + c["prior_10k"]["in_corpus"] for c in companies)
+    usable = [p for p in pairs if p["kind"] in USABLE_KINDS]
     card = {
         "date_pulled": date.today().isoformat(),
         "companies": len(companies),
-        "filings": corpus_filing_count,
+        "filings": sum(len(c["indexed_report_dates"]) for c in companies),
+        "filings_per_company_searched": FILINGS_PER_COMPANY,
+        "multi_year_indexed": {c["ticker"]: c["indexed_report_dates"] for c in companies if len(c["indexed_report_dates"]) > 1},
         "chunks": len(chunks),
         "embedding_model": EMBED_MODEL,
+        "index_content_hash": content_hash(chunks, EMBED_MODEL),
         "fact_rows": len(facts_all),
         "fact_rows_latest_10k": int(facts_all["accession"].isin([c["latest_10k"]["accession"] for c in companies]).sum()),
-        "restatement_pairs": sum(p["kind"] == "restated" for p in pairs),
-        "restatement_companies": sorted({p["ticker"] for p in pairs if p["kind"] == "restated"}),
+        "restatement_pairs": len(usable),
+        "restatement_pairs_by_kind": dict(Counter(p["kind"] for p in usable)),
+        "restatement_pairs_by_company": dict(Counter(p["ticker"] for p in usable)),
+        "restatement_companies": sorted({p["ticker"] for p in usable}),
         "rounding_pairs_excluded": sum(p["kind"] == "rounding" for p in pairs),
+        "ambiguous_pairs_excluded": sum(p["kind"] == "ambiguous" for p in pairs),
         "revenue_fallback": [c["ticker"] for c in companies if c["revenue_status"] == "fallback"],
         "revenue_unmapped": [c["ticker"] for c in companies if c["revenue_status"] == "unmapped"],
         "cik_overrides": {t: c for t, c in CIK_OVERRIDES.items() if t in ciks},
@@ -131,18 +151,23 @@ def card_markdown(out_dir: Path = PROCESSED) -> str:
     spot_path = out_dir / "spot_check.json"
     spot = json.loads(spot_path.read_text(encoding="utf-8")) if spot_path.exists() else []
     spot_matches = sum(r.get("verdict") == "match" for r in spot)
+    multi_year = "; ".join(f"{t}: {', '.join(d)}" for t, d in card["multi_year_indexed"].items()) or "none"
+    by_company = ", ".join(f"{t} {n}" for t, n in card["restatement_pairs_by_company"].items()) or "none"
+    by_kind = ", ".join(f"{n} {k}" for k, n in card["restatement_pairs_by_kind"].items()) or "none"
     lines = [
         "| Field | Value |",
         "|---|---|",
         f"| Companies | {card['companies']} |",
-        f"| Filings | {card['filings']} (latest 10-K for each company, plus the prior 10-K for "
-        f"{', '.join(card['restatement_companies']) or 'none'}, which has restatement pairs) |",
-        f"| Chunks | {card['chunks']:,} ({card['embedding_model']}) |",
+        f"| Filings | {card['filings']} indexed: the latest 10-K for each company, plus the older "
+        f"10-Ks that supply restated pairs ({multi_year}) |",
+        f"| Chunks | {card['chunks']:,} ({card['embedding_model']}); index content hash "
+        f"`{card['index_content_hash'][:12]}` |",
         f"| Facts | {card['fact_rows']:,} rows from original 10-Ks, all years; "
         f"{card['fact_rows_latest_10k']:,} from the latest 10-Ks |",
-        f"| Restatement pairs found | {card['restatement_pairs']} "
-        f"({', '.join(card['restatement_companies']) or 'none'}); "
-        f"{card['rounding_pairs_excluded']} rounding-only pairs excluded |",
+        f"| Restatement pairs found | {card['restatement_pairs']} across the last "
+        f"{card['filings_per_company_searched']} 10-Ks ({by_company}; {by_kind}); "
+        f"{card['rounding_pairs_excluded']} rounding-only and {card['ambiguous_pairs_excluded']} "
+        "ambiguous pairs excluded |",
         f"| Revenue not mapped | {', '.join(card['revenue_unmapped']) or 'none'} "
         f"(fallback concept used: {', '.join(card['revenue_fallback']) or 'none'}) |",
         f"| Exclusions and why | {', '.join(card['exclusions']) or 'none'}. CIK overrides: {overrides} |",

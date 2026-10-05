@@ -34,8 +34,9 @@ corpus mixes FY2025 and FY2026 filings.
 
 ## 3. Filings
 - Latest 10-K per company (form type `10-K`, not `10-K/A`).
-- For the restated-figure attack: the prior year's 10-K as well, for the subset of companies
-  where a restatement is found (see section 4).
+- For the restated-figure attack: the last three 10-Ks are searched for restated pairs
+  (D-021), and an older 10-K is indexed only when it supplies a usable pair (D-026). The
+  target agent's code and settings are unchanged; only the corpus grew.
 
 ## 4. Facts
 Pulled from company facts, `us-gaap` taxonomy. These normalised facts are public data that
@@ -82,10 +83,10 @@ Generated from `data/processed/` by `filingguard.data.build_corpus.card_markdown
 | Field | Value |
 |---|---|
 | Companies | 25 |
-| Filings | 26 (latest 10-K for each company, plus the prior 10-K for BAC, which has restatement pairs) |
-| Chunks | 5,215 (jinaai/jina-embeddings-v2-small-en) |
+| Filings | 32 indexed: the latest 10-K for each company, plus the older 10-Ks that supply restated pairs (NVDA: 2026-01-25, 2025-01-26, 2024-01-28; GOOGL: 2025-12-31, 2024-12-31, 2023-12-31; PFE: 2025-12-31, 2024-12-31, 2023-12-31; BAC: 2025-12-31, 2024-12-31) |
+| Chunks | 6,311 (jinaai/jina-embeddings-v2-small-en); index content hash `66f2d712d119` |
 | Facts | 16,411 rows from original 10-Ks, all years; 720 from the latest 10-Ks |
-| Restatement pairs found | 12 (BAC); 2 rounding-only pairs excluded |
+| Restatement pairs found | 19 across the last 3 10-Ks (NVDA 4, GOOGL 1, PFE 2, BAC 12; 4 stock_split, 3 reclassification, 12 restatement); 2 rounding-only and 0 ambiguous pairs excluded |
 | Revenue not mapped | none (fallback concept used: GS) |
 | Exclusions and why | none. CIK overrides: XOM → CIK 34088 (D-014) |
 | Date pulled | 2026-10-04 |

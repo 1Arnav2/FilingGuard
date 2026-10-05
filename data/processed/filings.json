@@ -36,11 +36,25 @@
       "primary_document": "aapl-20240928.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "AAPL",
+      "cik": 320193,
+      "accession": "0000320193-23-000106",
+      "form": "10-K",
+      "filed": "2023-11-03",
+      "report_date": "2023-09-30",
+      "primary_document": "aapl-20230930.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-09-27"
+    ],
     "revenue_concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
     "revenue_status": "primary",
     "unreported_concepts": [],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "MSFT",
@@ -79,11 +93,25 @@
       "primary_document": "msft-20250630.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "MSFT",
+      "cik": 789019,
+      "accession": "0000950170-24-087843",
+      "form": "10-K",
+      "filed": "2024-07-30",
+      "report_date": "2024-06-30",
+      "primary_document": "msft-20240630.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2026-06-30"
+    ],
     "revenue_concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
     "revenue_status": "primary",
     "unreported_concepts": [],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "NVDA",
@@ -120,13 +148,31 @@
       "filed": "2025-02-26",
       "report_date": "2025-01-26",
       "primary_document": "nvda-20250126.htm",
-      "in_corpus": false
+      "in_corpus": true
     },
+    "older_10k": {
+      "ticker": "NVDA",
+      "cik": 1045810,
+      "accession": "0001045810-24-000029",
+      "form": "10-K",
+      "filed": "2024-02-21",
+      "report_date": "2024-01-28",
+      "primary_document": "nvda-20240128.htm",
+      "in_corpus": true
+    },
+    "indexed_report_dates": [
+      "2026-01-25",
+      "2025-01-26",
+      "2024-01-28"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [],
-    "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs": 4,
+    "restatement_pairs_by_kind": {
+      "stock_split": 4
+    },
+    "excluded_pairs": {}
   },
   {
     "ticker": "GOOGL",
@@ -163,15 +209,33 @@
       "filed": "2025-02-05",
       "report_date": "2024-12-31",
       "primary_document": "goog-20241231.htm",
-      "in_corpus": false
+      "in_corpus": true
     },
+    "older_10k": {
+      "ticker": "GOOGL",
+      "cik": 1652044,
+      "accession": "0001652044-24-000022",
+      "form": "10-K",
+      "filed": "2024-01-31",
+      "report_date": "2023-12-31",
+      "primary_document": "goog-20231231.htm",
+      "in_corpus": true
+    },
+    "indexed_report_dates": [
+      "2025-12-31",
+      "2024-12-31",
+      "2023-12-31"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [
       "GrossProfit"
     ],
-    "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs": 1,
+    "restatement_pairs_by_kind": {
+      "reclassification": 1
+    },
+    "excluded_pairs": {}
   },
   {
     "ticker": "META",
@@ -210,13 +274,27 @@
       "primary_document": "meta-20241231.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "META",
+      "cik": 1326801,
+      "accession": "0001326801-24-000012",
+      "form": "10-K",
+      "filed": "2024-02-02",
+      "report_date": "2023-12-31",
+      "primary_document": "meta-20231231.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-12-31"
+    ],
     "revenue_concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
     "revenue_status": "primary",
     "unreported_concepts": [
       "GrossProfit"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "ORCL",
@@ -255,6 +333,19 @@
       "primary_document": "orcl-20250531.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "ORCL",
+      "cik": 1341439,
+      "accession": "0000950170-24-075605",
+      "form": "10-K",
+      "filed": "2024-06-20",
+      "report_date": "2024-05-31",
+      "primary_document": "orcl-20240531.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2026-05-31"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -263,7 +354,8 @@
       "LongTermDebt"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "AMZN",
@@ -302,6 +394,19 @@
       "primary_document": "amzn-20241231.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "AMZN",
+      "cik": 1018724,
+      "accession": "0001018724-24-000008",
+      "form": "10-K",
+      "filed": "2024-02-02",
+      "report_date": "2023-12-31",
+      "primary_document": "amzn-20231231.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-12-31"
+    ],
     "revenue_concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -310,7 +415,8 @@
       "ResearchAndDevelopmentExpense"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "WMT",
@@ -349,6 +455,19 @@
       "primary_document": "wmt-20250131.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "WMT",
+      "cik": 104169,
+      "accession": "0000104169-24-000056",
+      "form": "10-K",
+      "filed": "2024-03-15",
+      "report_date": "2024-01-31",
+      "primary_document": "wmt-20240131.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2026-01-31"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -357,7 +476,8 @@
       "ResearchAndDevelopmentExpense"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "COST",
@@ -396,6 +516,19 @@
       "primary_document": "cost-20240901.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "COST",
+      "cik": 909832,
+      "accession": "0000909832-23-000042",
+      "form": "10-K",
+      "filed": "2023-10-11",
+      "report_date": "2023-09-03",
+      "primary_document": "cost-20230903.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-08-31"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -404,7 +537,8 @@
       "ResearchAndDevelopmentExpense"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "NKE",
@@ -443,6 +577,19 @@
       "primary_document": "nke-20250531.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "NKE",
+      "cik": 320187,
+      "accession": "0000320187-24-000044",
+      "form": "10-K",
+      "filed": "2024-07-25",
+      "report_date": "2024-05-31",
+      "primary_document": "nke-20240531.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2026-05-31"
+    ],
     "revenue_concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -451,7 +598,8 @@
       "ResearchAndDevelopmentExpense"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "KO",
@@ -490,6 +638,19 @@
       "primary_document": "ko-20241231.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "KO",
+      "cik": 21344,
+      "accession": "0000021344-24-000009",
+      "form": "10-K",
+      "filed": "2024-02-20",
+      "report_date": "2023-12-31",
+      "primary_document": "ko-20231231.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-12-31"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -498,7 +659,8 @@
       "ResearchAndDevelopmentExpense"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "PG",
@@ -537,6 +699,19 @@
       "primary_document": "pg-20250630.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "PG",
+      "cik": 80424,
+      "accession": "0000080424-24-000083",
+      "form": "10-K",
+      "filed": "2024-08-05",
+      "report_date": "2024-06-30",
+      "primary_document": "pg-20240630.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2026-06-30"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -546,7 +721,8 @@
       "StockholdersEquity"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "JNJ",
@@ -585,6 +761,19 @@
       "primary_document": "jnj-20241229.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "JNJ",
+      "cik": 200406,
+      "accession": "0000200406-24-000013",
+      "form": "10-K",
+      "filed": "2024-02-16",
+      "report_date": "2023-12-31",
+      "primary_document": "jnj-20231231.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-12-28"
+    ],
     "revenue_concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -592,7 +781,8 @@
       "StockholdersEquity"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "PFE",
@@ -629,8 +819,23 @@
       "filed": "2025-02-27",
       "report_date": "2024-12-31",
       "primary_document": "pfe-20241231.htm",
-      "in_corpus": false
+      "in_corpus": true
     },
+    "older_10k": {
+      "ticker": "PFE",
+      "cik": 78003,
+      "accession": "0000078003-24-000039",
+      "form": "10-K",
+      "filed": "2024-02-22",
+      "report_date": "2023-12-31",
+      "primary_document": "pfe-20231231.htm",
+      "in_corpus": true
+    },
+    "indexed_report_dates": [
+      "2025-12-31",
+      "2024-12-31",
+      "2023-12-31"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -639,8 +844,11 @@
       "OperatingIncomeLoss",
       "ResearchAndDevelopmentExpense"
     ],
-    "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs": 2,
+    "restatement_pairs_by_kind": {
+      "reclassification": 2
+    },
+    "excluded_pairs": {}
   },
   {
     "ticker": "UNH",
@@ -679,6 +887,19 @@
       "primary_document": "unh-20241231.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "UNH",
+      "cik": 731766,
+      "accession": "0000731766-24-000081",
+      "form": "10-K",
+      "filed": "2024-02-28",
+      "report_date": "2023-12-31",
+      "primary_document": "unh-20231231.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-12-31"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -688,7 +909,8 @@
       "StockholdersEquity"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "XOM",
@@ -727,6 +949,19 @@
       "primary_document": "xom-20241231.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "XOM",
+      "cik": 34088,
+      "accession": "0000034088-24-000018",
+      "form": "10-K",
+      "filed": "2024-02-28",
+      "report_date": "2023-12-31",
+      "primary_document": "xom-20231231.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-12-31"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -735,7 +970,10 @@
       "OperatingIncomeLoss"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 2
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {
+      "rounding": 2
+    }
   },
   {
     "ticker": "CVX",
@@ -774,6 +1012,19 @@
       "primary_document": "cvx-20241231.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "CVX",
+      "cik": 93410,
+      "accession": "0000093410-24-000013",
+      "form": "10-K",
+      "filed": "2024-02-26",
+      "report_date": "2023-12-31",
+      "primary_document": "cvx-20231231.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-12-31"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -783,7 +1034,8 @@
       "OperatingIncomeLoss"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "BA",
@@ -822,11 +1074,25 @@
       "primary_document": "ba-20241231.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "BA",
+      "cik": 12927,
+      "accession": "0000012927-24-000010",
+      "form": "10-K",
+      "filed": "2024-01-31",
+      "report_date": "2023-12-31",
+      "primary_document": "ba-20231231.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-12-31"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "CAT",
@@ -865,6 +1131,19 @@
       "primary_document": "cat-20241231.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "CAT",
+      "cik": 18230,
+      "accession": "0000018230-24-000009",
+      "form": "10-K",
+      "filed": "2024-02-16",
+      "report_date": "2023-12-31",
+      "primary_document": "cat-20231231.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-12-31"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -874,7 +1153,8 @@
       "StockholdersEquity"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "DIS",
@@ -913,6 +1193,19 @@
       "primary_document": "dis-20240928.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "DIS",
+      "cik": 1744489,
+      "accession": "0001744489-23-000216",
+      "form": "10-K",
+      "filed": "2023-11-21",
+      "report_date": "2023-09-30",
+      "primary_document": "dis-20230930.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-09-27"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -921,7 +1214,8 @@
       "ResearchAndDevelopmentExpense"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "TSLA",
@@ -960,11 +1254,25 @@
       "primary_document": "tsla-20241231.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "TSLA",
+      "cik": 1318605,
+      "accession": "0001628280-24-002390",
+      "form": "10-K",
+      "filed": "2024-01-29",
+      "report_date": "2023-12-31",
+      "primary_document": "tsla-20231231.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-12-31"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "JPM",
@@ -1003,6 +1311,19 @@
       "primary_document": "jpm-20241231.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "JPM",
+      "cik": 19617,
+      "accession": "0000019617-24-000225",
+      "form": "10-K",
+      "filed": "2024-02-16",
+      "report_date": "2023-12-31",
+      "primary_document": "jpm-20231231.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-12-31"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -1013,7 +1334,8 @@
       "ResearchAndDevelopmentExpense"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "GS",
@@ -1052,6 +1374,19 @@
       "primary_document": "gs-20241231.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "GS",
+      "cik": 886982,
+      "accession": "0000886982-24-000006",
+      "form": "10-K",
+      "filed": "2024-02-23",
+      "report_date": "2023-12-31",
+      "primary_document": "gs-20231231.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-12-31"
+    ],
     "revenue_concept": "RevenuesNetOfInterestExpense",
     "revenue_status": "fallback",
     "unreported_concepts": [
@@ -1061,7 +1396,8 @@
       "ResearchAndDevelopmentExpense"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   },
   {
     "ticker": "BAC",
@@ -1100,6 +1436,20 @@
       "primary_document": "bac-20241231.htm",
       "in_corpus": true
     },
+    "older_10k": {
+      "ticker": "BAC",
+      "cik": 70858,
+      "accession": "0000070858-24-000122",
+      "form": "10-K",
+      "filed": "2024-02-20",
+      "report_date": "2023-12-31",
+      "primary_document": "bac-20231231.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-12-31",
+      "2024-12-31"
+    ],
     "revenue_concept": "Revenues",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -1109,7 +1459,10 @@
       "ResearchAndDevelopmentExpense"
     ],
     "restatement_pairs": 12,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {
+      "restatement": 12
+    },
+    "excluded_pairs": {}
   },
   {
     "ticker": "V",
@@ -1148,6 +1501,19 @@
       "primary_document": "v-20240930.htm",
       "in_corpus": false
     },
+    "older_10k": {
+      "ticker": "V",
+      "cik": 1403161,
+      "accession": "0001403161-23-000099",
+      "form": "10-K",
+      "filed": "2023-11-15",
+      "report_date": "2023-09-30",
+      "primary_document": "v-20230930.htm",
+      "in_corpus": false
+    },
+    "indexed_report_dates": [
+      "2025-09-30"
+    ],
     "revenue_concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
     "revenue_status": "primary",
     "unreported_concepts": [
@@ -1159,6 +1525,7 @@
       "StockholdersEquity"
     ],
     "restatement_pairs": 0,
-    "rounding_pairs": 0
+    "restatement_pairs_by_kind": {},
+    "excluded_pairs": {}
   }
 ]

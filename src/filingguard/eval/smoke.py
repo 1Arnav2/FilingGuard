@@ -4,7 +4,7 @@ The smoke set (`data/smoke/smoke_v1.jsonl`) is separate from the test set and is
 build test items. A retrieval hit means a chunk containing one of the expected answer strings
 is in the top k for the question's company.
 
-Run with `python -m filingguard.eval.smoke [--retrieval-only]`.
+Run with `python -m filingguard.eval.smoke [--retrieval-only] [--retrieval-out NAME]`.
 """
 
 import argparse
@@ -85,6 +85,7 @@ def main() -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--retrieval-only", action="store_true")
+    parser.add_argument("--retrieval-out", default="retrieval.json", help="file name under results/smoke/")
     args = parser.parse_args()
 
     index = VectorIndex.load(Path("data/processed/index"), fastembed_fn())
@@ -97,7 +98,7 @@ def main() -> None:
         print(f"\n### {name}\n{retrieval_table(reports)}")
     out_dir = Path("results/smoke")
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "retrieval.json").write_text(json.dumps(retrieval, indent=2) + "\n", encoding="utf-8")
+    (out_dir / args.retrieval_out).write_text(json.dumps(retrieval, indent=2) + "\n", encoding="utf-8")
     if args.retrieval_only:
         return
 

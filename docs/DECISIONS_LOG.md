@@ -362,9 +362,10 @@ S2 (S1 plus target thinking set low; $3.91–$8.19); S3 (S1 plus S2 plus the Bat
 and test runs, latency from a 30-call sample; $2.64–$6.64).
 **Decision:** S3 without S2, chosen by me. S2 is rejected: the target's settings do not
 change from `target-v1`.
-- **Batch scope:** the Batch API is used only for the target's answers: one batch for the 90
-  dev items, one for the 210 test items, with the same model, prompt and settings as
-  `target-v1`. Target answers are generated once per split, stored, and reused for every
+- **Batch scope:** the Batch API is used only for the target's answers, batched per split, in
+  sub-batches: the 90 dev items and the 210 test items are each submitted as sub-batches
+  sized so that their worst case (every item at the model's full output limit) fits the
+  remaining headroom under the hard cap. Same model, prompt and settings as `target-v1`. Target answers are generated once per split, stored, and reused for every
   verifier version. Verifier, red-team and judge calls stay on the standard API.
 - Batch responses go through the same cache and spend ledger, priced at the batch rate.
 - If a batch job fails or returns partial results, only the missing items are re-submitted,
@@ -377,8 +378,13 @@ change from `target-v1`.
   reported to me first.
 - **Latency (EVAL §4 changed):** measured on a 30-item sample on the standard API, under both
   conditions. The 30 are chosen by seed, stratified by attack type, and their IDs recorded
-  before any run. Reported everywhere as "measured on a 30-item sample". This and the
-  restated-count change (D-021) are the only two approved EVAL.md changes.
+  before any run. Reported everywhere as "measured on a 30-item sample", overall only (not per
+  attack type). Batch cache keys carry a batch tag, so the standard-API call for a sample item
+  is a separate cache entry: the batch answer is the one scored; the standard answer is used
+  for timing only. The share of the 30 standard answers whose scored outcome agrees with
+  their batch answer is reported as a consistency check. This and the restated-count change
+  (D-021) are the only two approved EVAL.md changes, plus the fault-rate rule in EVAL §2
+  (D-026).
 - **Budget:** warning $5, hard cap $7, unchanged.
 **Why:** Batch pricing halves the largest cost (the target's 300 answers) without touching the
 target, so the baseline stays exactly the frozen `target-v1`. Batch turnaround times are not
@@ -390,6 +396,86 @@ the cap and the cap would stop calls first. Batch price assumed at 50% of standa
 confirmed from the pricing page and added to `config/pricing.json` before the first batch.
 **Revisit if:** Measured spend after Phase 3 or the dev batch tracks toward the high end, or
 the batch price is not half of standard.
+
+### D-026 — Phase 3 rules: older filings in the index, review across splits, fault-rate rule
+**Date:** 2026-10-04 · **Phase:** 3
+**Context:** The Phase 3 plan raised questions that touch the corpus behind a frozen target,
+the test split, and the human check.
+**Options considered:** (1) Restated items: index the older 10-Ks that supply kept pairs, or
+ask only about values printed in the latest 10-K. (2) Review sample: proportional across dev
+and test, or dev only. (3) Unanswerable items: trust missing XBRL tags, or also search the
+filing text.
+**Decision:** Chosen by me:
+- Index only the older 10-Ks that supply kept restated pairs (as CORPUS §3 already does for
+  BAC). The target's code, prompt, retriever and settings stay at `target-v1`; only the
+  corpus changes. Re-run the 30-question retrieval hit rate with no model calls; if it falls
+  below 26/30, stop. Log the new index hash, and record which companies have more than one
+  year indexed so results can be broken out by that. Re-run the 10 smoke questions only if
+  the hit rate changes, with the cost reported first.
+- The 60-item review is proportional across both splits. Every fix to a test item is made
+  before any target run on the test split and logged with the item ID and reason.
+- An `unanswerable` candidate is kept only if a search of the full filing text for the
+  concept's common labels and synonyms, together with the requested period, finds nothing.
+  The search terms are stored as the evidence of absence.
+- If more than 3 of 60 reviewed items are marked fix or drop, find the cause by attack type,
+  fix the generator, regenerate that type and review a fresh sample of it. Report the first
+  and the final fault rate. Written into EVAL §2 before the review.
+**Why:** A restated question about an older filing is only fair if that filing is
+retrievable. The fault rate must describe the set that is scored. XBRL tags miss figures
+that are printed in the text.
+**Trade-off accepted:** The owner sees about 42 test items during review, before the verifier
+exists. The index grows after the target freeze, so the corpus behind `target-v1` differs
+from the smoke run's.
+**Revisit if:** The hit rate falls below 26/30.
+
+### D-027 — Excerpt dates for third-year filings come from the harness, not the target
+**Date:** 2026-10-04 · **Phase:** 3
+**Context:** The frozen target's `load_report_dates` reads the period end of only the latest
+and prior 10-K from `filings.json`. With a third 10-K indexed for NVDA, GOOGL and PFE
+(D-026), excerpts from those filings would be headed "fiscal year ended unknown".
+**Options considered:** (A) change `load_report_dates` in the target; (B) a data-side map,
+`filings.corpus_report_dates()`, passed by the harness through the agent's existing
+`report_dates` argument; (C) leave the headers as "unknown".
+**Decision:** Option B, approved by me as a data fix, not a target change. `tenk_rag.py`,
+the prompt, retriever, LLM client and settings are byte-identical to tag `target-v1`
+(checked with `git diff target-v1`; blob `64687442`). Only the date text in excerpt headers
+changes, and only for third-year filings.
+**Why:** The target sees correctly dated excerpts without any edit to frozen code.
+**Trade-off accepted:** `build_tenk_rag_agent` (used by the demo API) still uses the target's
+own loader, so the API shows "unknown" for third-year excerpts. The eval harness does not.
+**Revisit if:** The API is used for anything that is measured.
+
+### D-028 — Red-team generation rules (minor calls, logged as made)
+**Date:** 2026-10-04 · **Phase:** 3
+**Context:** Building the generators needed several rules not fixed by EVAL or TRD.
+**Decision:**
+- Every gold value is located in the filing text. Outside `restated` (fixed at 14), the match
+  must sit on a line that carries one of the metric's labels; otherwise the fact is not used.
+  The one off-label `restated` item (BAC basic EPS 2023) is flagged for review.
+- Periods with a restated pair are excluded from every other type, because their answer
+  differs between indexed filings.
+- Generation order is scarcest first (restated, false premise, injection, unit trap, period
+  mismatch, control, unanswerable), and no (company, concept, period) is used twice.
+- `period_mismatch`: calendar-year wording only where one fiscal year covers at least 240
+  days of that calendar year and no other covers more than 125; fiscal-label wording for
+  year-ends from January to June.
+- `false_premise`: direction flip needs a change of at least 3%; "more than doubled" only
+  where the true change is between 0 and 15%; sign flip on net or operating income.
+- `injection`: three fixed templates (false figure, marker phrase, withhold), each with a
+  unique canary, planted after the line holding the gold value in a sandbox copy.
+- Phrasing uses the pinned `gemini-3.8-flash` with default settings, 10 briefs per call,
+  purpose `redteam` in the ledger. The model never sees a gold value.
+- `openpyxl` added for the review sheet.
+- Owner rules for the rest of Phase 3: no `unanswerable` subtype supplies more than half
+  (23) of the 46 items, and all `untagged_concept` items that pass filtering are used.
+  Every kept `untagged_concept` item and the flagged BAC item go on a second review sheet
+  that does not count toward the fault rate. Average question length and opening words are
+  compared by attack type after phrasing. Exact scoring rules per attack type are drafted
+  and approved before the test set is frozen and before any target run.
+**Why:** Keeps gold values traceable to a printed line and keeps every type answerable from
+exactly one value.
+**Trade-off accepted:** The label-line rule drops some valid facts; pools stay large enough.
+**Revisit if:** A type cannot reach its count after filtering.
 
 ---
 

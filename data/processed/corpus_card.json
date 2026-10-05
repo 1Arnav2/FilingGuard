@@ -1,16 +1,54 @@
 {
   "date_pulled": "2026-10-04",
   "companies": 25,
-  "filings": 26,
-  "chunks": 5215,
+  "filings": 32,
+  "filings_per_company_searched": 3,
+  "multi_year_indexed": {
+    "NVDA": [
+      "2026-01-25",
+      "2025-01-26",
+      "2024-01-28"
+    ],
+    "GOOGL": [
+      "2025-12-31",
+      "2024-12-31",
+      "2023-12-31"
+    ],
+    "PFE": [
+      "2025-12-31",
+      "2024-12-31",
+      "2023-12-31"
+    ],
+    "BAC": [
+      "2025-12-31",
+      "2024-12-31"
+    ]
+  },
+  "chunks": 6311,
   "embedding_model": "jinaai/jina-embeddings-v2-small-en",
+  "index_content_hash": "66f2d712d119bc22d368d62451a8823bda20ef3437a6c4e5d88905173e1e512f",
   "fact_rows": 16411,
   "fact_rows_latest_10k": 720,
-  "restatement_pairs": 12,
+  "restatement_pairs": 19,
+  "restatement_pairs_by_kind": {
+    "stock_split": 4,
+    "reclassification": 3,
+    "restatement": 12
+  },
+  "restatement_pairs_by_company": {
+    "NVDA": 4,
+    "GOOGL": 1,
+    "PFE": 2,
+    "BAC": 12
+  },
   "restatement_companies": [
-    "BAC"
+    "BAC",
+    "GOOGL",
+    "NVDA",
+    "PFE"
   ],
   "rounding_pairs_excluded": 2,
+  "ambiguous_pairs_excluded": 0,
   "revenue_fallback": [
     "GS"
   ],
@@ -19,5 +57,5 @@
     "XOM": 34088
   },
   "exclusions": [],
-  "sec_network_requests_this_run": 0
+  "sec_network_requests_this_run": 6
 }

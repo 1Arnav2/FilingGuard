@@ -1,7 +1,9 @@
 """Company list, CIK resolution, and 10-K selection from EDGAR submissions data."""
 
+import json
 from collections.abc import Iterator
 from dataclasses import asdict, dataclass
+from pathlib import Path
 
 from filingguard.data.edgar_client import TICKERS_URL, EdgarClient, submissions_url
 
@@ -74,6 +76,24 @@ def _to_filing(ticker: str, cik: int, row: dict) -> Filing:
         report_date=row["reportDate"],
         primary_document=row["primaryDocument"],
     )
+
+
+CORPUS_FILING_KEYS = ("latest_10k", "prior_10k", "older_10k")
+
+
+def corpus_report_dates(filings_path: Path = Path("data/processed/filings.json")) -> dict[str, str]:
+    """Map every indexed accession, including older 10-Ks, to its fiscal period end.
+
+    The frozen target's own loader reads only the latest and prior 10-K; the harness passes
+    this map to the agent's `report_dates` argument so excerpts from a third filing are dated.
+    """
+    dates = {}
+    for company in json.loads(filings_path.read_text(encoding="utf-8")):
+        for key in CORPUS_FILING_KEYS:
+            filing = company.get(key)
+            if filing and (key == "latest_10k" or filing["in_corpus"]):
+                dates[filing["accession"]] = filing["report_date"]
+    return dates
 
 
 def ten_k_filings(client: EdgarClient, ticker: str, cik: int, submissions: dict, limit: int = 2) -> list[Filing]:

@@ -1,0 +1,836 @@
+{
+  "smoke": [
+    {
+      "retriever": "dense",
+      "questions": [
+        {
+          "id": "SM-01",
+          "company": "AAPL",
+          "answer_chunks": 6,
+          "first_hit_rank": 1
+        },
+        {
+          "id": "SM-02",
+          "company": "NVDA",
+          "answer_chunks": 1,
+          "first_hit_rank": 3
+        },
+        {
+          "id": "SM-03",
+          "company": "TSLA",
+          "answer_chunks": 1,
+          "first_hit_rank": 13
+        },
+        {
+          "id": "SM-04",
+          "company": "COST",
+          "answer_chunks": 1,
+          "first_hit_rank": 3
+        },
+        {
+          "id": "SM-05",
+          "company": "KO",
+          "answer_chunks": 1,
+          "first_hit_rank": null
+        },
+        {
+          "id": "SM-06",
+          "company": "JPM",
+          "answer_chunks": 8,
+          "first_hit_rank": 8
+        },
+        {
+          "id": "SM-07",
+          "company": "BAC",
+          "answer_chunks": 10,
+          "first_hit_rank": 2
+        },
+        {
+          "id": "SM-08",
+          "company": "GS",
+          "answer_chunks": 9,
+          "first_hit_rank": 7
+        },
+        {
+          "id": "SM-09",
+          "company": "XOM",
+          "answer_chunks": 3,
+          "first_hit_rank": 5
+        },
+        {
+          "id": "SM-10",
+          "company": "BAC",
+          "answer_chunks": 4,
+          "first_hit_rank": 3
+        }
+      ],
+      "hit@3": 0.5,
+      "hit@5": 0.6,
+      "hit@10": 0.8,
+      "hit@20": 0.9
+    },
+    {
+      "retriever": "bm25",
+      "questions": [
+        {
+          "id": "SM-01",
+          "company": "AAPL",
+          "answer_chunks": 6,
+          "first_hit_rank": 1
+        },
+        {
+          "id": "SM-02",
+          "company": "NVDA",
+          "answer_chunks": 1,
+          "first_hit_rank": 6
+        },
+        {
+          "id": "SM-03",
+          "company": "TSLA",
+          "answer_chunks": 1,
+          "first_hit_rank": 3
+        },
+        {
+          "id": "SM-04",
+          "company": "COST",
+          "answer_chunks": 1,
+          "first_hit_rank": 2
+        },
+        {
+          "id": "SM-05",
+          "company": "KO",
+          "answer_chunks": 1,
+          "first_hit_rank": 3
+        },
+        {
+          "id": "SM-06",
+          "company": "JPM",
+          "answer_chunks": 8,
+          "first_hit_rank": 5
+        },
+        {
+          "id": "SM-07",
+          "company": "BAC",
+          "answer_chunks": 10,
+          "first_hit_rank": 2
+        },
+        {
+          "id": "SM-08",
+          "company": "GS",
+          "answer_chunks": 9,
+          "first_hit_rank": 4
+        },
+        {
+          "id": "SM-09",
+          "company": "XOM",
+          "answer_chunks": 3,
+          "first_hit_rank": 2
+        },
+        {
+          "id": "SM-10",
+          "company": "BAC",
+          "answer_chunks": 4,
+          "first_hit_rank": 1
+        }
+      ],
+      "hit@3": 0.7,
+      "hit@5": 0.9,
+      "hit@10": 1.0,
+      "hit@20": 1.0
+    },
+    {
+      "retriever": "hybrid",
+      "questions": [
+        {
+          "id": "SM-01",
+          "company": "AAPL",
+          "answer_chunks": 6,
+          "first_hit_rank": 1
+        },
+        {
+          "id": "SM-02",
+          "company": "NVDA",
+          "answer_chunks": 1,
+          "first_hit_rank": 2
+        },
+        {
+          "id": "SM-03",
+          "company": "TSLA",
+          "answer_chunks": 1,
+          "first_hit_rank": 5
+        },
+        {
+          "id": "SM-04",
+          "company": "COST",
+          "answer_chunks": 1,
+          "first_hit_rank": 2
+        },
+        {
+          "id": "SM-05",
+          "company": "KO",
+          "answer_chunks": 1,
+          "first_hit_rank": 15
+        },
+        {
+          "id": "SM-06",
+          "company": "JPM",
+          "answer_chunks": 8,
+          "first_hit_rank": 5
+        },
+        {
+          "id": "SM-07",
+          "company": "BAC",
+          "answer_chunks": 10,
+          "first_hit_rank": 1
+        },
+        {
+          "id": "SM-08",
+          "company": "GS",
+          "answer_chunks": 9,
+          "first_hit_rank": 8
+        },
+        {
+          "id": "SM-09",
+          "company": "XOM",
+          "answer_chunks": 3,
+          "first_hit_rank": 1
+        },
+        {
+          "id": "SM-10",
+          "company": "BAC",
+          "answer_chunks": 4,
+          "first_hit_rank": 1
+        }
+      ],
+      "hit@3": 0.6,
+      "hit@5": 0.8,
+      "hit@10": 0.9,
+      "hit@20": 1.0
+    },
+    {
+      "retriever": "interleaved",
+      "questions": [
+        {
+          "id": "SM-01",
+          "company": "AAPL",
+          "answer_chunks": 6,
+          "first_hit_rank": 1
+        },
+        {
+          "id": "SM-02",
+          "company": "NVDA",
+          "answer_chunks": 1,
+          "first_hit_rank": 5
+        },
+        {
+          "id": "SM-03",
+          "company": "TSLA",
+          "answer_chunks": 1,
+          "first_hit_rank": 5
+        },
+        {
+          "id": "SM-04",
+          "company": "COST",
+          "answer_chunks": 1,
+          "first_hit_rank": 2
+        },
+        {
+          "id": "SM-05",
+          "company": "KO",
+          "answer_chunks": 1,
+          "first_hit_rank": 4
+        },
+        {
+          "id": "SM-06",
+          "company": "JPM",
+          "answer_chunks": 8,
+          "first_hit_rank": 9
+        },
+        {
+          "id": "SM-07",
+          "company": "BAC",
+          "answer_chunks": 10,
+          "first_hit_rank": 3
+        },
+        {
+          "id": "SM-08",
+          "company": "GS",
+          "answer_chunks": 9,
+          "first_hit_rank": 5
+        },
+        {
+          "id": "SM-09",
+          "company": "XOM",
+          "answer_chunks": 3,
+          "first_hit_rank": 3
+        },
+        {
+          "id": "SM-10",
+          "company": "BAC",
+          "answer_chunks": 4,
+          "first_hit_rank": 1
+        }
+      ],
+      "hit@3": 0.5,
+      "hit@5": 0.9,
+      "hit@10": 1.0,
+      "hit@20": 1.0
+    }
+  ],
+  "holdout_v1": [
+    {
+      "retriever": "dense",
+      "questions": [
+        {
+          "id": "HO-01",
+          "company": "META",
+          "answer_chunks": 5,
+          "first_hit_rank": 3
+        },
+        {
+          "id": "HO-02",
+          "company": "WMT",
+          "answer_chunks": 2,
+          "first_hit_rank": 9
+        },
+        {
+          "id": "HO-03",
+          "company": "PG",
+          "answer_chunks": 7,
+          "first_hit_rank": 3
+        },
+        {
+          "id": "HO-04",
+          "company": "JPM",
+          "answer_chunks": 8,
+          "first_hit_rank": null
+        },
+        {
+          "id": "HO-05",
+          "company": "GS",
+          "answer_chunks": 9,
+          "first_hit_rank": 6
+        },
+        {
+          "id": "HO-06",
+          "company": "BAC",
+          "answer_chunks": 7,
+          "first_hit_rank": 7
+        },
+        {
+          "id": "HO-07",
+          "company": "UNH",
+          "answer_chunks": 5,
+          "first_hit_rank": 2
+        },
+        {
+          "id": "HO-08",
+          "company": "DIS",
+          "answer_chunks": 2,
+          "first_hit_rank": 5
+        },
+        {
+          "id": "HO-09",
+          "company": "CAT",
+          "answer_chunks": 6,
+          "first_hit_rank": 2
+        },
+        {
+          "id": "HO-10",
+          "company": "V",
+          "answer_chunks": 1,
+          "first_hit_rank": 9
+        }
+      ],
+      "hit@3": 0.4,
+      "hit@5": 0.5,
+      "hit@10": 0.9,
+      "hit@20": 0.9
+    },
+    {
+      "retriever": "bm25",
+      "questions": [
+        {
+          "id": "HO-01",
+          "company": "META",
+          "answer_chunks": 5,
+          "first_hit_rank": 4
+        },
+        {
+          "id": "HO-02",
+          "company": "WMT",
+          "answer_chunks": 2,
+          "first_hit_rank": 2
+        },
+        {
+          "id": "HO-03",
+          "company": "PG",
+          "answer_chunks": 7,
+          "first_hit_rank": 2
+        },
+        {
+          "id": "HO-04",
+          "company": "JPM",
+          "answer_chunks": 8,
+          "first_hit_rank": 2
+        },
+        {
+          "id": "HO-05",
+          "company": "GS",
+          "answer_chunks": 9,
+          "first_hit_rank": null
+        },
+        {
+          "id": "HO-06",
+          "company": "BAC",
+          "answer_chunks": 7,
+          "first_hit_rank": null
+        },
+        {
+          "id": "HO-07",
+          "company": "UNH",
+          "answer_chunks": 5,
+          "first_hit_rank": 16
+        },
+        {
+          "id": "HO-08",
+          "company": "DIS",
+          "answer_chunks": 2,
+          "first_hit_rank": 12
+        },
+        {
+          "id": "HO-09",
+          "company": "CAT",
+          "answer_chunks": 6,
+          "first_hit_rank": 1
+        },
+        {
+          "id": "HO-10",
+          "company": "V",
+          "answer_chunks": 1,
+          "first_hit_rank": 7
+        }
+      ],
+      "hit@3": 0.4,
+      "hit@5": 0.5,
+      "hit@10": 0.6,
+      "hit@20": 0.8
+    },
+    {
+      "retriever": "hybrid",
+      "questions": [
+        {
+          "id": "HO-01",
+          "company": "META",
+          "answer_chunks": 5,
+          "first_hit_rank": 3
+        },
+        {
+          "id": "HO-02",
+          "company": "WMT",
+          "answer_chunks": 2,
+          "first_hit_rank": 7
+        },
+        {
+          "id": "HO-03",
+          "company": "PG",
+          "answer_chunks": 7,
+          "first_hit_rank": 3
+        },
+        {
+          "id": "HO-04",
+          "company": "JPM",
+          "answer_chunks": 8,
+          "first_hit_rank": 20
+        },
+        {
+          "id": "HO-05",
+          "company": "GS",
+          "answer_chunks": 9,
+          "first_hit_rank": 13
+        },
+        {
+          "id": "HO-06",
+          "company": "BAC",
+          "answer_chunks": 7,
+          "first_hit_rank": null
+        },
+        {
+          "id": "HO-07",
+          "company": "UNH",
+          "answer_chunks": 5,
+          "first_hit_rank": 5
+        },
+        {
+          "id": "HO-08",
+          "company": "DIS",
+          "answer_chunks": 2,
+          "first_hit_rank": 1
+        },
+        {
+          "id": "HO-09",
+          "company": "CAT",
+          "answer_chunks": 6,
+          "first_hit_rank": 1
+        },
+        {
+          "id": "HO-10",
+          "company": "V",
+          "answer_chunks": 1,
+          "first_hit_rank": 5
+        }
+      ],
+      "hit@3": 0.4,
+      "hit@5": 0.6,
+      "hit@10": 0.7,
+      "hit@20": 0.9
+    },
+    {
+      "retriever": "interleaved",
+      "questions": [
+        {
+          "id": "HO-01",
+          "company": "META",
+          "answer_chunks": 5,
+          "first_hit_rank": 5
+        },
+        {
+          "id": "HO-02",
+          "company": "WMT",
+          "answer_chunks": 2,
+          "first_hit_rank": 3
+        },
+        {
+          "id": "HO-03",
+          "company": "PG",
+          "answer_chunks": 7,
+          "first_hit_rank": 2
+        },
+        {
+          "id": "HO-04",
+          "company": "JPM",
+          "answer_chunks": 8,
+          "first_hit_rank": 3
+        },
+        {
+          "id": "HO-05",
+          "company": "GS",
+          "answer_chunks": 9,
+          "first_hit_rank": 11
+        },
+        {
+          "id": "HO-06",
+          "company": "BAC",
+          "answer_chunks": 7,
+          "first_hit_rank": 14
+        },
+        {
+          "id": "HO-07",
+          "company": "UNH",
+          "answer_chunks": 5,
+          "first_hit_rank": 4
+        },
+        {
+          "id": "HO-08",
+          "company": "DIS",
+          "answer_chunks": 2,
+          "first_hit_rank": 10
+        },
+        {
+          "id": "HO-09",
+          "company": "CAT",
+          "answer_chunks": 6,
+          "first_hit_rank": 1
+        },
+        {
+          "id": "HO-10",
+          "company": "V",
+          "answer_chunks": 1,
+          "first_hit_rank": 12
+        }
+      ],
+      "hit@3": 0.4,
+      "hit@5": 0.6,
+      "hit@10": 0.7,
+      "hit@20": 1.0
+    }
+  ],
+  "holdout_v2": [
+    {
+      "retriever": "dense",
+      "questions": [
+        {
+          "id": "HV-01",
+          "company": "AMZN",
+          "answer_chunks": 3,
+          "first_hit_rank": 5
+        },
+        {
+          "id": "HV-02",
+          "company": "ORCL",
+          "answer_chunks": 7,
+          "first_hit_rank": 3
+        },
+        {
+          "id": "HV-03",
+          "company": "NKE",
+          "answer_chunks": 2,
+          "first_hit_rank": 11
+        },
+        {
+          "id": "HV-04",
+          "company": "JNJ",
+          "answer_chunks": 3,
+          "first_hit_rank": 13
+        },
+        {
+          "id": "HV-05",
+          "company": "PFE",
+          "answer_chunks": 2,
+          "first_hit_rank": 4
+        },
+        {
+          "id": "HV-06",
+          "company": "CVX",
+          "answer_chunks": 2,
+          "first_hit_rank": 17
+        },
+        {
+          "id": "HV-07",
+          "company": "BA",
+          "answer_chunks": 1,
+          "first_hit_rank": 3
+        },
+        {
+          "id": "HV-08",
+          "company": "GOOGL",
+          "answer_chunks": 2,
+          "first_hit_rank": 5
+        },
+        {
+          "id": "HV-09",
+          "company": "JPM",
+          "answer_chunks": 2,
+          "first_hit_rank": 5
+        },
+        {
+          "id": "HV-10",
+          "company": "BAC",
+          "answer_chunks": 8,
+          "first_hit_rank": 3
+        }
+      ],
+      "hit@3": 0.3,
+      "hit@5": 0.7,
+      "hit@10": 0.7,
+      "hit@20": 1.0
+    },
+    {
+      "retriever": "bm25",
+      "questions": [
+        {
+          "id": "HV-01",
+          "company": "AMZN",
+          "answer_chunks": 3,
+          "first_hit_rank": null
+        },
+        {
+          "id": "HV-02",
+          "company": "ORCL",
+          "answer_chunks": 7,
+          "first_hit_rank": null
+        },
+        {
+          "id": "HV-03",
+          "company": "NKE",
+          "answer_chunks": 2,
+          "first_hit_rank": null
+        },
+        {
+          "id": "HV-04",
+          "company": "JNJ",
+          "answer_chunks": 3,
+          "first_hit_rank": null
+        },
+        {
+          "id": "HV-05",
+          "company": "PFE",
+          "answer_chunks": 2,
+          "first_hit_rank": 10
+        },
+        {
+          "id": "HV-06",
+          "company": "CVX",
+          "answer_chunks": 2,
+          "first_hit_rank": 18
+        },
+        {
+          "id": "HV-07",
+          "company": "BA",
+          "answer_chunks": 1,
+          "first_hit_rank": null
+        },
+        {
+          "id": "HV-08",
+          "company": "GOOGL",
+          "answer_chunks": 2,
+          "first_hit_rank": 9
+        },
+        {
+          "id": "HV-09",
+          "company": "JPM",
+          "answer_chunks": 2,
+          "first_hit_rank": 15
+        },
+        {
+          "id": "HV-10",
+          "company": "BAC",
+          "answer_chunks": 8,
+          "first_hit_rank": 1
+        }
+      ],
+      "hit@3": 0.1,
+      "hit@5": 0.1,
+      "hit@10": 0.3,
+      "hit@20": 0.5
+    },
+    {
+      "retriever": "hybrid",
+      "questions": [
+        {
+          "id": "HV-01",
+          "company": "AMZN",
+          "answer_chunks": 3,
+          "first_hit_rank": 18
+        },
+        {
+          "id": "HV-02",
+          "company": "ORCL",
+          "answer_chunks": 7,
+          "first_hit_rank": null
+        },
+        {
+          "id": "HV-03",
+          "company": "NKE",
+          "answer_chunks": 2,
+          "first_hit_rank": null
+        },
+        {
+          "id": "HV-04",
+          "company": "JNJ",
+          "answer_chunks": 3,
+          "first_hit_rank": 7
+        },
+        {
+          "id": "HV-05",
+          "company": "PFE",
+          "answer_chunks": 2,
+          "first_hit_rank": 1
+        },
+        {
+          "id": "HV-06",
+          "company": "CVX",
+          "answer_chunks": 2,
+          "first_hit_rank": 11
+        },
+        {
+          "id": "HV-07",
+          "company": "BA",
+          "answer_chunks": 1,
+          "first_hit_rank": 11
+        },
+        {
+          "id": "HV-08",
+          "company": "GOOGL",
+          "answer_chunks": 2,
+          "first_hit_rank": 3
+        },
+        {
+          "id": "HV-09",
+          "company": "JPM",
+          "answer_chunks": 2,
+          "first_hit_rank": 1
+        },
+        {
+          "id": "HV-10",
+          "company": "BAC",
+          "answer_chunks": 8,
+          "first_hit_rank": 1
+        }
+      ],
+      "hit@3": 0.4,
+      "hit@5": 0.4,
+      "hit@10": 0.5,
+      "hit@20": 0.8
+    },
+    {
+      "retriever": "interleaved",
+      "questions": [
+        {
+          "id": "HV-01",
+          "company": "AMZN",
+          "answer_chunks": 3,
+          "first_hit_rank": 10
+        },
+        {
+          "id": "HV-02",
+          "company": "ORCL",
+          "answer_chunks": 7,
+          "first_hit_rank": 5
+        },
+        {
+          "id": "HV-03",
+          "company": "NKE",
+          "answer_chunks": 2,
+          "first_hit_rank": null
+        },
+        {
+          "id": "HV-04",
+          "company": "JNJ",
+          "answer_chunks": 3,
+          "first_hit_rank": null
+        },
+        {
+          "id": "HV-05",
+          "company": "PFE",
+          "answer_chunks": 2,
+          "first_hit_rank": 8
+        },
+        {
+          "id": "HV-06",
+          "company": "CVX",
+          "answer_chunks": 2,
+          "first_hit_rank": null
+        },
+        {
+          "id": "HV-07",
+          "company": "BA",
+          "answer_chunks": 1,
+          "first_hit_rank": 6
+        },
+        {
+          "id": "HV-08",
+          "company": "GOOGL",
+          "answer_chunks": 2,
+          "first_hit_rank": 10
+        },
+        {
+          "id": "HV-09",
+          "company": "JPM",
+          "answer_chunks": 2,
+          "first_hit_rank": 10
+        },
+        {
+          "id": "HV-10",
+          "company": "BAC",
+          "answer_chunks": 8,
+          "first_hit_rank": 1
+        }
+      ],
+      "hit@3": 0.1,
+      "hit@5": 0.2,
+      "hit@10": 0.7,
+      "hit@20": 0.7
+    }
+  ]
+}

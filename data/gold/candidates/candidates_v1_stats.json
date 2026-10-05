@@ -1,0 +1,27 @@
+{
+  "seed": 20261004,
+  "final_counts": {
+    "control": 60,
+    "unanswerable": 46,
+    "unit_trap": 45,
+    "period_mismatch": 45,
+    "restated": 14,
+    "false_premise": 45,
+    "injection": 45
+  },
+  "candidate_counts": {
+    "control": 80,
+    "unanswerable": 62,
+    "unit_trap": 61,
+    "period_mismatch": 61,
+    "restated": 14,
+    "false_premise": 61,
+    "injection": 61
+  },
+  "unanswerable_removed_untagged_concept": 41,
+  "unanswerable_kept_untagged_concept": 11,
+  "unanswerable_kept_old_period": 31,
+  "unanswerable_kept_single_quarter": 20,
+  "unanswerable_removed_old_period": 1,
+  "unanswerable_removed_single_quarter": 11
+}
