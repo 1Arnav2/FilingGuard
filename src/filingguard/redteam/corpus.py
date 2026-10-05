@@ -13,7 +13,9 @@ from pathlib import Path
 
 import pandas as pd
 
-from filingguard.data.facts import is_annual
+from filingguard.data.facts import REVENUE_FALLBACK, REVENUE_PRIMARY, is_annual
+
+REVENUE_CONCEPTS = tuple(REVENUE_PRIMARY + REVENUE_FALLBACK)
 
 PROCESSED = Path("data/processed")
 EXCERPT_CHARS = 600
@@ -28,10 +30,13 @@ class Metric:
     row_label: str       # regex a statement-style row label must match for the value to be gold (D-030)
 
 
-_NAME = r"(?:[a-z0-9.,&'() -]+ )?"   # optional company name inside a label ("total nike, inc. revenues")
+_NAME = r"(?:[a-z0-9.,&'() -]+ )?"   # optional company name inside a label ("total walmart shareholders' equity")
+# Revenue rows may carry a company name only with a corporate suffix ("total nike, inc. revenues"),
+# so segment rows such as "total automotive revenues" do not qualify.
+_CORPORATE_NAME = r"(?:[a-z0-9.,&' -]+ (?:inc|corp|corporation|company|co)\.?,? )?"
 METRICS = {m.key: m for m in (
     Metric("Revenue", "total revenue", ("revenue", "revenues", "net sales", "total sales"), True,
-           r"^(?!.*\b(?:cost|costs|deferred|unearned|other|segment|per)\b)(?:total |consolidated )?" + _NAME
+           r"^(?!.*\b(?:cost|costs|deferred|unearned|other|segment|per)\b)(?:total |consolidated )?" + _CORPORATE_NAME
            + r"(?:net )?(?:operating )?(?:sales and )?(?:revenues?|sales)(?:,? net)?(?:,? net of interest expense)?$"),
     Metric("NetIncomeLoss", "net income",
            ("net income", "net earnings", "net loss", "net profit", "profit attributable"), True,
@@ -47,15 +52,15 @@ METRICS = {m.key: m for m in (
     Metric("Liabilities", "total liabilities", ("total liabilities",), False, r"^total liabilities$"),
     Metric("StockholdersEquity", "total stockholders' equity",
            ("stockholders' equity", "shareholders' equity", "shareowners' equity", "total equity"), False,
-           r"^(?!.*\b(?:beginning|liabilities|noncontrolling)\b)total " + _NAME
+           r"^(?!.*\b(?:beginning|liabilities|noncontrolling|debt|plus|common|preferred)\b)total " + _NAME
            + r"(?:(?:stockholders|shareholders|shareowners)'? ?)?equity(?:,? ending balances?| attributable to .+)?$"),
     Metric("CashAndCashEquivalentsAtCarryingValue", "cash and cash equivalents",
            ("cash and cash equivalents", "cash and due from banks", "cash equivalents"), False,
            r"^cash and cash equivalents(?:,? at end of (?:the )?(?:year|period))?$"),
     Metric("EarningsPerShareBasic", "basic earnings per share", ("earnings per share", "per share", "basic"), True,
-           r"^(?!.*\b(?:diluted|weighted|average|shares outstanding)\b).*\bbasic\b.*$"),
+           r"^(?!.*\b(?:diluted|weighted|average|shares outstanding|adjusted|non-gaap|core)\b).*\bbasic\b.*$"),
     Metric("EarningsPerShareDiluted", "diluted earnings per share", ("earnings per share", "per share", "diluted"), True,
-           r"^(?!.*\b(?:basic|weighted|average|shares outstanding)\b).*\bdiluted\b.*$"),
+           r"^(?!.*\b(?:basic|weighted|average|shares outstanding|adjusted|non-gaap|core)\b).*\bdiluted\b.*$"),
     Metric("ResearchAndDevelopmentExpense", "research and development expense",
            ("research and development", "research & development", "r&d", "product development",
             "technology and development", "research, development"), True,
@@ -169,6 +174,36 @@ def locate(text: str, value: float, unit: str, metric: Metric) -> Located | None
     return None
 
 
+# XBRL concepts for the other line a reader could take for the same metric.
+ALTERNATIVE_CONCEPTS = {
+    "NetIncomeLoss": ("ProfitLoss",),   # net income including noncontrolling interests
+    "StockholdersEquity": ("StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",),
+    "EarningsPerShareBasic": ("IncomeLossFromContinuingOperationsPerBasicShare",),
+    "EarningsPerShareDiluted": ("IncomeLossFromContinuingOperationsPerDilutedShare",),
+    "NetCashProvidedByUsedInOperatingActivities": ("NetCashProvidedByUsedInOperatingActivitiesContinuingOperations",),
+    **{c: tuple(o for o in REVENUE_CONCEPTS if o != c) for c in REVENUE_CONCEPTS},
+}
+TOLERANCE = 0.005
+
+
+def question_label(metric: Metric, name: str, row_label: str, alternatives: list[dict]) -> str:
+    """How a question names the metric: its usual label, or, when the filing also reports a
+    differing figure a reader could take for it, the line the gold value is on (D-037)."""
+    if not alternatives:
+        return metric.label
+    parent = {
+        "NetIncomeLoss": f"net income attributable to {name}",
+        "StockholdersEquity": f"stockholders' equity attributable to {name}",
+        "EarningsPerShareBasic": "basic earnings per share (net income, including any discontinued operations)",
+        "EarningsPerShareDiluted": "diluted earnings per share (net income, including any discontinued operations)",
+        "NetCashProvidedByUsedInOperatingActivities": "net cash provided by operating activities (including any discontinued operations)",
+    }
+    if metric.key in parent:
+        return parent[metric.key]
+    text = clean_label(row_label)
+    return text[0].lower() + text[1:] if text else metric.label
+
+
 def excerpt(text: str, start: int, end: int, width: int = EXCERPT_CHARS) -> dict:
     """About `width` characters around [start, end), with the match's position inside it."""
     lo = max(0, start - width // 2)
@@ -201,6 +236,7 @@ class Corpus:
         self.companies = {c["ticker"]: c for c in json.loads((self.processed / "filings.json").read_text(encoding="utf-8"))}
         self.pairs = json.loads((self.processed / "restatement_pairs.json").read_text(encoding="utf-8"))
         self._text: dict[str, str] = {}
+        self._companyfacts: dict[str, dict] = {}
 
     @cached_property
     def chunks(self) -> list[dict]:
@@ -256,18 +292,40 @@ class Corpus:
         if loc is None:
             return None
         filing = next(f for f in self.filings(ticker) if f["accession"] == accession)
+        period_start = r["period_start"] if isinstance(r["period_start"], str) else None
+        alternatives = self.alternatives(ticker, r["concept"], accession, period_start, r["period_end"], float(r["value"]))
         return {
             "gold": {
-                "value": float(r["value"]), "unit": r["unit"], "concept": r["concept"], "metric": metric.label,
+                "value": float(r["value"]), "unit": r["unit"], "concept": r["concept"],
+                "metric": question_label(metric, self.name(ticker), loc.row_label, alternatives),
                 "period_start": r["period_start"] if isinstance(r["period_start"], str) else None,
                 "period_end": r["period_end"], "fiscal_year": fiscal_label(r["period_end"]),
                 "printed_scale": loc.printed_scale, "printed_as": loc.rendering,
             },
             "source": {
                 "accession": accession, "filed": filing["filed"], "report_date": filing["report_date"],
-                "span": [loc.start, loc.end], "row_label": loc.row_label,
+                "span": [loc.start, loc.end], "row_label": loc.row_label, "alternatives": alternatives,
             },
         }
+
+    def alternatives(self, ticker: str, concept: str, accession: str, period_start: str | None,
+                     period_end: str, value: float) -> list[dict]:
+        """Other XBRL figures in the same filing and period that a reader could take for this
+        metric and that differ from `value` by more than the tolerance."""
+        if ticker not in self._companyfacts:
+            from filingguard.data.edgar_client import companyfacts_url, edgar_client_from_env
+
+            client = edgar_client_from_env()
+            self._companyfacts[ticker] = client.get_json(companyfacts_url(self.companies[ticker]["cik"]))
+        gaap = self._companyfacts[ticker]["facts"].get("us-gaap", {})
+        out = []
+        for other in ALTERNATIVE_CONCEPTS.get(concept, ()):
+            for entries in gaap.get(other, {}).get("units", {}).values():
+                for e in entries:
+                    if (e.get("accn") == accession and e["end"] == period_end and e.get("start") == period_start
+                            and abs(float(e["val"]) - value) > TOLERANCE * abs(value)):
+                        out.append({"concept": other, "value": float(e["val"])})
+        return [dict(t) for t in {tuple(sorted(a.items())) for a in out}]
 
     def filings(self, ticker: str) -> list[dict]:
         """Indexed filings for a company, newest first."""

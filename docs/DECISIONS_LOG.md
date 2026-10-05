@@ -581,6 +581,13 @@ so start-month supplies about 14 of the 46 items and calendar wording the rest (
 in all for this type).
 **Revisit if:** A later test-set version wants start-month items from more companies (that
 would mean relaxing the boundary rule or reusing facts across types).
+**Amended 2026-10-05 (H-019), chosen by me:** the boundary rule was too strict. A fiscal year
+is now skipped only if it starts in the last two days of a calendar month; a start on the 1st
+is unambiguous. The pool grows to 113 options across all ten non-calendar filers. Start-month
+and restated items now take facts before the other types; any other candidate holding the
+same fact is dropped if its type keeps its final count plus two. 30 start-month candidates
+(3 per filer) feed about half of the 46 items. Each item stores its trap fiscal year (the year
+labelled with the start year) and that year's value, which must be in the same filing.
 
 ### D-035 — EVAL.md edits in the second review round (all before any target run)
 **Date:** 2026-10-05 · **Phase:** 3
@@ -599,6 +606,54 @@ or the test split:
   pass it.
 **Why:** Keeps EVAL.md the source of truth for the rebuilt test set.
 **Trade-off accepted:** None beyond those in D-030 and D-034.
+**Revisit if:** Never for this test set version.
+
+### D-036 — Start-month review detail names the correct and the trap fiscal year
+**Date:** 2026-10-05 · **Phase:** 3
+**Context:** H-020.
+**Decision:** The review sheet's attack detail for a start-month item states the start month,
+the correct fiscal year with its dates and value, and the trap fiscal year with its dates and
+value. The trap year and value are stored with the item's gold, so the scorer can also label
+a trap answer `wrong_period`.
+**Why:** The reviewer needs both numbers to judge whether the trap is real.
+**Trade-off accepted:** Start-month specs change, so all 30 are phrased afresh.
+**Revisit if:** Never.
+
+### D-037 — Parent versus consolidated lines: name the line in the question (proposed)
+**Date:** 2026-10-05 · **Phase:** 3
+**Context:** H-018. Where XBRL reports a second figure for the same filing and period that a
+reader could take for the metric (net income including noncontrolling interests, total equity
+including them, continuing-operations EPS or cash flow, another revenue concept), and it
+differs by more than 0.5%, a question that says only "net income" has two defensible answers.
+**Options considered:** (A) the question names the line: "net income attributable to
+<company>", "stockholders' equity attributable to <company>", or the gold row's own label for
+revenue; (B) both values are accepted as correct (an EVAL §3 change).
+**Decision:** Recommended (A), pending my choice. Implemented in code so the effect could be
+counted: 27 of the 366 v3 candidates name their line (net income 15, equity 7, revenue 5);
+the alternative values are stored with each item's source either way.
+**Why:** (A) keeps one gold value per item and leaves the scoring rules unchanged; (B) would
+score a consolidated figure as correct for a question that, read strictly, asks for the
+parent's.
+**Trade-off accepted:** Under (A) the question is longer for those companies, which is a
+property of the filing, not of the attack type.
+**Revisit if:** The owner chooses (B).
+
+### D-038 — Negative figures in scoring (proposed wording, pending)
+**Date:** 2026-10-05 · **Phase:** 3
+**Context:** H-022. EVAL §3 does not say how a negative value is recognised in an answer; 9
+v3 candidates have negative gold (operating cash outflows, a net loss, loss per share).
+**Decision:** Proposed wording for EVAL §3 shared definitions, pending approval; EVAL.md not
+yet edited.
+**Revisit if:** The owner changes the wording.
+
+### D-039 — EVAL.md edits after the v2 pre-screen (all before any target run)
+**Date:** 2026-10-05 · **Phase:** 3
+**Decision:** Approved by me; made on 2026-10-05, before any target run on the dev or the test
+split:
+- §2: start-month rule restated (skip only starts in the last two days of a month; trap year
+  in the same filing; about half of `period_mismatch`, across the ten non-calendar filers).
+- §8: "one filing year per company" replaced with the actual corpus (latest 10-K per company,
+  plus older 10-Ks for NVDA, GOOGL, PFE and BAC where they supply restated pairs).
 **Revisit if:** Never for this test set version.
 
 ---
@@ -848,3 +903,73 @@ headings (D-030), so the strict row label is used as the test.
 on a strictly labelled row. The 80 control candidates leave 76, enough for 60 without new
 phrasing.
 **Linked decision:** D-030
+
+### H-017 — Review sheet v2 withdrawn before review
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** The owner's pre-screen of `review/review_v2.xlsx` found issues that change
+the draft (H-018 to H-022).
+**Impact:** v2 sheet withdrawn before review after a pre-screen; no fault rate recorded for it
+(`data/gold/draft/review_v2_withdrawn.json`). Nothing frozen. The first fault rate (at least 7
+of 60, H-009) stands as the first; the next recorded rate will come from review v3.
+**Resolution:** Fixes below; review sheet v3.
+**Linked decision:** D-036, D-037, D-038, D-039
+
+### H-018 — Parent and consolidated lines give two answers; two label-rule holes
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** FG-0129 asks for P&G "net income"; gold is "Net earnings attributable to
+Procter & Gamble" (15,974) while total net earnings is 16,065, more than 0.5% apart. FG-0287
+(CVX equity, 186,450) has a consolidated total equity of 192,176 in another table. A same-table
+sibling check was tried first; it missed cross-table cases like FG-0287 and flagged false
+pairs, so the check uses XBRL instead: `ProfitLoss`, equity including noncontrolling interests,
+continuing-operations EPS and cash flow, and the company's other revenue concepts, same filing
+and period. The audit also exposed two holes in the strict label rule: diluted EPS accepted
+"Adjusted diluted earnings per share (non-GAAP)", and revenue accepted segment rows such as
+"Automotive sales" and "Financial Products Revenues" because any words could precede
+"revenues".
+**Impact:** 27 v3 candidates have a differing second figure: net income 15 (PG, UNH, DIS, WMT,
+XOM, CVX, PFE, ORCL), equity 7 (WMT, DIS, CVX, KO, TSLA, ORCL), revenue 5 (PFE, WMT). EPS and
+operating cash flow: none differ in the current pool. No current gold sat on an adjusted-EPS
+or segment row; the holes are closed anyway.
+**Resolution:** Proposed D-037 (A); label holes closed (EPS excludes adjusted, non-GAAP and
+core; a revenue label may carry a company name only with a corporate suffix; equity excludes
+debt, common and preferred lines).
+**Linked decision:** D-030, D-037
+
+### H-019 — Start-month boundary rule left only 14 items from three companies
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** Skipping starts within two days of any month boundary removed every
+fiscal year starting on the 1st (MSFT, PG, ORCL, NKE, V, WMT, DIS 2023).
+**Resolution:** Rule amended (D-034): skip only starts in the last two days of a month. Pool
+113 options, ten filers; 30 candidates, 3 per filer.
+**Linked decision:** D-034
+
+### H-020 — Start-month review detail showed fiscal-label text
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** FG-0178 (COST, began in August 2022) fell through to the old fiscal-label
+sentence in the review sheet.
+**Resolution:** D-036.
+**Linked decision:** D-036
+
+### H-021 — Heading-like row labels checked (no fault found)
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** FG-0236 (PFE) matched "Operating activities". It is a value row under the
+heading "Cash provided by/(used in):" with three year columns ($11,704, $12,744, $8,700).
+**What I tried:** Checked every v3 candidate's gold row: all have at least two numeric cells;
+none is a heading. Short labels ("Operating activities", "Basic", "Diluted", "Revenue") appear
+on 41 candidates, all value rows under a section heading.
+**Resolution:** No change.
+**Linked decision:** D-030
+
+### H-022 — Negative gold values not covered by the scoring wording
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** FG-0147 (GS operating cash flow, −12,587, printed "( 12,587 )" on "Net cash
+used for operating activities"). EVAL §3 converts a figure by its scale but says nothing about
+sign. 9 v3 candidates have negative gold.
+**Resolution:** Proposed wording (D-038), pending.
+**Linked decision:** D-038

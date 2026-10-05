@@ -27,7 +27,7 @@ def build(ticker: str, name: str, metric: Metric, fact: dict, requested: str) ->
     return ItemSpec(
         attack_type="unit_trap", subtype=f"{gold['printed_scale']}_to_{requested}", company=ticker,
         expected_behavior="answer", gold=gold, source=fact["source"],
-        brief=f"Ask for {name}'s {metric.label} {when}, {NO_DATES.format(label=gold['fiscal_year'])}, and ask "
+        brief=f"Ask for {name}'s {gold['metric']} {when}, {NO_DATES.format(label=gold['fiscal_year'])}, and ask "
               f"for the figure expressed in {wording}.",
         must_include=[[str(gold["fiscal_year"])], phrases],
         forbid=forbid_for(gold) + [f"{in_requested:,.0f}", f"{in_requested:,.1f}", f"{in_requested:,.2f}"],

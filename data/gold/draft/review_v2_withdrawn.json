@@ -1,0 +1,7 @@
+{
+  "workbook": "review/review_v2.xlsx",
+  "date": "2026-10-05",
+  "status": "v2 sheet withdrawn before review after a pre-screen; no fault rate recorded for it",
+  "fault_rate": null,
+  "reason": "owner pre-screen found issues that change the draft (start-month boundary rule, parent vs consolidated lines, start-month attack detail, heading-like row labels, negative values)"
+}

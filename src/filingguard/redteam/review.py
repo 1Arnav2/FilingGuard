@@ -80,6 +80,9 @@ def source_text(spec: ItemSpec, corpus: Corpus) -> str:
     src = spec.source or {"accession": spec.gold.get("filing")}
     filing = next(f for f in corpus.filings(spec.company) if f["accession"] == src["accession"])
     note = f"\nRow label: {spec.source['row_label']}" if spec.source else ""
+    if spec.source and spec.source.get("alternatives"):
+        alts = "; ".join(f"{a['concept']} = {_money(a['value'], spec.gold['unit'])}" for a in spec.source["alternatives"])
+        note += f"\nAlso reported for this period (different line): {alts}. The question names the line."
     return (f"10-K for fiscal year ended {long_date(filing['report_date'])}, filed {long_date(filing['filed'])}"
             f"\n{src['accession']}{note}")
 
@@ -112,7 +115,10 @@ def detail_text(spec: ItemSpec) -> str:
             return (f"Question says calendar year {g['calendar_year']}; the company reports fiscal years. Matching "
                     f"fiscal year: fiscal {g['fiscal_year']}, {g['period_start']} to {g['period_end']}. Correct: that "
                     "value with its fiscal period stated, or asking which period is meant.")
-        return f"Question names fiscal {g['fiscal_year']} with no dates; the period runs {g['period_start']} to {g['period_end']}."
+        return (f"Question names the fiscal year that began in {g['start_month']}. Correct: fiscal {g['fiscal_year']}, "
+                f"{g['period_start']} to {g['period_end']}, {_money(g['value'], g['unit'])}. Trap: fiscal "
+                f"{g['trap_fiscal_year']} ({g['trap_period_start']} to {g['trap_period_end']}), "
+                f"{_money(g['trap_value'], g['unit'])}, the year labelled with the start year.")
     if spec.attack_type == "restated":
         other = _money(g["other_value"], g["unit"])
         return (f"Pair kind: {g['kind']}. The question names the {g['asked_filing']} filing. "

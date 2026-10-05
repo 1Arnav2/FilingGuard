@@ -31,9 +31,9 @@ SEED = 20261004
 OUT = Path("data/gold/candidates")
 DRAFT_ITEMS = Path("data/testset/draft")
 DRAFT_GOLD = Path("data/gold/draft")
-CANDIDATES = OUT / "candidates_v2.jsonl"
-PHRASED = OUT / "phrased_v2.jsonl"
-REVIEW_BOOK = Path("review/review_v2.xlsx")   # v1 was halted at the first pass (H-009)
+CANDIDATES = OUT / "candidates_v3.jsonl"
+PHRASED = OUT / "phrased_v3.jsonl"
+REVIEW_BOOK = Path("review/review_v3.xlsx")   # v2 was withdrawn before review (H-017)   # v1 was halted at the first pass (H-009)
 # Types with the scarcest facts claim theirs first; control takes from what is left.
 GENERATION_ORDER = ("restated", "false_premise", "injection", "unit_trap", "period_mismatch", "control", "unanswerable")
 
@@ -147,8 +147,9 @@ def assemble_draft(seed: int = SEED) -> dict:
     if problems:
         raise RuntimeError(f"review sample is not stratified enough: {problems}")
     in_sample = {s.spec_id for s in sample}
-    extra = [s for s in items if s.spec_id not in in_sample and (
-        s.subtype == "untagged_concept")]
+    # Extra checks (not in the fault rate): every untagged-concept and start-month item not
+    # already in the sample (D-028, D-034).
+    extra = [s for s in items if s.spec_id not in in_sample and s.subtype in ("untagged_concept", "start_month")]
 
     _write_jsonl(DRAFT_ITEMS / "items_v1.jsonl", [
         {"id": ids[s.spec_id], "company": s.company, "attack_type": s.attack_type, "subtype": s.subtype,
@@ -177,7 +178,7 @@ def assemble_draft(seed: int = SEED) -> dict:
         "review_sample": sorted(ids[s.spec_id] for s in sample),
         "injection_delivery_rank": {ids[k]: r for k, r in ranks.items() if k in ids},
     }
-    _write_json(DRAFT_GOLD / "assembly_v2.json", stats)
+    _write_json(DRAFT_GOLD / "assembly_v3.json", stats)
     return stats
 
 
@@ -212,9 +213,11 @@ def main() -> None:
         from filingguard.redteam.revise import revise
 
         v1 = [ItemSpec(**row) for row in _read_jsonl(OUT / "candidates_v1.jsonl")]
-        specs, record = revise(Corpus(), v1, SEED)
+        corpus = Corpus()
+        final = allocate_counts(len(select_pairs(usable_pairs(corpus), SEED)))
+        specs, record = revise(corpus, v1, SEED, final)
         _write_jsonl(CANDIDATES, [s.to_dict() for s in specs])
-        _write_json(OUT / "candidates_v2_revision.json", record)
+        _write_json(OUT / "candidates_v3_revision.json", record)
         print(json.dumps(record["stats"], indent=2))
     elif args.step == "phrase":
         from filingguard.llm.client import client_from_env
@@ -226,8 +229,8 @@ def main() -> None:
         else:
             specs = [ItemSpec(**row) for row in _read_jsonl(CANDIDATES)]
             # Questions already phrased for an identical spec (same id) are reused, never re-asked.
-            existing = {r["spec_id"]: r for path in (OUT / "phrased_v1.jsonl", PHRASED) if path.exists()
-                        for r in _read_jsonl(path)}
+            existing = {r["spec_id"]: r for path in (OUT / "phrased_v1.jsonl", OUT / "phrased_v2.jsonl", PHRASED)
+                        if path.exists() for r in _read_jsonl(path)}
             rows = phrase(client_from_env("TARGET_MODEL"), specs, existing)
             _write_jsonl(PHRASED, rows)
         print(json.dumps({"phrased": len(rows), "failed_checks": sum(bool(r["problems"]) for r in rows)}, indent=2))
@@ -239,7 +242,7 @@ def main() -> None:
         from filingguard.redteam.review import fault_rate, read_decisions
 
         decisions = read_decisions(REVIEW_BOOK)
-        _write_json(DRAFT_GOLD / "review_v2.json", decisions)
+        _write_json(DRAFT_GOLD / "review_v3.json", decisions)
         print(json.dumps({"fault_rate_sample": fault_rate(decisions["Fault-rate sample"]),
                           "extra_checks": fault_rate(decisions["Extra checks"]) | {"counts_toward_fault_rate": False}},
                          indent=2))

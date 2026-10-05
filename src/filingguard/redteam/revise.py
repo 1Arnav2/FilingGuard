@@ -1,5 +1,6 @@
-"""Candidates v2: the committed v1 candidates revised under the rules adopted after the first
-review (H-009 to H-016, D-030 to D-034), plus replacements generated for what was removed.
+"""Candidates v3: the committed v1 candidates revised under the rules adopted after the first
+review and the v2 pre-screen (H-009 to H-019, D-030 to D-037), plus replacements generated for
+what was removed.
 
 Every v1 spec that still passes keeps its spec id, so its existing question is reused and
 nothing is re-phrased that did not change. Deterministic given the v1 file and the seed.
@@ -16,8 +17,9 @@ from filingguard.redteam.injection import containing_chunk, insert_position
 from filingguard.redteam.restated import select_pairs
 from filingguard.redteam.spec import ItemSpec
 
-START_MONTH_CANDIDATES = 36   # every start-month option the boundary rule leaves (D-034)
-PERIOD_CANDIDATES = 52        # 46 period_mismatch items plus room for phrasing and review losses
+START_MONTH_CANDIDATES = 30   # about half of 46 period items, plus room; 3 per non-calendar filer (D-034)
+PERIOD_CANDIDATES = 54        # 46 period_mismatch items plus room for phrasing and review losses
+SPARE = 2                     # each type must keep at least its final count plus this many candidates
 
 
 def _metric(corpus: Corpus, ticker: str, concept: str):
@@ -76,15 +78,23 @@ def revise_one(corpus: Corpus, spec: ItemSpec) -> tuple[ItemSpec | None, str]:
         return None, "value not on a row labelled with the metric's own name (D-030)"
     if t == "false_premise" and not _prior_ok(corpus, spec):
         return None, "prior-year value not on a strictly labelled row (D-030)"
-    gold = spec.gold | {k: fact["gold"][k] for k in ("printed_scale", "printed_as")}
+    gold = spec.gold | {k: fact["gold"][k] for k in ("printed_scale", "printed_as", "metric")}
     if t == "unit_trap":
         requested = spec.gold["requested_scale"]
         if gold["printed_scale"] != spec.gold["printed_scale"]:
             return None, "printed scale changed on the strictly labelled row"
         metric = _metric(corpus, spec.company, spec.gold["concept"])
         rebuilt = unit_trap.build(spec.company, corpus.name(spec.company), metric, fact, requested)
-        return rebuilt, "kept" if rebuilt.spec_id == spec.spec_id else "dollars wording changed (D-033)"
+        if rebuilt.spec_id == spec.spec_id:
+            return rebuilt, "kept"
+        return rebuilt, ("line named in the question (D-037)" if gold["metric"] != spec.gold["metric"]
+                         else "dollars wording changed (D-033)")
     changes: dict = {"gold": gold, "source": fact["source"]}
+    if gold["metric"] != spec.gold["metric"]:
+        old, new = f"'s {spec.gold['metric']}", f"'s {gold['metric']}"
+        changes["brief"] = spec.brief.replace(old, new, 1)
+        if "premise" in gold:
+            gold["premise"] = gold["premise"].replace(old, new, 1)
     if t == "injection":
         chunk = containing_chunk(corpus.chunks, fact["source"]["accession"], fact["source"]["span"])
         if chunk is None:
@@ -92,40 +102,50 @@ def revise_one(corpus: Corpus, spec: ItemSpec) -> tuple[ItemSpec | None, str]:
         changes["injection"] = spec.injection | {"chunk_id": chunk["chunk_id"],
                                                  "insert_at": insert_position(chunk, fact["source"]["span"][1])}
     revised = _rebuilt(spec, **changes)
-    return revised, "kept" if revised.spec_id == spec.spec_id else "gold printed form changed"
+    if revised.spec_id == spec.spec_id:
+        return revised, "kept"
+    return revised, "line named in the question (D-037)" if "brief" in changes else "gold printed form changed"
 
 
-def revise(corpus: Corpus, v1: list[ItemSpec], seed: int) -> tuple[list[ItemSpec], dict]:
-    """Candidates v2 and a record of what happened to every v1 spec."""
+def revise(corpus: Corpus, v1: list[ItemSpec], seed: int, final: dict[str, int]) -> tuple[list[ItemSpec], dict]:
+    """Candidates v3 and a record of what happened to every v1 spec."""
     ctx = GenContext(corpus, random.Random(f"{seed}-revise"), seed)
     kept, outcome = [], {}
     for spec in v1:
         revised, reason = revise_one(corpus, spec)
         outcome[spec.spec_id] = {"type": spec.attack_type, "subtype": spec.subtype, "reason": reason,
-                                 "v2_spec_id": revised.spec_id if revised else None}
+                                 "v3_spec_id": revised.spec_id if revised else None}
         if revised:
             kept.append(revised)
     key = lambda s: (s.company, s.gold["concept"], s.gold["period_end"])
-    # Controls have spare candidates (76 for 60), so new items may take a fact a control
-    # candidate holds; that control candidate is then dropped as a duplicate.
-    ctx.used |= {key(s) for s in kept if s.source and s.attack_type != "control"}
+    # Restated and start-month items are the scarcest, so they take facts first; any kept
+    # candidate of another type that holds one of those facts is dropped as a duplicate, as
+    # long as its type keeps its final count plus SPARE (checked below).
     added = restated.generate(ctx, len(select_pairs(restated.usable_pairs(corpus), seed)))
     added += period_mismatch.generate_subtype(ctx, "start_month", START_MONTH_CANDIDATES)
+    taken = {key(s) for s in added}
+    by_new_id = {o["v3_spec_id"]: k for k, o in outcome.items() if o["v3_spec_id"]}
+    for s in kept:
+        if s.source and key(s) in taken:
+            outcome[by_new_id[s.spec_id]] |= {"reason": "fact taken by a new restated or start-month item",
+                                              "v3_spec_id": None}
+    kept = [s for s in kept if not (s.source and key(s) in taken)]
+    ctx.used |= {key(s) for s in kept if s.source}
     period = sum(s.attack_type == "period_mismatch" for s in kept + added)
     added += period_mismatch.generate_subtype(ctx, "calendar_wording", max(0, PERIOD_CANDIDATES - period))
-    taken = {key(s) for s in added}
-    for s in kept:
-        if s.attack_type == "control" and key(s) in taken:
-            outcome[next(k for k, o in outcome.items() if o["v2_spec_id"] == s.spec_id)] |= {
-                "reason": "fact taken by a new restated or start-month item", "v2_spec_id": None}
-    kept = [s for s in kept if not (s.attack_type == "control" and key(s) in taken)]
     specs = kept + added
-    random.Random(f"{seed}-v2-order").shuffle(specs)
+    # restated is fixed at its selected pair count, so it has no spares.
+    short = {t: n for t, n in Counter(s.attack_type for s in specs).items()
+             if n < final[t] + (0 if t == "restated" else SPARE)}
+    if short or set(final) - {s.attack_type for s in specs}:
+        raise RuntimeError(f"too few candidates after revision: {short}")
+    random.Random(f"{seed}-v3-order").shuffle(specs)
     stats = {
-        "seed": seed, "v1": len(v1), "v1_kept": len(kept), "added": len(added), "v2": len(specs),
+        "seed": seed, "v1": len(v1), "v1_kept": len(kept), "added": len(added), "v3": len(specs),
         "v1_outcomes": dict(Counter((o["type"], o["reason"]) for o in outcome.values()).most_common()),
-        "v2_by_type": dict(Counter(s.attack_type for s in specs)),
-        "v2_by_subtype": dict(Counter(f"{s.attack_type}/{s.subtype}" for s in specs)),
+        "v3_by_type": dict(Counter(s.attack_type for s in specs)),
+        "v3_by_subtype": dict(Counter(f"{s.attack_type}/{s.subtype}" for s in specs)),
+        "start_month_by_company": dict(Counter(s.company for s in specs if s.subtype == "start_month")),
     }
     stats["v1_outcomes"] = [{"type": k[0], "reason": k[1], "count": v} for k, v in stats["v1_outcomes"].items()]
     return specs, {"stats": stats, "per_spec": outcome}

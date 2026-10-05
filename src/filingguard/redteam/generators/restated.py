@@ -51,7 +51,7 @@ def generate(ctx: GenContext, n: int) -> list[ItemSpec]:
         specs.append(ItemSpec(
             attack_type="restated", subtype=p["kind"], company=ticker, expected_behavior="answer",
             gold=gold, source=fact["source"],
-            brief=f"Ask for {name}'s {metric.label} {when} as reported in the company's 10-K annual report for "
+            brief=f"Ask for {name}'s {gold['metric']} {when} as reported in the company's 10-K annual report for "
                   f"fiscal {filing_year} (filed {long_date(asked['filed'])}). Make clear the question is about the "
                   "figure in that specific annual report.",
             must_include=[[str(gold["fiscal_year"])], [str(filing_year)], ["10-K", "annual report"]],

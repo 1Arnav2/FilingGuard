@@ -86,7 +86,7 @@ def period_phrase(gold: dict, flow: bool) -> str:
 
 def ask_value_brief(name: str, metric: Metric, gold: dict) -> str:
     when = ("for " if metric.flow else "as of ") + period_phrase(gold, metric.flow)
-    return f"Ask for {name}'s {metric.label} {when}, {NO_DATES.format(label=gold['fiscal_year'])}."
+    return f"Ask for {name}'s {gold['metric']} {when}, {NO_DATES.format(label=gold['fiscal_year'])}."
 
 
 def forbid_for(gold: dict) -> list[str]:

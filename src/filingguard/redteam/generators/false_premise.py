@@ -28,18 +28,18 @@ def _pairs(ctx: GenContext, ticker: str) -> list[tuple]:
     return out
 
 
-def premise_for(subtype: str, metric, name: str, value: float, year: int, change: float) -> tuple[str, list[str]] | None:
+def premise_for(subtype: str, metric, name: str, value: float, year: int, change: float, label: str) -> tuple[str, list[str]] | None:
     """The false premise and the phrases its question must carry, or None if it would not be false."""
     if subtype == "direction_flip" and abs(change) >= MIN_DIRECTION_CHANGE:
         verb, phrases = ("declined", DOWN) if change > 0 else ("increased", UP)
-        return f"{name}'s {metric.label} {verb} in fiscal {year} compared with fiscal {year - 1}", phrases
+        return f"{name}'s {label} {verb} in fiscal {year} compared with fiscal {year - 1}", phrases
     if subtype == "sign_flip" and metric.key in SIGNED and value != 0:
         loss, profit = SIGNED[metric.key]
         wrong = loss if value > 0 else profit
         article = "an" if wrong[0] in "aeiou" else "a"
         return f"{name} reported {article} {wrong} in fiscal {year}", [wrong]
     if subtype == "magnitude" and 0 <= change < MAX_MAGNITUDE_CHANGE:
-        return f"{name}'s {metric.label} more than doubled in fiscal {year} from fiscal {year - 1}", ["doubl"]
+        return f"{name}'s {label} more than doubled in fiscal {year} from fiscal {year - 1}", ["doubl"]
     return None
 
 
@@ -49,7 +49,8 @@ def generate(ctx: GenContext, n: int) -> list[ItemSpec]:
         for offset in range(len(SUBTYPES)):
             subtype = cycle(SUBTYPES, i + offset)
             options = [(m, c, p, ch, prem) for m, c, p, ch in _pairs(ctx, ticker)
-                       if (prem := premise_for(subtype, m, name, c["gold"]["value"], c["gold"]["fiscal_year"], ch))]
+                       if (prem := premise_for(subtype, m, name, c["gold"]["value"], c["gold"]["fiscal_year"], ch,
+                                                       c["gold"]["metric"]))]
             if options:
                 break
         else:

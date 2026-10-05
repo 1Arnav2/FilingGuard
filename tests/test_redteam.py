@@ -136,11 +136,11 @@ def test_calendar_year_needs_one_clearly_matching_fiscal_year():
 
 def test_false_premises_are_false():
     m = METRICS["Revenue"]
-    assert "declined" in premise_for("direction_flip", m, "Apple", 110.0, 2025, 0.10)[0]
-    assert premise_for("direction_flip", m, "Apple", 101.0, 2025, 0.01) is None
-    assert premise_for("magnitude", m, "Apple", 105.0, 2025, 0.05)[1] == ["doubl"]
-    assert premise_for("magnitude", m, "Apple", 300.0, 2025, 2.0) is None
-    loss = premise_for("sign_flip", METRICS["OperatingIncomeLoss"], "Apple", 5.0, 2025, 0.1)
+    assert "declined" in premise_for("direction_flip", m, "Apple", 110.0, 2025, 0.10, m.label)[0]
+    assert premise_for("direction_flip", m, "Apple", 101.0, 2025, 0.01, m.label) is None
+    assert premise_for("magnitude", m, "Apple", 105.0, 2025, 0.05, m.label)[1] == ["doubl"]
+    assert premise_for("magnitude", m, "Apple", 300.0, 2025, 2.0, m.label) is None
+    loss = premise_for("sign_flip", METRICS["OperatingIncomeLoss"], "Apple", 5.0, 2025, 0.1, "operating income")
     assert loss[0] == "Apple reported an operating loss in fiscal 2025"
 
 
@@ -189,10 +189,25 @@ def test_sandbox_poisons_a_copy_and_leaves_the_index_alone():
     assert np.array_equal(index.vectors, before[0]) and [c["text"] for c in index.chunks] == before[1]
 
 
-def test_start_month_skips_dates_near_a_month_boundary():
+def test_start_month_skips_only_the_last_two_days_of_a_month():
     from filingguard.redteam.generators.period_mismatch import start_month
-    assert start_month("2024-01-29") == "January 2024"   # NVDA: three days before February
-    assert start_month("2023-09-04") == "September 2023"  # COST: three days into September
-    assert start_month("2024-07-01") is None              # MSFT: on the boundary
-    assert start_month("2024-09-29") is None              # AAPL: two days before October
-    assert start_month("2024-09-02") is None              # one day into September
+    assert start_month("2024-01-29") == "January 2024"    # NVDA
+    assert start_month("2024-07-01") == "July 2024"       # MSFT: a start on the 1st is unambiguous
+    assert start_month("2024-09-02") == "September 2024"
+    assert start_month("2024-09-29") is None              # AAPL: could be read as October
+    assert start_month("2024-09-30") is None
+    assert start_month("2024-02-28") is None              # leap year: Feb 28 and 29 are the last two days
+    assert start_month("2024-02-27") == "February 2024"
+
+
+def test_question_names_the_line_only_when_a_second_figure_differs():
+    from filingguard.redteam.corpus import question_label
+    ni = METRICS["NetIncomeLoss"]
+    assert question_label(ni, "Procter & Gamble", "Net earnings attributable to Procter & Gamble", []) == "net income"
+    alt = [{"concept": "ProfitLoss", "value": 16065e6}]
+    assert question_label(ni, "Procter & Gamble", "Net earnings attributable to Procter & Gamble", alt) ==         "net income attributable to Procter & Gamble"
+    assert question_label(METRICS["Revenue"], "Pfizer", "Total revenues", alt) == "total revenues"
+    assert not label_matches(METRICS["EarningsPerShareDiluted"], "Adjusted diluted earnings per share (non-GAAP)")
+    assert not label_matches(METRICS["Revenue"], "Total automotive revenues")
+    assert not label_matches(METRICS["Revenue"], "Financial Products Revenues")
+    assert label_matches(METRICS["Revenue"], "Total NIKE, Inc. Revenues")

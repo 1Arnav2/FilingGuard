@@ -33,8 +33,10 @@ adversarial 10-K questions, and what does it cost in coverage and latency?
 - **Period wording (D-034):** calendar-year wording is used only where one fiscal year covers
   at least 240 days of the named calendar year and no other fiscal year in the filing covers
   more than 125. Start-month wording ("the fiscal year that began in January 2024") takes
-  the month from the period's actual start date and skips any fiscal year that starts within
-  two days of a month boundary.
+  the month from the period's actual start date and skips any fiscal year that starts in the
+  last two days of a calendar month (a start on the 1st is unambiguous). Its trap year, the
+  fiscal year labelled with the start year, must appear in the same filing. Start-month items
+  make up about half of `period_mismatch`, spread across the ten non-calendar filers.
 
 - **Split:** 90 dev, 210 test, stratified by attack type and company. Assigned once by seed
   and then frozen.
@@ -166,7 +168,10 @@ Each unsupported claim gets one label:
 - The target agent is a stand-in, not a commercial product. Results describe this agent.
 - The red-team and verifier may share model blind spots. Mitigation: gold from XBRL, and
   deterministic verifier steps for numbers.
-- One filing year per company. No claims about trend questions.
+- Corpus: the latest 10-K for each of the 25 companies, plus older 10-Ks only where they
+  supply a restated pair (NVDA, GOOGL and PFE have three years indexed, BAC two). Items ask
+  about the periods those filings report, mostly the latest three fiscal years. No claims
+  about longer trends.
 - Small counts per attack type.
 - Gold location: each gold value must sit in a table row labelled with the metric's own name
   (D-030). Such a row can be in an MD&A summary table rather than the primary statement; the
