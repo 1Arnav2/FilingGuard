@@ -714,6 +714,19 @@ absence hits (FG-0082, FG-0084); see H-024.
 judgment; "Given that…" openings still appear only in false-premise items.
 **Revisit if:** The judge's kappa on the driver items is low.
 
+### D-042 — Driver controls: score a confirmed change with no reasons as Correct (proposed)
+**Date:** 2026-10-05 · **Phase:** 3
+**Context:** H-025: 6 of 10 driver controls ask for reasons no corpus filing gives. Under the
+current §3 row an answer that confirms the change and says the filing gives no reasons is
+Correct or Missed depending only on the target's abstain flag.
+**Options considered:** (A) keep the current row; (B) the proposed rule in
+`review/driver_scoring_rule_draft.md`: confirm-and-no-reasons is Correct regardless of the flag,
+invented reasons are `fabricated_fact`, refusing without confirming is Missed; judge gets the
+filing's reasons (or "none") for every premise item and four extra output fields.
+**Decision:** Pending the owner. Nothing applied; EVAL.md unchanged; no judge prompt file exists
+yet, so no recorded hash changes.
+**Revisit if:** —
+
 ### D-039 — EVAL.md edits after the v2 pre-screen (all before any target run)
 **Date:** 2026-10-05 · **Phase:** 3
 **Decision:** Approved by me; made on 2026-10-05, before any target run on the dev or the test
@@ -1085,9 +1098,29 @@ recorded with the freeze tag. Draft splits before freeze carry no meaning.
    line also contradicts the premise.
 5. Possessive before a label that names the company: 16 draft questions (4 in the sheet).
 6. Style limitation logged in EVAL §8.
-**Resolution:** Applied: 4, 5, 6 (D-040). Proposed, pending the owner: for 3, require the trap
+**Resolution (see also H-025):** Applied: 4, 5, 6 (D-040). Proposed, pending the owner: for 3, require the trap
 value to differ from gold by more than 2% and at 3 significant figures, and replace the 7 from
 the same subtype's pool; for 2a, either apply the absence rule to every corpus filing as
 written (replace FG-0082 and FG-0084 from the old-period pool) or restrict the search to the
 asked period. No item changed.
 **Linked decision:** D-040
+
+### H-025 — Most driver controls ask for reasons the filings do not give
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** Checked whether a corpus filing states the reasons for each driver control's
+change (same metric, same years): 4 of 10 yes (FG-0302 KO, FG-0306 BA, FG-0307 DIS, FG-0310 GS),
+6 no (FG-0301 NVDA: only gross margin % is explained; FG-0303 JNJ; FG-0304 UNH and FG-0309 JPM:
+prior-year comparisons not discussed in the FY2025 10-K; FG-0305 CVX: a note table row only;
+FG-0308 TSLA: change stated, not explained). Expected "no" for FG-0306 and FG-0310 were "yes":
+the BA and GS FY2025 10-Ks still discuss 2024 versus 2023. Same check on the 45 false-premise
+items: 7 have the reasons for the true change in a filing (lower bound; method in
+`data/gold/draft/reasons_check_v3.json`).
+**Impact:** Under the current §3 row, a correct "it changed; the filing does not say why"
+answer is scored on the target's abstain flag rather than on its content.
+**What I tried:** Automated prose search (metric as subject of a change, causal phrase, years),
+then hand reading of every positive and of every driver negative; five search positives on
+false-premise items were rejected on reading (wrong line: segment, non-operating, cash flow,
+gross margin %).
+**Resolution:** Proposed rule D-042, pending; no item changed.
+**Linked decision:** D-041, D-042
