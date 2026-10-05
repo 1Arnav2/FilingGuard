@@ -141,3 +141,55 @@ def test_poisoned_chunk_check_detects_a_changed_chunk():
     good = [{"chunk_id": inj["chunk_id"], "text": clean}]
     assert check_poisoned([item], good) == []
     assert check_poisoned([item], [{"chunk_id": inj["chunk_id"], "text": clean + " changed"}])
+
+
+def test_reply_validator_rejects_off_schema_replies_h028():
+    from filingguard.eval.dev_run import reply_errors
+    from filingguard.retrieval import Retrieved
+    from tests.test_tenk_rag import CHUNK, GOOD, OTHER
+
+    hits = [Retrieved(1, 0.9, CHUNK, "bm25"), Retrieved(2, 0.5, OTHER, "dense")]
+    assert reply_errors(json.dumps(GOOD), hits) == []
+    assert reply_errors(json.dumps({"answer": "x", "abstain": True, "claims": []}), hits) == []
+    for bad in ({"answer": "x", "abstain": False, "claims": ["a string claim"]},
+                {"abstain": False, "total_revenue": 5},
+                {"answer": "x", "abstain": "no", "claims": []},
+                {"answer": "x", "abstain": False, "claims": [{"statement": "s"}]}):
+        assert reply_errors(json.dumps(bad), hits), bad
+    assert reply_errors("not json", hits)
+
+
+def test_batch_tags_keep_runs_apart(tmp_path, ledger):
+    llm = client(tmp_path, ledger)
+    llm.generate_batch([("a", {})], FakeBatch(), purpose="t", display_name="x", poll_s=0, tag="batch")
+    with pytest.raises(KeyError):
+        BatchReplayClient(llm, "batch-file").generate("a")
+    assert BatchReplayClient(llm, "batch").generate("a").text == "re a"
+
+
+def test_submit_stops_after_a_sub_batch_with_an_invalid_reply(tmp_path, ledger, monkeypatch):
+    from filingguard.eval import dev_run
+    from tests.test_tenk_rag import DATES, GOOD, FixedRetriever
+
+    class FakeHarness:
+        def retriever(self, item):
+            return FixedRetriever()
+
+        def agent(self, item, llm):
+            return TenKRagAgent(llm, FixedRetriever(), DATES, k=2)
+
+    class OneBad(FakeBatch):
+        def results(self, job_name):
+            reqs = self.jobs[job_name]
+            out = {r["key"]: {"text": json.dumps(GOOD), "raw": {}} for r in reqs}
+            out[reqs[-1]["key"]] = {"text": json.dumps({"abstain": False, "total_revenue": 1}), "raw": {}}
+            return out
+
+    monkeypatch.setattr(dev_run, "BATCHES", tmp_path / "rerun.json")
+    items = [{"id": f"FG-{i:04d}", "question": f"Q{i}?", "company": "AAPL"} for i in range(90)]
+    fake = OneBad()
+    with pytest.raises(RuntimeError, match="sub-batch 1"):
+        dev_run.submit(FakeHarness(), items, client(tmp_path, ledger), fake, limit_usd=1.0)
+    assert fake.submitted == 1 and len(fake.jobs["batches/1"]) == 5, "only the first 5-item sub-batch was sent"
+    record = json.loads((tmp_path / "rerun.json").read_text())
+    assert record["sub_batches"][0]["invalid_replies"] and not record["sub_batches"][0]["complete"]

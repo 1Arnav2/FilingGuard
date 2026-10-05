@@ -1,0 +1,70 @@
+{
+  "item": "FG-0004",
+  "question": "What was Microsoft's net income for fiscal 2025?",
+  "company": "MSFT",
+  "request_difference": {
+    "file_job_same_request": "none: SDK standard-call body in a JSONL file",
+    "inline_response_schema": "response_json_schema sent as response_schema"
+  },
+  "probes": [
+    {
+      "probe": "file_job_same_request",
+      "passed": true,
+      "problems": [],
+      "shape": {
+        "keys": [
+          "abstain",
+          "answer",
+          "claims"
+        ],
+        "claims": 2,
+        "claim_fields": [
+          "excerpt",
+          "period",
+          "quote",
+          "scale",
+          "statement",
+          "unit",
+          "value"
+        ]
+      },
+      "reply": "{\n  \"answer\": \"Microsoft's net income for fiscal year 2025 was $101,832 million (approximately $101.83 billion). On a non-GAAP basis, adjusted net income was $105,452 million.\",\n  \"abstain\": false,\n  \"claims\": [\n    {\n      \"statement\": \"Microsoft reported GAAP net income of $101,832 million for fiscal year 2025.\",\n      \"excerpt\": \"E4\",\n      \"quote\": \"Net income | 133,749 | 101,832 | 31%\",\n      \"period\": \"fiscal 2025\",\n      \"scale\": \"millions\",\n      \"unit\": \"USD\",\n      \"value\": 101832\n    },\n    {\n      \"statement\": \"Microsoft reported adjusted net income (non-GAAP) of $105,452 million for fiscal year 2025.\",\n      \"excerpt\": \"E4\",\n      \"quote\": \"Adjusted net income (non-GAAP) | 128,786 | 105,452 | 22%\",\n      \"period\": \"fiscal 2025\",\n      \"scale\": \"millions\",\n      \"unit\": \"USD\",\n      \"value\": 105452\n    }\n  ]\n}",
+      "job": "batches/elqicj6rlpnywo15o4473ps392n9ravj1qas",
+      "collected_existing_job": true,
+      "cost_usd": 0.008345
+    },
+    {
+      "probe": "inline_response_schema",
+      "passed": false,
+      "error": "ValidationError: 4 validation errors for Schema\nproperties.claims.items.properties.value.type\n  Input should be 'TYPE_UNSPECIFIED', 'STRING', 'NUMBER', 'INTEGER', 'BOOLEAN', 'ARRAY', 'OBJECT' or 'NULL' [type=enum, input_value=['number', 'null'], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.13/v/enum\nproperties.claims.items.properties.unit.type\n  Input should be 'TYPE_UNSPECIFIED', 'STRING', 'NUMBER', 'INTEGER', 'BOOLEAN', 'ARRAY', 'OBJECT' or 'NULL' [type=enum, input_value=['string', 'null'], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.13/v/enum\nproperties.claims.items.properties.scale.type\n  Input should be 'TYPE_UNSPECIFIED', 'STRING', 'NUMBER', 'INTEGER', 'BOOLEAN', 'ARRAY', 'OBJECT' or 'NULL' [type=enum, input_value=['string', 'null'], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.13/v/enum\nproperties.claims.items.properties.period.type\n  Input should be 'TYPE_UNSPECIFIED', 'STRING', 'NUMBER', 'INTEGER', 'BOOLEAN', 'ARRAY', 'OBJECT' or 'NULL' [type=enum, input_value=['string', 'null'], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.13/v/enum",
+      "cost_usd": 0.0
+    }
+  ],
+  "reference": {
+    "probe": "standard_api_reference",
+    "passed": true,
+    "problems": [],
+    "cached": true,
+    "shape": {
+      "keys": [
+        "abstain",
+        "answer",
+        "claims"
+      ],
+      "claims": 2,
+      "claim_fields": [
+        "excerpt",
+        "period",
+        "quote",
+        "scale",
+        "statement",
+        "unit",
+        "value"
+      ]
+    },
+    "reply": "{\n  \"answer\": \"Microsoft's net income for fiscal 2025 was $101,832 million. On a non-GAAP basis, adjusted net income for fiscal 2025 was $105,452 million.\",\n  \"abstain\": false,\n  \"claims\": [\n    {\n      \"statement\": \"Microsoft reported GAAP net income of $101,832 million for fiscal year 2025.\",\n      \"value\": 101832,\n      \"unit\": \"USD\",\n      \"scale\": \"millions\",\n      \"period\": \"fiscal 2025\",\n      \"excerpt\": \"E4\",\n      \"quote\": \"Net income | 133,749 | 101,832 | 31%\"\n    },\n    {\n      \"statement\": \"Microsoft reported adjusted net income (non-GAAP) of $105,452 million for fiscal year 2025.\",\n      \"value\": 105452,\n      \"unit\": \"USD\",\n      \"scale\": \"millions\",\n      \"period\": \"fiscal 2025\",\n      \"excerpt\": \"E4\",\n      \"quote\": \"Adjusted net income (non-GAAP) | 128,786 | 105,452 | 22%\"\n    }\n  ]\n}",
+    "cost_usd": 0.0
+  },
+  "spend_usd": 0.008345,
+  "total_spend_usd": 1.36305
+}

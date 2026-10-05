@@ -26,10 +26,11 @@ POISONED = Path("data/testset/poisoned_chunks_v1.jsonl")
 PROCESSED = Path("data/processed")
 RUNS = Path("results/runs")
 OUT = RUNS / "dev_target_v1.jsonl"
-BATCHES = RUNS / "dev_target_v1_batches.json"
+BATCHES = RUNS / "dev_target_v1_rerun_batches.json"  # the first run's record, dev_target_v1_batches.json, is H-028
+TAG = "batch-file"
 SPLIT = "dev"
 DEV_COUNT = 90
-SUB_BATCH = 30
+SUB_BATCH_SIZES = (5, 30, 30, 25)
 # High-end cost of one dev item at the batch price (22k input, 2,500 output tokens), used to
 # project each sub-batch against the owner's dev limit before it is sent.
 HIGH_COST_PER_ITEM = 0.013
@@ -40,6 +41,50 @@ FROZEN_PATHS = ("src/filingguard/agents/targets", "src/filingguard/agents/schema
 # afterwards: rebuilding their prompts must give the cached prompts byte for byte.
 IDENTITY_QUESTIONS = (("GS", "What were Goldman Sachs's total net revenues in 2025?"),
                       ("XOM", "What were ExxonMobil's total revenues and other income in 2025?"))
+
+
+_JSON_TYPES = {"string": str, "boolean": bool, "array": list, "object": dict, "null": type(None)}
+
+
+def schema_errors(value: Any, schema: dict[str, Any], path: str = "$") -> list[str]:
+    """Errors of `value` against the subset of JSON Schema the target's response schema uses:
+    type (one or a list), required, properties, items."""
+    types = schema.get("type")
+    if types is not None:
+        allowed = types if isinstance(types, list) else [types]
+        ok = any((isinstance(value, (int, float)) and not isinstance(value, bool)) if t == "number"
+                 else isinstance(value, _JSON_TYPES[t]) and not (t != "boolean" and isinstance(value, bool))
+                 for t in allowed)
+        if not ok:
+            return [f"{path}: expected {allowed}, got {type(value).__name__}"]
+    errors = []
+    if isinstance(value, dict):
+        errors += [f"{path}: missing {k}" for k in schema.get("required", []) if k not in value]
+        for k, sub in schema.get("properties", {}).items():
+            if k in value:
+                errors += schema_errors(value[k], sub, f"{path}.{k}")
+    if isinstance(value, list) and "items" in schema:
+        for i, v in enumerate(value):
+            errors += schema_errors(v, schema["items"], f"{path}[{i}]")
+    return errors
+
+
+def reply_errors(text: str, hits: list[Any]) -> list[str]:
+    """Why a target reply is not valid: not JSON, off the response schema, or not parsed cleanly
+    by the frozen parser (H-028). Empty if valid."""
+    from filingguard.agents.targets.tenk_rag import RESPONSE_SCHEMA, parse_response
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        return [f"invalid JSON: {exc}"]
+    errors = schema_errors(data, RESPONSE_SCHEMA)
+    if errors:
+        return errors
+    try:
+        _, parse_error = parse_response(text, hits)
+    except Exception as exc:  # the frozen parser must not crash on a valid reply
+        return [f"frozen parser raised {type(exc).__name__}: {exc}"]
+    return [parse_error] if parse_error else []
 
 
 def load_items(split: str = SPLIT) -> list[dict[str, Any]]:
@@ -131,7 +176,7 @@ def build_requests(h: Harness, items: list[dict[str, Any]], model: str) -> list[
         h.agent(it, rec).answer(it["question"], it["company"])
         prompt, params = rec.requests[0]
         out.append({"id": it["id"], "prompt": prompt, "params": params,
-                    "key": batch_cache_key(model, prompt, params)})
+                    "key": batch_cache_key(model, prompt, params, TAG)})
     return out
 
 
@@ -145,14 +190,19 @@ def _save_batches(record: dict[str, Any]) -> None:
 
 
 def submit(h: Harness, items: list[dict[str, Any]], llm: LLMClient, batch_backend: Any, limit_usd: float) -> dict[str, Any]:
-    """Send the dev requests in sub-batches of SUB_BATCH, one after another, recording each job
-    before waiting on it so an interrupted run resumes instead of resubmitting."""
+    """Send the dev requests in sub-batches (SUB_BATCH_SIZES), one after another, recording each
+    job before waiting on it so an interrupted run resumes instead of resubmitting. Every reply
+    in a sub-batch is checked against the response schema and the frozen parser before the next
+    is sent; the run stops on the first invalid reply or missing item (H-028)."""
     requests = build_requests(h, items, llm.model)
     record = _load_batches()
-    start_total = llm.ledger.total()["cost_usd"]
-    record.setdefault("spend_before_usd", start_total)
-    for n, lo in enumerate(range(0, len(requests), SUB_BATCH), start=1):
-        chunk = requests[lo:lo + SUB_BATCH]
+    record.setdefault("tag", TAG)
+    record.setdefault("reason", "re-run of the dev batch under D-025 after H-028; file-based jobs")
+    record.setdefault("spend_before_usd", llm.ledger.total()["cost_usd"])
+    by_id = {it["id"]: it for it in items}
+    lo = 0
+    for n, size in enumerate(SUB_BATCH_SIZES, start=1):
+        chunk, lo = requests[lo:lo + size], lo + size
         entry = next((b for b in record["sub_batches"] if b["n"] == n), None)
         if entry is None:
             entry = {"n": n, "ids": [r["id"] for r in chunk], "job": None}
@@ -172,18 +222,25 @@ def submit(h: Harness, items: list[dict[str, Any]], llm: LLMClient, batch_backen
             _save_batches(record)
 
         answers, errors = llm.generate_batch(
-            [(r["prompt"], r["params"]) for r in chunk], batch_backend, purpose="target_batch",
-            display_name=f"filingguard-dev-target-v1-{n}", resume_job=entry["job"], on_submit=on_submit)
+            [(r["prompt"], r["params"]) for r in chunk], batch_backend, purpose="target_batch_file",
+            display_name=f"filingguard-dev-target-v1-file-{n}", resume_job=entry["job"], on_submit=on_submit,
+            tag=TAG)
         entry["answered"] = sum(1 for r in chunk if r["key"] in answers)
         entry["errors"] = {r["id"]: errors[r["key"]] for r in chunk if r["key"] in errors}
-        entry["complete"] = not entry["errors"]
+        invalid = {}
+        for r in chunk:
+            if r["key"] in answers:
+                it = by_id[r["id"]]
+                problems = reply_errors(answers[r["key"]].text, h.retriever(it).retrieve(it["question"], it["company"], 20))
+                if problems:
+                    invalid[r["id"]] = problems
+        entry["invalid_replies"] = invalid
+        entry["complete"] = not entry["errors"] and not invalid
+        record["spend_after_usd"] = llm.ledger.total()["cost_usd"]
         _save_batches(record)
-        if entry["errors"]:
-            print(f"sub-batch {n}: {len(entry['errors'])} item(s) missing; re-run to resubmit them alone", file=sys.stderr)
-            entry["job"] = None
-            _save_batches(record)
-    record["spend_after_usd"] = llm.ledger.total()["cost_usd"]
-    _save_batches(record)
+        if not entry["complete"]:
+            raise RuntimeError(f"sub-batch {n}: {len(invalid)} invalid repl(ies), {len(entry['errors'])} missing; "
+                               f"stopping before any further submission: {invalid or entry['errors']}")
     return record
 
 
@@ -196,13 +253,13 @@ def write_rows(h: Harness, items: list[dict[str, Any]], llm: LLMClient) -> list[
     subs = {i: b["n"] for b in _load_batches()["sub_batches"] for i in b["ids"]}
     rows = []
     for it in items:
-        answer = h.agent(it, BatchReplayClient(llm)).answer(it["question"], it["company"])
+        answer = h.agent(it, BatchReplayClient(llm, TAG)).answer(it["question"], it["company"])
         t = answer.trace
-        stored = llm.cache.get(batch_cache_key(llm.model, *_request_of(h, it, llm.model)))
+        stored = llm.cache.get(batch_cache_key(llm.model, *_request_of(h, it, llm.model), TAG))
         inp, out = usage_tokens(stored["raw"])
         rows.append({
             "id": it["id"], "split": it["split"], "company": it["company"], "question": it["question"],
-            "condition": "baseline", "mode": "batch", "sub_batch": subs.get(it["id"]), "batch_job": jobs.get(it["id"]),
+            "condition": "baseline", "mode": TAG, "sub_batch": subs.get(it["id"]), "batch_job": jobs.get(it["id"]),
             "answer": {"text": answer.text, "abstained": answer.abstained,
                        "claims": [c.__dict__ for c in answer.claims],
                        "citations": [c.__dict__ for c in answer.citations], "parse_error": t["parse_error"]},
@@ -244,18 +301,20 @@ def pre_submit_checks(h: Harness, items: list[dict[str, Any]], llm: LLMClient) -
 
 
 def main() -> None:
-    from filingguard.llm.client import batch_backend_from_env, client_from_env
+    import os
+
+    from filingguard.llm.client import client_from_env, gemini_file_batch_backend
 
     parser = argparse.ArgumentParser()
     parser.add_argument("step", choices=("check", "submit", "write"))
-    parser.add_argument("--limit-usd", type=float, default=1.20)
+    parser.add_argument("--limit-usd", type=float, default=1.00)
     args = parser.parse_args()
     items = load_items()
     h, llm = Harness(), client_from_env("TARGET_MODEL")
     report = pre_submit_checks(h, items, llm)
     print(json.dumps(report, indent=2))
     if args.step == "submit":
-        print(json.dumps(submit(h, items, llm, batch_backend_from_env(), args.limit_usd), indent=2))
+        print(json.dumps(submit(h, items, llm, gemini_file_batch_backend(os.environ["GEMINI_API_KEY"]), args.limit_usd), indent=2))
     elif args.step == "write":
         rows = write_rows(h, items, llm)
         print(f"wrote {len(rows)} rows to {OUT}")

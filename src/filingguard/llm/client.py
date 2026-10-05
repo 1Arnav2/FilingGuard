@@ -116,9 +116,87 @@ def gemini_batch_backend(api_key: str) -> BatchBackend:
     return _Gemini()
 
 
-def batch_cache_key(model: str, prompt: str, params: dict[str, Any]) -> str:
-    """Cache key for a Batch API answer: tagged so it never collides with a standard call (D-025)."""
-    return cache_key({"model": model, "prompt": prompt, "params": params, "mode": "batch"})
+def file_response(response: dict[str, Any]) -> dict[str, Any]:
+    """{"text", "raw"} from one REST response in a batch result file. Read directly rather than
+    through the SDK's response model, which rejects fields newer than the SDK (`serviceTier`).
+    Text joins the first candidate's non-thought text parts, as the SDK's `.text` does; `raw`
+    keeps the whole response plus token counts under the names the spend ledger reads."""
+    parts = ((response.get("candidates") or [{}])[0].get("content") or {}).get("parts") or []
+    text = "".join(p.get("text", "") for p in parts if not p.get("thought"))
+    usage = response.get("usageMetadata") or {}
+    return {"text": text, "raw": {"response": response, "usage_metadata": {
+        "prompt_token_count": usage.get("promptTokenCount"),
+        "candidates_token_count": usage.get("candidatesTokenCount"),
+        "thoughts_token_count": usage.get("thoughtsTokenCount"),
+    }}}
+
+
+def gemini_file_batch_backend(api_key: str, work_dir: Path = Path(".cache/batch_files")) -> BatchBackend:
+    """Batch API backend with a JSONL input file (H-028). Each line's request body is built by
+    the SDK's own converter for a standard `generate_content` call, so the request matches a
+    standard call field for field; only the URL part is dropped."""
+    import json
+
+    from google import genai
+    from google.genai import models, types
+
+    client = genai.Client(api_key=api_key)
+
+    def body(model: str, prompt: str, params: dict[str, Any]) -> dict[str, Any]:
+        config = types.GenerateContentConfig(
+            automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True), **params)
+        request = models._GenerateContentParameters_to_mldev(
+            client._api_client, types._GenerateContentParameters(model=model, contents=prompt, config=config))
+        request.pop("_url", None)
+        return request
+
+    class _GeminiFile:
+        def submit(self, model: str, requests: list[dict[str, Any]], display_name: str) -> str:
+            work_dir.mkdir(parents=True, exist_ok=True)
+            path = work_dir / f"{display_name}.jsonl"
+            lines = [json.dumps({"key": r["key"], "request": body(model, r["prompt"], r["params"])}) for r in requests]
+            path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+            uploaded = client.files.upload(file=str(path), config=types.UploadFileConfig(
+                display_name=display_name, mime_type="jsonl"))
+            job = client.batches.create(model=model, src=uploaded.name,
+                                        config=types.CreateBatchJobConfig(display_name=display_name))
+            return job.name
+
+        def state(self, job_name: str) -> str:
+            return client.batches.get(name=job_name).state.name
+
+        def find_job(self, display_name: str) -> str | None:
+            """The newest job with this display name (a free listing call), to collect a job whose
+            name was not recorded."""
+            jobs = [j for j in client.batches.list() if j.display_name == display_name]
+            jobs.sort(key=lambda j: j.create_time, reverse=True)
+            return jobs[0].name if jobs else None
+
+        def results(self, job_name: str) -> dict[str, dict[str, Any]]:
+            job = client.batches.get(name=job_name)
+            if not job.dest or not job.dest.file_name:
+                return {}
+            out = {}
+            for line in client.files.download(file=job.dest.file_name).decode("utf-8").splitlines():
+                if not line.strip():
+                    continue
+                row = json.loads(line)
+                key = row.get("key")
+                if key is None:
+                    continue
+                if row.get("error") or "response" not in row:
+                    out[key] = {"error": json.dumps(row.get("error") or "no response")}
+                    continue
+                out[key] = file_response(row["response"])
+            return out
+
+    return _GeminiFile()
+
+
+def batch_cache_key(model: str, prompt: str, params: dict[str, Any], tag: str = "batch") -> str:
+    """Cache key for a Batch API answer: tagged so it never collides with a standard call (D-025),
+    nor with another batch run under a different tag (H-028)."""
+    return cache_key({"model": model, "prompt": prompt, "params": params, "mode": tag})
 
 
 class LLMClient:
@@ -164,6 +242,7 @@ class LLMClient:
         resume_job: str | None = None,
         on_submit: Callable[[str], None] | None = None,
         poll_s: float = 30.0,
+        tag: str = "batch",
     ) -> tuple[dict[str, LLMResponse], dict[str, str]]:
         """Answer (prompt, params) pairs through one Batch API job at the batch price.
 
@@ -171,7 +250,7 @@ class LLMClient:
         cap before it is sent; each returned answer is recorded and cached. Returns answers and
         errors, both keyed by `batch_cache_key`. `resume_job` collects a job already submitted.
         """
-        keyed = {batch_cache_key(self.model, p, params): (p, params) for p, params in requests}
+        keyed = {batch_cache_key(self.model, p, params, tag): (p, params) for p, params in requests}
         done = {k: self.cache.get(k) for k in keyed}
         pending = [k for k, hit in done.items() if hit is None]
         if pending:
@@ -190,7 +269,7 @@ class LLMClient:
                     continue
                 self.ledger.record(self.model, result["raw"], k, purpose, batch=True)
                 p, params = keyed[k]
-                entry = {"model": self.model, "prompt": p, "params": params, "mode": "batch",
+                entry = {"model": self.model, "prompt": p, "params": params, "mode": tag,
                          "batch_job": resume_job, "latency_s": None, **result}
                 self.cache.put(k, entry)
                 done[k] = entry
@@ -199,10 +278,10 @@ class LLMClient:
                   for k in keyed if k not in answers} if pending else {}
         return answers, errors
 
-    def batch_answer(self, prompt: str, **params: Any) -> LLMResponse:
+    def batch_answer(self, prompt: str, tag: str = "batch", **params: Any) -> LLMResponse:
         """A stored Batch API answer for this exact request. Never calls the model; raises
         KeyError if the request was not answered in a batch."""
-        hit = self.cache.get(batch_cache_key(self.model, prompt, params))
+        hit = self.cache.get(batch_cache_key(self.model, prompt, params, tag))
         if hit is None:
             raise KeyError("no batch answer for this request")
         return LLMResponse(hit["text"], self.model, True, hit["raw"], None)
@@ -212,11 +291,12 @@ class BatchReplayClient:
     """Stands in for LLMClient inside an agent, serving only stored batch answers, so a batch
     run uses the agent's own prompt-building and parsing code unchanged."""
 
-    def __init__(self, llm: LLMClient) -> None:
+    def __init__(self, llm: LLMClient, tag: str = "batch") -> None:
         self.llm = llm
+        self.tag = tag
 
     def generate(self, prompt: str, *, purpose: str | None = None, **params: Any) -> LLMResponse:
-        return self.llm.batch_answer(prompt, **params)
+        return self.llm.batch_answer(prompt, self.tag, **params)
 
 
 class PromptRecorder:
