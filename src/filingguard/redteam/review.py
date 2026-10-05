@@ -230,6 +230,9 @@ def review_record(decisions: dict[str, list[dict]], workbook: Path, edgar_rows: 
 
     v1, v2 = (json.loads(p.read_text(encoding="utf-8")) for p in EARLIER_ROUNDS)
     sample = _counted(decisions["Fault-rate sample"])
+    reviewed = sum(len(rows) for rows in decisions.values())
+    if not 0 <= edgar_rows <= reviewed:
+        raise ValueError(f"EDGAR rows must be between 0 and {reviewed}")
     return {
         "bar": BAR,
         "first_fault_rate": {"round": "v1", "result": v1["fault_rate_first"]},
@@ -246,6 +249,11 @@ def review_record(decisions: dict[str, list[dict]], workbook: Path, edgar_rows: 
              # The 3-of-60 bar applies to the sample only.
              "extra_checks": {k: v for k, v in _counted(decisions["Extra checks"]).items() if k != "bar_met"}
              | {"counts_toward_fault_rate": False},
-             "stated_by_owner": {"date": date, "hours": hours, "rows_verified_on_edgar": edgar_rows}},
+             "stated_by_owner": {"date": date, "hours": hours, "rows_reviewed": reviewed,
+                                 "rows_verified_on_edgar": edgar_rows,
+                                 "rows_checked_against_sheet_excerpt": reviewed - edgar_rows,
+                                 "how": f"{edgar_rows} of {reviewed} rows verified against the filing on EDGAR; "
+                                        f"the other {reviewed - edgar_rows} checked against the source excerpt "
+                                        "in the sheet"}},
         ],
     }

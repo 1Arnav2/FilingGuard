@@ -195,9 +195,11 @@ standard answers reach the same scored outcome as their batch answers.
 - **Multiple comparisons:** per-type results are descriptive. Only the overall comparison is
   treated as the confirmatory test.
 - **Judge reliability:** Cohen's kappa between the LLM judge and hand labels on the checked
-  sample. In Phase 5, before the test run, the owner hand-checks 20 judge decisions on the dev
-  split (10 `false_premise`, 10 true-premise driver controls) and the agreement rate is
-  reported (D-042).
+  sample. In Phase 5, before the test run, the owner hand-checks the judge's decisions on the
+  dev premise items: every dev true-premise driver control plus dev `false_premise` items up to
+  20, or all dev premise items if fewer than 20 exist. Test set v1 has 16 (3 driver controls,
+  13 `false_premise`), so all 16 are checked, and the agreement rate is reported (D-042, plan
+  corrected in D-045).
 
 ## 6. Pass bars (set now, before results)
 | Bar | Target |
@@ -254,8 +256,9 @@ Report as exploratory.
 
 ## 10. Run protocol
 1. Freeze test set and config. Tag the commit.
-2. Run baseline and treatment on the dev split. Tune. Hand-check 20 premise-judge decisions on
-   dev (10 `false_premise`, 10 driver controls) and report the agreement rate.
+2. Run baseline and treatment on the dev split. Tune. Hand-check the premise judge on all 16
+   dev premise items (3 driver controls, 13 `false_premise`; §5, D-045) and report the
+   agreement rate.
 3. Freeze the verifier. Tag the commit.
 4. Run both conditions on the test split once.
 5. Write `results/summary.json`. Every published number comes from this file.

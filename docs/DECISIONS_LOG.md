@@ -809,6 +809,22 @@ meets the count bar, but its Wilson 95% upper bound (6.0%) is above 5%: with 60 
 cannot show the true fault rate is below 5%.
 **Revisit if:** Never for test set v1; any change makes a v2 with its own tag.
 
+### D-045 — Judge hand-check plan: all 16 dev premise items (plan correction)
+**Date:** 2026-10-05 · **Phase:** 3
+**Context:** D-042 planned a Phase 5 hand-check of 20 premise-judge decisions on dev (10
+`false_premise`, 10 driver controls). The frozen split puts only 3 of the 10 driver controls in
+dev (13 dev `false_premise` items), so 10 dev driver controls do not exist.
+**Options considered:** (A) every dev driver control plus dev `false_premise` items up to 20;
+(B) all dev premise items when fewer than 20 exist.
+**Decision:** Chosen by me: (A), falling back to (B). Dev has 3 + 13 = 16 premise items, so all
+16 are hand-checked. EVAL §5 and §10 edited on 2026-10-05, after the freeze and before any
+target run on the dev or the test split. This is a correction to the hand-check plan only: the
+judge prompt and its hash, the scoring rules, the pass bars and the split are unchanged.
+**Why:** The plan asked for items the dev split does not hold.
+**Trade-off accepted:** Agreement on driver controls rests on 3 items, too few for a separate
+kappa; it is reported within the 16.
+**Revisit if:** Never for test set v1.
+
 ---
 
 ---

@@ -57,9 +57,12 @@
         "counts_toward_fault_rate": false
       },
       "stated_by_owner": {
-        "date": "2026-10-04 to 2026-10-05",
+        "date": "2026-10-05",
         "hours": 2.0,
-        "rows_verified_on_edgar": 93
+        "rows_reviewed": 93,
+        "rows_verified_on_edgar": 0,
+        "rows_checked_against_sheet_excerpt": 93,
+        "how": "0 of 93 rows verified against the filing on EDGAR; the other 93 checked against the source excerpt in the sheet"
       }
     }
   ]

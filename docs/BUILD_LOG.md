@@ -16,13 +16,28 @@ of every session.
 
 ---
 
+## 2026-10-05 — Phase 3 corrections after freeze (no model calls)
+**Corrected:** review record (`results/testset/fault_rate_v1.json`, step `review-record` now
+records both counts): reviewed 2026-10-05 only, about 2 hours, 0 of 93 rows verified against
+the filing on EDGAR and the other 93 checked against the source excerpt in the sheet. The
+previous entry said 93 on EDGAR over 2026-10-04 to 2026-10-05; that was wrong. Judge hand-check
+plan (EVAL §5, §10; D-045): dev holds only 3 driver controls, so the plan is every dev premise
+item, 16 in all (3 driver controls, 13 `false_premise`). Plan correction, not a scoring change.
+**Unchanged:** the record is not one of the frozen files; the manifest, frozen files and the
+`testset-v1` tag are unchanged, and the frozen-file test passes.
+**Tests:** 106 offline tests pass.
+**Spend so far:** $0.4397 (no calls).
+**Next session starts with:** Phase 4, the verifier, tuned on the dev split only.
+**Commit:** Phase 3 corrections: review record wording, judge hand-check plan (D-045)
+
 ## 2026-10-05 — Phase 3 complete: review v3 applied, test set v1 frozen (no model calls)
 **Review v3:** owner's `review/review_v3.xlsx` read back with `review-apply`: 93 Decision cells
 filled, all "accept", no notes; a cell-by-cell comparison with the committed sheet found no
 change outside Decision and Note. Fault-rate sample 0 of 60 faulty against the bar of 3 of 60
 (met; Wilson 95% 0.0% to 6.0%). Extra checks 0 of 33 (Wilson 95% 0.0% to 10.4%), reported
-separately, not in the fault rate. As stated by the owner: all 93 rows verified against the
-filing on EDGAR, about 2 hours, reviewed 2026-10-04 to 2026-10-05. Record:
+separately, not in the fault rate. As stated by the owner (corrected in the next entry):
+reviewed 2026-10-05, about 2 hours; 0 of 93 rows verified against the filing on EDGAR, the
+other 93 checked against the source excerpt in the sheet. Record:
 `results/testset/fault_rate_v1.json` (step `review-record`), which also lists the v1 and v2
 rounds from their unchanged records.
 **Freeze (D-044):** step `freeze` (`redteam/freeze.py`). Split assigned once from the final 300,
