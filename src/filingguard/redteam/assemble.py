@@ -74,15 +74,19 @@ def select(specs: list[ItemSpec], counts: dict[str, int], rng: random.Random,
     """Pick each type's final count, spread across companies.
 
     `unanswerable` keeps every `untagged_concept` item, then fills alternately from the other
-    subtypes with no subtype above half of the type's count.
+    subtypes with no subtype above half of the type's count. `period_mismatch` takes every
+    `start_month` item up to half the type, then fills with `calendar_wording` (D-034).
     """
     chosen = []
     for t in ATTACK_TYPES:
         pool = spread_by_company([s for s in specs if s.attack_type == t], rng, company_order)
-        if t != "unanswerable":
-            take = pool[: counts[t]]
-        else:
+        if t == "unanswerable":
             take = _select_unanswerable(pool, counts[t])
+        elif t == "period_mismatch":
+            starts = [s for s in pool if s.subtype == "start_month"][: counts[t] // 2]
+            take = _alternate(pool, counts[t], ("calendar_wording",), counts[t], starts)
+        else:
+            take = pool[: counts[t]]
         if len(take) < counts[t]:
             raise RuntimeError(f"{t}: only {len(take)} of {counts[t]} after filtering")
         chosen += take
@@ -91,8 +95,14 @@ def select(specs: list[ItemSpec], counts: dict[str, int], rng: random.Random,
 
 def _select_unanswerable(pool: list[ItemSpec], n: int) -> list[ItemSpec]:
     cap = int(n * UNANSWERABLE_SUBTYPE_CAP)
-    take = [s for s in pool if s.subtype == "untagged_concept"][:cap]
-    rest = {sub: [s for s in pool if s.subtype == sub] for sub in ("single_quarter", "old_period")}
+    first = [s for s in pool if s.subtype == "untagged_concept"][:cap]
+    return _alternate(pool, n, ("single_quarter", "old_period"), cap, first)
+
+
+def _alternate(pool: list[ItemSpec], n: int, subtypes: tuple[str, ...], cap: int, take: list[ItemSpec]) -> list[ItemSpec]:
+    """Append items from `subtypes` in turn to `take` until it holds `n`, at most `cap` each."""
+    take = list(take)
+    rest = {sub: [s for s in pool if s.subtype == sub] for sub in subtypes}
     used = {sub: 0 for sub in rest}
     while len(take) < n and any(used[sub] < min(cap, len(rest[sub])) for sub in rest):
         for sub in rest:

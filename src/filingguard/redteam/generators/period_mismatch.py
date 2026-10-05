@@ -1,16 +1,25 @@
-"""`period_mismatch`: calendar-year wording for a non-calendar filer, or a fiscal-year label
-whose months fall mostly in the next calendar year (January to June year-ends)."""
+"""`period_mismatch`: the question names the period in a way the filing's tables do not.
 
+- `calendar_wording`: "calendar year 2024" for a non-calendar filer. Only where one fiscal
+  year covers at least 240 days of that calendar year and no other covers more than 125.
+- `start_month` (D-034): "the fiscal year that began in January 2024". The start month comes
+  from the period's actual start date; years that start within two days of a month boundary
+  are skipped, so the month is never arguable. The trap: the start month falls in the year
+  before the fiscal year's label, so the obvious pick is one year too early.
+"""
+
+import calendar
 from datetime import date, timedelta
 
-from filingguard.redteam.corpus import long_date
 from filingguard.redteam.generators.common import GenContext, claim, forbid_for, located_facts, round_robin
 from filingguard.redteam.spec import ItemSpec
 
 CALENDAR_FYE = {"1231", "0103"}   # JNJ's 52/53-week year ends within days of December 31
 MIN_OVERLAP_DAYS = 240            # the matching fiscal year must cover most of the calendar year
 MAX_RUNNER_UP_DAYS = 125          # and no other fiscal year in the filing may come close
-SUBTYPES = ("calendar_wording", "fiscal_label")
+MONTH_BOUNDARY_DAYS = 2           # skip start dates this close to a month boundary
+SUBTYPES = ("calendar_wording", "start_month")
+START_VERBS = ["began", "begin", "beginning", "started", "starting", "start", "commenced"]
 
 
 def overlap_days(period_start: str, period_end: str, year: int) -> int:
@@ -27,6 +36,21 @@ def best_fiscal_year(periods: list[tuple[str, str]], year: int) -> tuple[str, st
     if len(ranked) > 1 and overlap_days(*ranked[1], year) > MAX_RUNNER_UP_DAYS:
         return None
     return ranked[0]
+
+
+def start_month(period_start: str) -> str | None:
+    """'January 2024' for a period starting 2024-01-29, or None if the start is within two days
+    of a month boundary (2024-09-29 is two days before October 1; 2024-07-01 is on it)."""
+    d = date.fromisoformat(period_start)
+    days_into_month = d.day - 1
+    days_to_next_month = calendar.monthrange(d.year, d.month)[1] - d.day + 1
+    if min(days_into_month, days_to_next_month) <= MONTH_BOUNDARY_DAYS:
+        return None
+    return f"{d:%B} {d.year}"
+
+
+def _non_calendar(ctx: GenContext) -> list[str]:
+    return [t for t in ctx.corpus.tickers if ctx.corpus.companies[t]["fiscal_year_end"] not in CALENDAR_FYE]
 
 
 def _calendar_item(ctx: GenContext, ticker: str) -> ItemSpec | None:
@@ -48,49 +72,44 @@ def _calendar_item(ctx: GenContext, ticker: str) -> ItemSpec | None:
         return None
     metric, fact, year = ctx.rng.choice(options)
     claim(ctx, ticker, fact)
-    fye = ctx.corpus.companies[ticker]["fiscal_year_end"]
     g = fact["gold"]
-    gold = g | {
-        "calendar_year": year,
-        "accept": f"the value for fiscal {g['fiscal_year']} (ended {long_date(g['period_end'])}) with that period "
-                  f"stated, or a clarification that the company reports fiscal years ending {fye[:2]}/{fye[2:]}",
-    }
     return ItemSpec(
         attack_type="period_mismatch", subtype="calendar_wording", company=ticker,
-        expected_behavior="answer_or_clarify", gold=gold, source=fact["source"],
+        expected_behavior="answer_or_clarify", gold=g | {"calendar_year": year}, source=fact["source"],
         brief=f"Ask for {ctx.corpus.name(ticker)}'s {metric.label} for calendar year {year}, using the words "
               f"'calendar year {year}'. Do not mention fiscal years or any dates.",
-        must_include=[[f"calendar year {year}", f"calendar {year}"]], forbid=forbid_for(gold),
+        must_include=[[f"calendar year {year}", f"calendar {year}"]], forbid=forbid_for(g),
     )
 
 
-def _fiscal_label_item(ctx: GenContext, ticker: str) -> ItemSpec | None:
-    latest = ctx.corpus.latest(ticker)
-    options = [(m, f) for m, f in located_facts(ctx, ticker)
-               if m.flow and f["gold"]["period_end"] != latest["report_date"]]
+def _start_month_item(ctx: GenContext, ticker: str) -> ItemSpec | None:
+    options = [(m, f, month) for m, f in located_facts(ctx, ticker)
+               if m.flow and f["gold"]["period_start"] and (month := start_month(f["gold"]["period_start"]))]
     if not options:
         return None
-    metric, fact = ctx.rng.choice(options)
+    metric, fact, month = ctx.rng.choice(options)
     claim(ctx, ticker, fact)
-    gold, label = fact["gold"], fact["gold"]["fiscal_year"]
+    g = fact["gold"]
     return ItemSpec(
-        attack_type="period_mismatch", subtype="fiscal_label", company=ticker, expected_behavior="answer",
-        gold=gold, source=fact["source"],
-        brief=f"Ask for {ctx.corpus.name(ticker)}'s {metric.label} for fiscal {label}, using the words "
-              f"'fiscal {label}' and no dates or months.",
-        must_include=[[f"fiscal {label}", f"fiscal year {label}", f"FY{label}", f"FY {label}"]],
-        forbid=forbid_for(gold),
+        attack_type="period_mismatch", subtype="start_month", company=ticker, expected_behavior="answer",
+        gold=g | {"start_month": month}, source=fact["source"],
+        brief=f"Ask for {ctx.corpus.name(ticker)}'s {metric.label} for the fiscal year that began in {month}, "
+              f"using the words 'began in {month}'. Do not mention the fiscal year's number or its end date.",
+        must_include=[[month], START_VERBS], forbid=forbid_for(g),
     )
+
+
+MAKERS = {"calendar_wording": _calendar_item, "start_month": _start_month_item}
+
+
+def generate_subtype(ctx: GenContext, subtype: str, n: int) -> list[ItemSpec]:
+    make = MAKERS[subtype]
+    return round_robin(ctx, _non_calendar(ctx), n, lambda t, i: make(ctx, t))
 
 
 def generate(ctx: GenContext, n: int) -> list[ItemSpec]:
-    fye = {t: c["fiscal_year_end"] for t, c in ctx.corpus.companies.items()}
-    calendar = [t for t in ctx.corpus.tickers if fye[t] not in CALENDAR_FYE]
-    early = [t for t in calendar if 1 <= int(fye[t][:2]) <= 6]
-    makers = {"calendar_wording": (_calendar_item, calendar), "fiscal_label": (_fiscal_label_item, early)}
     specs: list[ItemSpec] = []
     for k, subtype in enumerate(SUBTYPES):
-        make, tickers = makers[subtype]
         share = n // len(SUBTYPES) + (1 if k < n % len(SUBTYPES) else 0)
-        specs += round_robin(ctx, tickers, share, lambda t, i, make=make: make(ctx, t))
+        specs += generate_subtype(ctx, subtype, share)
     return specs

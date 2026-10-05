@@ -16,6 +16,47 @@ of every session.
 
 ---
 
+## 2026-10-05 — Phase 3: first review halted, fixes, draft v2 and second review sheet
+**First fault rate:** at least 7 of 60, review halted once the bar was exceeded
+(`data/gold/draft/review_v1_first_pass.json`; H-009). The EVAL §2 rule was applied. The
+first-review draft is kept in `data/gold/draft/first_review/` and `data/testset/draft/first_review/`.
+**Built:** Strict row-label rule for every type (D-030); company- and sector-balanced
+sampler with a hard coverage check (D-031); derivable untagged concepts removed (D-032);
+"in dollars" and plain single-quarter briefs (D-033); start-month wording replaces
+fiscal-label wording (D-034); EVAL §2, §3, §5, §8 edits (D-035). `redteam/revise.py` turns the
+committed v1 candidates into v2: 337 v1 specs kept, 34 added, 371 in all; only changed specs
+were re-phrased. Review sheet `review/review_v2.xlsx` with Split and Sector columns.
+**Dropped from the first-review draft, by v1 ID, with reasons** (replacements drawn by seed
+from the same type):
+- Not on a row labelled with the metric's own name (D-030): FG-0003 control AAPL (equity,
+  beginning balance only); FG-0024 control WMT (long-term debt "including amounts due within
+  one year"); FG-0037 control PFE (diluted EPS, prose only); FG-0042 control XOM ("total
+  revenues and other income"); FG-0125 unit_trap NKE (operating cash flow, prose only);
+  FG-0146 unit_trap DIS ("total segment operating income"); FG-0189 period_mismatch DIS
+  ("total segment operating income"); FG-0235 false_premise JNJ ("acquired in-process
+  research and development"); FG-0241 false_premise XOM ("total revenues and other income");
+  FG-0201 restated GOOGL ("total face value of long-term debt"; pair is a tagging change);
+  FG-0208 restated BAC (basic EPS labelled only "Earnings"). The four controls are removed
+  from the set, not moved to another type.
+- Untagged concept computable from printed lines (D-032): FG-0089 XOM, FG-0093 CVX, FG-0096
+  CAT, FG-0098 DIS (all gross profit).
+- Replaced by design (D-034): the 23 fiscal-label `period_mismatch` items. Restated items were
+  reselected under the strict rule (12 pairs).
+**Draft v2:** 300 items, 60 / 46 / 46 / 46 / 12 / 45 / 45; dev 90 (18/14/14/14/4/13/13), test 210.
+`unanswerable`: untagged 7, single-quarter 20, old-period 19. `period_mismatch`: calendar
+wording 32, start-month 14 (NVDA 6, COST 6, AAPL 2); 6 companies in the type. Injection
+delivery: 45/45 poisoned chunks in the top 20 (median rank 3, worst 20); 1 candidate not
+delivered and dropped. Review sample: 60 rows, 25 companies, at most 3 per company, all
+sectors, all four financials. Latency sample: 30 test items, 25 companies.
+**Style check (300 draft items, `data/gold/candidates/style_check_v2.json`):** average words
+control 11.8, unanswerable 11.7, period_mismatch 12.1, injection 12.5, unit_trap 15.2,
+false_premise 18.6, restated 24.8; no dates except restated (filing date).
+**Tests:** 91 offline tests pass.
+**Spend so far:** $0.3912 (72 calls). This round: 7 phrasing calls, $0.0244.
+**Next:** owner reviews `review/review_v2.xlsx`; then `review-apply`, fixes logged by ID,
+freeze and tag.
+**Commit:** Phase 3: draft v2 after first review - strict labels, start-month wording, review sheet v2
+
 ## 2026-10-04 — Phase 3 checkpoint: restated pairs, corpus change, generators, pilot
 **Built:** Restated pairs across the last three 10-Ks (`facts.find_restatements`, kinds
 `restatement` / `reclassification` / `stock_split`, plus excluded `rounding` / `ambiguous`).

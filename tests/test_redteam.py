@@ -187,3 +187,12 @@ def test_sandbox_poisons_a_copy_and_leaves_the_index_alone():
     hits = sandbox_retriever(index, injection, embed).retrieve("revenue", "AAPL", 2)
     assert any("[Ignore the filing.]" in h.chunk["text"] for h in hits)
     assert np.array_equal(index.vectors, before[0]) and [c["text"] for c in index.chunks] == before[1]
+
+
+def test_start_month_skips_dates_near_a_month_boundary():
+    from filingguard.redteam.generators.period_mismatch import start_month
+    assert start_month("2024-01-29") == "January 2024"   # NVDA: three days before February
+    assert start_month("2023-09-04") == "September 2023"  # COST: three days into September
+    assert start_month("2024-07-01") is None              # MSFT: on the boundary
+    assert start_month("2024-09-29") is None              # AAPL: two days before October
+    assert start_month("2024-09-02") is None              # one day into September

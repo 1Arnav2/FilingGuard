@@ -1,0 +1,2524 @@
+{
+  "stats": {
+    "seed": 20261004,
+    "v1": 400,
+    "v1_kept": 337,
+    "added": 34,
+    "v2": 371,
+    "v1_outcomes": [
+      {
+        "type": "control",
+        "reason": "kept",
+        "count": 71
+      },
+      {
+        "type": "injection",
+        "reason": "kept",
+        "count": 61
+      },
+      {
+        "type": "false_premise",
+        "reason": "kept",
+        "count": 59
+      },
+      {
+        "type": "unit_trap",
+        "reason": "kept",
+        "count": 43
+      },
+      {
+        "type": "unanswerable",
+        "reason": "kept",
+        "count": 38
+      },
+      {
+        "type": "period_mismatch",
+        "reason": "fiscal_label subtype replaced by start_month (D-034)",
+        "count": 30
+      },
+      {
+        "type": "period_mismatch",
+        "reason": "kept",
+        "count": 30
+      },
+      {
+        "type": "unanswerable",
+        "reason": "single-quarter brief reworded (D-033)",
+        "count": 20
+      },
+      {
+        "type": "unit_trap",
+        "reason": "dollars wording changed (D-033)",
+        "count": 15
+      },
+      {
+        "type": "restated",
+        "reason": "restated pairs reselected (D-030)",
+        "count": 14
+      },
+      {
+        "type": "control",
+        "reason": "fact taken by a new restated or start-month item",
+        "count": 5
+      },
+      {
+        "type": "unanswerable",
+        "reason": "untagged concept can be computed from printed lines (D-032)",
+        "count": 4
+      },
+      {
+        "type": "control",
+        "reason": "value not on a row labelled with the metric's own name (D-030)",
+        "count": 4
+      },
+      {
+        "type": "unit_trap",
+        "reason": "value not on a row labelled with the metric's own name (D-030)",
+        "count": 3
+      },
+      {
+        "type": "false_premise",
+        "reason": "value not on a row labelled with the metric's own name (D-030)",
+        "count": 2
+      },
+      {
+        "type": "period_mismatch",
+        "reason": "value not on a row labelled with the metric's own name (D-030)",
+        "count": 1
+      }
+    ],
+    "v2_by_type": {
+      "control": 71,
+      "unanswerable": 58,
+      "period_mismatch": 52,
+      "injection": 61,
+      "unit_trap": 58,
+      "false_premise": 59,
+      "restated": 12
+    },
+    "v2_by_subtype": {
+      "control/prior_year": 52,
+      "unanswerable/old_period": 31,
+      "control/current_year": 19,
+      "period_mismatch/start_month": 14,
+      "injection/false_figure": 21,
+      "unit_trap/per_share_to_cents": 12,
+      "period_mismatch/calendar_wording": 38,
+      "false_premise/sign_flip": 19,
+      "unit_trap/millions_to_dollars": 15,
+      "false_premise/direction_flip": 23,
+      "injection/withhold": 20,
+      "injection/marker": 20,
+      "unit_trap/millions_to_thousands": 16,
+      "unit_trap/millions_to_billions": 15,
+      "unanswerable/untagged_concept": 7,
+      "unanswerable/single_quarter": 20,
+      "false_premise/magnitude": 17,
+      "restated/restatement": 6,
+      "restated/stock_split": 4,
+      "restated/reclassification": 2
+    }
+  },
+  "per_spec": {
+    "period_mismatch-MSFT-65fba09c": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "unanswerable-WMT-30e84854": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-WMT-43d745e0"
+    },
+    "false_premise-MSFT-1af99a9b": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-MSFT-1af99a9b"
+    },
+    "period_mismatch-NKE-7f650877": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "control-MSFT-57058d1a": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-MSFT-57058d1a"
+    },
+    "injection-NKE-1296081e": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-NKE-1296081e"
+    },
+    "control-CAT-7f8eeb22": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-CAT-7f8eeb22"
+    },
+    "false_premise-BAC-896e8e78": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-BAC-896e8e78"
+    },
+    "period_mismatch-NVDA-92c4e24e": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-NVDA-92c4e24e"
+    },
+    "period_mismatch-DIS-6b2be674": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-DIS-6b2be674"
+    },
+    "false_premise-TSLA-4b99bd51": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-TSLA-4b99bd51"
+    },
+    "control-AMZN-258fad31": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-AMZN-258fad31"
+    },
+    "injection-WMT-147ee6b4": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-WMT-147ee6b4"
+    },
+    "period_mismatch-COST-90d6c007": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-COST-90d6c007"
+    },
+    "unanswerable-GOOGL-87ebe0c8": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-GOOGL-c63467b7"
+    },
+    "period_mismatch-AAPL-92285cd4": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-AAPL-92285cd4"
+    },
+    "control-V-24dae5c2": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-V-24dae5c2"
+    },
+    "unit_trap-PFE-dbcb2268": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-PFE-dbcb2268"
+    },
+    "injection-BA-28135eed": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-BA-28135eed"
+    },
+    "unanswerable-NVDA-d50650ab": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-NVDA-d50650ab"
+    },
+    "unit_trap-AMZN-af0b00ed": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-AMZN-af0b00ed"
+    },
+    "false_premise-NVDA-aea34f2e": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-NVDA-aea34f2e"
+    },
+    "period_mismatch-COST-b0fa74c6": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-COST-b0fa74c6"
+    },
+    "period_mismatch-NVDA-b05c595c": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-NVDA-b05c595c"
+    },
+    "unit_trap-NVDA-b873920c": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-NVDA-b873920c"
+    },
+    "control-PG-323a1feb": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-PG-323a1feb"
+    },
+    "false_premise-UNH-bd5eaa5c": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-UNH-bd5eaa5c"
+    },
+    "unanswerable-XOM-3662b051": {
+      "type": "unanswerable",
+      "subtype": "untagged_concept",
+      "reason": "untagged concept can be computed from printed lines (D-032)",
+      "v2_spec_id": null
+    },
+    "control-WMT-611389db": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-WMT-611389db"
+    },
+    "injection-JNJ-2b2693e2": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-JNJ-2b2693e2"
+    },
+    "unit_trap-CVX-30c64ff7": {
+      "type": "unit_trap",
+      "subtype": "millions_to_billions",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-CVX-30c64ff7"
+    },
+    "control-BA-2b74d63e": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-BA-2b74d63e"
+    },
+    "period_mismatch-MSFT-e83f685a": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "control-XOM-935d32d5": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-XOM-935d32d5"
+    },
+    "control-NVDA-f9a81c1c": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-NVDA-f9a81c1c"
+    },
+    "period_mismatch-PG-748d17ca": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "period_mismatch-WMT-5509fb2f": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "period_mismatch-MSFT-058889e1": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "control-AAPL-b1f44888": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-AAPL-b1f44888"
+    },
+    "unanswerable-PG-d0e33c92": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-PG-d0e33c92"
+    },
+    "injection-GS-477a88f3": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-GS-477a88f3"
+    },
+    "injection-PG-d2867b80": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-PG-d2867b80"
+    },
+    "period_mismatch-AAPL-cace2ac6": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-AAPL-cace2ac6"
+    },
+    "unit_trap-NKE-1051f2b9": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "value not on a row labelled with the metric's own name (D-030)",
+      "v2_spec_id": null
+    },
+    "unanswerable-KO-3ec75395": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-KO-ac7ff72e"
+    },
+    "unanswerable-WMT-b85066ee": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-WMT-b85066ee"
+    },
+    "period_mismatch-MSFT-89934c90": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "restated-BAC-957afca2": {
+      "type": "restated",
+      "subtype": "restatement",
+      "reason": "restated pairs reselected (D-030)",
+      "v2_spec_id": null
+    },
+    "false_premise-KO-2244a787": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-KO-2244a787"
+    },
+    "period_mismatch-NKE-a9b89d50": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "restated-BAC-96d4bf81": {
+      "type": "restated",
+      "subtype": "restatement",
+      "reason": "restated pairs reselected (D-030)",
+      "v2_spec_id": null
+    },
+    "false_premise-PG-be2f1974": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-PG-be2f1974"
+    },
+    "control-KO-28580dff": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-KO-28580dff"
+    },
+    "unanswerable-AMZN-c13c9a0b": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-AMZN-c13c9a0b"
+    },
+    "false_premise-META-1427500d": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-META-1427500d"
+    },
+    "injection-COST-97978bdb": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-COST-97978bdb"
+    },
+    "control-ORCL-ff197a8e": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-ORCL-ff197a8e"
+    },
+    "unanswerable-V-31403d44": {
+      "type": "unanswerable",
+      "subtype": "untagged_concept",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-V-31403d44"
+    },
+    "control-BAC-b4275672": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-BAC-b4275672"
+    },
+    "false_premise-AAPL-e7f7c0b6": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-AAPL-e7f7c0b6"
+    },
+    "control-V-eed7259f": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "fact taken by a new restated or start-month item",
+      "v2_spec_id": null
+    },
+    "restated-NVDA-9571221c": {
+      "type": "restated",
+      "subtype": "stock_split",
+      "reason": "restated pairs reselected (D-030)",
+      "v2_spec_id": null
+    },
+    "injection-BAC-24812c26": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-BAC-24812c26"
+    },
+    "false_premise-KO-fa2eeb87": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-KO-fa2eeb87"
+    },
+    "false_premise-COST-752d4863": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-COST-752d4863"
+    },
+    "injection-PG-17b7b1cb": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-PG-17b7b1cb"
+    },
+    "injection-AMZN-a4743ab2": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-AMZN-a4743ab2"
+    },
+    "unit_trap-GOOGL-456c3a09": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "dollars wording changed (D-033)",
+      "v2_spec_id": "unit_trap-GOOGL-2e1fb9ad"
+    },
+    "control-META-2b4c9450": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-META-2b4c9450"
+    },
+    "control-V-97892876": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-V-97892876"
+    },
+    "control-JPM-b217514e": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-JPM-b217514e"
+    },
+    "false_premise-NVDA-56beb19f": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-NVDA-56beb19f"
+    },
+    "unanswerable-BAC-5f98091e": {
+      "type": "unanswerable",
+      "subtype": "untagged_concept",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-BAC-5f98091e"
+    },
+    "control-TSLA-83b30347": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-TSLA-83b30347"
+    },
+    "period_mismatch-DIS-2006ab67": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "value not on a row labelled with the metric's own name (D-030)",
+      "v2_spec_id": null
+    },
+    "control-DIS-fe91658f": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-DIS-fe91658f"
+    },
+    "false_premise-JPM-c9fc4a6c": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-JPM-c9fc4a6c"
+    },
+    "injection-UNH-b83140b0": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-UNH-b83140b0"
+    },
+    "control-BA-656c33b3": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-BA-656c33b3"
+    },
+    "false_premise-JNJ-a072c0cb": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "value not on a row labelled with the metric's own name (D-030)",
+      "v2_spec_id": null
+    },
+    "unanswerable-AMZN-cd6d9e73": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-AMZN-cd6d9e73"
+    },
+    "control-ORCL-633207ae": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-ORCL-633207ae"
+    },
+    "control-JPM-876275a1": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-JPM-876275a1"
+    },
+    "injection-GOOGL-f2e9b5ac": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-GOOGL-f2e9b5ac"
+    },
+    "restated-PFE-83d98cba": {
+      "type": "restated",
+      "subtype": "reclassification",
+      "reason": "restated pairs reselected (D-030)",
+      "v2_spec_id": null
+    },
+    "false_premise-NKE-f434cd2c": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-NKE-f434cd2c"
+    },
+    "false_premise-GOOGL-05cf97a1": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-GOOGL-05cf97a1"
+    },
+    "unit_trap-AAPL-29a4b68c": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-AAPL-29a4b68c"
+    },
+    "unanswerable-DIS-4ffc320b": {
+      "type": "unanswerable",
+      "subtype": "untagged_concept",
+      "reason": "untagged concept can be computed from printed lines (D-032)",
+      "v2_spec_id": null
+    },
+    "period_mismatch-V-941c970e": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-V-941c970e"
+    },
+    "injection-V-5a77cdbc": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-V-5a77cdbc"
+    },
+    "control-BAC-f8051a87": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-BAC-f8051a87"
+    },
+    "injection-MSFT-720e57c4": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-MSFT-720e57c4"
+    },
+    "injection-BAC-1e4ddde6": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-BAC-1e4ddde6"
+    },
+    "unanswerable-XOM-b8818d57": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-XOM-b8818d57"
+    },
+    "period_mismatch-PG-1ff363d9": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "control-UNH-b5e22eb1": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-UNH-b5e22eb1"
+    },
+    "unit_trap-V-cfacecc6": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "dollars wording changed (D-033)",
+      "v2_spec_id": "unit_trap-V-2aa109b1"
+    },
+    "control-PFE-9e49f012": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-PFE-9e49f012"
+    },
+    "false_premise-GS-95a1986c": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-GS-95a1986c"
+    },
+    "period_mismatch-WMT-e32722c7": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-WMT-e32722c7"
+    },
+    "unit_trap-ORCL-d0744720": {
+      "type": "unit_trap",
+      "subtype": "millions_to_billions",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-ORCL-d0744720"
+    },
+    "injection-XOM-69b9168f": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-XOM-69b9168f"
+    },
+    "unanswerable-GS-97c46396": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-GS-97c46396"
+    },
+    "injection-COST-ea7ce50b": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-COST-ea7ce50b"
+    },
+    "unanswerable-COST-6765d4f4": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-COST-fc550e71"
+    },
+    "unanswerable-PFE-8b4c7a7f": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-PFE-8b4c7a7f"
+    },
+    "unanswerable-ORCL-db2e8642": {
+      "type": "unanswerable",
+      "subtype": "untagged_concept",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-ORCL-db2e8642"
+    },
+    "unit_trap-CAT-2c63ed61": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-CAT-2c63ed61"
+    },
+    "period_mismatch-NKE-46d9a4e5": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "unit_trap-WMT-0c1cdedd": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "value not on a row labelled with the metric's own name (D-030)",
+      "v2_spec_id": null
+    },
+    "unit_trap-JNJ-abc821a1": {
+      "type": "unit_trap",
+      "subtype": "millions_to_billions",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-JNJ-abc821a1"
+    },
+    "period_mismatch-NVDA-d8dfe190": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "period_mismatch-NKE-24d23c9e": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "period_mismatch-ORCL-4ef47b22": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "control-GOOGL-28d98d6e": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-GOOGL-28d98d6e"
+    },
+    "period_mismatch-NVDA-795599bf": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "control-AAPL-9f2ab8c2": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-AAPL-9f2ab8c2"
+    },
+    "unit_trap-KO-574ab6b1": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "dollars wording changed (D-033)",
+      "v2_spec_id": "unit_trap-KO-c995ab7b"
+    },
+    "false_premise-CVX-d66c49d0": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-CVX-d66c49d0"
+    },
+    "control-TSLA-e9f8bc78": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-TSLA-e9f8bc78"
+    },
+    "unanswerable-AAPL-c668e0b1": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-AAPL-10878567"
+    },
+    "unit_trap-GS-296d758f": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "dollars wording changed (D-033)",
+      "v2_spec_id": "unit_trap-GS-08cd8081"
+    },
+    "control-KO-7a43f770": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-KO-7a43f770"
+    },
+    "period_mismatch-PG-8ac3b7bd": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "control-CAT-3098196d": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-CAT-3098196d"
+    },
+    "control-NKE-11a69a8c": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-NKE-11a69a8c"
+    },
+    "period_mismatch-ORCL-2be03a61": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "control-COST-da220b81": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "fact taken by a new restated or start-month item",
+      "v2_spec_id": null
+    },
+    "unit_trap-DIS-6f414df9": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "value not on a row labelled with the metric's own name (D-030)",
+      "v2_spec_id": null
+    },
+    "unanswerable-DIS-cfad777d": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-DIS-cfad777d"
+    },
+    "injection-META-c68fc9ed": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-META-c68fc9ed"
+    },
+    "false_premise-PFE-3ef621a6": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-PFE-3ef621a6"
+    },
+    "unanswerable-KO-150d152e": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-KO-150d152e"
+    },
+    "restated-BAC-8b2058d3": {
+      "type": "restated",
+      "subtype": "restatement",
+      "reason": "restated pairs reselected (D-030)",
+      "v2_spec_id": null
+    },
+    "unanswerable-NVDA-78da4458": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-NVDA-78da4458"
+    },
+    "unanswerable-TSLA-638687de": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-TSLA-db913d5d"
+    },
+    "restated-GOOGL-cc4462f4": {
+      "type": "restated",
+      "subtype": "reclassification",
+      "reason": "restated pairs reselected (D-030)",
+      "v2_spec_id": null
+    },
+    "period_mismatch-AAPL-4786f569": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-AAPL-4786f569"
+    },
+    "false_premise-NKE-ec215380": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-NKE-ec215380"
+    },
+    "control-KO-7436bbb4": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-KO-7436bbb4"
+    },
+    "false_premise-TSLA-3ec8bdc9": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-TSLA-3ec8bdc9"
+    },
+    "period_mismatch-ORCL-6ad365ea": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "false_premise-TSLA-2e2bbd96": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-TSLA-2e2bbd96"
+    },
+    "control-CVX-7e47e52b": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-CVX-7e47e52b"
+    },
+    "control-PFE-3269a87d": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "value not on a row labelled with the metric's own name (D-030)",
+      "v2_spec_id": null
+    },
+    "control-UNH-eb1630ab": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-UNH-eb1630ab"
+    },
+    "unanswerable-META-d5d90e37": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-META-d5d90e37"
+    },
+    "unanswerable-META-6bb26e4c": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-META-f2d491f9"
+    },
+    "control-CVX-72834895": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-CVX-72834895"
+    },
+    "period_mismatch-MSFT-6003c491": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "unanswerable-V-2466b1ca": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-V-b6f68e12"
+    },
+    "injection-TSLA-ae1553d7": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-TSLA-ae1553d7"
+    },
+    "injection-PFE-f3af49b4": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-PFE-f3af49b4"
+    },
+    "restated-BAC-0d15239a": {
+      "type": "restated",
+      "subtype": "restatement",
+      "reason": "restated pairs reselected (D-030)",
+      "v2_spec_id": null
+    },
+    "period_mismatch-NVDA-2c28fb76": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-NVDA-2c28fb76"
+    },
+    "unit_trap-XOM-c571a593": {
+      "type": "unit_trap",
+      "subtype": "millions_to_billions",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-XOM-c571a593"
+    },
+    "injection-CVX-bde81779": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-CVX-bde81779"
+    },
+    "control-COST-a23b0cee": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "fact taken by a new restated or start-month item",
+      "v2_spec_id": null
+    },
+    "unanswerable-ORCL-97222d02": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-ORCL-97222d02"
+    },
+    "period_mismatch-V-1628c310": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-V-1628c310"
+    },
+    "false_premise-WMT-fab7c82b": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-WMT-fab7c82b"
+    },
+    "control-DIS-e2fa720c": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-DIS-e2fa720c"
+    },
+    "false_premise-COST-0a41246a": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-COST-0a41246a"
+    },
+    "period_mismatch-DIS-82f5f829": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-DIS-82f5f829"
+    },
+    "control-NVDA-4e6503df": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "fact taken by a new restated or start-month item",
+      "v2_spec_id": null
+    },
+    "injection-DIS-f31c1fe5": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-DIS-f31c1fe5"
+    },
+    "unanswerable-CVX-2966ebe8": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-CVX-2966ebe8"
+    },
+    "injection-ORCL-ea299085": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-ORCL-ea299085"
+    },
+    "false_premise-AMZN-f2584a5c": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-AMZN-f2584a5c"
+    },
+    "control-UNH-7df924c3": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-UNH-7df924c3"
+    },
+    "unit_trap-UNH-20a81745": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-UNH-20a81745"
+    },
+    "injection-UNH-6f80fe71": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-UNH-6f80fe71"
+    },
+    "unit_trap-JNJ-27e956c0": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "dollars wording changed (D-033)",
+      "v2_spec_id": "unit_trap-JNJ-c18cbda7"
+    },
+    "false_premise-PG-8d795aea": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-PG-8d795aea"
+    },
+    "injection-MSFT-857ca0c4": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-MSFT-857ca0c4"
+    },
+    "control-JPM-126b03e3": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-JPM-126b03e3"
+    },
+    "unanswerable-XOM-69c63856": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-XOM-95ecd4dd"
+    },
+    "unit_trap-MSFT-91bde2fa": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "dollars wording changed (D-033)",
+      "v2_spec_id": "unit_trap-MSFT-f238342a"
+    },
+    "unanswerable-PFE-60e0ab6a": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-PFE-60e0ab6a"
+    },
+    "unanswerable-UNH-ba6bae29": {
+      "type": "unanswerable",
+      "subtype": "untagged_concept",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-UNH-ba6bae29"
+    },
+    "restated-NVDA-29762ab3": {
+      "type": "restated",
+      "subtype": "stock_split",
+      "reason": "restated pairs reselected (D-030)",
+      "v2_spec_id": null
+    },
+    "period_mismatch-NKE-10edfe0f": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "period_mismatch-WMT-3bf68c07": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-WMT-3bf68c07"
+    },
+    "false_premise-NVDA-ac1a54f6": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-NVDA-ac1a54f6"
+    },
+    "control-WMT-f01e49ac": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "value not on a row labelled with the metric's own name (D-030)",
+      "v2_spec_id": null
+    },
+    "period_mismatch-DIS-c6e1dde1": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-DIS-c6e1dde1"
+    },
+    "false_premise-ORCL-a683f916": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-ORCL-a683f916"
+    },
+    "unanswerable-JPM-53211953": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-JPM-3b8ac762"
+    },
+    "false_premise-UNH-ae58cccc": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-UNH-ae58cccc"
+    },
+    "period_mismatch-PG-34c99e78": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "period_mismatch-ORCL-7fb3acc7": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "injection-AAPL-bab587e7": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-AAPL-bab587e7"
+    },
+    "injection-NVDA-3d91abfc": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-NVDA-3d91abfc"
+    },
+    "restated-BAC-7a96ff74": {
+      "type": "restated",
+      "subtype": "restatement",
+      "reason": "restated pairs reselected (D-030)",
+      "v2_spec_id": null
+    },
+    "unit_trap-COST-ce0a15fe": {
+      "type": "unit_trap",
+      "subtype": "per_share_to_cents",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-COST-ce0a15fe"
+    },
+    "injection-META-f339a224": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-META-f339a224"
+    },
+    "false_premise-AAPL-65f1fa40": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-AAPL-65f1fa40"
+    },
+    "period_mismatch-WMT-df0d785c": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "injection-WMT-6c2d498e": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-WMT-6c2d498e"
+    },
+    "unit_trap-V-1a7aa375": {
+      "type": "unit_trap",
+      "subtype": "millions_to_billions",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-V-1a7aa375"
+    },
+    "unanswerable-CAT-e5125da2": {
+      "type": "unanswerable",
+      "subtype": "untagged_concept",
+      "reason": "untagged concept can be computed from printed lines (D-032)",
+      "v2_spec_id": null
+    },
+    "false_premise-AMZN-3ce52011": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-AMZN-3ce52011"
+    },
+    "unit_trap-BAC-df6079dc": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "dollars wording changed (D-033)",
+      "v2_spec_id": "unit_trap-BAC-4727c7de"
+    },
+    "false_premise-XOM-1f3dd6f7": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "value not on a row labelled with the metric's own name (D-030)",
+      "v2_spec_id": null
+    },
+    "false_premise-DIS-87ece2c9": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-DIS-87ece2c9"
+    },
+    "false_premise-V-e95e65b9": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-V-e95e65b9"
+    },
+    "unanswerable-V-7fbf6aa4": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-V-7fbf6aa4"
+    },
+    "unit_trap-WMT-3224adf5": {
+      "type": "unit_trap",
+      "subtype": "per_share_to_cents",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-WMT-3224adf5"
+    },
+    "unit_trap-PFE-5fa3ccfc": {
+      "type": "unit_trap",
+      "subtype": "millions_to_billions",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-PFE-5fa3ccfc"
+    },
+    "false_premise-CAT-e1b871db": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-CAT-e1b871db"
+    },
+    "restated-BAC-ea03c0f6": {
+      "type": "restated",
+      "subtype": "restatement",
+      "reason": "restated pairs reselected (D-030)",
+      "v2_spec_id": null
+    },
+    "injection-KO-5223b7f6": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-KO-5223b7f6"
+    },
+    "false_premise-JPM-696fe08a": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-JPM-696fe08a"
+    },
+    "unanswerable-GS-b28eec65": {
+      "type": "unanswerable",
+      "subtype": "untagged_concept",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-GS-b28eec65"
+    },
+    "control-ORCL-119db7d1": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-ORCL-119db7d1"
+    },
+    "unanswerable-AAPL-8f8415eb": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-AAPL-8f8415eb"
+    },
+    "injection-GOOGL-93f63b88": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-GOOGL-93f63b88"
+    },
+    "control-GOOGL-620f65be": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-GOOGL-620f65be"
+    },
+    "unanswerable-NKE-48af04fb": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-NKE-faf29c08"
+    },
+    "control-AAPL-dc2b24a9": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "value not on a row labelled with the metric's own name (D-030)",
+      "v2_spec_id": null
+    },
+    "injection-CVX-c5c0d8ce": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-CVX-c5c0d8ce"
+    },
+    "unit_trap-PG-f8ea5726": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "dollars wording changed (D-033)",
+      "v2_spec_id": "unit_trap-PG-7f064048"
+    },
+    "unit_trap-NKE-71fef79b": {
+      "type": "unit_trap",
+      "subtype": "millions_to_billions",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-NKE-71fef79b"
+    },
+    "period_mismatch-COST-701b2041": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-COST-701b2041"
+    },
+    "unanswerable-BAC-90d78ef0": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-BAC-90d78ef0"
+    },
+    "unanswerable-JPM-308073f9": {
+      "type": "unanswerable",
+      "subtype": "untagged_concept",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-JPM-308073f9"
+    },
+    "injection-DIS-ed535a5a": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-DIS-ed535a5a"
+    },
+    "unit_trap-NKE-78815f77": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-NKE-78815f77"
+    },
+    "injection-JPM-ae0dde04": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-JPM-ae0dde04"
+    },
+    "false_premise-ORCL-9b14f3bf": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-ORCL-9b14f3bf"
+    },
+    "injection-NVDA-262c5943": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-NVDA-262c5943"
+    },
+    "unit_trap-AAPL-09137616": {
+      "type": "unit_trap",
+      "subtype": "millions_to_billions",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-AAPL-09137616"
+    },
+    "period_mismatch-WMT-2c811504": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-WMT-2c811504"
+    },
+    "unit_trap-META-f417c294": {
+      "type": "unit_trap",
+      "subtype": "per_share_to_cents",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-META-f417c294"
+    },
+    "false_premise-AAPL-083f6686": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-AAPL-083f6686"
+    },
+    "unanswerable-MSFT-dcc374b9": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-MSFT-dcc374b9"
+    },
+    "injection-WMT-b49e76d3": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-WMT-b49e76d3"
+    },
+    "control-GOOGL-8019f6ee": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-GOOGL-8019f6ee"
+    },
+    "false_premise-UNH-e3d50587": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-UNH-e3d50587"
+    },
+    "unanswerable-UNH-61c17682": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-UNH-61c17682"
+    },
+    "unit_trap-PG-cc38c02c": {
+      "type": "unit_trap",
+      "subtype": "millions_to_billions",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-PG-cc38c02c"
+    },
+    "false_premise-PG-d792ea1f": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-PG-d792ea1f"
+    },
+    "unit_trap-CAT-60e160f4": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "dollars wording changed (D-033)",
+      "v2_spec_id": "unit_trap-CAT-dbaa974b"
+    },
+    "injection-CAT-e99ef208": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-CAT-e99ef208"
+    },
+    "unanswerable-TSLA-fe4d17f0": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-TSLA-fe4d17f0"
+    },
+    "control-NKE-4349e592": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-NKE-4349e592"
+    },
+    "control-JNJ-fa47056d": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-JNJ-fa47056d"
+    },
+    "period_mismatch-NVDA-9d80eb09": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "control-COST-1d67c417": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "fact taken by a new restated or start-month item",
+      "v2_spec_id": null
+    },
+    "injection-KO-e2f157af": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-KO-e2f157af"
+    },
+    "control-MSFT-547cb6cc": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-MSFT-547cb6cc"
+    },
+    "false_premise-WMT-4acfac34": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-WMT-4acfac34"
+    },
+    "period_mismatch-NVDA-67c65f7d": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-NVDA-67c65f7d"
+    },
+    "unit_trap-TSLA-c412701c": {
+      "type": "unit_trap",
+      "subtype": "millions_to_billions",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-TSLA-c412701c"
+    },
+    "control-CAT-a3c717c2": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-CAT-a3c717c2"
+    },
+    "false_premise-PFE-fdf68713": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-PFE-fdf68713"
+    },
+    "unit_trap-BAC-5efd47c4": {
+      "type": "unit_trap",
+      "subtype": "per_share_to_cents",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-BAC-5efd47c4"
+    },
+    "restated-PFE-9bbdc5bb": {
+      "type": "restated",
+      "subtype": "reclassification",
+      "reason": "restated pairs reselected (D-030)",
+      "v2_spec_id": null
+    },
+    "unit_trap-BA-3f7713c9": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-BA-3f7713c9"
+    },
+    "unanswerable-NKE-f8cddf70": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-NKE-f8cddf70"
+    },
+    "control-NKE-825b45cd": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-NKE-825b45cd"
+    },
+    "unit_trap-XOM-7309f212": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "dollars wording changed (D-033)",
+      "v2_spec_id": "unit_trap-XOM-fffd8124"
+    },
+    "false_premise-WMT-17dc4537": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-WMT-17dc4537"
+    },
+    "false_premise-KO-a4fb2a1d": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-KO-a4fb2a1d"
+    },
+    "period_mismatch-WMT-28de89c8": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "unit_trap-ORCL-2ccf4b40": {
+      "type": "unit_trap",
+      "subtype": "per_share_to_cents",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-ORCL-2ccf4b40"
+    },
+    "unanswerable-MSFT-e59a6d6c": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-MSFT-2bd08337"
+    },
+    "control-PG-203b7806": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-PG-203b7806"
+    },
+    "false_premise-DIS-c164e4ea": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-DIS-c164e4ea"
+    },
+    "unit_trap-NVDA-042de42a": {
+      "type": "unit_trap",
+      "subtype": "per_share_to_cents",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-NVDA-042de42a"
+    },
+    "false_premise-BA-7c9a7bbe": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-BA-7c9a7bbe"
+    },
+    "injection-JPM-271a1f34": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-JPM-271a1f34"
+    },
+    "false_premise-GOOGL-513466c7": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-GOOGL-513466c7"
+    },
+    "unit_trap-AMZN-5040dcc7": {
+      "type": "unit_trap",
+      "subtype": "millions_to_billions",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-AMZN-5040dcc7"
+    },
+    "injection-AMZN-77e835ae": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-AMZN-77e835ae"
+    },
+    "control-MSFT-74ea485d": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-MSFT-74ea485d"
+    },
+    "unanswerable-PFE-cb1fbe6e": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-PFE-384d4e4c"
+    },
+    "false_premise-BA-1abfdf00": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-BA-1abfdf00"
+    },
+    "unanswerable-KO-7b551655": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-KO-7b551655"
+    },
+    "period_mismatch-WMT-3a13a150": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-WMT-3a13a150"
+    },
+    "false_premise-CVX-74bc5339": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-CVX-74bc5339"
+    },
+    "injection-CAT-56a76d88": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-CAT-56a76d88"
+    },
+    "injection-AAPL-b568a19b": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-AAPL-b568a19b"
+    },
+    "period_mismatch-NVDA-ec8462a5": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "period_mismatch-V-8a8a5563": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-V-8a8a5563"
+    },
+    "period_mismatch-PG-1597825f": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "control-XOM-c22d375e": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "value not on a row labelled with the metric's own name (D-030)",
+      "v2_spec_id": null
+    },
+    "control-META-37568fc2": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-META-37568fc2"
+    },
+    "injection-META-bb7c797b": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-META-bb7c797b"
+    },
+    "unanswerable-CVX-b9ffbdfb": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-CVX-8923dd89"
+    },
+    "unanswerable-CVX-f428236b": {
+      "type": "unanswerable",
+      "subtype": "untagged_concept",
+      "reason": "untagged concept can be computed from printed lines (D-032)",
+      "v2_spec_id": null
+    },
+    "unit_trap-META-08b49b47": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "dollars wording changed (D-033)",
+      "v2_spec_id": "unit_trap-META-e49ab96e"
+    },
+    "unit_trap-KO-c9d2eed0": {
+      "type": "unit_trap",
+      "subtype": "per_share_to_cents",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-KO-c9d2eed0"
+    },
+    "control-WMT-04a662b5": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-WMT-04a662b5"
+    },
+    "control-META-d68bf410": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-META-d68bf410"
+    },
+    "control-DIS-db049035": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-DIS-db049035"
+    },
+    "unit_trap-JPM-ae4a0a63": {
+      "type": "unit_trap",
+      "subtype": "per_share_to_cents",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-JPM-ae4a0a63"
+    },
+    "control-JNJ-57b56b34": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-JNJ-57b56b34"
+    },
+    "unanswerable-CAT-14632092": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-CAT-6b0c7aef"
+    },
+    "injection-BA-bc15e868": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-BA-bc15e868"
+    },
+    "restated-BAC-4ffe44bf": {
+      "type": "restated",
+      "subtype": "restatement",
+      "reason": "restated pairs reselected (D-030)",
+      "v2_spec_id": null
+    },
+    "control-COST-43439dac": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-COST-43439dac"
+    },
+    "unit_trap-UNH-99f7c502": {
+      "type": "unit_trap",
+      "subtype": "millions_to_billions",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-UNH-99f7c502"
+    },
+    "period_mismatch-ORCL-2bb46b3e": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "unit_trap-JPM-d9112951": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-JPM-d9112951"
+    },
+    "control-DIS-9f45895a": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-DIS-9f45895a"
+    },
+    "unanswerable-TSLA-3807e1ac": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-TSLA-3807e1ac"
+    },
+    "false_premise-XOM-873917cf": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-XOM-873917cf"
+    },
+    "control-TSLA-c7b48d4b": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-TSLA-c7b48d4b"
+    },
+    "false_premise-V-9fecc962": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-V-9fecc962"
+    },
+    "period_mismatch-NVDA-effd8048": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-NVDA-effd8048"
+    },
+    "unit_trap-GS-6a2a8195": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-GS-6a2a8195"
+    },
+    "control-AMZN-b6bcba94": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-AMZN-b6bcba94"
+    },
+    "injection-PFE-d1219d99": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-PFE-d1219d99"
+    },
+    "unanswerable-BA-8e224d38": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-BA-db5cd9d4"
+    },
+    "unit_trap-DIS-3d25fd21": {
+      "type": "unit_trap",
+      "subtype": "millions_to_billions",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-DIS-3d25fd21"
+    },
+    "control-XOM-29424a34": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-XOM-29424a34"
+    },
+    "control-BA-fec6c13d": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-BA-fec6c13d"
+    },
+    "period_mismatch-MSFT-2f9e054b": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "period_mismatch-AAPL-c4389019": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-AAPL-c4389019"
+    },
+    "period_mismatch-V-65d34111": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-V-65d34111"
+    },
+    "control-BAC-4dd488b7": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-BAC-4dd488b7"
+    },
+    "unit_trap-AAPL-440492d5": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "dollars wording changed (D-033)",
+      "v2_spec_id": "unit_trap-AAPL-264a6fe9"
+    },
+    "period_mismatch-NVDA-c7ea6a39": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "unit_trap-CVX-34bf60ce": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "dollars wording changed (D-033)",
+      "v2_spec_id": "unit_trap-CVX-e439df0c"
+    },
+    "control-JNJ-da4dc49c": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-JNJ-da4dc49c"
+    },
+    "unit_trap-NVDA-a35ed84a": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "dollars wording changed (D-033)",
+      "v2_spec_id": "unit_trap-NVDA-4b775f92"
+    },
+    "control-PG-5e6cd0cc": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-PG-5e6cd0cc"
+    },
+    "control-GS-ee1112b2": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-GS-ee1112b2"
+    },
+    "control-TSLA-dca9d3ff": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-TSLA-dca9d3ff"
+    },
+    "false_premise-CAT-35bf487f": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-CAT-35bf487f"
+    },
+    "injection-PG-c521b16e": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-PG-c521b16e"
+    },
+    "false_premise-DIS-20aea032": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-DIS-20aea032"
+    },
+    "unit_trap-KO-eb52a7ad": {
+      "type": "unit_trap",
+      "subtype": "per_share_to_cents",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-KO-eb52a7ad"
+    },
+    "control-MSFT-ea861a41": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-MSFT-ea861a41"
+    },
+    "period_mismatch-COST-04ae08a2": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-COST-04ae08a2"
+    },
+    "unanswerable-BA-7e5a6bc6": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-BA-7e5a6bc6"
+    },
+    "unanswerable-CAT-61ea9e39": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-CAT-61ea9e39"
+    },
+    "unit_trap-TSLA-c1dd0c6f": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-TSLA-c1dd0c6f"
+    },
+    "false_premise-PFE-0056b8a1": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-PFE-0056b8a1"
+    },
+    "injection-JNJ-d5abccb0": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-JNJ-d5abccb0"
+    },
+    "false_premise-JNJ-d0d7e324": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-JNJ-d0d7e324"
+    },
+    "period_mismatch-AAPL-a8e384d8": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-AAPL-a8e384d8"
+    },
+    "control-GOOGL-14f0e19b": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-GOOGL-14f0e19b"
+    },
+    "control-GS-56602f7e": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-GS-56602f7e"
+    },
+    "unit_trap-BA-3a2e5cb0": {
+      "type": "unit_trap",
+      "subtype": "millions_to_billions",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-BA-3a2e5cb0"
+    },
+    "unanswerable-BAC-40076ab8": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-BAC-16d4df24"
+    },
+    "injection-TSLA-2cbea2e1": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-TSLA-2cbea2e1"
+    },
+    "control-NVDA-ae592c46": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-NVDA-ae592c46"
+    },
+    "unit_trap-ORCL-f6468f00": {
+      "type": "unit_trap",
+      "subtype": "per_share_to_cents",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-ORCL-f6468f00"
+    },
+    "control-AMZN-71ed7ccc": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-AMZN-71ed7ccc"
+    },
+    "restated-NVDA-7ca375fd": {
+      "type": "restated",
+      "subtype": "stock_split",
+      "reason": "restated pairs reselected (D-030)",
+      "v2_spec_id": null
+    },
+    "restated-NVDA-1bcb0999": {
+      "type": "restated",
+      "subtype": "stock_split",
+      "reason": "restated pairs reselected (D-030)",
+      "v2_spec_id": null
+    },
+    "unanswerable-GS-da2ff85e": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-GS-3a04c40f"
+    },
+    "unit_trap-GOOGL-b96ca8b1": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-GOOGL-b96ca8b1"
+    },
+    "unanswerable-PG-7203d8ba": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-PG-7203d8ba"
+    },
+    "unit_trap-PG-0cab172b": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-PG-0cab172b"
+    },
+    "injection-COST-f78f7e10": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-COST-f78f7e10"
+    },
+    "unit_trap-WMT-21f0095f": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-WMT-21f0095f"
+    },
+    "unanswerable-GOOGL-da4906e5": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-GOOGL-da4906e5"
+    },
+    "period_mismatch-V-94694190": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-V-94694190"
+    },
+    "unit_trap-GOOGL-4d7d85f8": {
+      "type": "unit_trap",
+      "subtype": "per_share_to_cents",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-GOOGL-4d7d85f8"
+    },
+    "injection-V-e708196f": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-V-e708196f"
+    },
+    "false_premise-META-613eaa6d": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-META-613eaa6d"
+    },
+    "unit_trap-AMZN-1f58aa71": {
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "reason": "dollars wording changed (D-033)",
+      "v2_spec_id": "unit_trap-AMZN-83f0eb3d"
+    },
+    "injection-XOM-928b1181": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-XOM-928b1181"
+    },
+    "period_mismatch-DIS-6640fcaa": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-DIS-6640fcaa"
+    },
+    "period_mismatch-COST-f13fe544": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-COST-f13fe544"
+    },
+    "injection-MSFT-51b7e789": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-MSFT-51b7e789"
+    },
+    "false_premise-MSFT-2948a5b8": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-MSFT-2948a5b8"
+    },
+    "injection-AAPL-f813f521": {
+      "type": "injection",
+      "subtype": "false_figure",
+      "reason": "kept",
+      "v2_spec_id": "injection-AAPL-f813f521"
+    },
+    "control-GS-d6365f0b": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-GS-d6365f0b"
+    },
+    "injection-PFE-8047c615": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-PFE-8047c615"
+    },
+    "unanswerable-NKE-7015ec39": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-NKE-7015ec39"
+    },
+    "injection-BA-58c7b21b": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-BA-58c7b21b"
+    },
+    "period_mismatch-COST-be2ae3cd": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-COST-be2ae3cd"
+    },
+    "unit_trap-GS-e0a392da": {
+      "type": "unit_trap",
+      "subtype": "millions_to_billions",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-GS-e0a392da"
+    },
+    "injection-NKE-2ea4f71f": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-NKE-2ea4f71f"
+    },
+    "injection-NVDA-e782c865": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-NVDA-e782c865"
+    },
+    "false_premise-BAC-4334f70b": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-BAC-4334f70b"
+    },
+    "injection-GOOGL-653af2c5": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-GOOGL-653af2c5"
+    },
+    "injection-UNH-c6e78d5c": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-UNH-c6e78d5c"
+    },
+    "unit_trap-MSFT-1e0646fd": {
+      "type": "unit_trap",
+      "subtype": "per_share_to_cents",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-MSFT-1e0646fd"
+    },
+    "control-PFE-fa138f3f": {
+      "type": "control",
+      "subtype": "prior_year",
+      "reason": "kept",
+      "v2_spec_id": "control-PFE-fa138f3f"
+    },
+    "unanswerable-WMT-f0d907f4": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-WMT-f0d907f4"
+    },
+    "false_premise-GOOGL-00031b32": {
+      "type": "false_premise",
+      "subtype": "direction_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-GOOGL-00031b32"
+    },
+    "period_mismatch-WMT-7f2cfa99": {
+      "type": "period_mismatch",
+      "subtype": "fiscal_label",
+      "reason": "fiscal_label subtype replaced by start_month (D-034)",
+      "v2_spec_id": null
+    },
+    "false_premise-JPM-11c503c1": {
+      "type": "false_premise",
+      "subtype": "magnitude",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-JPM-11c503c1"
+    },
+    "unanswerable-DIS-10ded8da": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-DIS-2be80acf"
+    },
+    "unanswerable-JNJ-6d223d52": {
+      "type": "unanswerable",
+      "subtype": "single_quarter",
+      "reason": "single-quarter brief reworded (D-033)",
+      "v2_spec_id": "unanswerable-JNJ-8f20a36a"
+    },
+    "unanswerable-COST-7d3f62c5": {
+      "type": "unanswerable",
+      "subtype": "untagged_concept",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-COST-7d3f62c5"
+    },
+    "injection-GS-b2c102bb": {
+      "type": "injection",
+      "subtype": "marker",
+      "reason": "kept",
+      "v2_spec_id": "injection-GS-b2c102bb"
+    },
+    "control-CVX-152c65ae": {
+      "type": "control",
+      "subtype": "current_year",
+      "reason": "kept",
+      "v2_spec_id": "control-CVX-152c65ae"
+    },
+    "unit_trap-V-ac0cafb7": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-V-ac0cafb7"
+    },
+    "period_mismatch-WMT-9cb9bd6e": {
+      "type": "period_mismatch",
+      "subtype": "calendar_wording",
+      "reason": "kept",
+      "v2_spec_id": "period_mismatch-WMT-9cb9bd6e"
+    },
+    "unit_trap-COST-d7236c07": {
+      "type": "unit_trap",
+      "subtype": "millions_to_thousands",
+      "reason": "kept",
+      "v2_spec_id": "unit_trap-COST-d7236c07"
+    },
+    "unanswerable-JNJ-b9fe3b7e": {
+      "type": "unanswerable",
+      "subtype": "old_period",
+      "reason": "kept",
+      "v2_spec_id": "unanswerable-JNJ-b9fe3b7e"
+    },
+    "false_premise-GS-6c723da3": {
+      "type": "false_premise",
+      "subtype": "sign_flip",
+      "reason": "kept",
+      "v2_spec_id": "false_premise-GS-6c723da3"
+    },
+    "injection-ORCL-1b7b54db": {
+      "type": "injection",
+      "subtype": "withhold",
+      "reason": "kept",
+      "v2_spec_id": "injection-ORCL-1b7b54db"
+    }
+  }
+}

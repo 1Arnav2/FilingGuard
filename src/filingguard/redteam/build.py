@@ -1,8 +1,9 @@
 """Build the red-team test set.
 
-    python -m filingguard.redteam.build candidates      # deterministic specs, no model calls
-    python -m filingguard.redteam.build phrase --pilot  # one phrasing call (first batch)
-    python -m filingguard.redteam.build phrase          # phrase every spec without a question yet
+    python -m filingguard.redteam.build candidates      # v1 specs (committed; never overwritten)
+    python -m filingguard.redteam.build revise          # v2: v1 revised after the first review, plus replacements
+    python -m filingguard.redteam.build phrase --pilot  # one phrasing call (first batch of v1)
+    python -m filingguard.redteam.build phrase          # phrase every v2 spec without a question yet
     python -m filingguard.redteam.build assemble        # filter, select, split, latency IDs, review sheet
     python -m filingguard.redteam.build review-apply    # read the owner's decisions back
 
@@ -22,6 +23,7 @@ from filingguard.redteam.corpus import Corpus
 from filingguard.redteam.generators import GENERATORS
 from filingguard.redteam.generators.common import GenContext
 from filingguard.redteam.phrasing import BATCH_SIZE, check_question, phrase_batch
+from filingguard.redteam.generators.restated import usable_pairs
 from filingguard.redteam.restated import select_pairs
 from filingguard.redteam.spec import ItemSpec
 
@@ -29,6 +31,8 @@ SEED = 20261004
 OUT = Path("data/gold/candidates")
 DRAFT_ITEMS = Path("data/testset/draft")
 DRAFT_GOLD = Path("data/gold/draft")
+CANDIDATES = OUT / "candidates_v2.jsonl"
+PHRASED = OUT / "phrased_v2.jsonl"
 REVIEW_BOOK = Path("review/review_v2.xlsx")   # v1 was halted at the first pass (H-009)
 # Types with the scarcest facts claim theirs first; control takes from what is left.
 GENERATION_ORDER = ("restated", "false_premise", "injection", "unit_trap", "period_mismatch", "control", "unanswerable")
@@ -53,7 +57,7 @@ def _write_json(path: Path, obj) -> None:
 
 def generate_candidates(corpus: Corpus, seed: int = SEED) -> tuple[list[ItemSpec], dict]:
     """Every candidate spec, in a seeded order that mixes attack types, plus generation stats."""
-    final = allocate_counts(len(select_pairs(corpus.pairs, seed)))
+    final = allocate_counts(len(select_pairs(usable_pairs(corpus), seed)))
     wanted = candidate_counts(final)
     ctx = GenContext(corpus, random.Random(seed), seed)
     specs: list[ItemSpec] = []
@@ -115,8 +119,8 @@ def assemble_draft(seed: int = SEED) -> dict:
 
     corpus = Corpus()
     companies = list(corpus.companies)
-    specs = [ItemSpec(**row) for row in _read_jsonl(OUT / "candidates_v1.jsonl")]
-    phrased = {r["spec_id"]: r for r in _read_jsonl(OUT / "phrased_v1.jsonl")}
+    specs = [ItemSpec(**row) for row in _read_jsonl(CANDIDATES)]
+    phrased = {r["spec_id"]: r for r in _read_jsonl(PHRASED)}
     questions = {k: r["question"] for k, r in phrased.items()}
 
     failed = {s.spec_id for s in specs if s.spec_id not in phrased or phrased[s.spec_id]["problems"]}
@@ -128,6 +132,7 @@ def assemble_draft(seed: int = SEED) -> dict:
     passing = [s for s in passing if s.spec_id not in undelivered]
 
     counts = allocate_counts(sum(s.attack_type == "restated" for s in specs))
+    dropped_v1 = _dropped_draft_items(corpus)
     items = asm.select(passing, counts, random.Random(f"{seed}-select"), companies)
     ids = asm.assign_ids(items, companies)
     split = asm.assign_split(items, random.Random(f"{seed}-split"), companies)
@@ -167,33 +172,64 @@ def assemble_draft(seed: int = SEED) -> dict:
         "companies_per_type": {t: len({s.company for s in items if s.attack_type == t}) for t in ATTACK_TYPES},
         "review_sample_by_type": _by_type(sample, split),
         "review_extra": sorted(ids[s.spec_id] for s in extra),
+        "v1_draft_items_dropped": dropped_v1,
         "latency_sample": latency_ids,
         "review_sample": sorted(ids[s.spec_id] for s in sample),
         "injection_delivery_rank": {ids[k]: r for k, r in ranks.items() if k in ids},
     }
-    _write_json(DRAFT_GOLD / "assembly_v1.json", stats)
+    _write_json(DRAFT_GOLD / "assembly_v2.json", stats)
     return stats
+
+
+def _dropped_draft_items(corpus: Corpus) -> list[dict]:
+    """The v1 draft items that the v2 rules removed, with the reason (for BUILD_LOG)."""
+    from filingguard.redteam.revise import revise_one
+
+    v1 = {r["spec_id"]: ItemSpec(**r) for r in _read_jsonl(OUT / "candidates_v1.jsonl")}
+    out = []
+    for g in _read_jsonl(DRAFT_GOLD / "first_review" / "gold_v1.jsonl"):
+        revised, reason = revise_one(corpus, v1[g["spec_id"]])
+        if revised is None and not reason.startswith(("restated pairs", "fiscal_label")):
+            out.append({"v1_id": g["id"], "type": v1[g["spec_id"]].attack_type, "company": v1[g["spec_id"]].company,
+                        "reason": reason})
+    return out
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("step", choices=["candidates", "phrase", "assemble", "review-apply"])
+    parser.add_argument("step", choices=["candidates", "revise", "phrase", "assemble", "review-apply"])
     parser.add_argument("--pilot", action="store_true", help="phrase only the first batch")
     args = parser.parse_args()
 
     if args.step == "candidates":
+        if (OUT / "candidates_v1.jsonl").exists():
+            raise SystemExit("candidates_v1.jsonl is a committed record; v2 comes from `revise`")
         specs, stats = generate_candidates(Corpus())
         _write_jsonl(OUT / "candidates_v1.jsonl", [s.to_dict() for s in specs])
         _write_json(OUT / "candidates_v1_stats.json", stats)
         print(json.dumps(stats, indent=2))
+    elif args.step == "revise":
+        from filingguard.redteam.revise import revise
+
+        v1 = [ItemSpec(**row) for row in _read_jsonl(OUT / "candidates_v1.jsonl")]
+        specs, record = revise(Corpus(), v1, SEED)
+        _write_jsonl(CANDIDATES, [s.to_dict() for s in specs])
+        _write_json(OUT / "candidates_v2_revision.json", record)
+        print(json.dumps(record["stats"], indent=2))
     elif args.step == "phrase":
         from filingguard.llm.client import client_from_env
 
-        specs = [ItemSpec(**row) for row in _read_jsonl(OUT / "candidates_v1.jsonl")]
-        path = OUT / "phrased_v1.jsonl"
-        existing = {} if args.pilot or not path.exists() else {r["spec_id"]: r for r in _read_jsonl(path)}
-        rows = phrase(client_from_env("TARGET_MODEL"), specs, existing, 1 if args.pilot else None)
-        _write_jsonl(OUT / "phrased_pilot_v1.jsonl" if args.pilot else path, rows)
+        if args.pilot:
+            specs = [ItemSpec(**row) for row in _read_jsonl(OUT / "candidates_v1.jsonl")]
+            rows = phrase(client_from_env("TARGET_MODEL"), specs, {}, 1)
+            _write_jsonl(OUT / "phrased_pilot_v1.jsonl", rows)
+        else:
+            specs = [ItemSpec(**row) for row in _read_jsonl(CANDIDATES)]
+            # Questions already phrased for an identical spec (same id) are reused, never re-asked.
+            existing = {r["spec_id"]: r for path in (OUT / "phrased_v1.jsonl", PHRASED) if path.exists()
+                        for r in _read_jsonl(path)}
+            rows = phrase(client_from_env("TARGET_MODEL"), specs, existing)
+            _write_jsonl(PHRASED, rows)
         print(json.dumps({"phrased": len(rows), "failed_checks": sum(bool(r["problems"]) for r in rows)}, indent=2))
     elif args.step == "assemble":
         stats = assemble_draft()
@@ -203,7 +239,7 @@ def main() -> None:
         from filingguard.redteam.review import fault_rate, read_decisions
 
         decisions = read_decisions(REVIEW_BOOK)
-        _write_json(DRAFT_GOLD / "review_v1.json", decisions)
+        _write_json(DRAFT_GOLD / "review_v2.json", decisions)
         print(json.dumps({"fault_rate_sample": fault_rate(decisions["Fault-rate sample"]),
                           "extra_checks": fault_rate(decisions["Extra checks"]) | {"counts_toward_fault_rate": False}},
                          indent=2))

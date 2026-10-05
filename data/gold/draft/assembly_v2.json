@@ -1,0 +1,327 @@
+{
+  "seed": 20261004,
+  "candidates": 371,
+  "failed_checks": 0,
+  "near_duplicates": 0,
+  "injection_not_delivered": 1,
+  "passing_by_type": {
+    "control": 71,
+    "unanswerable": 58,
+    "unit_trap": 58,
+    "period_mismatch": 52,
+    "restated": 12,
+    "false_premise": 59,
+    "injection": 60
+  },
+  "final_counts": {
+    "control": 60,
+    "unanswerable": 46,
+    "unit_trap": 46,
+    "period_mismatch": 46,
+    "restated": 12,
+    "false_premise": 45,
+    "injection": 45
+  },
+  "split": {
+    "control": {
+      "dev": 18,
+      "test": 42
+    },
+    "unanswerable": {
+      "dev": 14,
+      "test": 32
+    },
+    "unit_trap": {
+      "dev": 14,
+      "test": 32
+    },
+    "period_mismatch": {
+      "dev": 14,
+      "test": 32
+    },
+    "restated": {
+      "dev": 4,
+      "test": 8
+    },
+    "false_premise": {
+      "dev": 13,
+      "test": 32
+    },
+    "injection": {
+      "dev": 13,
+      "test": 32
+    }
+  },
+  "unanswerable_by_subtype": {
+    "untagged_concept": 7,
+    "single_quarter": 20,
+    "old_period": 19
+  },
+  "companies_per_type": {
+    "control": 25,
+    "unanswerable": 25,
+    "unit_trap": 25,
+    "period_mismatch": 6,
+    "restated": 3,
+    "false_premise": 25,
+    "injection": 25
+  },
+  "review_sample_by_type": {
+    "control": {
+      "dev": 4,
+      "test": 8
+    },
+    "unanswerable": {
+      "dev": 3,
+      "test": 6
+    },
+    "unit_trap": {
+      "dev": 3,
+      "test": 6
+    },
+    "period_mismatch": {
+      "dev": 3,
+      "test": 6
+    },
+    "restated": {
+      "dev": 1,
+      "test": 2
+    },
+    "false_premise": {
+      "dev": 3,
+      "test": 6
+    },
+    "injection": {
+      "dev": 3,
+      "test": 6
+    }
+  },
+  "review_extra": [
+    "FG-0074",
+    "FG-0098",
+    "FG-0101",
+    "FG-0103",
+    "FG-0104"
+  ],
+  "v1_draft_items_dropped": [
+    {
+      "v1_id": "FG-0003",
+      "type": "control",
+      "company": "AAPL",
+      "reason": "value not on a row labelled with the metric's own name (D-030)"
+    },
+    {
+      "v1_id": "FG-0024",
+      "type": "control",
+      "company": "WMT",
+      "reason": "value not on a row labelled with the metric's own name (D-030)"
+    },
+    {
+      "v1_id": "FG-0037",
+      "type": "control",
+      "company": "PFE",
+      "reason": "value not on a row labelled with the metric's own name (D-030)"
+    },
+    {
+      "v1_id": "FG-0042",
+      "type": "control",
+      "company": "XOM",
+      "reason": "value not on a row labelled with the metric's own name (D-030)"
+    },
+    {
+      "v1_id": "FG-0089",
+      "type": "unanswerable",
+      "company": "XOM",
+      "reason": "untagged concept can be computed from printed lines (D-032)"
+    },
+    {
+      "v1_id": "FG-0093",
+      "type": "unanswerable",
+      "company": "CVX",
+      "reason": "untagged concept can be computed from printed lines (D-032)"
+    },
+    {
+      "v1_id": "FG-0096",
+      "type": "unanswerable",
+      "company": "CAT",
+      "reason": "untagged concept can be computed from printed lines (D-032)"
+    },
+    {
+      "v1_id": "FG-0098",
+      "type": "unanswerable",
+      "company": "DIS",
+      "reason": "untagged concept can be computed from printed lines (D-032)"
+    },
+    {
+      "v1_id": "FG-0125",
+      "type": "unit_trap",
+      "company": "NKE",
+      "reason": "value not on a row labelled with the metric's own name (D-030)"
+    },
+    {
+      "v1_id": "FG-0146",
+      "type": "unit_trap",
+      "company": "DIS",
+      "reason": "value not on a row labelled with the metric's own name (D-030)"
+    },
+    {
+      "v1_id": "FG-0189",
+      "type": "period_mismatch",
+      "company": "DIS",
+      "reason": "value not on a row labelled with the metric's own name (D-030)"
+    },
+    {
+      "v1_id": "FG-0235",
+      "type": "false_premise",
+      "company": "JNJ",
+      "reason": "value not on a row labelled with the metric's own name (D-030)"
+    },
+    {
+      "v1_id": "FG-0241",
+      "type": "false_premise",
+      "company": "XOM",
+      "reason": "value not on a row labelled with the metric's own name (D-030)"
+    }
+  ],
+  "latency_sample": [
+    "FG-0003",
+    "FG-0015",
+    "FG-0022",
+    "FG-0028",
+    "FG-0047",
+    "FG-0055",
+    "FG-0067",
+    "FG-0078",
+    "FG-0088",
+    "FG-0096",
+    "FG-0099",
+    "FG-0124",
+    "FG-0132",
+    "FG-0134",
+    "FG-0135",
+    "FG-0141",
+    "FG-0156",
+    "FG-0165",
+    "FG-0172",
+    "FG-0187",
+    "FG-0193",
+    "FG-0207",
+    "FG-0237",
+    "FG-0240",
+    "FG-0247",
+    "FG-0251",
+    "FG-0265",
+    "FG-0268",
+    "FG-0278",
+    "FG-0288"
+  ],
+  "review_sample": [
+    "FG-0001",
+    "FG-0004",
+    "FG-0008",
+    "FG-0010",
+    "FG-0018",
+    "FG-0024",
+    "FG-0025",
+    "FG-0028",
+    "FG-0032",
+    "FG-0035",
+    "FG-0046",
+    "FG-0049",
+    "FG-0063",
+    "FG-0070",
+    "FG-0072",
+    "FG-0080",
+    "FG-0085",
+    "FG-0086",
+    "FG-0092",
+    "FG-0099",
+    "FG-0100",
+    "FG-0115",
+    "FG-0129",
+    "FG-0131",
+    "FG-0132",
+    "FG-0136",
+    "FG-0137",
+    "FG-0144",
+    "FG-0145",
+    "FG-0147",
+    "FG-0154",
+    "FG-0160",
+    "FG-0174",
+    "FG-0178",
+    "FG-0185",
+    "FG-0189",
+    "FG-0191",
+    "FG-0194",
+    "FG-0195",
+    "FG-0199",
+    "FG-0203",
+    "FG-0206",
+    "FG-0236",
+    "FG-0238",
+    "FG-0241",
+    "FG-0242",
+    "FG-0243",
+    "FG-0244",
+    "FG-0245",
+    "FG-0248",
+    "FG-0255",
+    "FG-0265",
+    "FG-0267",
+    "FG-0268",
+    "FG-0272",
+    "FG-0275",
+    "FG-0287",
+    "FG-0288",
+    "FG-0293",
+    "FG-0299"
+  ],
+  "injection_delivery_rank": {
+    "FG-0271": 7,
+    "FG-0273": 2,
+    "FG-0272": 8,
+    "FG-0266": 2,
+    "FG-0260": 17,
+    "FG-0294": 1,
+    "FG-0280": 17,
+    "FG-0299": 12,
+    "FG-0287": 4,
+    "FG-0278": 2,
+    "FG-0276": 6,
+    "FG-0291": 20,
+    "FG-0284": 1,
+    "FG-0257": 4,
+    "FG-0296": 1,
+    "FG-0293": 2,
+    "FG-0285": 4,
+    "FG-0288": 1,
+    "FG-0259": 1,
+    "FG-0277": 1,
+    "FG-0258": 10,
+    "FG-0265": 1,
+    "FG-0262": 1,
+    "FG-0269": 10,
+    "FG-0295": 1,
+    "FG-0286": 1,
+    "FG-0298": 3,
+    "FG-0264": 6,
+    "FG-0275": 1,
+    "FG-0274": 4,
+    "FG-0283": 3,
+    "FG-0268": 2,
+    "FG-0256": 2,
+    "FG-0300": 7,
+    "FG-0261": 2,
+    "FG-0267": 9,
+    "FG-0297": 9,
+    "FG-0289": 3,
+    "FG-0281": 12,
+    "FG-0263": 15,
+    "FG-0270": 6,
+    "FG-0279": 1,
+    "FG-0290": 2,
+    "FG-0292": 1,
+    "FG-0282": 1
+  }
+}

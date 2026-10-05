@@ -561,6 +561,46 @@ with no "exact" or "rather than millions". The `single_quarter` brief names the 
 **Trade-off accepted:** About 4 extra phrasing calls.
 **Revisit if:** The style check singles out either subtype again.
 
+### D-034 — `period_mismatch`: start-month wording replaces fiscal-label wording
+**Date:** 2026-10-05 · **Phase:** 3
+**Context:** H-012: fiscal-label items read exactly like controls.
+**Options considered:** (A) calendar-year wording only (109 options, 6 companies); (B) keep
+calendar wording and add "the fiscal year that began in <month year>" (187 options before the
+boundary rule).
+**Decision:** Option B, chosen by me, with two conditions: the start month comes from the
+period's actual start date, and any fiscal year starting within two days of a month boundary
+is skipped; calendar wording keeps the 240/125-day overlap rule. Selection takes every
+start-month item up to half the type, then calendar wording for the rest. Expected
+behaviour for start-month items is "answer"; scoring is the old fiscal-label rule, renamed.
+**Why:** The start month falls in the year before the fiscal year's label, so the natural
+reading picks the wrong year: a real period trap that controls do not have.
+**Trade-off accepted:** The boundary rule removes every fiscal year that starts on the 1st
+(MSFT, PG, ORCL, NKE, V, WMT) or on September 29 (AAPL 2024, DIS 2024). Only 36 options remain,
+from NVDA, COST and AAPL; after other types' facts are excluded, 14 start-month candidates,
+so start-month supplies about 14 of the 46 items and calendar wording the rest (6 companies
+in all for this type).
+**Revisit if:** A later test-set version wants start-month items from more companies (that
+would mean relaxing the boundary rule or reusing facts across types).
+
+### D-035 — EVAL.md edits in the second review round (all before any target run)
+**Date:** 2026-10-05 · **Phase:** 3
+**Context:** Fixes after the halted first review (H-009 to H-016), approved by me.
+**Decision:** These EVAL.md edits were made on 2026-10-05, before any target run on the dev
+or the test split:
+- §2 counts table: 60 / 46 / 46 / 46 / 12 / 45 / 45 (`restated` 12 after D-030; shortfall 28
+  spread by the D-021 rule). The `period_mismatch` "what it tests" text now names the two
+  wordings used.
+- §2: `restated` is reported as a short case study with counts, not a rate with an interval.
+- §2: the calendar-year overlap rule (240 / 125 days) and the start-month boundary rule.
+- §3: the "fiscal-label wording" row renamed "start-month wording"; the rule is unchanged.
+- §5: per-type intervals exclude `restated` (counts only); "about 28" items per type
+  corrected to "about 30".
+- §8: the row-label test approximates "primary statement line"; an MD&A summary table can
+  pass it.
+**Why:** Keeps EVAL.md the source of truth for the rebuilt test set.
+**Trade-off accepted:** None beyond those in D-030 and D-034.
+**Revisit if:** Never for this test set version.
+
 ---
 
 ---
