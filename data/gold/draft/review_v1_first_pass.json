@@ -1,0 +1,19 @@
+{
+  "workbook": "review/review_v1.xlsx",
+  "date": "2026-10-05",
+  "fault_rate_first": "at least 7 of 60, review halted once the bar was exceeded",
+  "faulty_at_least": 7,
+  "reviewed": "partial (halted)",
+  "bar": "at most 3 of 60 (EVAL section 2)",
+  "bar_met": false,
+  "causes_reported_by_owner": [
+    "sample not stratified by company: 56 of 60 rows from six tech companies, 9 of 25 companies",
+    "FG-0201 wrong gold: 'Total face value of long-term debt' used for long-term debt",
+    "period_mismatch fiscal_label items identical to controls in wording and expected behaviour",
+    "unit_trap millions_to_dollars brief wording ('exact', 'rather than millions')",
+    "unanswerable untagged_concept items derivable from two printed lines",
+    "FG-0064 awkward single-quarter wording",
+    "controls using a value shown only as a beginning balance or outside a primary statement line"
+  ],
+  "rule_applied": "EVAL section 2: find the cause by attack type, fix the generator, regenerate, fresh review sample"
+}

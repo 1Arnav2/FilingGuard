@@ -506,6 +506,61 @@ answer's only figure.
 **Revisit if:** Never for this test set version. The rules were fixed on 2026-10-04, before any
 target run on the test split (and before any target run on dev).
 
+### D-030 — Gold values must sit on a row labelled with the metric's own name
+**Date:** 2026-10-05 · **Phase:** 3
+**Context:** H-011, H-016. The first label check accepted any synonym anywhere on the line, so
+"Total face value of long-term debt", a beginning balance, a diluted-EPS row for basic EPS and
+prose sentences all passed.
+**Options considered:** (A) detect primary statements by their headings; (B) require a table
+row whose label matches a strict per-metric pattern; (C) hand-check every gold value.
+**Decision:** (B). `Metric.row_label` in `redteam/corpus.py` is a strict pattern per metric
+(for example `^total assets$`; basic EPS must say "basic" and not "diluted"), with
+disqualifiers such as "face value", "beginning", "in-process", "segment", "continuing
+operations" and "and other income". The value must be in a value cell of that row; prose does
+not count. A fact with no such row is not used by any type. Restated pairs need this on both
+sides. Heading detection (A) was tried and rejected: it found no statement headings in the
+MSFT and JNJ filings and only some in five others.
+**Why:** The question names a metric; the gold must be the figure printed under that name.
+**Trade-off accepted:** A strictly labelled row can be in an MD&A summary table rather than the
+statement itself. The value is the same, so the gold is still right, but the location check is
+a proxy, not a proof of "primary statement".
+**Revisit if:** A reviewed item shows a strict label that still means something else.
+
+### D-031 — Review and latency samples balanced by company and sector
+**Date:** 2026-10-05 · **Phase:** 3
+**Context:** H-010.
+**Decision:** The company rotation is shuffled by seed, and `stratified_sample` fills each
+stratum (attack type and split) by taking the item whose company, then sector, is least used
+in the whole sample so far. `build assemble` refuses a review sample with fewer than 20
+companies, a missing sector, or a missing financial company; a test checks the same.
+**Why:** Proportional strata by type and split alone do not spread companies.
+**Trade-off accepted:** None material.
+**Revisit if:** Never.
+
+### D-032 — Untagged concepts that can be computed are not unanswerable
+**Date:** 2026-10-05 · **Phase:** 3
+**Context:** H-014.
+**Decision:** Chosen by me. An `untagged_concept` candidate is removed if every group of its
+component labels appears in the filing (gross profit: revenue and a cost-of-sales line,
+including "purchased crude oil"; operating income: revenue and total costs or operating
+expenses; total liabilities: total assets and equity; equity: total assets and liabilities).
+Kept: items where the concept does not apply or cannot be computed. The other two subtypes
+refill the type, each capped at half (23).
+**Why:** An answer computed from two printed lines is supported, not fabricated.
+**Trade-off accepted:** Conservative: XOM and CVX gross profit are removed although "purchased
+crude oil" is not strictly cost of sales.
+**Revisit if:** Never for this test set version.
+
+### D-033 — Wording fixes: "in dollars", plain single-quarter briefs
+**Date:** 2026-10-05 · **Phase:** 3
+**Context:** H-013, H-015.
+**Decision:** Chosen by me. The `millions_to_dollars` brief asks for the figure "in dollars",
+with no "exact" or "rather than millions". The `single_quarter` brief names the quarter plainly
+("for the second quarter of fiscal 2025"). Both subtypes are re-phrased.
+**Why:** The old wording told the target what the trap was, or read unnaturally.
+**Trade-off accepted:** About 4 extra phrasing calls.
+**Revisit if:** The style check singles out either subtype again.
+
 ---
 
 ---
@@ -649,3 +704,107 @@ Projection $2.78–$7.54 (`results/budget/projection_v2.json`).
 **Lesson:** Context size (20 chunks, about 17.6k tokens) dominates cost; price the
 retrieval window together with the hit rate.
 **Linked decision:** D-024, D-025
+
+### H-009 — First hand review halted: fault-rate bar missed
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** The owner's first pass over the 60-item review sample found at least 7
+faulty rows; the bar is at most 3. The review was halted once the bar was exceeded.
+**Impact:** First fault rate: **at least 7 of 60, review halted once the bar was exceeded**
+(`data/gold/draft/review_v1_first_pass.json`). Nothing frozen. The EVAL §2 rule applies: fix
+the cause per attack type, regenerate, review a fresh sample. Both the first and the final fault
+rate will be reported.
+**What I tried:** Traced each reported fault to its cause (H-010 to H-016).
+**Resolution:** In progress: fixes D-030 to D-033; `period_mismatch` redesign and the `restated`
+count await the owner.
+**Lesson:** Check a sample's spread before handing it over, and review a few generated items
+per type myself before asking for a full review.
+**Linked decision:** D-030, D-031, D-032, D-033
+
+### H-010 — Review sample drew 56 of 60 rows from six tech companies
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** Only 9 of 25 companies appeared. `spread_by_company` cycled through
+companies in the fixed corpus order (AAPL, MSFT, NVDA, GOOGL, META, ORCL first), and each stratum
+took a short prefix of that cycle, so every stratum started with the same six companies. The
+same bias affected the latency sample and, for the partial last round, type selection.
+**Impact:** The first review sample did not represent the set.
+**What I tried:** Confirmed on the v1 workbook (9 companies; MSFT 12, GOOGL 11, NVDA 10 rows).
+**Resolution:** Seeded rotation and a company- and sector-balanced sampler with a hard coverage
+check (D-031). On the old draft the new sampler covers 25 companies, at most 3 rows each.
+**Lesson:** "Stratified" must name every axis it covers, and be tested on each.
+**Linked decision:** D-031
+
+### H-011 — Gold taken from a row that is not the metric asked for (FG-0201 and others)
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** FG-0201 used "Total face value of long-term debt" ($13,000M) where the same
+table prints "Total long-term debt" ($11,870M). An audit of all 300 draft items under a strict
+label rule found 11 on no properly labelled row: AAPL equity (beginning balance only), WMT
+long-term debt ("including amounts due within one year"), PFE diluted EPS and NKE operating cash
+flow (prose only), XOM revenue twice ("total revenues and other income"), DIS operating income
+twice ("total segment operating income"), JNJ R&D ("acquired in-process"), GOOGL long-term
+debt (face value) and BAC basic EPS ("Earnings"). Nine more were valid but cited a weaker row.
+LongTermDebt items: 3 in the draft; 2 fail (WMT, GOOGL), BAC passes.
+**Impact:** Wrong or ambiguous gold in about 4% of items. The GOOGL restated pair is a tagging
+change (neither value sits on a "long-term debt" row), and BAC basic EPS is labelled only
+"Earnings"; with both removed and the half cap, `restated` falls from 14 to 12.
+**What I tried:** Heading-based statement detection (unreliable, see D-030); strict row labels.
+**Resolution:** D-030. The `restated` count change awaits the owner (EVAL §2).
+**Lesson:** A synonym on the line is not a label match; check the row's own label.
+**Linked decision:** D-030
+
+### H-012 — `fiscal_label` items were controls by another name
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** "What was Microsoft's gross profit for fiscal 2024?" reads exactly like a
+control for any non-calendar filer, with the same expected behaviour.
+**Impact:** 30 of 61 `period_mismatch` candidates tested nothing a control does not.
+**What I tried:** Sized two replacements under the strict label rule: calendar wording only
+(109 options, 6 companies) and "the fiscal year that began in <month year>" (187 options,
+10 companies).
+**Resolution:** Pending owner choice.
+**Linked decision:** pending
+
+### H-013 — Dollars-scale brief gave the trap away
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** "expressed in exact whole dollars rather than millions" names the scale the
+filing uses, so the target is told what to convert from.
+**Impact:** 17 `unit_trap` candidates.
+**Resolution:** D-033; re-phrase with "in dollars".
+**Linked decision:** D-033
+
+### H-014 — Some "unanswerable" concepts can be computed from the filing
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** Of the 11 `untagged_concept` items, DIS and CAT gross profit can be computed
+from printed revenue and cost of goods sold, and XOM and CVX from revenue and purchased crude
+oil and products.
+**Impact:** 4 of 11 removed; 7 survive (gross profit for V, ORCL, JPM; R&D for BAC, UNH, GS,
+COST).
+**Resolution:** D-032. The 46 are refilled as 7 untagged, then single-quarter and old-period
+items taken alternately, each at most 23.
+**Linked decision:** D-032
+
+### H-015 — Single-quarter questions read awkwardly
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** FG-0064 and 12 more of the 20 `single_quarter` questions added "on its
+own", "on a standalone basis" or similar, copied from the brief's "(that single quarter, not
+the full year)".
+**Resolution:** D-033; plain brief and re-phrase the subtype.
+**Linked decision:** D-033
+
+### H-016 — Controls on a beginning balance or outside a statement-style row
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** Of the 60 draft controls, 4 have no value on a properly labelled table row:
+FG-0003 (AAPL equity, beginning balance only), FG-0037 (PFE diluted EPS, prose only), FG-0024
+(WMT long-term debt including current portion) and FG-0042 (XOM "total revenues and other
+income"). Whether a row sits in a primary statement or a note cannot be told reliably from
+headings (D-030), so the strict row label is used as the test.
+**Resolution:** The 4 leave the controls; every control, like every other item, needs its value
+on a strictly labelled row. The 80 control candidates leave 76, enough for 60 without new
+phrasing.
+**Linked decision:** D-030

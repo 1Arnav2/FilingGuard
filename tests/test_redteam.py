@@ -4,7 +4,9 @@ import numpy as np
 
 from filingguard.data.index import VectorIndex
 from filingguard.redteam import assemble as asm
-from filingguard.redteam.corpus import METRICS, find_terms, fiscal_label, locate
+from filingguard.data.filings import COMPANIES
+from filingguard.redteam.corpus import METRICS, find_terms, fiscal_label, label_matches, locate
+from filingguard.redteam.generators.unanswerable import derivable
 from filingguard.redteam.counts import TOTAL, allocate_counts, candidate_counts
 from filingguard.redteam.generators.false_premise import premise_for
 from filingguard.redteam.generators.period_mismatch import best_fiscal_year
@@ -49,12 +51,72 @@ def test_fiscal_label_moves_first_week_of_january_back():
     assert fiscal_label("2021-01-03") == 2020     # JNJ 53-week year
 
 
-def test_locate_prefers_a_labelled_line_and_whole_numbers():
-    text = "Other figure 21,234.5\nTotal revenue | 1,234 | 1,100\nSomething | 1,234\n"
+def test_locate_needs_a_value_cell_on_a_row_labelled_with_the_metric():
+    text = ("Revenue rose to 1,234 in prose\nSomething | 1,234\nOther figure | 21,234.5\n"
+            "Total revenue | 1,234 | 1,100\n")
     hit = locate(text, 1_234_000_000, "USD", METRICS["Revenue"])
-    assert hit.on_label_line and text[hit.start:hit.end] == "1,234" and hit.printed_scale == "millions"
+    assert text[hit.start:hit.end] == "1,234" and hit.printed_scale == "millions" and hit.row_label == "Total revenue"
     assert text.index("Total revenue") < hit.start
     assert locate("Total revenue | 11,234", 1_234_000_000, "USD", METRICS["Revenue"]) is None
+    assert locate("Revenue was 1,234 this year", 1_234_000_000, "USD", METRICS["Revenue"]) is None
+
+
+def test_row_labels_must_be_the_metric_itself():
+    good = {
+        "Revenue": ["Total revenues", "Net sales", "Total NIKE, Inc. Revenues", "Total revenue, net of interest expense",
+                    "Consolidated Sales and Revenues"],
+        "NetIncomeLoss": ["Net income", "Net Income (Loss) Attributable to Chevron Corporation",
+                          "Net earnings/(loss) attributable to Boeing shareholders"],
+        "StockholdersEquity": ["Total stockholders’ equity", "Total Equity Attributable to Shareowners of The Coca-Cola Company"],
+        "EarningsPerShareBasic": ["Basic", "• Basic", "Basic Net Income Per Share 1", "Net income: Basic"],
+        "EarningsPerShareDiluted": ["Diluted", "Net income per diluted share", "Diluted earnings"],
+        "LongTermDebt": ["Long-term debt", "Total long-term debt"],
+        "ResearchAndDevelopmentExpense": ["Research and development", "Research and development expenses"],
+        "NetCashProvidedByUsedInOperatingActivities": ["Net cash provided by (used in) operating activities",
+                                                      "Operating activities", "Cash provided by operations"],
+        "CashAndCashEquivalentsAtCarryingValue": ["Cash and cash equivalents (Notes 1 and 2)"],
+    }
+    bad = {
+        "Revenue": ["Total revenues and other income", "Cost of revenues", "Deferred revenue"],
+        "NetIncomeLoss": ["Net earnings from continuing operations", "Net income attributable to noncontrolling interests"],
+        "OperatingIncomeLoss": ["Total segment operating income (1)"],
+        "StockholdersEquity": ["Total shareholders’ equity, beginning balances", "Total liabilities and equity"],
+        "EarningsPerShareBasic": ["Diluted earnings/(loss) per share", "Weighted-average shares - basic", "Earnings"],
+        "EarningsPerShareDiluted": ["Basic Net Income Per Share 1"],
+        "LongTermDebt": ["Total face value of long-term debt", "Long-term debt, including amounts due within one year"],
+        "ResearchAndDevelopmentExpense": ["Charges for acquired in-process research and development"],
+    }
+    for key, labels in good.items():
+        assert all(label_matches(METRICS[key], lab) for lab in labels), key
+    for key, labels in bad.items():
+        assert not any(label_matches(METRICS[key], lab) for lab in labels), key
+
+
+def test_untagged_concept_that_two_lines_can_compute_is_not_unanswerable():
+    text = "Revenues | 100\nCost of sales | 60\n"
+    assert derivable(text, METRICS["GrossProfit"]) == ["revenues", "cost of sales"]
+    assert derivable("Revenues | 100\nOperating expenses | 60\n", METRICS["GrossProfit"]) is None
+    assert derivable(text, METRICS["ResearchAndDevelopmentExpense"]) is None
+
+
+def test_review_sample_covers_companies_sectors_and_financials():
+    tickers = list(COMPANIES)
+    items = []
+    for i in range(300):
+        t = "control" if i < 60 else ("restated" if i < 74 else "unit_trap")
+        # Restated items, like the real ones, come from only three companies.
+        company = ["BAC", "NVDA", "PFE"][i % 3] if t == "restated" else tickers[i % len(tickers)]
+        items.append(spec(attack_type=t, company=company, brief=f"b{i}"))
+    split = {s.spec_id: "dev" if i % 10 < 3 else "test" for i, s in enumerate(items)}
+    sample = asm.stratified_sample(items, 60, random.Random(1), COMPANIES,
+                                   lambda s: f"{s.attack_type}|{split[s.spec_id]}")
+    assert len(sample) == 60
+    assert asm.coverage_problems(sample, COMPANIES) == []
+    assert len({s.company for s in sample}) >= 20
+    assert {"JPM", "GS", "BAC", "V"} <= {s.company for s in sample}
+    # The failure that halted the first review: six tech companies supplying most rows.
+    assert asm.coverage_problems([spec(company=c) for c in ["AAPL", "MSFT", "NVDA", "GOOGL", "META", "ORCL"] * 10],
+                                 COMPANIES)
 
 
 def test_absence_search_finds_terms_alone_or_near_a_period():

@@ -1,7 +1,7 @@
 """The red-team's view of the corpus: facts, filings, filing text, metric labels and lookups.
 
 Everything here is deterministic. Gold values come from XBRL facts; the filing text is used
-to find the span that shows each value and to prove that an unanswerable fact is absent.
+to find the table row that shows each value and to prove that an unanswerable fact is absent.
 """
 
 import json
@@ -23,35 +23,51 @@ EXCERPT_CHARS = 600
 class Metric:
     key: str             # key in concept_map.json
     label: str           # wording used in questions
-    synonyms: tuple[str, ...]   # labels a filing may print; used to find spans and prove absence
+    synonyms: tuple[str, ...]   # labels a filing may print; used to prove absence
     flow: bool           # True for a duration (income or cash flow), False for a balance
+    row_label: str       # regex a statement-style row label must match for the value to be gold (D-030)
 
 
+_NAME = r"(?:[a-z0-9.,&'() -]+ )?"   # optional company name inside a label ("total nike, inc. revenues")
 METRICS = {m.key: m for m in (
-    Metric("Revenue", "total revenue", ("revenue", "revenues", "net sales", "total sales"), True),
+    Metric("Revenue", "total revenue", ("revenue", "revenues", "net sales", "total sales"), True,
+           r"^(?!.*\b(?:cost|costs|deferred|unearned|other|segment|per)\b)(?:total |consolidated )?" + _NAME
+           + r"(?:net )?(?:operating )?(?:sales and )?(?:revenues?|sales)(?:,? net)?(?:,? net of interest expense)?$"),
     Metric("NetIncomeLoss", "net income",
-           ("net income", "net earnings", "net loss", "net profit", "profit attributable"), True),
+           ("net income", "net earnings", "net loss", "net profit", "profit attributable"), True,
+           r"^(?!.*\b(?:continuing|discontinued|per|comprehensive|noncontrolling|before)\b)(?:consolidated )?"
+           r"net (?:income|earnings)(?: ?\(loss\)|/\(loss\))?(?: attributable to .+)?$"),
     Metric("OperatingIncomeLoss", "operating income",
            ("operating income", "income from operations", "operating profit", "operating loss",
-            "operating earnings"), True),
-    Metric("GrossProfit", "gross profit", ("gross profit", "gross margin"), True),
-    Metric("Assets", "total assets", ("total assets",), False),
-    Metric("Liabilities", "total liabilities", ("total liabilities",), False),
+            "operating earnings"), True,
+           r"^(?!.*\b(?:segment|adjusted|non-gaap)\b)(?:total |consolidated )?(?:operating (?:income|profit|earnings)"
+           r"(?: ?\(loss\))?|income (?:\(loss\) )?from operations)$"),
+    Metric("GrossProfit", "gross profit", ("gross profit", "gross margin"), True, r"^(?:total )?gross (?:profit|margin)$"),
+    Metric("Assets", "total assets", ("total assets",), False, r"^total assets$"),
+    Metric("Liabilities", "total liabilities", ("total liabilities",), False, r"^total liabilities$"),
     Metric("StockholdersEquity", "total stockholders' equity",
-           ("stockholders' equity", "shareholders' equity", "shareowners' equity", "total equity"), False),
+           ("stockholders' equity", "shareholders' equity", "shareowners' equity", "total equity"), False,
+           r"^(?!.*\b(?:beginning|liabilities|noncontrolling)\b)total " + _NAME
+           + r"(?:(?:stockholders|shareholders|shareowners)'? ?)?equity(?:,? ending balances?| attributable to .+)?$"),
     Metric("CashAndCashEquivalentsAtCarryingValue", "cash and cash equivalents",
-           ("cash and cash equivalents", "cash and due from banks", "cash equivalents"), False),
-    Metric("EarningsPerShareBasic", "basic earnings per share",
-           ("earnings per share", "per share", "basic"), True),
-    Metric("EarningsPerShareDiluted", "diluted earnings per share",
-           ("earnings per share", "per share", "diluted"), True),
+           ("cash and cash equivalents", "cash and due from banks", "cash equivalents"), False,
+           r"^cash and cash equivalents(?:,? at end of (?:the )?(?:year|period))?$"),
+    Metric("EarningsPerShareBasic", "basic earnings per share", ("earnings per share", "per share", "basic"), True,
+           r"^(?!.*\b(?:diluted|weighted|average|shares outstanding)\b).*\bbasic\b.*$"),
+    Metric("EarningsPerShareDiluted", "diluted earnings per share", ("earnings per share", "per share", "diluted"), True,
+           r"^(?!.*\b(?:basic|weighted|average|shares outstanding)\b).*\bdiluted\b.*$"),
     Metric("ResearchAndDevelopmentExpense", "research and development expense",
            ("research and development", "research & development", "r&d", "product development",
-            "technology and development", "research, development"), True),
+            "technology and development", "research, development"), True,
+           r"^(?!.*\b(?:acquired|in-process)\b)(?:total )?research,? (?:and|&) development"
+           r"(?: expenses?| expense, net| costs?)?$"),
     Metric("LongTermDebt", "long-term debt",
-           ("long-term debt", "long term debt", "long-term borrowings", "senior notes", "notes payable"), False),
+           ("long-term debt", "long term debt", "long-term borrowings", "senior notes", "notes payable"), False,
+           r"^(?:total )?long-term debt$"),
     Metric("NetCashProvidedByUsedInOperatingActivities", "net cash provided by operating activities",
-           ("operating activities", "operating cash flow", "cash provided by operations"), True),
+           ("operating activities", "operating cash flow", "cash provided by operations"), True,
+           r"^(?:(?:total |net )?(?:cash (?:provided by|from|generated by|flows? from|provided by \(used (?:in|for)\)|"
+           r"provided/\(used\) by|used (?:in|for)) )?operating activities|(?:net )?cash (?:provided by|from) operations)$"),
 )}
 
 # How each company is named in questions, and the names a question may use for it.
@@ -85,6 +101,19 @@ def normalise_text(text: str) -> str:
     return text.replace("’", "'")
 
 
+def clean_label(label: str) -> str:
+    """Lower-case a table row label and drop footnote marks, bullets, '$' and trailing colons."""
+    text = normalise_text(label).lower()
+    text = re.sub(r"\((?:\d+|[a-z]|notes? [^)]*)\)", " ", text)
+    text = re.sub(r"[^a-z0-9(]+$", "", re.sub(r"^[^a-z0-9(]+", "", text))
+    text = re.sub(r"\s+\d+$", "", text)
+    return re.sub(r"\s+", " ", text).strip(" :")
+
+
+def label_matches(metric: Metric, label: str) -> bool:
+    return re.match(metric.row_label, clean_label(label)) is not None
+
+
 def renderings(value: float, unit: str) -> list[tuple[str, str]]:
     """(string, printed scale) pairs a 10-K might use for `value`, most likely first."""
     if unit == "USD/shares":
@@ -103,13 +132,13 @@ class Located:
     end: int
     rendering: str
     printed_scale: str
-    on_label_line: bool
+    row_label: str
 
 
-def _line_at(text: str, pos: int) -> str:
+def _line_bounds(text: str, pos: int) -> tuple[int, int]:
     lo = text.rfind("\n", 0, pos) + 1
     hi = text.find("\n", pos)
-    return text[lo: hi if hi != -1 else len(text)]
+    return lo, hi if hi != -1 else len(text)
 
 
 def _number_at(text: str, start: int, end: int) -> bool:
@@ -122,23 +151,22 @@ def _number_at(text: str, start: int, end: int) -> bool:
 
 
 def locate(text: str, value: float, unit: str, metric: Metric) -> Located | None:
-    """Where the filing prints `value`, preferring a line that also carries the metric's label.
+    """Where the filing prints `value` in a table row whose label is the metric's own name.
 
-    Returns the first whole-number match on a labelled line; failing that, the first
-    whole-number match anywhere (flagged `on_label_line=False` for the reviewer).
+    Only a value cell of a table row counts (not prose, not the label cell), and the row label
+    must match `metric.row_label` (D-030). Returns the first such match, or None.
     """
-    lowered = normalise_text(text).lower()
-    fallback = None
     for rendering, scale in renderings(value, unit):
         for m in re.finditer(re.escape(rendering), text):
             if not _number_at(text, m.start(), m.end()):
                 continue
-            line = _line_at(lowered, m.start())
-            hit = Located(m.start(), m.end(), rendering, scale, any(s in line for s in metric.synonyms))
-            if hit.on_label_line:
-                return hit
-            fallback = fallback or hit
-    return fallback
+            lo, hi = _line_bounds(text, m.start())
+            bar = text.find("|", lo, hi)
+            if bar == -1 or m.start() < bar:
+                continue
+            if label_matches(metric, text[lo:bar]):
+                return Located(m.start(), m.end(), rendering, scale, text[lo:bar].strip())
+    return None
 
 
 def excerpt(text: str, start: int, end: int, width: int = EXCERPT_CHARS) -> dict:
@@ -216,7 +244,8 @@ class Corpus:
         return rows[counts == 1].sort_values("period_end", ascending=False).reset_index(drop=True)
 
     def fact(self, ticker: str, metric: Metric, accession: str, period_end: str) -> dict | None:
-        """One located fact: value, unit, period, and the span that shows it in the filing."""
+        """One located fact: value, unit, period, and the labelled row that shows it, or None
+        if the filing prints it on no row labelled with the metric's own name."""
         rows = self.annual_values(ticker, metric, accession)
         rows = rows[rows["period_end"] == period_end]
         if rows.empty:
@@ -236,7 +265,7 @@ class Corpus:
             },
             "source": {
                 "accession": accession, "filed": filing["filed"], "report_date": filing["report_date"],
-                "span": [loc.start, loc.end], "on_label_line": loc.on_label_line,
+                "span": [loc.start, loc.end], "row_label": loc.row_label,
             },
         }
 

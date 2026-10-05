@@ -34,7 +34,7 @@ def located_facts(ctx: GenContext, ticker: str, metrics: list[Metric] | None = N
         for metric in corpus.metrics(ticker):
             for period_end in corpus.annual_values(ticker, metric, latest["accession"])["period_end"]:
                 fact = corpus.fact(ticker, metric, latest["accession"], period_end)
-                if fact and fact["source"]["on_label_line"] and (ticker, fact["gold"]["concept"], period_end) not in restated:
+                if fact and (ticker, fact["gold"]["concept"], period_end) not in restated:
                     found.append((metric, fact))
         ctx._facts[ticker] = found
     keys = {m.key for m in metrics} if metrics else None

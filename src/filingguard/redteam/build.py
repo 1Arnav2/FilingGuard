@@ -15,6 +15,7 @@ import json
 import random
 from pathlib import Path
 
+from filingguard.data.filings import COMPANIES
 from filingguard.redteam import assemble as asm
 from filingguard.redteam.counts import ATTACK_TYPES, allocate_counts, candidate_counts
 from filingguard.redteam.corpus import Corpus
@@ -28,7 +29,7 @@ SEED = 20261004
 OUT = Path("data/gold/candidates")
 DRAFT_ITEMS = Path("data/testset/draft")
 DRAFT_GOLD = Path("data/gold/draft")
-REVIEW_BOOK = Path("review/review_v1.xlsx")
+REVIEW_BOOK = Path("review/review_v2.xlsx")   # v1 was halted at the first pass (H-009)
 # Types with the scarcest facts claim theirs first; control takes from what is left.
 GENERATION_ORDER = ("restated", "false_premise", "injection", "unit_trap", "period_mismatch", "control", "unanswerable")
 
@@ -133,13 +134,16 @@ def assemble_draft(seed: int = SEED) -> dict:
     items.sort(key=lambda s: ids[s.spec_id])
 
     test = [s for s in items if split[s.spec_id] == "test"]
-    latency = asm.stratified_sample(test, asm.LATENCY_SAMPLE, random.Random(f"{seed}-latency"), companies,
+    latency = asm.stratified_sample(test, asm.LATENCY_SAMPLE, random.Random(f"{seed}-latency"), COMPANIES,
                                     lambda s: s.attack_type)
-    sample = asm.stratified_sample(items, asm.REVIEW_SAMPLE, random.Random(f"{seed}-review"), companies,
+    sample = asm.stratified_sample(items, asm.REVIEW_SAMPLE, random.Random(f"{seed}-review"), COMPANIES,
                                    lambda s: f"{s.attack_type}|{split[s.spec_id]}")
+    problems = asm.coverage_problems(sample, COMPANIES)
+    if problems:
+        raise RuntimeError(f"review sample is not stratified enough: {problems}")
     in_sample = {s.spec_id for s in sample}
     extra = [s for s in items if s.spec_id not in in_sample and (
-        s.subtype == "untagged_concept" or (s.source is not None and not s.source["on_label_line"]))]
+        s.subtype == "untagged_concept")]
 
     _write_jsonl(DRAFT_ITEMS / "items_v1.jsonl", [
         {"id": ids[s.spec_id], "company": s.company, "attack_type": s.attack_type, "subtype": s.subtype,
@@ -150,7 +154,8 @@ def assemble_draft(seed: int = SEED) -> dict:
     latency_ids = sorted(ids[s.spec_id] for s in latency)
     _write_json(DRAFT_ITEMS / "latency_sample_v1.json",
                 {"seed": f"{seed}-latency", "split": "test", "ids": latency_ids, "by_type": _by_type(latency)})
-    rows = lambda group: [(ids[s.spec_id], s, questions[s.spec_id]) for s in sorted(group, key=lambda s: ids[s.spec_id])]
+    rows = lambda group: [(ids[s.spec_id], s, questions[s.spec_id], split[s.spec_id])
+                          for s in sorted(group, key=lambda s: ids[s.spec_id])]
     write_workbook(REVIEW_BOOK, rows(sample), rows(extra), corpus)
 
     stats = {

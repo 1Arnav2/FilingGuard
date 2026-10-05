@@ -18,7 +18,7 @@ def generate(ctx: GenContext, n: int) -> list[ItemSpec]:
         options = []
         for metric, fact in located_facts(ctx, ticker, current_only=True):
             chunk = containing_chunk(corpus.chunks, fact["source"]["accession"], fact["source"]["span"])
-            if chunk and fact["source"]["on_label_line"]:
+            if chunk:
                 options.append((metric, fact, chunk))
         if not options:
             return None

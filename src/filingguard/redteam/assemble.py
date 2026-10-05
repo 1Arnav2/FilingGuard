@@ -7,7 +7,7 @@ scoring rules are approved (D-026, D-028).
 
 import random
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict
 from collections.abc import Callable
 
 from filingguard.redteam.counts import ATTACK_TYPES
@@ -49,15 +49,21 @@ def near_duplicates(specs: list[ItemSpec], questions: dict[str, str]) -> set[str
 
 
 def spread_by_company(specs: list[ItemSpec], rng: random.Random, company_order: list[str]) -> list[ItemSpec]:
-    """Seeded order that takes one spec per company in turn, so a prefix spreads across companies."""
+    """Seeded order that takes one spec per company in turn, so a prefix spreads across companies.
+
+    The company rotation itself is shuffled; a fixed rotation made every short prefix start
+    with the same six tech companies (H-010).
+    """
     by_company = defaultdict(list)
     shuffled = specs[:]
     rng.shuffle(shuffled)
     for s in shuffled:
         by_company[s.company].append(s)
+    rotation = company_order[:]
+    rng.shuffle(rotation)
     order = []
     while any(by_company.values()):
-        for c in company_order:
+        for c in rotation:
             if by_company[c]:
                 order.append(by_company[c].pop(0))
     return order
@@ -123,15 +129,49 @@ def assign_split(items: list[ItemSpec], rng: random.Random, company_order: list[
     return split
 
 
-def stratified_sample(items: list[ItemSpec], n: int, rng: random.Random, company_order: list[str],
+MIN_REVIEW_COMPANIES = 20
+
+
+def coverage_problems(sample: list[ItemSpec], sector_of: dict[str, str]) -> list[str]:
+    """Ways a review sample fails the coverage rule: at least 20 companies, every sector, and
+    every financial company (H-010)."""
+    companies = {s.company for s in sample}
+    problems = []
+    if len(companies) < MIN_REVIEW_COMPANIES:
+        problems.append(f"{len(companies)} companies, need {MIN_REVIEW_COMPANIES}")
+    missing_sectors = set(sector_of.values()) - {sector_of[c] for c in companies}
+    if missing_sectors:
+        problems.append(f"missing sectors {sorted(missing_sectors)}")
+    missing_fin = {t for t, sec in sector_of.items() if sec == "Financials"} - companies
+    if missing_fin:
+        problems.append(f"missing financials {sorted(missing_fin)}")
+    return problems
+
+
+def stratified_sample(items: list[ItemSpec], n: int, rng: random.Random, sector_of: dict[str, str],
                       strata: Callable[[ItemSpec], str]) -> list[ItemSpec]:
-    """`n` items with each stratum's share proportional to its size, spread across companies."""
+    """`n` items with each stratum's share proportional to its size, balanced across companies
+    and sectors over the whole sample.
+
+    Strata are filled smallest first (they have the fewest companies to choose from). Each pick
+    takes the item whose company, then sector, is least used in the sample so far, with seeded
+    tie-breaks (H-010).
+    """
     groups = defaultdict(list)
     for s in items:
         groups[strata(s)].append(s)
     keys = sorted(groups, key=lambda k: (ATTACK_TYPES.index(k.split("|")[0]), k))
     quota = largest_remainder({k: len(groups[k]) for k in keys}, n)
+    by_company: Counter = Counter()
+    by_sector: Counter = Counter()
     out = []
-    for k in keys:
-        out += spread_by_company(sorted(groups[k], key=lambda s: s.spec_id), rng, company_order)[: quota[k]]
+    for k in sorted(keys, key=lambda k: (len({s.company for s in groups[k]}), keys.index(k))):
+        pool = sorted(groups[k], key=lambda s: s.spec_id)
+        rng.shuffle(pool)
+        for _ in range(quota[k]):
+            pick = min(pool, key=lambda s: (by_company[s.company], by_sector[sector_of[s.company]]))
+            pool.remove(pick)
+            by_company[pick.company] += 1
+            by_sector[sector_of[pick.company]] += 1
+            out.append(pick)
     return out
