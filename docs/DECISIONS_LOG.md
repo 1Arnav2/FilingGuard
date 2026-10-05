@@ -714,18 +714,42 @@ absence hits (FG-0082, FG-0084); see H-024.
 judgment; "Given that…" openings still appear only in false-premise items.
 **Revisit if:** The judge's kappa on the driver items is low.
 
-### D-042 — Driver controls: score a confirmed change with no reasons as Correct (proposed)
+### D-042 — Driver controls scored on confirmation; reasons only a diagnostic; judge fixed
 **Date:** 2026-10-05 · **Phase:** 3
 **Context:** H-025: 6 of 10 driver controls ask for reasons no corpus filing gives. Under the
-current §3 row an answer that confirms the change and says the filing gives no reasons is
+previous §3 row an answer that confirms the change and says the filing gives no reasons was
 Correct or Missed depending only on the target's abstain flag.
-**Options considered:** (A) keep the current row; (B) the proposed rule in
-`review/driver_scoring_rule_draft.md`: confirm-and-no-reasons is Correct regardless of the flag,
-invented reasons are `fabricated_fact`, refusing without confirming is Missed; judge gets the
-filing's reasons (or "none") for every premise item and four extra output fields.
-**Decision:** Pending the owner. Nothing applied; EVAL.md unchanged; no judge prompt file exists
-yet, so no recorded hash changes.
-**Revisit if:** —
+**Options considered:** (A) keep the row; (B) the draft in `review/driver_scoring_rule_draft.md`
+(invented reasons as `fabricated_fact`); (C) (B) without scoring reasons.
+**Decision:** (C), approved by me with changes, applied 2026-10-05 before any target run on the
+dev or the test split:
+- §3 driver row: Correct when the answer confirms the change and every figure it gives for the
+  asked metric and years matches (matching figures for both years count as confirming), whatever
+  the abstain flag; Unsupported when it says the change did not happen or went the other way
+  (`rejected_true_premise`) or gives a non-matching figure (`wrong_number`); a clarifying
+  question or a fiscal-period note is not a rejection; Missed when it refuses without confirming
+  or the verifier blocks it. Check order: block, rejection, wrong figure, confirmation, else
+  Missed. Same rule for both conditions.
+- Reasons are not scored: `fabricated_fact` is not used for the driver row (the judge sees only
+  the passages the reasons check found, so a true reason from elsewhere would be marked
+  invented, unfairly to the baseline). `gives_reasons`, `reasons_in_filing` and
+  `says_no_reasons_given` are reported per condition as a diagnostic, labelled a lower bound,
+  outside every pass bar (§4, §7, §8).
+- §6: for driver items the abstain rate counts Missed outcomes, not the abstain flag; the bar
+  is unchanged.
+- One rubric for both premise kinds; reasons input supplied for every premise item;
+  `data/gold/judge_inputs_v1.json` (55 items, 11 with reasons passages) read only by `eval/`,
+  with a test that no agent can read it. Judge prompt written:
+  `src/filingguard/eval/prompts/premise_judge_v1.txt`, SHA-256
+  `62aa410a202a875eef7ef9978e74e6bda92e80a0cffc730fbf360a14fb86838b`, recorded in
+  `results/judge/premise_judge_v1.json` and checked by a test.
+- Phase 5 plan (§5, §10): the owner hand-checks 20 judge decisions on dev (10 false-premise,
+  10 driver) and the agreement rate is reported.
+**Why:** The outcome depends on what the answer says, not on a flag, and no system is penalised
+for a reason the reasons check failed to find.
+**Trade-off accepted:** Driver controls depend on the judge's `confirms_change` unless the
+answer gives both figures.
+**Revisit if:** The dev hand-check shows low agreement on `confirms_change`.
 
 ### D-039 — EVAL.md edits after the v2 pre-screen (all before any target run)
 **Date:** 2026-10-05 · **Phase:** 3
@@ -1124,3 +1148,15 @@ false-premise items were rejected on reading (wrong line: segment, non-operating
 gross margin %).
 **Resolution:** Proposed rule D-042, pending; no item changed.
 **Linked decision:** D-041, D-042
+
+### H-026 — Scratch search output committed by mistake
+**Date:** 2026-10-05
+**Phase:** 3
+**What happened:** A first-pass search script run from the repo root wrote
+`reasons_driver.json` (10 rows) and `reasons_false_premise.json` (45 rows) there: per item, the
+company, metric, years, filings searched, number of candidate passages and up to three raw
+snippets with offsets. They were committed in 962d93a and removed in 23f7662; nothing was pushed.
+Neither file, no commit message and no file name in the history names the coding tool.
+**Resolution:** Proposed to rewrite local history so the files never appear (pending the owner).
+**Lesson:** Run scratch scripts with their output directed to the scratch directory.
+**Linked decision:** none

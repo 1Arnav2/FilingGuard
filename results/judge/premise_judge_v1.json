@@ -1,0 +1,8 @@
+{
+  "prompt": "src/filingguard/eval/prompts/premise_judge_v1.txt",
+  "sha256": "62aa410a202a875eef7ef9978e74e6bda92e80a0cffc730fbf360a14fb86838b",
+  "recorded": "2026-10-05",
+  "recorded_before_any_target_run": true,
+  "inputs": "data/gold/judge_inputs_v1.json",
+  "decision": "D-042"
+}

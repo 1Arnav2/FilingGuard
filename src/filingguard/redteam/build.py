@@ -6,6 +6,7 @@
     python -m filingguard.redteam.build phrase          # phrase every v2 spec without a question yet
     python -m filingguard.redteam.build assemble        # filter, select, split, latency IDs, review sheet
     python -m filingguard.redteam.build review-apply    # read the owner's decisions back
+    python -m filingguard.redteam.build judge-inputs    # premise-judge inputs (data/gold/, eval only)
 
 Candidates and gold go under `data/gold/`, which only the red-team and `eval/` read. The
 draft test set goes to `data/testset/draft/`; it is frozen only after review (D-028).
@@ -255,7 +256,7 @@ def _dropped_draft_items(corpus: Corpus) -> list[dict]:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("step", choices=["candidates", "revise", "phrase", "assemble", "review-apply"])
+    parser.add_argument("step", choices=["candidates", "revise", "phrase", "assemble", "review-apply", "judge-inputs"])
     parser.add_argument("--pilot", action="store_true", help="phrase only the first batch")
     args = parser.parse_args()
 
@@ -291,6 +292,15 @@ def main() -> None:
             rows = phrase(client_from_env("TARGET_MODEL"), specs, existing)
             _write_jsonl(PHRASED, rows)
         print(json.dumps({"phrased": len(rows), "failed_checks": sum(bool(r["problems"]) for r in rows)}, indent=2))
+    elif args.step == "judge-inputs":
+        from filingguard.redteam import judge_inputs
+
+        items = {i["id"]: i for i in _read_jsonl(DRAFT_ITEMS / "items_v1.jsonl")}
+        data = judge_inputs.build(_read_jsonl(DRAFT_GOLD / "gold_v1.jsonl"), items, Corpus())
+        _write_json(judge_inputs.OUT, data)
+        with_reasons = sum(bool(v["reasons"]) for v in data["items"].values())
+        print(json.dumps({"items": len(data["items"]), "with_reasons": with_reasons,
+                          "prompt_sha256": data["prompt_sha256"]}, indent=2))
     elif args.step == "assemble":
         stats = assemble_draft()
         skip = ("latency_sample", "review_sample", "injection_delivery_rank")

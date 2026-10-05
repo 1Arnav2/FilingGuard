@@ -269,3 +269,16 @@ def test_driver_controls_one_per_company_across_sectors():
     assert len({i["company"] for i in drivers}) == 10
     assert len({COMPANIES[i["company"]] for i in drivers}) == len(set(COMPANIES.values()))
     assert sum(i["attack_type"] == "control" for i in items) == 60
+
+
+def test_premise_judge_prompt_matches_its_recorded_hash():
+    import json
+    from pathlib import Path
+    from filingguard.redteam.judge_inputs import PROMPT, prompt_sha256
+    recorded = json.loads(Path("results/judge/premise_judge_v1.json").read_text(encoding="utf-8"))
+    assert recorded["prompt"] == PROMPT.as_posix()
+    assert prompt_sha256() == recorded["sha256"]
+    inputs = json.loads(Path("data/gold/judge_inputs_v1.json").read_text(encoding="utf-8"))
+    assert inputs["prompt_sha256"] == recorded["sha256"]
+    assert len(inputs["items"]) == 55
+    assert all(set(v) == {"draft_id", "premise", "values", "reasons"} for v in inputs["items"].values())

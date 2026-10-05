@@ -16,6 +16,19 @@ of every session.
 
 ---
 
+## 2026-10-05 — Phase 3: driver scoring rule and premise judge fixed (no model calls)
+**Built (D-042):** EVAL §3 driver row and check order, §4 reasons diagnostic, §6 abstain
+counting for drivers, §7 note, §8 limitation, §5 and §10 Phase 5 judge hand-check (20 dev
+decisions). Judge prompt `src/filingguard/eval/prompts/premise_judge_v1.txt` written, SHA-256
+`62aa410a…838b` recorded in `results/judge/premise_judge_v1.json`. Judge inputs
+`data/gold/judge_inputs_v1.json` (55 premise items, 11 with reasons passages; builder
+`redteam/judge_inputs.py`, step `judge-inputs`). Reasons check record gains passage locations.
+**Tests:** 99 offline tests pass (new: no agent can read the judge inputs; prompt matches its
+recorded hash).
+**Spend so far:** $0.4397 (no calls this step).
+**Open:** owner's OK to squash the two commits that carried scratch files (H-026).
+**Commit:** Phase 3: driver scoring rule (D-042), premise judge prompt and inputs
+
 ## 2026-10-05 — Phase 3: absence and trap rules applied, driver controls, sheet v3 rebuilt
 **Built (D-041):** absence rule over every corpus filing plus the header-cell table check;
 trap-distance rule over the whole `period_mismatch` pool; 10 true-premise driver controls;

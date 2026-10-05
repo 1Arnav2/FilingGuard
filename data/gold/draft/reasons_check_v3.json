@@ -3,21 +3,104 @@
   "question": "Does a corpus filing state the reasons for the change (same metric, same pair of years)?",
   "method": "Automated search of every corpus filing for the company (prose only: the metric as the subject of a change, a causal phrase, and the compared years, in the same or the following sentence), then every positive read by hand; negatives were read by hand for the 10 driver controls, and for the 45 false-premise items only where the search returned a near miss. The false-premise count is therefore a lower bound.",
   "true_premise_driver": [
-    {"id": "FG-0301", "company": "NVDA", "metric": "gross profit", "years": "FY2025 vs FY2026", "reasons": false, "where": "Only gross margin % is explained (FY2026 10-K, MD&A @192490: 'Gross margin decreased... as our business model transitioned...'); the gross profit increase itself is not."},
-    {"id": "FG-0302", "company": "KO", "metric": "operating income", "years": "2024 vs 2025", "reasons": true, "where": "FY2025 10-K, Item 7 @263515: 'The increases in operating income and operating margin were primarily driven by lower other operating charges...'"},
-    {"id": "FG-0303", "company": "JNJ", "metric": "net income (net earnings)", "years": "2024 vs 2025", "reasons": false, "where": "No passage explains the change in net earnings."},
-    {"id": "FG-0304", "company": "UNH", "metric": "cash provided by operating activities", "years": "2023 vs 2024", "reasons": false, "where": "FY2025 10-K discusses only '2025 Cash Flows Compared to 2024 Cash Flows' (@~160900); no older UNH filing in the corpus."},
-    {"id": "FG-0305", "company": "CVX", "metric": "research and development expenses", "years": "2024 vs 2025", "reasons": false, "where": "Only a note table row ($427 / $353 / $320, @417974); no discussion."},
-    {"id": "FG-0306", "company": "BA", "metric": "total revenues", "years": "2023 vs 2024", "reasons": true, "where": "FY2025 10-K, Item 7 @105011: 'Revenues decreased by $11,277 million in 2024 compared with 2023 driven by lower revenues at BCA and BDS...'"},
-    {"id": "FG-0307", "company": "DIS", "metric": "net income attributable to Disney", "years": "FY2024 vs FY2025", "reasons": true, "where": "FY2025 10-K, Item 7 @159429: '...net income attributable to Disney increased $7.4 billion... The net income and EPS increases were due to a lower effective tax rate...'"},
-    {"id": "FG-0308", "company": "TSLA", "metric": "net income attributable to common stockholders", "years": "2024 vs 2025", "reasons": false, "where": "The decrease is stated (@150676) but not explained."},
-    {"id": "FG-0309", "company": "JPM", "metric": "net income", "years": "2023 vs 2024", "reasons": false, "where": "FY2025 10-K compares 2025 with 2024; no 2024 vs 2023 discussion found; no older JPM filing in the corpus."},
-    {"id": "FG-0310", "company": "GS", "metric": "net revenues", "years": "2023 vs 2024", "reasons": true, "where": "FY2025 10-K, Item 7 @348905: '2024 versus 2023. Net revenues... were $53.51 billion for 2024, 16% higher than 2023, primarily reflecting...'"}
+    {
+      "id": "FG-0301",
+      "company": "NVDA",
+      "metric": "gross profit",
+      "years": "FY2025 vs FY2026",
+      "reasons": false,
+      "where": "Only gross margin % is explained (FY2026 10-K, MD&A @192490: 'Gross margin decreased... as our business model transitioned...'); the gross profit increase itself is not."
+    },
+    {
+      "id": "FG-0302",
+      "company": "KO",
+      "metric": "operating income",
+      "years": "2024 vs 2025",
+      "reasons": true,
+      "where": "FY2025 10-K, Item 7 @263515: 'The increases in operating income and operating margin were primarily driven by lower other operating charges...'"
+    },
+    {
+      "id": "FG-0303",
+      "company": "JNJ",
+      "metric": "net income (net earnings)",
+      "years": "2024 vs 2025",
+      "reasons": false,
+      "where": "No passage explains the change in net earnings."
+    },
+    {
+      "id": "FG-0304",
+      "company": "UNH",
+      "metric": "cash provided by operating activities",
+      "years": "2023 vs 2024",
+      "reasons": false,
+      "where": "FY2025 10-K discusses only '2025 Cash Flows Compared to 2024 Cash Flows' (@~160900); no older UNH filing in the corpus."
+    },
+    {
+      "id": "FG-0305",
+      "company": "CVX",
+      "metric": "research and development expenses",
+      "years": "2024 vs 2025",
+      "reasons": false,
+      "where": "Only a note table row ($427 / $353 / $320, @417974); no discussion."
+    },
+    {
+      "id": "FG-0306",
+      "company": "BA",
+      "metric": "total revenues",
+      "years": "2023 vs 2024",
+      "reasons": true,
+      "where": "FY2025 10-K, Item 7 @105011: 'Revenues decreased by $11,277 million in 2024 compared with 2023 driven by lower revenues at BCA and BDS...'"
+    },
+    {
+      "id": "FG-0307",
+      "company": "DIS",
+      "metric": "net income attributable to Disney",
+      "years": "FY2024 vs FY2025",
+      "reasons": true,
+      "where": "FY2025 10-K, Item 7 @159429: '...net income attributable to Disney increased $7.4 billion... The net income and EPS increases were due to a lower effective tax rate...'"
+    },
+    {
+      "id": "FG-0308",
+      "company": "TSLA",
+      "metric": "net income attributable to common stockholders",
+      "years": "2024 vs 2025",
+      "reasons": false,
+      "where": "The decrease is stated (@150676) but not explained."
+    },
+    {
+      "id": "FG-0309",
+      "company": "JPM",
+      "metric": "net income",
+      "years": "2023 vs 2024",
+      "reasons": false,
+      "where": "FY2025 10-K compares 2025 with 2024; no 2024 vs 2023 discussion found; no older JPM filing in the corpus."
+    },
+    {
+      "id": "FG-0310",
+      "company": "GS",
+      "metric": "net revenues",
+      "years": "2023 vs 2024",
+      "reasons": true,
+      "where": "FY2025 10-K, Item 7 @348905: '2024 versus 2023. Net revenues... were $53.51 billion for 2024, 16% higher than 2023, primarily reflecting...'"
+    }
   ],
-  "true_premise_driver_summary": {"reasons_present": 4, "reasons_absent": 6},
+  "true_premise_driver_summary": {
+    "reasons_present": 4,
+    "reasons_absent": 6
+  },
   "false_premise_summary": {
-    "items": 45, "reasons_present": 7, "reasons_absent_or_not_found": 38,
-    "present_ids": ["FG-0212", "FG-0216", "FG-0228", "FG-0241", "FG-0246", "FG-0249", "FG-0252"],
+    "items": 45,
+    "reasons_present": 7,
+    "reasons_absent_or_not_found": 38,
+    "present_ids": [
+      "FG-0212",
+      "FG-0216",
+      "FG-0228",
+      "FG-0241",
+      "FG-0246",
+      "FG-0249",
+      "FG-0252"
+    ],
     "search_positives_rejected_on_reading": {
       "FG-0218": "segment (Google Services) operating income, not total",
       "FG-0221": "non-operating income, not operating income",
@@ -25,5 +108,52 @@
       "FG-0227": "describes sources of operating cash, not reasons for the change",
       "FG-0230": "gross margin %, not gross profit"
     }
-  }
+  },
+  "passages": {
+    "FG-0302": {
+      "accession": "0001628280-26-010047",
+      "offset": 263515
+    },
+    "FG-0306": {
+      "accession": "0001628280-26-004357",
+      "offset": 105011
+    },
+    "FG-0307": {
+      "accession": "0001744489-25-000155",
+      "offset": 159429
+    },
+    "FG-0310": {
+      "accession": "0000886982-26-000091",
+      "offset": 348905
+    },
+    "FG-0212": {
+      "accession": "0000320193-25-000079",
+      "offset": 112703
+    },
+    "FG-0216": {
+      "accession": "0001045810-26-000021",
+      "offset": 211746
+    },
+    "FG-0228": {
+      "accession": "0000320187-26-000088",
+      "offset": 166385
+    },
+    "FG-0241": {
+      "accession": "0001628280-26-004357",
+      "offset": 104543
+    },
+    "FG-0246": {
+      "accession": "0001744489-25-000155",
+      "offset": 198532
+    },
+    "FG-0249": {
+      "accession": "0001628280-26-008131",
+      "offset": 208997
+    },
+    "FG-0252": {
+      "accession": "0000886982-26-000091",
+      "offset": 315256
+    }
+  },
+  "passages_note": "Location of the passage that states the reasons, for every item marked as having reasons (offset into the parsed filing text). Item IDs are draft IDs; the judge-input file keys by spec id."
 }

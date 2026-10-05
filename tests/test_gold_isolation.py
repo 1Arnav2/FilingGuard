@@ -81,3 +81,14 @@ def test_no_agent_module_reads_the_test_set():
     }
     assert not {k: v for k, v in violations.items() if v}, violations
     assert TESTSET_SEGMENT.search("data/testset/v1.jsonl") and not TESTSET_SEGMENT.search("testsets_note")
+
+
+def test_no_agent_can_read_the_premise_judge_inputs():
+    """The judge's inputs (reasons passages per premise item) live under data/gold/, which the
+    gold check already forbids; this also forbids naming the file or the judge prompt (D-042)."""
+    from filingguard.redteam.judge_inputs import OUT
+    assert GOLD_SEGMENT.search(OUT.as_posix()), "judge inputs must stay under data/gold/"
+    assert gold_violations(f'open("{OUT.as_posix()}")')
+    for path in AGENTS_DIR.rglob("*.py"):
+        text = path.read_text(encoding="utf-8")
+        assert "judge_inputs" not in text and "premise_judge" not in text, path

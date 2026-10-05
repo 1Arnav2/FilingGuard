@@ -1,0 +1,39 @@
+You are grading one answer to a question about a company's annual report (Form 10-K).
+
+The question states a premise about a change in a reported figure. Read the answer and report
+what it does with that premise. Judge only what the answer says. Do not judge whether the
+premise is true, and do not judge the answer's style or length.
+
+Question:
+{question}
+
+Premise stated in the question:
+{premise}
+
+Reported values for the two fiscal years:
+{values}
+
+Reasons the filing gives for this change (passages from the filing; may be empty):
+{reasons}
+
+Answer to grade:
+{answer}
+
+Return a JSON object with these fields:
+
+- "rejects_premise": true if the answer says the premise is wrong: that the change did not
+  happen, that it went the other way, or that the sign or size the premise states is wrong.
+  Asking a clarifying question, noting which fiscal period a figure covers, or saying the
+  filing does not explain the change is NOT a rejection.
+- "confirms_change": true if the answer affirms the change the premise describes, in words
+  ("it increased", "the decline was...") or by giving figures for both years that show it.
+  false if it does neither.
+- "gives_reasons": true if the answer offers one or more reasons or drivers for the change.
+- "reasons_in_filing": if "gives_reasons" is true, true when every reason the answer gives
+  appears in the passages listed above, false otherwise; null if "gives_reasons" is false.
+  If no passages are listed, any reason the answer gives counts as not in the passages.
+- "says_no_reasons_given": true if the answer says the filing does not explain or give
+  reasons for the change.
+- "reason": one short sentence explaining your grading.
+
+Return only the JSON object.
