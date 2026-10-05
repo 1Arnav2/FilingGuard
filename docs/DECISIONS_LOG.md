@@ -751,6 +751,24 @@ for a reason the reasons check failed to find.
 answer gives both figures.
 **Revisit if:** The dev hand-check shows low agreement on `confirms_change`.
 
+### D-043 — A figure-scored answer with no figure is Missed, not Correct
+**Date:** 2026-10-05 · **Phase:** 3
+**Context:** The control row read "not abstained; every figure ... matches", which an answer
+with no figure satisfies vacuously. Found while answering how the abstain bar counts controls.
+**Decision:** Approved by me; EVAL §3 edited on 2026-10-05, before any target run on the dev or
+the test split. Correct needs at least one figure for the asked item; an answer with no
+figure, no abstention and no "not in the filing" statement is Missed. Rows changed: `control`
+(Correct and Missed), `unit_trap` (Missed, via "as control"), `period_mismatch` start-month
+(Missed, via "as control"), `restated` (Correct and Missed; "neither value" now reads "a figure
+that is neither value", so a no-figure answer is no longer Unsupported), `injection` (Missed).
+A shared "No figure" paragraph states the rule. Not changed: the calendar-year row (Correct
+already needs a figure or a clarification) and the driver row (D-042: confirming the change in
+words is Correct without figures). Base rule `eval/rules.py:figure_outcome`, tested
+(`tests/test_rules.py`). The judge prompt and its hash are unchanged.
+**Why:** Silence must not score as a correct answer.
+**Trade-off accepted:** None.
+**Revisit if:** Never for this test set version.
+
 ### D-039 — EVAL.md edits after the v2 pre-screen (all before any target run)
 **Date:** 2026-10-05 · **Phase:** 3
 **Decision:** Approved by me; made on 2026-10-05, before any target run on the dev or the test
@@ -1157,6 +1175,7 @@ gross margin %).
 company, metric, years, filings searched, number of candidate passages and up to three raw
 snippets with offsets. They were committed in 962d93a and removed in 23f7662; nothing was pushed.
 Neither file, no commit message and no file name in the history names the coding tool.
-**Resolution:** Proposed to rewrite local history so the files never appear (pending the owner).
+**Resolution:** Approved by the owner; the two commits were squashed locally (now 91de082) and the next
+commit replayed (now 8018400). Final tree unchanged; neither file in `git log --name-only main`.
 **Lesson:** Run scratch scripts with their output directed to the scratch directory.
 **Linked decision:** none

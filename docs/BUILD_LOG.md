@@ -16,6 +16,20 @@ of every session.
 
 ---
 
+## 2026-10-05 — Phase 3: no-figure rule; local history squashed (no model calls)
+**Built (D-043):** EVAL §3: Correct needs at least one figure for the asked item on the
+figure-scored rows (control, unit_trap, start-month period_mismatch, restated, injection); a
+no-figure, non-abstaining answer is Missed. `eval/rules.py:figure_outcome` with tests. Judge
+prompt and hash unchanged (`62aa410a…838b`).
+**History (H-026):** the commit that carried two scratch files and its clean-up commit were
+squashed into one (now 91de082) and the following commit replayed (now 8018400); the final tree
+equals the pre-squash tree (fcee855…); neither file appears in `git log --name-only main`; no
+commit message has a trailer. Not pushed.
+**Tests:** 101 offline tests pass.
+**Spend so far:** $0.4397 (no calls).
+**Next:** owner's filled `review/review_v3.xlsx`; `review-apply`; fixes logged by ID; freeze.
+**Commit:** Phase 3: no-figure rule for figure-scored rows (D-043)
+
 ## 2026-10-05 — Phase 3: driver scoring rule and premise judge fixed (no model calls)
 **Built (D-042):** EVAL §3 driver row and check order, §4 reasons diagnostic, §6 abstain
 counting for drivers, §7 note, §8 limitation, §5 and §10 Phase 5 judge hand-check (20 dev
@@ -26,7 +40,6 @@ decisions). Judge prompt `src/filingguard/eval/prompts/premise_judge_v1.txt` wri
 **Tests:** 99 offline tests pass (new: no agent can read the judge inputs; prompt matches its
 recorded hash).
 **Spend so far:** $0.4397 (no calls this step).
-**Open:** owner's OK to squash the two commits that carried scratch files (H-026).
 **Commit:** Phase 3: driver scoring rule (D-042), premise judge prompt and inputs
 
 ## 2026-10-05 — Phase 3: absence and trap rules applied, driver controls, sheet v3 rebuilt
