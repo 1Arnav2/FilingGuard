@@ -679,6 +679,41 @@ absence hits (FG-0082, FG-0084); see H-024.
 **Trade-off accepted:** None.
 **Revisit if:** The owner approves the proposed replacements.
 
+### D-041 — Absence over every filing, trap distance, true-premise driver controls
+**Date:** 2026-10-05 · **Phase:** 3
+**Context:** Owner decisions on the pre-review checks (H-024) and the style limitation (D-040).
+**Decision:** Chosen by me:
+- **Absence rule, applied literally:** an `unanswerable` item needs no hit in any corpus filing
+  for its company, and an old-period item also needs no table with a row labelled with the
+  metric and the asked year as a header cell. FG-0082 (single-quarter) and FG-0084
+  (old-period) were replaced like for like; final subtypes: untagged 7, single-quarter 20,
+  old-period 19.
+- **Trap distance:** the trap value must differ from gold by more than 2% and at three
+  significant figures, over the whole `period_mismatch` pool (start-month traps stored in the
+  gold, calendar-year traps in the evidence); enforced by a test on the committed draft.
+  Start-month stays at 23 of 46.
+- **True-premise driver controls:** 10 of the 60 controls become `control/true_premise_driver`
+  items: the same fact pairs and brief wording as false-premise direction items, with a true
+  premise; one per company, across all six sectors (BA, CVX, DIS, GS, JNJ, JPM, KO, NVDA, TSLA,
+  UNH). The 10 regular controls they replace were taken from the driver companies first.
+  EVAL §3 gains their row; §7 gains `rejected_true_premise`; the premise judge uses one rubric
+  for both kinds and stays blind to condition and to whether a premise is true; its prompt
+  hash is fixed before any target run. The abstain-rate bar on controls is computed over all
+  60 controls, the 10 drivers included; the bar itself is unchanged. `rejected_true_premise` is
+  reported separately.
+- **Rebuilds keep what survives:** surviving items keep their selection and their item IDs;
+  freed slots are filled from the same type and subtype; the review sample keeps every
+  surviving row and swaps only departed rows, each for an item of the same type (reasons
+  recorded in `assembly_v3.json`). The split stays non-sticky (H-023).
+- **EVAL.md edits, all made on 2026-10-05 before any target run on the dev or the test split:**
+  §2 control row and the trap-distance, proof-of-absence and driver-control rules; §3 driver
+  row and the premise-judge text; §4 abstain-rate formula and the separate
+  `rejected_true_premise` metric; §7 label; §8 style note updated.
+**Why:** Each rule closes a way an item could be scored wrong or recognised by style.
+**Trade-off accepted:** Driver controls need the judge, so 10 more controls depend on an LLM
+judgment; "Given that…" openings still appear only in false-premise items.
+**Revisit if:** The judge's kappa on the driver items is low.
+
 ### D-039 — EVAL.md edits after the v2 pre-screen (all before any target run)
 **Date:** 2026-10-05 · **Phase:** 3
 **Decision:** Approved by me; made on 2026-10-05, before any target run on the dev or the test

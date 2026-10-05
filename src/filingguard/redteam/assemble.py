@@ -185,3 +185,99 @@ def stratified_sample(items: list[ItemSpec], n: int, rng: random.Random, sector_
             by_sector[sector_of[pick.company]] += 1
             out.append(pick)
     return out
+
+
+DRIVERS_IN_CONTROLS = 10   # true-premise driver controls among the 60 (D-041)
+
+
+def _sector_balanced(pool: list[ItemSpec], n: int, sector_of: dict[str, str]) -> list[ItemSpec]:
+    """`n` items from `pool` (in its order), at most one per company, cycling through sectors."""
+    by_sector: dict[str, list[ItemSpec]] = defaultdict(list)
+    for s in pool:
+        by_sector[sector_of[s.company]].append(s)
+    take, companies = [], set()
+    while len(take) < n and any(by_sector.values()):
+        for sector in sorted(by_sector):
+            while by_sector[sector] and by_sector[sector][0].company in companies:
+                by_sector[sector].pop(0)
+            if by_sector[sector] and len(take) < n:
+                s = by_sector[sector].pop(0)
+                take.append(s)
+                companies.add(s.company)
+    return take
+
+
+
+def sticky_select(specs: list[ItemSpec], counts: dict[str, int], rng: random.Random, company_order: list[str],
+                  previous: dict[str, tuple[str, str]], sector_of: dict[str, str]) -> tuple[list[ItemSpec], dict]:
+    """Like `select`, but keeps every previously selected item (`previous`: spec id -> (type,
+    subtype)) that is still available, and fills each freed slot from the same type and, where
+    the pool allows, the same subtype (D-041). Controls take 10 true-premise drivers, one per
+    company across sectors; the regular controls they displace are dropped from the driver
+    companies first. Returns the items and a per-type record."""
+    chosen, record = [], {}
+    for t in ATTACK_TYPES:
+        pool = spread_by_company([s for s in specs if s.attack_type == t], rng, company_order)
+        n, take = counts[t], []
+        if t == "control":
+            take = _sector_balanced([s for s in pool if s.subtype == "true_premise_driver"], DRIVERS_IN_CONTROLS, sector_of)
+            driver_companies = {s.company for s in take}
+            pool = [s for s in pool if s.subtype != "true_premise_driver"]
+            kept = sorted((s for s in pool if s.spec_id in previous), key=lambda s: s.company in driver_companies)
+        else:
+            kept = [s for s in pool if s.spec_id in previous]
+        kept = kept[: n - len(take)]
+        take += kept
+        taken = {s.spec_id for s in take}
+        left = Counter(sub for sid, (typ, sub) in previous.items() if typ == t and sid not in taken)
+        free = [s for s in pool if s.spec_id not in taken]
+        for s in free:   # like for like: the subtypes of the items that left
+            if len(take) < n and left[s.subtype] > 0:
+                take.append(s)
+                taken.add(s.spec_id)
+                left[s.subtype] -= 1
+        for s in free:   # then any subtype, if the pool for a subtype ran out
+            if len(take) < n and s.spec_id not in taken:
+                take.append(s)
+                taken.add(s.spec_id)
+        if len(take) < n:
+            raise RuntimeError(f"{t}: only {len(take)} of {n} after filtering")
+        chosen += take
+        record[t] = {"kept_from_previous": len(kept), "by_subtype": dict(Counter(s.subtype for s in take))}
+    return chosen, record
+
+
+def sticky_ids(items: list[ItemSpec], previous_ids: dict[str, str], company_order: list[str]) -> dict[str, str]:
+    """Surviving items keep their ID; new items get the next free numbers, in type then company order."""
+    ids = {s.spec_id: previous_ids[s.spec_id] for s in items if s.spec_id in previous_ids}
+    next_n = 1 + max((int(i.split("-")[1]) for i in previous_ids.values()), default=0)
+    new = sorted((s for s in items if s.spec_id not in ids),
+                 key=lambda s: (ATTACK_TYPES.index(s.attack_type), company_order.index(s.company), s.spec_id))
+    for k, s in enumerate(new):
+        ids[s.spec_id] = f"FG-{next_n + k:04d}"
+    return ids
+
+
+def revise_sample(previous: list[str], items: list[ItemSpec], split: dict[str, str], rng: random.Random,
+                  sector_of: dict[str, str], previous_types: dict[str, tuple[str, str]]) -> tuple[list[ItemSpec], list[dict]]:
+    """The previous review sample with only its departed rows swapped, each for an item of the
+    same type, least-used company and then sector first."""
+    by_id = {s.spec_id: s for s in items}
+    sample = [by_id[sid] for sid in previous if sid in by_id]
+    by_company = Counter(s.company for s in sample)
+    by_sector = Counter(sector_of[s.company] for s in sample)
+    in_sample = {s.spec_id for s in sample}
+    swaps = []
+    for sid in previous:
+        if sid in by_id:
+            continue
+        typ, _ = previous_types[sid]
+        pool = [s for s in items if s.attack_type == typ and s.spec_id not in in_sample]
+        rng.shuffle(pool)
+        pick = min(pool, key=lambda s: (by_company[s.company], by_sector[sector_of[s.company]]))
+        sample.append(pick)
+        in_sample.add(pick.spec_id)
+        by_company[pick.company] += 1
+        by_sector[sector_of[pick.company]] += 1
+        swaps.append({"old_spec_id": sid, "new_spec_id": pick.spec_id, "type": typ})
+    return sample, swaps

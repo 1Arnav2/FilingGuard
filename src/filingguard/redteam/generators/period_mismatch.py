@@ -7,6 +7,11 @@
   month is skipped, so the month is never arguable (a start on the 1st is unambiguous). The
   trap: the start month falls in the year before the fiscal year's label, so the obvious pick
   is the fiscal year labelled with the start year. That trap year must be in the same filing.
+
+Both subtypes record a trap (the wrong-period answer a reader would most likely give: the
+start-year fiscal year, or the fiscal year with the next-largest overlap with the calendar
+year). The trap value must differ from gold by more than 2% and at three significant
+figures, so a trap answer can never score as correct (D-041).
 """
 
 import calendar
@@ -21,6 +26,29 @@ MIN_OVERLAP_DAYS = 240            # the matching fiscal year must cover most of 
 MAX_RUNNER_UP_DAYS = 125          # and no other fiscal year in the filing may come close
 LAST_DAYS_SKIPPED = 2             # skip start dates in the last two days of a month
 SUBTYPES = ("calendar_wording", "start_month")
+TRAP_MIN_GAP = 0.02   # trap value must differ from gold by more than this, relative (D-041)
+
+
+def trap_far_enough(gold_value: float, trap_value: float) -> bool:
+    """True if a trap answer could never match gold: more than 2% apart and different at three
+    significant figures."""
+    if gold_value == 0:
+        return trap_value != 0
+    return (abs(trap_value - gold_value) / abs(gold_value) > TRAP_MIN_GAP
+            and float(f"{trap_value:.3g}") != float(f"{gold_value:.3g}"))
+
+
+def calendar_trap(corpus, ticker: str, metric, fact: dict, year: int) -> dict | None:
+    """The fiscal year with the next-largest overlap with calendar `year`, from the same filing."""
+    g = fact["gold"]
+    rows = corpus.annual_values(ticker, metric, fact["source"]["accession"])
+    others = [(overlap_days(r.period_start, r.period_end, year), r) for r in rows.itertuples()
+              if isinstance(r.period_start, str) and r.period_end != g["period_end"]]
+    if not others:
+        return None
+    _, r = max(others, key=lambda x: x[0])
+    return {"trap_fiscal_year": fiscal_label(r.period_end), "trap_period_start": r.period_start,
+            "trap_period_end": r.period_end, "trap_value": float(r.value)}
 START_VERBS = ["began", "begin", "beginning", "started", "starting", "start", "commenced"]
 
 
@@ -67,7 +95,7 @@ def _non_calendar(ctx: GenContext) -> list[str]:
     return [t for t in ctx.corpus.tickers if ctx.corpus.companies[t]["fiscal_year_end"] not in CALENDAR_FYE]
 
 
-def _calendar_item(ctx: GenContext, ticker: str) -> ItemSpec | None:
+def _calendar_item(ctx: GenContext, ticker: str, require_gap: bool = True) -> ItemSpec | None:
     flows = [(m, f) for m, f in located_facts(ctx, ticker) if m.flow and f["gold"]["period_start"]]
     # Judge the overlap against every fiscal year the filing reports, used or not.
     latest = ctx.corpus.latest(ticker)["accession"]
@@ -81,25 +109,29 @@ def _calendar_item(ctx: GenContext, ticker: str) -> ItemSpec | None:
         g = fact["gold"]
         for year in sorted({int(g["period_end"][:4]), int(g["period_start"][:4])}):
             if best_fiscal_year(all_periods, year) == (g["period_start"], g["period_end"]):
-                options.append((metric, fact, year))
+                trap = calendar_trap(ctx.corpus, ticker, metric, fact, year)
+                if trap and (not require_gap or trap_far_enough(g["value"], trap["trap_value"])):
+                    options.append((metric, fact, year, trap))
     if not options:
         return None
-    metric, fact, year = ctx.rng.choice(options)
+    metric, fact, year, trap = ctx.rng.choice(options)
     claim(ctx, ticker, fact)
     g = fact["gold"]
     return ItemSpec(
         attack_type="period_mismatch", subtype="calendar_wording", company=ticker,
         expected_behavior="answer_or_clarify", gold=g | {"calendar_year": year}, source=fact["source"],
+        evidence=trap,
         brief=f"Ask for {ctx.corpus.name(ticker)}'s {g['metric']} for calendar year {year}, using the words "
               f"'calendar year {year}'. Do not mention fiscal years or any dates.",
         must_include=[[f"calendar year {year}", f"calendar {year}"]], forbid=forbid_for(g),
     )
 
 
-def _start_month_item(ctx: GenContext, ticker: str) -> ItemSpec | None:
+def _start_month_item(ctx: GenContext, ticker: str, require_gap: bool = True) -> ItemSpec | None:
     options = [(m, f, month, trap) for m, f in located_facts(ctx, ticker)
                if m.flow and f["gold"]["period_start"] and (month := start_month(f["gold"]["period_start"]))
-               and (trap := _trap(ctx, ticker, m, f))]
+               and (trap := _trap(ctx, ticker, m, f))
+               and (not require_gap or trap_far_enough(f["gold"]["value"], trap["trap_value"]))]
     if not options:
         return None
     metric, fact, month, trap = ctx.rng.choice(options)
@@ -117,9 +149,11 @@ def _start_month_item(ctx: GenContext, ticker: str) -> ItemSpec | None:
 MAKERS = {"calendar_wording": _calendar_item, "start_month": _start_month_item}
 
 
-def generate_subtype(ctx: GenContext, subtype: str, n: int) -> list[ItemSpec]:
+def generate_subtype(ctx: GenContext, subtype: str, n: int, require_gap: bool = True) -> list[ItemSpec]:
+    """`require_gap=False` reproduces draws made before the trap rule, so the revision step can
+    keep those that pass and replace only those that fail (D-041)."""
     make = MAKERS[subtype]
-    return round_robin(ctx, _non_calendar(ctx), n, lambda t, i: make(ctx, t))
+    return round_robin(ctx, _non_calendar(ctx), n, lambda t, i: make(ctx, t, require_gap))
 
 
 def generate(ctx: GenContext, n: int) -> list[ItemSpec]:

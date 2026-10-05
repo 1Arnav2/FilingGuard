@@ -136,23 +136,38 @@ def assemble_draft(seed: int = SEED) -> dict:
 
     counts = allocate_counts(sum(s.attack_type == "restated" for s in specs))
     dropped_v1 = _dropped_draft_items(corpus)
-    items = asm.select(passing, counts, random.Random(f"{seed}-select"), companies)
-    ids = asm.assign_ids(items, companies)
+    prev = _previous_draft()
+    if prev:
+        items, selection = asm.sticky_select(passing, counts, random.Random(f"{seed}-select"), companies,
+                                             prev["types"], COMPANIES)
+        ids = asm.sticky_ids(items, prev["ids"], companies)
+    else:
+        items, selection = asm.select(passing, counts, random.Random(f"{seed}-select"), companies), {}
+        ids = asm.assign_ids(items, companies)
     split = asm.assign_split(items, random.Random(f"{seed}-split"), companies)
     items.sort(key=lambda s: ids[s.spec_id])
 
     test = [s for s in items if split[s.spec_id] == "test"]
     latency = asm.stratified_sample(test, asm.LATENCY_SAMPLE, random.Random(f"{seed}-latency"), COMPANIES,
                                     lambda s: s.attack_type)
-    sample = asm.stratified_sample(items, asm.REVIEW_SAMPLE, random.Random(f"{seed}-review"), COMPANIES,
-                                   lambda s: f"{s.attack_type}|{split[s.spec_id]}")
+    swaps: list[dict] = []
+    if prev and prev["sample"]:
+        sample, swaps = asm.revise_sample(prev["sample"], items, split, random.Random(f"{seed}-review"), COMPANIES,
+                                          prev["types"])
+        for sw in swaps:
+            sw |= {"old_id": prev["ids"][sw["old_spec_id"]], "new_id": ids[sw["new_spec_id"]],
+                   "reason": _departure_reason(sw["old_spec_id"], prev["types"][sw["old_spec_id"]], specs, passing)}
+    else:
+        sample = asm.stratified_sample(items, asm.REVIEW_SAMPLE, random.Random(f"{seed}-review"), COMPANIES,
+                                       lambda s: f"{s.attack_type}|{split[s.spec_id]}")
     problems = asm.coverage_problems(sample, COMPANIES)
     if problems:
         raise RuntimeError(f"review sample is not stratified enough: {problems}")
     in_sample = {s.spec_id for s in sample}
-    # Extra checks (not in the fault rate): every untagged-concept and start-month item not
-    # already in the sample (D-028, D-034).
-    extra = [s for s in items if s.spec_id not in in_sample and s.subtype in ("untagged_concept", "start_month")]
+    # Extra checks (not in the fault rate): every untagged-concept, start-month and true-premise
+    # driver item not already in the sample (D-028, D-034, D-041).
+    extra = [s for s in items if s.spec_id not in in_sample
+             and s.subtype in ("untagged_concept", "start_month", "true_premise_driver")]
 
     _write_jsonl(DRAFT_ITEMS / "items_v1.jsonl", [
         {"id": ids[s.spec_id], "company": s.company, "attack_type": s.attack_type, "subtype": s.subtype,
@@ -177,6 +192,8 @@ def assemble_draft(seed: int = SEED) -> dict:
         "review_sample_by_type": _by_type(sample, split),
         "review_extra": sorted(ids[s.spec_id] for s in extra),
         "v1_draft_items_dropped": dropped_v1,
+        "selection": selection,
+        "review_sample_swaps": swaps,
         "possessives_dropped_among_candidates": possessives_dropped,
         "latency_sample": latency_ids,
         "review_sample": sorted(ids[s.spec_id] for s in sample),
@@ -184,6 +201,42 @@ def assemble_draft(seed: int = SEED) -> dict:
     }
     _write_json(DRAFT_GOLD / "assembly_v3.json", stats)
     return stats
+
+
+def _previous_draft() -> dict | None:
+    """The current draft's IDs, types and review sample, read before they are overwritten, so a
+    rebuild keeps surviving items, IDs and sampled rows (D-041)."""
+    gold_path, items_path, assembly_path = DRAFT_GOLD / "gold_v1.jsonl", DRAFT_ITEMS / "items_v1.jsonl", \
+        DRAFT_GOLD / "assembly_v3.json"
+    if not (gold_path.exists() and items_path.exists()):
+        return None
+    spec_of = {g["id"]: g["spec_id"] for g in _read_jsonl(gold_path)}
+    items = _read_jsonl(items_path)
+    assembly = json.loads(assembly_path.read_text(encoding="utf-8")) if assembly_path.exists() else {}
+    return {
+        "ids": {spec_of[i["id"]]: i["id"] for i in items},
+        "types": {spec_of[i["id"]]: (i["attack_type"], i["subtype"]) for i in items},
+        "sample": [spec_of[i] for i in assembly.get("review_sample", [])],
+    }
+
+
+def _departure_reason(spec_id: str, kind: tuple[str, str], specs: list[ItemSpec], passing: list[ItemSpec]) -> str:
+    """Why an item in the previous draft is not in this one."""
+    typ, sub = kind
+    if spec_id in {s.spec_id for s in passing}:
+        if typ == "control":
+            return "not selected: one of the 10 control slots given to a true-premise driver (D-041)"
+        return "not selected"
+    if spec_id in {s.spec_id for s in specs}:
+        return "failed a draft check (phrasing rule, near-duplicate or injection delivery)"
+    record = json.loads((OUT / "candidates_v3_revision.json").read_text(encoding="utf-8"))["per_spec"]
+    if spec_id in record:
+        return record[spec_id]["reason"]
+    if typ == "unanswerable":
+        return "absence rule fails in another corpus filing (D-041)"
+    if typ == "period_mismatch":
+        return "trap value within 2% of gold or equal at 3 significant figures (D-041)"
+    return "removed in revision"
 
 
 def _dropped_draft_items(corpus: Corpus) -> list[dict]:

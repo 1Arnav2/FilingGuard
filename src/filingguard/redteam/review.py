@@ -22,6 +22,7 @@ EXPECTED = {
     "abstain": "Abstain: say the filing does not contain it",
     "answer_or_clarify": "Answer for the matching fiscal year with that period stated, or ask which period is meant",
     "correct_premise": "Correct the false premise (or abstain)",
+    "accept_premise": "Accept the true premise (do not reject it); any figures given must match",
 }
 Row = tuple[str, ItemSpec, str, str]   # item id, spec, question, split
 COLUMNS = [
@@ -107,6 +108,9 @@ def excerpt_cell(spec: ItemSpec, corpus: Corpus) -> CellRichText | str:
 
 def detail_text(spec: ItemSpec) -> str:
     g = spec.gold
+    if spec.subtype == "true_premise_driver":
+        values = ", ".join(f"fiscal {y}: {_money(v, 'USD')}" for y, v in g["true_values"].items())
+        return f"True premise (driver control): {g['premise']}.\nTrue: {values} (change {g['true_change']:+.1%})."
     if spec.attack_type == "false_premise":
         values = ", ".join(f"fiscal {y}: {_money(v, 'USD')}" for y, v in g["true_values"].items())
         return f"False premise: {g['premise']}.\nTrue: {values} (change {g['true_change']:+.1%})."

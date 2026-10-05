@@ -16,6 +16,28 @@ of every session.
 
 ---
 
+## 2026-10-05 — Phase 3: absence and trap rules applied, driver controls, sheet v3 rebuilt
+**Built (D-041):** absence rule over every corpus filing plus the header-cell table check;
+trap-distance rule over the whole `period_mismatch` pool; 10 true-premise driver controls;
+sticky selection, item IDs and review sample on rebuild. EVAL §2, §3, §4, §7, §8 edited.
+**Replaced:** FG-0082 and FG-0084 (absence rule), 6 start-month draws and 4 calendar-year
+items (trap rule; covers FG-0153, 0154, 0175, 0186, 0187, 0188, 0194), FG-0193 (its fact taken by
+a new start-month draw), 10 regular controls (driver slots).
+**Final draft:** 60 / 46 / 46 / 46 / 12 / 45 / 45 = 300; dev 90, test 210. `unanswerable`:
+untagged 7, single-quarter 20, old-period 19. `period_mismatch`: start-month 23 (NKE 4, ORCL 4,
+MSFT 3, NVDA 3, COST 2, DIS 2, WMT 2, AAPL 1, PG 1, V 1), calendar-year 23. Re-checked on the final
+300: multi-filing ambiguity 0, absence failures 0, traps too close 0, injection delivery 45/45
+(median rank 2, worst 19). Items per company: min 8 (XOM), max 21 (NVDA).
+**Review sheet v3 (rebuilt):** 6 rows swapped (FG-0035 → FG-0059, FG-0046 → FG-0027, FG-0052 →
+FG-0001: control slots given to drivers; FG-0153 → FG-0191, FG-0187 → FG-0198: trap rule;
+FG-0193 → FG-0315: fact taken by a new start-month item). 25 companies, at most 3 rows each, all
+sectors and financials. Extra checks: 16 start-month, 10 drivers, 7 untagged-concept.
+**Style (`style_check_v3.json`):** driver controls 19.1 words against false premise 18.2, same
+openings; regular controls 11.4.
+**Tests:** 97 offline tests pass.
+**Spend so far:** $0.4397 (82 calls). This step: 3 phrasing calls, $0.0177.
+**Commit:** Phase 3: absence and trap rules, driver controls, review sheet v3 rebuilt
+
 ## 2026-10-05 — Phase 3: pre-review checks on draft v3 (no model calls)
 **Checks (H-024, `data/gold/draft/prescreen_v3_checks.json`):** multi-filing ambiguity 0 items;
 absence search over every corpus filing 2 hits (FG-0082, FG-0084, both PFE, neither figure in

@@ -230,3 +230,42 @@ def test_possessive_is_dropped_only_before_a_label_that_names_the_company():
                 "Total Walmart shareholders' equity") == "What was Total Walmart shareholders' equity at the end of fiscal 2026?"
     assert drop("What was Apple's total revenue for fiscal 2025?", "AAPL", "total revenue") == \
         "What was Apple's total revenue for fiscal 2025?"
+
+
+def test_trap_rule_needs_more_than_two_percent_and_a_different_three_sig_fig_value():
+    from filingguard.redteam.generators.period_mismatch import trap_far_enough
+    assert not trap_far_enough(84_284e6, 84_039e6)    # PG revenue, 0.29% apart (FG-0188)
+    assert not trap_far_enough(6.13, 6.08)            # AAPL EPS, 0.8%
+    assert not trap_far_enough(36_443e6, 35_726e6)    # WMT cash flow, 1.97%
+    assert trap_far_enough(100.0, 97.0)
+    assert not trap_far_enough(1000.0, 1001.0)          # equal at 3 significant figures
+
+
+def test_every_draft_period_item_obeys_the_trap_rule():
+    """Enforced on the committed draft: start-month traps are in the gold, calendar traps in the evidence."""
+    import json
+    from pathlib import Path
+    from filingguard.redteam.generators.period_mismatch import trap_far_enough
+    items = {json.loads(l)["id"]: json.loads(l)
+             for l in Path("data/testset/draft/items_v1.jsonl").read_text(encoding="utf-8").splitlines()}
+    checked = 0
+    for line in Path("data/gold/draft/gold_v1.jsonl").read_text(encoding="utf-8").splitlines():
+        g = json.loads(line)
+        if items[g["id"]]["attack_type"] != "period_mismatch":
+            continue
+        trap = g["gold"].get("trap_value", (g.get("evidence") or {}).get("trap_value"))
+        assert trap is not None, g["id"]
+        assert trap_far_enough(g["gold"]["value"], trap), g["id"]
+        checked += 1
+    assert checked == 46
+
+
+def test_driver_controls_one_per_company_across_sectors():
+    import json
+    from pathlib import Path
+    items = [json.loads(l) for l in Path("data/testset/draft/items_v1.jsonl").read_text(encoding="utf-8").splitlines()]
+    drivers = [i for i in items if i["subtype"] == "true_premise_driver"]
+    assert len(drivers) == 10 and all(i["attack_type"] == "control" for i in drivers)
+    assert len({i["company"] for i in drivers}) == 10
+    assert len({COMPANIES[i["company"]] for i in drivers}) == len(set(COMPANIES.values()))
+    assert sum(i["attack_type"] == "control" for i in items) == 60

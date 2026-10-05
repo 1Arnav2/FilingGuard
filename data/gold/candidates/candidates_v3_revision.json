@@ -2,9 +2,9 @@
   "stats": {
     "seed": 20261004,
     "v1": 400,
-    "v1_kept": 323,
-    "added": 42,
-    "v3": 365,
+    "v1_kept": 316,
+    "added": 62,
+    "v3": 378,
     "v1_outcomes": [
       {
         "type": "control",
@@ -14,7 +14,7 @@
       {
         "type": "injection",
         "reason": "kept",
-        "count": 50
+        "count": 51
       },
       {
         "type": "false_premise",
@@ -24,7 +24,7 @@
       {
         "type": "unanswerable",
         "reason": "kept",
-        "count": 38
+        "count": 37
       },
       {
         "type": "unit_trap",
@@ -37,14 +37,14 @@
         "count": 30
       },
       {
-        "type": "period_mismatch",
-        "reason": "kept",
-        "count": 25
-      },
-      {
         "type": "unanswerable",
         "reason": "single-quarter brief reworded (D-033)",
-        "count": 20
+        "count": 19
+      },
+      {
+        "type": "period_mismatch",
+        "reason": "kept",
+        "count": 19
       },
       {
         "type": "restated",
@@ -84,16 +84,16 @@
       {
         "type": "period_mismatch",
         "reason": "fact taken by a new restated or start-month item",
+        "count": 6
+      },
+      {
+        "type": "period_mismatch",
+        "reason": "trap value within 2% of gold or equal at 3 significant figures (D-041)",
         "count": 4
       },
       {
         "type": "unanswerable",
         "reason": "untagged concept can be computed from printed lines (D-032)",
-        "count": 4
-      },
-      {
-        "type": "injection",
-        "reason": "fact taken by a new restated or start-month item",
         "count": 4
       },
       {
@@ -107,8 +107,18 @@
         "count": 3
       },
       {
+        "type": "injection",
+        "reason": "fact taken by a new restated or start-month item",
+        "count": 3
+      },
+      {
         "type": "false_premise",
         "reason": "value not on a row labelled with the metric's own name (D-030)",
+        "count": 2
+      },
+      {
+        "type": "unanswerable",
+        "reason": "absence rule fails in another corpus filing (D-041)",
         "count": 2
       },
       {
@@ -138,48 +148,65 @@
       }
     ],
     "v3_by_type": {
+      "period_mismatch": 54,
       "unit_trap": 56,
+      "unanswerable": 59,
       "false_premise": 51,
-      "control": 75,
-      "period_mismatch": 56,
-      "injection": 57,
-      "unanswerable": 58,
+      "injection": 58,
+      "control": 88,
       "restated": 12
     },
     "v3_by_subtype": {
-      "unit_trap/millions_to_billions": 15,
-      "false_premise/magnitude": 16,
-      "control/current_year": 19,
       "period_mismatch/start_month": 30,
+      "unit_trap/per_share_to_cents": 10,
+      "unit_trap/millions_to_thousands": 16,
+      "unanswerable/untagged_concept": 7,
+      "unanswerable/old_period": 30,
       "false_premise/direction_flip": 18,
-      "control/prior_year": 56,
+      "injection/false_figure": 21,
       "false_premise/sign_flip": 17,
+      "control/prior_year": 56,
+      "control/true_premise_driver": 13,
+      "false_premise/magnitude": 16,
       "unit_trap/millions_to_dollars": 15,
       "injection/marker": 18,
-      "unanswerable/old_period": 31,
-      "period_mismatch/calendar_wording": 26,
-      "restated/restatement": 6,
-      "unit_trap/per_share_to_cents": 10,
-      "unanswerable/untagged_concept": 7,
-      "unanswerable/single_quarter": 20,
-      "restated/reclassification": 2,
-      "injection/false_figure": 20,
-      "unit_trap/millions_to_thousands": 16,
+      "injection/withhold": 19,
       "restated/stock_split": 4,
-      "injection/withhold": 19
+      "unit_trap/millions_to_billions": 15,
+      "unanswerable/single_quarter": 22,
+      "control/current_year": 19,
+      "period_mismatch/calendar_wording": 24,
+      "restated/restatement": 6,
+      "restated/reclassification": 2
     },
     "start_month_by_company": {
-      "WMT": 3,
-      "V": 3,
-      "AAPL": 3,
-      "NKE": 3,
-      "PG": 3,
       "MSFT": 3,
-      "NVDA": 3,
       "DIS": 3,
-      "COST": 3,
-      "ORCL": 3
-    }
+      "NVDA": 4,
+      "COST": 4,
+      "AAPL": 1,
+      "ORCL": 4,
+      "V": 3,
+      "PG": 1,
+      "WMT": 3,
+      "NKE": 4
+    },
+    "start_month_draws_failing_trap_rule": 6,
+    "driver_companies": [
+      "AAPL",
+      "BA",
+      "CVX",
+      "DIS",
+      "GOOGL",
+      "GS",
+      "JNJ",
+      "JPM",
+      "KO",
+      "NVDA",
+      "TSLA",
+      "UNH",
+      "WMT"
+    ]
   },
   "per_spec": {
     "period_mismatch-MSFT-65fba09c": {
@@ -233,8 +260,8 @@
     "period_mismatch-NVDA-92c4e24e": {
       "type": "period_mismatch",
       "subtype": "calendar_wording",
-      "reason": "kept",
-      "v3_spec_id": "period_mismatch-NVDA-92c4e24e"
+      "reason": "fact taken by a new restated or start-month item",
+      "v3_spec_id": null
     },
     "period_mismatch-DIS-6b2be674": {
       "type": "period_mismatch",
@@ -275,8 +302,8 @@
     "period_mismatch-AAPL-92285cd4": {
       "type": "period_mismatch",
       "subtype": "calendar_wording",
-      "reason": "kept",
-      "v3_spec_id": "period_mismatch-AAPL-92285cd4"
+      "reason": "trap value within 2% of gold or equal at 3 significant figures (D-041)",
+      "v3_spec_id": null
     },
     "control-V-24dae5c2": {
       "type": "control",
@@ -431,8 +458,8 @@
     "injection-PG-d2867b80": {
       "type": "injection",
       "subtype": "false_figure",
-      "reason": "fact taken by a new restated or start-month item",
-      "v3_spec_id": null
+      "reason": "kept",
+      "v3_spec_id": "injection-PG-d2867b80"
     },
     "period_mismatch-AAPL-cace2ac6": {
       "type": "period_mismatch",
@@ -491,8 +518,8 @@
     "false_premise-PG-be2f1974": {
       "type": "false_premise",
       "subtype": "magnitude",
-      "reason": "kept",
-      "v3_spec_id": "false_premise-PG-be2f1974"
+      "reason": "fact taken by a new restated or start-month item",
+      "v3_spec_id": null
     },
     "control-KO-28580dff": {
       "type": "control",
@@ -719,14 +746,14 @@
     "period_mismatch-V-941c970e": {
       "type": "period_mismatch",
       "subtype": "calendar_wording",
-      "reason": "kept",
-      "v3_spec_id": "period_mismatch-V-941c970e"
+      "reason": "trap value within 2% of gold or equal at 3 significant figures (D-041)",
+      "v3_spec_id": null
     },
     "injection-V-5a77cdbc": {
       "type": "injection",
       "subtype": "withhold",
-      "reason": "fact taken by a new restated or start-month item",
-      "v3_spec_id": null
+      "reason": "kept",
+      "v3_spec_id": "injection-V-5a77cdbc"
     },
     "control-BAC-f8051a87": {
       "type": "control",
@@ -809,8 +836,8 @@
     "injection-COST-ea7ce50b": {
       "type": "injection",
       "subtype": "withhold",
-      "reason": "kept",
-      "v3_spec_id": "injection-COST-ea7ce50b"
+      "reason": "fact taken by a new restated or start-month item",
+      "v3_spec_id": null
     },
     "unanswerable-COST-6765d4f4": {
       "type": "unanswerable",
@@ -821,8 +848,8 @@
     "unanswerable-PFE-8b4c7a7f": {
       "type": "unanswerable",
       "subtype": "old_period",
-      "reason": "kept",
-      "v3_spec_id": "unanswerable-PFE-8b4c7a7f"
+      "reason": "absence rule fails in another corpus filing (D-041)",
+      "v3_spec_id": null
     },
     "unanswerable-ORCL-db2e8642": {
       "type": "unanswerable",
@@ -1013,8 +1040,8 @@
     "period_mismatch-AAPL-4786f569": {
       "type": "period_mismatch",
       "subtype": "calendar_wording",
-      "reason": "kept",
-      "v3_spec_id": "period_mismatch-AAPL-4786f569"
+      "reason": "trap value within 2% of gold or equal at 3 significant figures (D-041)",
+      "v3_spec_id": null
     },
     "false_premise-NKE-ec215380": {
       "type": "false_premise",
@@ -1145,8 +1172,8 @@
     "period_mismatch-V-1628c310": {
       "type": "period_mismatch",
       "subtype": "calendar_wording",
-      "reason": "kept",
-      "v3_spec_id": "period_mismatch-V-1628c310"
+      "reason": "fact taken by a new restated or start-month item",
+      "v3_spec_id": null
     },
     "false_premise-WMT-fab7c82b": {
       "type": "false_premise",
@@ -1637,8 +1664,8 @@
     "false_premise-PG-d792ea1f": {
       "type": "false_premise",
       "subtype": "magnitude",
-      "reason": "fact taken by a new restated or start-month item",
-      "v3_spec_id": null
+      "reason": "kept",
+      "v3_spec_id": "false_premise-PG-d792ea1f"
     },
     "unit_trap-CAT-60e160f4": {
       "type": "unit_trap",
@@ -1847,8 +1874,8 @@
     "unanswerable-PFE-cb1fbe6e": {
       "type": "unanswerable",
       "subtype": "single_quarter",
-      "reason": "single-quarter brief reworded (D-033)",
-      "v3_spec_id": "unanswerable-PFE-384d4e4c"
+      "reason": "absence rule fails in another corpus filing (D-041)",
+      "v3_spec_id": null
     },
     "false_premise-BA-1abfdf00": {
       "type": "false_premise",
@@ -2555,8 +2582,8 @@
     "period_mismatch-WMT-9cb9bd6e": {
       "type": "period_mismatch",
       "subtype": "calendar_wording",
-      "reason": "kept",
-      "v3_spec_id": "period_mismatch-WMT-9cb9bd6e"
+      "reason": "trap value within 2% of gold or equal at 3 significant figures (D-041)",
+      "v3_spec_id": null
     },
     "unit_trap-COST-d7236c07": {
       "type": "unit_trap",

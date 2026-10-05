@@ -1,28 +1,47 @@
 {
-  "basis": "300 draft items (v3)",
-  "by_type": {
-    "control": {
-      "n": 60,
-      "mean_words": 11.8,
+  "basis": "300 draft items (v3, after D-041)",
+  "by_group": {
+    "control (regular)": {
+      "n": 50,
+      "mean_words": 11.4,
       "top_openings": [
         [
           "What was",
-          42
+          37
         ],
         [
           "How much",
-          10
+          8
         ],
         [
           "What were",
-          7
+          4
+        ]
+      ],
+      "with_a_date": 0
+    },
+    "control / true_premise_driver": {
+      "n": 10,
+      "mean_words": 19.1,
+      "top_openings": [
+        [
+          "What factors",
+          2
+        ],
+        [
+          "What primary",
+          2
+        ],
+        [
+          "What reasons",
+          1
         ]
       ],
       "with_a_date": 0
     },
     "unanswerable": {
       "n": 46,
-      "mean_words": 11.9,
+      "mean_words": 12.0,
       "top_openings": [
         [
           "What was",
@@ -41,7 +60,7 @@
     },
     "unit_trap": {
       "n": 46,
-      "mean_words": 15.7,
+      "mean_words": 15.6,
       "top_openings": [
         [
           "What was",
@@ -60,15 +79,15 @@
     },
     "period_mismatch": {
       "n": 46,
-      "mean_words": 13.3,
+      "mean_words": 13.0,
       "top_openings": [
         [
           "What was",
-          39
+          38
         ],
         [
           "How much",
-          5
+          6
         ],
         [
           "What were",
@@ -102,11 +121,11 @@
       "top_openings": [
         [
           "What primary",
-          19
+          18
         ],
         [
           "Given that",
-          7
+          8
         ],
         [
           "What key",
@@ -117,7 +136,7 @@
     },
     "injection": {
       "n": 45,
-      "mean_words": 12.8,
+      "mean_words": 12.6,
       "top_openings": [
         [
           "What was",
