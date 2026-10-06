@@ -22,7 +22,7 @@ SCALE_NAMES = {1e3: "thousands", 1e6: "millions", 1e9: "billions", 1e12: "trilli
 
 _NUMBER = re.compile(
     r"(?<![\w.,])(?P<open>\()?\s*(?P<minus>[-−–](?=\s*(?:US)?\$?\s*\d))?\s*(?P<usd>(?:US)?\$)?\s*"
-    r"(?P<num>\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)(?![\d,]*\d)"
+    r"(?P<num>\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)(?![\d,]*\d)(?!-[A-Za-z])"  # never a form number (10-K)
 )
 # Text right after a number: a closing parenthesis, then a scale word, "dollars", "cents" or "per share".
 _AFTER = re.compile(
@@ -31,11 +31,18 @@ _AFTER = re.compile(
     re.IGNORECASE,
 )
 _PERCENT_AFTER = re.compile(r"^\s*(?:%|percent|per cent|percentage points?|basis points?|bps|x\b|times\b)", re.IGNORECASE)
-_PER_SHARE_AFTER = re.compile(r"^[^.;\n]{0,25}?\bper (?:diluted |basic )?(?:common )?share\b", re.IGNORECASE)
+# "per share" must follow the number directly, not after other words ("10-K, diluted ... per share").
+_PER_SHARE_AFTER = re.compile(r"^\s*\)?\s*per\s+(?:diluted\s+|basic\s+)?(?:common\s+)?share\b", re.IGNORECASE)
 # Parenthetical labels that name a sign without stating one: "net income (loss)", "provided by (used in)".
 _SIGN_LABEL = re.compile(r"\(\s*(?:loss|losses|used(?:\s+(?:in|for))?)\s*\)|/\s*\(?\s*(?:loss|used(?:\s+(?:in|for))?)\s*\)?",
                          re.IGNORECASE)
 NEGATIVE_WORDS = re.compile(r"\b(?:loss|losses|used|outflows?|negative)\b", re.IGNORECASE)
+# Where a new clause starts: a loss word before one of these does not describe the figure after it
+# ("an operating loss ... because it reported operating income of $X").
+_CLAUSE_BREAK = re.compile(r"[;:()]|\b(?:because|rather than|rather|instead|whereas|while|but|however|although)\b",
+                           re.IGNORECASE)
+# A date right after these words dates a document, not the period a figure covers.
+_FILED_BEFORE = re.compile(r"\b(?:filed|dated|submitted|issued)(?:\s+on)?\s*$", re.IGNORECASE)
 
 MONTHS = ("january", "february", "march", "april", "may", "june", "july", "august", "september",
           "october", "november", "december")
@@ -82,6 +89,7 @@ class Figure:
     sentence: int
     metric: str | None = None   # metric key it is attributed to, "other", or None
     periods: list["Period"] = field(default_factory=list)  # nearest period mention(s)
+    adjusted: bool = False  # labelled adjusted, non-GAAP or core (EVAL §3, D-053)
 
 
 @dataclass(frozen=True)
@@ -127,6 +135,8 @@ def periods(text: str) -> list[Period]:
         for m in pattern.finditer(text):
             if any(s < m.end() and m.start() < e for s, e in taken):
                 continue
+            if kind in ("date", "month") and _FILED_BEFORE.search(text[max(0, m.start() - 20):m.start()]):
+                kind = "filed"  # kept so its year is not read again; never a figure's period
             g = m.groupdict()
             year = g.get("year")
             if year is not None:
@@ -145,7 +155,8 @@ def parse_figures(text: str) -> list[Figure]:
     currency mark, a scale word, "dollars", "cents" or "per share", or digit grouping (1,000);
     percentages, years, dates and bare small numbers do not."""
     bounds = sentences(text)
-    year_spans = [(p.start, p.end) for p in periods(text) if p.kind in ("date", "month", "fiscal", "calendar", "year")]
+    year_spans = [(p.start, p.end) for p in periods(text)
+                  if p.kind in ("date", "month", "fiscal", "calendar", "year", "filed")]
     figures = []
     for m in _NUMBER.finditer(text):
         num_start = m.start("num")
@@ -186,11 +197,15 @@ def parse_figures(text: str) -> list[Figure]:
 
 def _mark_negative_words(text: str, figures: list[Figure], bounds: list[tuple[int, int]]) -> None:
     """A figure is negative if it is described as a loss, cash used, an outflow or negative:
-    such a word between the previous figure (or the sentence start) and this figure."""
+    such a word in the figure's own clause, between the previous figure (or the sentence start,
+    or the last clause break) and this figure."""
     for i, f in enumerate(figures):
         s_start = bounds[f.sentence][0] if bounds else 0
         prev_end = figures[i - 1].end if i and figures[i - 1].sentence == f.sentence else s_start
         window = _SIGN_LABEL.sub(" ", text[prev_end:f.start])
+        breaks = list(_CLAUSE_BREAK.finditer(window))
+        if breaks:
+            window = window[breaks[-1].end():]
         if NEGATIVE_WORDS.search(window):
             f.negative = True
     for f in figures:
@@ -237,7 +252,7 @@ def assign_periods(text: str, figures: list[Figure], claims: list[Claim]) -> Non
     """Attach to each figure the period mention nearest to it in its sentence; with none, the
     period of the claim that states it (D-047); with neither, no period."""
     bounds = sentences(text)
-    mentions = periods(text)
+    mentions = [p for p in periods(text) if p.kind != "filed"]
     for f in figures:
         s, e = bounds[f.sentence] if bounds else (0, len(text))
         local = [p for p in mentions if s <= p.start < e]

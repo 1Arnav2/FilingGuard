@@ -3,9 +3,9 @@
 Reads the dev run file, the dev rows of the gold file and the judge inputs (eval/ only), runs
 the premise judge on the dev premise items, scores every answer and writes:
 - `results/judge/dev_judge_v1.jsonl`: one judge decision per premise answer and condition
-- `results/dev/baseline_scores_v1.jsonl`: one scored row per item
-- `results/dev/baseline_summary_v1.json`: counts and rates by type
-- `review/dev_score_sheet_v1.xlsx`: the sheet the owner spot-checks
+- `results/dev/baseline_scores_v2.jsonl`: one scored row per item
+- `results/dev/baseline_summary_v2.json`: counts and rates by type
+- `review/dev_score_sheet_v2.xlsx`: the sheet the owner spot-checks
 
 Usage: python -m filingguard.eval.dev_report {judge,score}
 """
@@ -23,9 +23,10 @@ from filingguard.eval.stats import wilson
 
 GOLD = Path("data/gold/gold_v1.jsonl")
 JUDGE_OUT = Path("results/judge/dev_judge_v1.jsonl")
-SCORES = Path("results/dev/baseline_scores_v1.jsonl")
-SUMMARY = Path("results/dev/baseline_summary_v1.json")
-SHEET = Path("review/dev_score_sheet_v1.xlsx")
+# v2: after the D-053 scorer fixes; the v1 files are kept as the before record.
+SCORES = Path("results/dev/baseline_scores_v2.jsonl")
+SUMMARY = Path("results/dev/baseline_summary_v2.json")
+SHEET = Path("review/dev_score_sheet_v2.xlsx")
 CONDITION = "baseline"
 JUDGE_LIMIT_USD = 0.15
 HIGH_COST_PER_JUDGE_CALL = 0.012  # 6k input and 2k output tokens at the standard price

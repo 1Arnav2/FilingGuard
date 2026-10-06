@@ -16,6 +16,25 @@ of every session.
 
 ---
 
+## 2026-10-05 — Phase 4: scorer fixes, dev re-score, headroom analysis (no model calls)
+**Built:** Scorer fixes a to e (D-053) with a unit test each; gold-row check re-run (passes).
+Dev re-scored: `results/dev/baseline_scores_v2.jsonl`, `baseline_summary_v2.json`,
+`review/dev_score_sheet_v2.xlsx` (v1 kept). EVAL §3 adjusted-figure sentence (dated, after dev
+answers, before any test run); EVAL §4 secondary metric (D-054). Headroom analysis
+`results/dev/headroom_v1.md`. H-029 logged.
+**Tests:** 192 offline tests pass.
+**Broken or unfinished:** FG-0303 regressed to Unsupported as a side effect of fix (a) (D-053);
+fix needs the owner's approval. Verified-answer definition proposed, not adopted. EVAL §4 says
+the control abstain rate is over "all 60 controls" but the test split has 42: needs a ruling.
+**Numbers worth keeping (dev baseline v2, descriptive):** Correct 85, Missed 4, Unsupported 1
+(0 on reading). Unsupported-claim rate 1/54 as scored. Control abstain 2/18 (11.1%). Of 54
+returned answers, a block could help 1 (the artefact) and hurt 52. McNemar needs at least 6
+test items Unsupported at baseline and blocked (two-sided exact p = 0.031).
+**Spend so far:** $2.2587 (no calls this session step).
+**Next session starts with:** The owner's decisions on FG-0303, the verified-answer definition,
+the control denominator, and the headroom findings; then the verifier only if approved.
+**Commit:** Phase 4: scorer bug fixes (D-053), dev re-score, secondary metric, headroom analysis
+
 ## 2026-10-05 — Phase 4: Verifier, step 1 (dev baseline; stopped at the owner's spot check)
 **Built:** Probes after H-028 (`eval/batch_probe.py`, `results/runs/batch_probe_v1.json`): file-based
 batch job with the standard call's request passed; `response_schema` refused by the SDK. File

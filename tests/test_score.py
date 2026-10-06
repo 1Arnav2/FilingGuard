@@ -428,3 +428,67 @@ def test_printed_label_matches_either_apostrophe():
 
 def test_provided_used_label_is_not_a_sign():
     assert parse_figures("Net cash provided/(used) by operating activities was $5,960 million.")[0].value > 0
+
+
+# ---------------------------------------------------------------- scorer bug fixes after dev answers (D-053)
+
+def test_fix_a_possessive_company_name_is_not_a_segment_line():
+    it = item(question="What was Procter & Gamble's net cash provided by operating activities for fiscal 2026?",
+              company="PG")
+    g = gold_row(value=19_556e6, metric="net cash provided by operating activities",
+                 concept="NetCashProvidedByUsedInOperatingActivities", fiscal_year=2026, period_end="2026-06-30",
+                 row_label="Total operating activities")
+    text = "Procter & Gamble's net cash provided by operating activities for fiscal 2026 was $19,556 million."
+    assert score(it, g, ans(text)).outcome == "correct"
+    it2 = item(question="What was UnitedHealth's total revenue for fiscal 2025?", company="UNH")
+    g2 = gold_row(value=447_567e6, metric="total revenue", concept="Revenues", fiscal_year=2025, period_end="2025-12-31",
+                  row_label="Total revenues")
+    assert score(it2, g2, ans("UnitedHealth Group's total revenue for fiscal 2025 was $447,567 million.")).outcome == "correct"
+
+
+def test_fix_b_filing_date_is_not_the_figures_period():
+    it = item("restated", "reclassification", "What were Pfizer's total revenues for fiscal 2023 as reported in its "
+              "fiscal 2023 Form 10-K filed on February 22, 2024?", "PFE")
+    g = gold_row(value=58_496e6, metric="total revenues", concept="Revenues", fiscal_year=2023,
+                 period_start="2023-01-01", period_end="2023-12-31", row_label="Total revenues", other_value=59_553e6)
+    text = ("Pfizer's total revenues for fiscal year 2023, as reported in its fiscal 2023 Form 10-K filed on "
+            "February 22, 2024, were $58,496 million.")
+    assert score(it, g, ans(text)).outcome == "correct"
+
+
+def test_fix_c_labelled_non_gaap_figure_is_another_metric_when_gaap_is_given():
+    it = item(question="What was Microsoft's net income for fiscal 2025?", company="MSFT")
+    g = gold_row(value=101_832e6, metric="net income", concept="NetIncomeLoss", fiscal_year=2025, period_end="2025-06-30",
+                 row_label="Net income")
+    both = ("Microsoft's net income for fiscal year 2025 was $101,832 million. On a non-GAAP basis, adjusted net "
+            "income for fiscal 2025 was $105,452 million.")
+    assert score(it, g, ans(both)).outcome == "correct"
+    after = "Microsoft's net income for fiscal 2025 was $101,832 million (or $105,452 million on a non-GAAP adjusted basis)."
+    assert score(it, g, ans(after)).outcome == "correct"
+    only_adjusted = "Microsoft's adjusted net income for fiscal 2025 was $105,452 million."
+    s = score(it, g, ans(only_adjusted))
+    assert (s.outcome, s.label) == ("unsupported", "wrong_number")
+
+
+def test_fix_c_split_adjustment_wording_is_not_a_non_gaap_label():
+    from filingguard.eval.score import mark_adjusted
+    text = "Diluted EPS was $0.17 per share (retrospectively adjusted for the June 2024 ten-for-one stock split)."
+    figs = parse_figures(text)
+    mark_adjusted(text, figs)
+    assert [f.adjusted for f in figs] == [False]
+
+
+def test_fix_d_loss_word_in_an_earlier_clause_is_not_a_sign():
+    for text in ("There was no operating loss for fiscal 2026 because Oracle reported operating income of $20,606 million.",
+                 "ExxonMobil did not report a net loss; it reported net income of $28,844 million.",
+                 "Visa did not report an operating loss; rather, it reported operating income of $23,595 million."):
+        assert parse_figures(text)[0].value > 0, text
+    assert parse_figures("While revenue rose, net cash used in operating activities was $12.6 billion.")[0].value < 0
+
+
+def test_fix_e_form_number_is_not_a_figure():
+    text = ("In NVIDIA's fiscal 2025 Form 10-K, diluted net income per share for fiscal 2023 was reported as "
+            "$0.17 per share.")
+    assert [f.value for f in parse_figures(text)] == [0.17]
+    assert [f.value for f in parse_figures("Form 8-K filed; EPS was $2.10 per share.")] == [2.10]
+    assert parse_figures("Diluted EPS was 7.46 per diluted share.")[0].per_share

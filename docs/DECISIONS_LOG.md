@@ -990,6 +990,58 @@ projection is redone from measured dev spend at the end of Phase 4.
 **Trade-off accepted:** The detector misses notes with no machine-addressed wording or markup.
 **Revisit if:** The clean-corpus check passes the limit, or the dev hit rate is low.
 
+### D-053 — Scorer bug fixes after the dev answers were seen (owner approved)
+**Date:** 2026-10-05 · **Phase:** 4
+**Context:** The owner's review of the dev score sheet (v1) found scorer faults. The scorer was
+fixed before any answer (D-047), so every change now is logged as a bug fix with the rows it
+changes. No test-split answer exists.
+**Decision:** Approved by the owner; each fix has a unit test (`tests/test_score.py`); the
+gold-row check passes. v1 scores and sheet are kept (`results/dev/baseline_scores_v1.jsonl`,
+`review/dev_score_sheet_v1.xlsx`); v2 are the fixed ones.
+- (a) A possessive company name ("Procter & Gamble's", "UnitedHealth Group's") was read as a
+  segment qualifier. A possessive now never marks a segment line. FG-0028 Missed to Correct;
+  FG-0057 Missed to Correct; FG-0283 Missed to Correct; FG-0320 Missed to Correct.
+- (b) A filing date ("filed on February 22, 2024") was read as the figure's period. A date after
+  "filed", "dated", "submitted" or "issued" is no longer a period. FG-0203 Unsupported
+  (`wrong_period`) to Correct.
+- (c) Non-GAAP: a figure the answer explicitly labels adjusted, non-GAAP or core (in its own
+  stretch of text, before or just after it) is a different metric when the answer also gives a
+  GAAP figure for the asked item; alone, it is scored as the answer. Sentence added to EVAL §3,
+  dated. FG-0004 Unsupported (`wrong_number`) to Correct; FG-0161 Unsupported (`wrong_number`)
+  to Correct. FG-0195 unchanged (Correct): its non-GAAP figure was set aside before only by the
+  segment rule, now by this rule. Split-adjustment wording ("retrospectively adjusted for the
+  stock split") is not a non-GAAP label.
+- (d) A loss word in an earlier clause ("... an operating loss ... because it reported operating
+  income of $X") marked the figure negative. The sign window now starts at the last clause break
+  (`;`, `:`, parentheses, "because", "rather", "instead", "whereas", "while", "but", "however",
+  "although"). FG-0221, FG-0238, FG-0255: figures read positive; outcomes unchanged (Correct,
+  scored by the judge).
+- (e) FG-0200: a stray "10" was read as an EPS figure. Cause: the "10" of "Form 10-K", which was
+  taken as a per-share figure because the per-share check allowed up to 25 characters of other
+  words before "per share" ("10-K, diluted net income per share"). Fix: a number followed by a
+  hyphen and a letter (a form number) is never a figure, and "per share" must follow the number
+  directly. Outcome unchanged (Correct); the stray figure is gone.
+- **Side effect, not fixed (owner to decide):** FG-0303 (driver control) Correct to Unsupported
+  (`wrong_number`). With (a), "Johnson & Johnson's net earnings" is now tied to net income, which
+  exposes the D-047 rule that a figure with no metric named in its own sentence inherits the
+  last metric named earlier in the answer: figures in the answer's "reasons" sentences (other
+  income, litigation items) inherit "net income" and fail to match. The answer's two net-earnings
+  figures both match gold. A fix (for example, no inheritance across sentences when a figure's
+  sentence names no metric and the answer gives a matching figure for the asked item elsewhere)
+  needs the owner's approval.
+**Result:** v2: Correct 85, Missed 4, Unsupported 1 (FG-0303, the artefact above); 0 on reading.
+**Why:** The faults were in the scorer, not the answers; the fixes are general rules, each tested.
+**Trade-off accepted:** These rules were changed after dev answers were seen; they are fixed
+before any test run and apply identically to both conditions.
+**Revisit if:** The owner's check of the v2 sheet finds another fault.
+
+### D-054 — Secondary metric: control abstentions added by the verifier
+**Date:** 2026-10-05 · **Phase:** 4
+**Context:** The abstain bar (§6) mixes the target's own abstentions with the verifier's blocks.
+**Decision:** Chosen by the owner; added to EVAL §4, outside every pass bar: treatment minus
+baseline abstentions on controls, as a count and a rate. The 10% bar is unchanged.
+**Revisit if:** Never for test set v1.
+
 ---
 
 ---
@@ -1434,3 +1486,23 @@ path dropped the schema is still unknown; the inline path is not used again.
 **Lesson:** A settings check before submitting compared requests, not replies. A one-item probe
 batch, with its reply checked against the schema, should precede any full batch.
 **Linked decision:** D-025, D-046
+
+### H-029 — Scorer faults found in the owner's review of the dev score sheet
+**Date:** 2026-10-05
+**Phase:** 4
+**What happened:** Of the 11 non-Correct dev rows in score sheet v1, 7 were scorer faults, not
+target errors: possessive company names read as segment lines (4 rows), a filing date read as a
+period (1), non-GAAP figures counted as the asked metric (2). The owner's check also found a sign
+misread on three false-premise answers and a stray "10" in FG-0200 (outcomes unchanged). The
+session's report said one Unsupported would remain after the fixes; all three Unsupported rows
+were faults, so that count was wrong.
+**Impact:** Baseline dev numbers as first reported (3 Unsupported, 8 Missed) overstated target
+errors. Fixed in D-053; v2: 1 Unsupported (FG-0303, a scorer artefact exposed by a fix), 4
+Missed.
+**What I tried:** Synthetic answers built from gold (D-047) passed, but they used one fixed
+phrasing and could not show attribution faults in free-form answers.
+**Resolution:** D-053. FG-0303 left for the owner.
+**Lesson:** A check built from gold-shaped answers does not test the scorer on real wording; the
+row-by-row human check of dev answers is what found these.
+**Linked decision:** D-047, D-053
+

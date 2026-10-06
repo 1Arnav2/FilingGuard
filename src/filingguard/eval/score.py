@@ -59,6 +59,14 @@ _TOTAL_WORDS = {"total", "net", "consolidated", "the", "its", "our", "their", "g
                 "corporation", "inc", "inc.", "corp", "corp.", "company", "co", "co.", "incorporated"}
 
 
+_ADJUSTED_WORDS = {"adjusted", "non-gaap", "core"}
+# An explicit adjusted / non-GAAP / core label (not "retrospectively adjusted for the split").
+_ADJUSTED_LABEL = re.compile(
+    r"\bnon-GAAP\b|\badjusted\s+(?:basis|net|diluted|basic|earnings|eps|operating|income|ebitda|revenues?|"
+    r"free|gross)\b|\bcore\s+(?:earnings|eps|net|operating|income|revenues?)\b|\bon\s+an?\s+(?:adjusted|core)\s+basis\b",
+    re.IGNORECASE)
+
+
 def _metric_patterns() -> list[tuple[str, re.Pattern]]:
     out = [(k, re.compile(p, re.IGNORECASE)) for k, p in _MENTIONS]
     for key, m in METRICS.items():
@@ -93,6 +101,10 @@ def _is_segment_line(text: str, start: int, company: str) -> bool:
         return False
     names = {n.lower() for n in COMPANY_NAMES.get(company, ())} | {company.lower()}
     if word.lower().rstrip("'’s").rstrip("'’") in names or word.lower().replace("’", "'").removesuffix("'s") in names:
+        return False
+    # A possessive names the owner ("Procter & Gamble's", "UnitedHealth Group's"), never a segment;
+    # an adjusted / non-GAAP / core label is handled by the non-GAAP rule (EVAL §3), not here.
+    if re.search(r"['’]s$", word) or word.lower() in _ADJUSTED_WORDS:
         return False
     if word.lower() in _SEGMENT_WORDS:
         return True
@@ -140,6 +152,29 @@ def attribute_metrics(text: str, figures: list[Figure], company: str, extra: dic
             f.metric = after[0][2]
         elif earlier:
             f.metric = earlier[-1][2]
+
+
+def mark_adjusted(text: str, figures: list[Figure]) -> None:
+    """Flag figures the answer explicitly labels adjusted, non-GAAP or core: the label in the
+    figure's own stretch of text, from the previous figure (or the sentence start) up to the
+    figure, or from the figure to the next figure or the sentence end (within 40 characters)."""
+    from filingguard.eval.figures import sentences
+    bounds = sentences(text)
+    for i, f in enumerate(figures):
+        s, e = bounds[f.sentence] if bounds else (0, len(text))
+        prev_end = figures[i - 1].end if i and figures[i - 1].sentence == f.sentence else s
+        nxt = figures[i + 1].start if i + 1 < len(figures) and figures[i + 1].sentence == f.sentence else e
+        window = text[prev_end:f.start] + " " + text[f.end:min(nxt, e, f.end + 40)]
+        f.adjusted = bool(_ADJUSTED_LABEL.search(window))
+
+
+def asked_figures(figures: list[Figure], key: str) -> list[Figure]:
+    """Figures for the asked item. A figure labelled adjusted, non-GAAP or core is a different
+    metric when the answer also gives a GAAP figure for the asked item; given alone, it is the
+    answer and is scored as one (EVAL §3, D-053)."""
+    asked = [f for f in figures if is_asked(f, key)]
+    gaap = [f for f in asked if not f.adjusted]
+    return gaap if gaap else asked
 
 
 def is_asked(f: Figure, key: str) -> bool:
@@ -234,7 +269,7 @@ def _period_status(f: Figure, gold: dict) -> bool | None:
 
 def _describe(f: Figure, key: str, gold: dict) -> dict[str, Any]:
     p = f.periods[0] if f.periods else None
-    return {"value": f.value, "scale": f.scale_word, "negative": f.negative, "metric": f.metric,
+    return {"value": f.value, "scale": f.scale_word, "negative": f.negative, "metric": f.metric, "adjusted": f.adjusted,
             "asked": is_asked(f, key), "period": None if p is None else f"{p.kind}:{p.year or ''}"
             f"{'-' + str(p.month) if p.month else ''}{'-Q' + str(p.quarter) if p.quarter else ''}",
             "period_ok": _period_status(f, gold)}
@@ -264,7 +299,8 @@ def score_answer(item: dict, gold_row: dict, answer: dict, *, blocked: bool = Fa
 
     text = answer.get("text") or ""
     figures, key = read_figures(answer, gold, source, item["company"])
-    asked = [f for f in figures if is_asked(f, key)]
+    mark_adjusted(text, figures)
+    asked = asked_figures(figures, key)
     s.figures = [_describe(f, key, gold) for f in figures]
     flag = bool(answer.get("abstained"))
     # "No figure for the asked item": none for the asked metric in the asked period.
