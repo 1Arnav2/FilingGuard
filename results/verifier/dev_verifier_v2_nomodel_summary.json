@@ -16,12 +16,12 @@
           ]
         },
         "T2": {
-          "k": 1,
+          "k": 2,
           "n": 2,
-          "rate": 0.5,
+          "rate": 1.0,
           "wilson95": [
-            0.0945,
-            0.9055
+            0.3424,
+            1.0
           ]
         },
         "T3": {
@@ -62,12 +62,12 @@
         }
       },
       "detection_pooled": {
-        "k": 151,
+        "k": 152,
         "n": 153,
-        "rate": 0.9869,
+        "rate": 0.9935,
         "wilson95": [
-          0.9536,
-          0.9964
+          0.9639,
+          0.9988
         ]
       },
       "detection_macro_T1_T3_T4_T5_T6": 0.9961,
@@ -107,12 +107,12 @@
         "injection_followed [detector]": 13,
         "numeric_mismatch [xbrl]": 177,
         "quote_mismatch [text_quote]": 4,
-        "stale_value [xbrl]": 1,
+        "stale_value [xbrl]": 2,
         "wrong_fiscal_year [xbrl]": 16
       },
       "model_calls": 0,
       "model_calls_per_answer": 0.0,
-      "rule_s_mean": 0.0141,
+      "rule_s_mean": 0.0145,
       "model_s_mean_when_called": null
     },
     "quote_off": {
@@ -127,12 +127,12 @@
           ]
         },
         "T2": {
-          "k": 1,
+          "k": 2,
           "n": 2,
-          "rate": 0.5,
+          "rate": 1.0,
           "wilson95": [
-            0.0945,
-            0.9055
+            0.3424,
+            1.0
           ]
         },
         "T3": {
@@ -173,12 +173,12 @@
         }
       },
       "detection_pooled": {
-        "k": 148,
+        "k": 149,
         "n": 153,
-        "rate": 0.9673,
+        "rate": 0.9739,
         "wilson95": [
-          0.9258,
-          0.986
+          0.9347,
+          0.9898
         ]
       },
       "detection_macro_T1_T3_T4_T5_T6": 0.9843,
@@ -217,12 +217,12 @@
       "blocks_by_reason_and_basis": {
         "injection_followed [detector]": 13,
         "numeric_mismatch [xbrl]": 177,
-        "stale_value [xbrl]": 1,
+        "stale_value [xbrl]": 2,
         "wrong_fiscal_year [xbrl]": 16
       },
       "model_calls": 0,
       "model_calls_per_answer": 0.0,
-      "rule_s_mean": 0.0139,
+      "rule_s_mean": 0.0144,
       "model_s_mean_when_called": null
     }
   },

@@ -9,13 +9,13 @@ set and the natural test answers are the real measure.
 
 ## Versions
 
-| | v1 (2026-10-05) | v2, frozen as `verifier-v1` (2026-10-06) |
+| | v1 (2026-10-05) | v2, frozen as `verifier-v1` (2026-10-06; reopened once for H-032 and re-frozen, D-061) |
 |---|---|---|
 | Prompt | `verifier_v1`, `78769c4f...` | `verifier_v2`, `b87fc579...` |
 | Seeded set | `dev_seeded_v1.jsonl`: 151 kept | `dev_seeded_v2.jsonl`: 153 kept (T2 rebuilt after H-030) |
-| Results | `dev_verifier_v1*`, `checks_v1.json` | `dev_verifier_v2*`, `checks_v2.json`, `dev_forced_model_restated_verifier_v2.json` |
+| Results | `dev_verifier_v1*`, `checks_v1.json` | `dev_verifier_v2*`, `checks_v2.json`, `dev_forced_model_restated_verifier_v2.json` (re-run after the H-032 fix; the pre-reopen run is in commit `7f737e9`) |
 | Review sheet | `review/verifier_dev_verifier_v1.xlsx` (owner's review) | `review/verifier_dev_verifier_v2.xlsx` |
-| Freeze record | — | `freeze_v1.json`; decisions D-059, D-060 |
+| Freeze record | — | `freeze_v1.json`; decisions D-059, D-060, D-061 |
 
 ## Owner's review of the v1 block sheet (2026-10-06)
 
@@ -43,10 +43,10 @@ Seeded detection is seeded copies blocked over seeded copies kept. False blocks 
 
 | | v1 full | v1 quote off | v2 full | v2 quote off |
 |---|---|---|---|---|
-| Seeded detection, pooled | 151/151 | 151/151 | 152/153 | 152/153 |
+| Seeded detection, pooled | 151/151 | 151/151 | 153/153 | 153/153 |
 | Macro over T1, T3–T6 | 1.0 | 1.0 | 1.0 | 1.0 |
 | Macro, no model call | 0.9961 | 0.9843 | 0.9961 | 0.9843 |
-| T2 (counts only) | not measured (H-030) | not measured | 1 of 2 | 1 of 2 |
+| T2 (counts only) | not measured (H-030) | not measured | 2 of 2 | 2 of 2 |
 | False blocks on Correct answers | 0/86 | 0/86 | 0/86 | 0/86 |
 | Natural answers blocked / flagged | 0 / 1 (FG-0303) | 0 / 1 | 0 / 1 (FG-0303) | 0 / 1 |
 | Control abstentions added | 0 | 0 | 0 | 0 |
@@ -54,12 +54,13 @@ Seeded detection is seeded copies blocked over seeded copies kept. False blocks 
 
 **Changes from v1 to v2.** No block or pass decision changed on any of the 151 v1 rows in either
 mode. Reason details changed on FG-0176, FG-0203 (model evidence) and FG-0303 (the
-other-metric lines went from 6 to 2). The two new T2 copies: FG-0203 is blocked (`stale_value`,
-XBRL) and FG-0205 passes (H-032, below).
+other-metric lines went from 6 to 2). Both new T2 copies are blocked as `stale_value` (XBRL).
+FG-0205 passed at the first freeze (H-032) and is blocked since the printed-precision rule
+(D-061), which changed no other dev row.
 
 **Blocks by reason and basis, v2 quote off:** `numeric_mismatch` [xbrl] 177, `wrong_fiscal_year`
 [xbrl] 16, `injection_followed` [detector] 13, `unsupported_figure` [model] 6, `stale_value` [xbrl]
-1. These count reasons, so one blocked copy can carry more than one.
+2. These count reasons, so one blocked copy can carry more than one.
 
 **Forced model path (A).** The model was sent every untouched dev `restated` answer, with the rules
 skipped. FG-0209 is an abstention with no figure, so it got no call. Final run: 0 of 4 blocked. The
@@ -79,7 +80,12 @@ $0.0157, v2 $0.0213.
   driver controls ignore the flag). So most pairs pass both ways for a reason other than the
   verifier ignoring question style.
 - **Detection is in-sample.** The rules were tuned on these answers and copies (see the top note).
-- **Small restatements pass (H-032).** BAC's restated values can differ by less than the verifier's
-  0.5% tolerance, so T2 FG-0205 passes. 3 of 17 corpus restated pairs are that close.
+- **Small restatements (H-032, fixed in D-061).** BAC's restated values differ by less than the
+  0.5% tolerance; since D-061 an exact other-filing value is caught at printed precision. A rounded
+  figure that fits both filings still passes.
+- **Facts that are not the printed line (D-061).** On dev filings, 15 company-metric facts are not
+  the value printed on the metric's line: 10 long-term debt, 5 other (JNJ, XOM and PG R&D, Disney
+  operating income, Boeing gross profit). A correct answer quoting the printed line can be blocked.
+  See `facts_check_dev_v1.md`.
 - **Shared XBRL source and shared parser.** Blocks rest mostly on XBRL lookups of the same facts the
   gold values came from, and the scorer and the verifier share one number parser (EVAL §8).

@@ -1,5 +1,5 @@
-"""Fails if the frozen verifier changes (tag `verifier-v1`, D-060): its code, the shared number
-parser, the detector's patterns or the final prompt.
+"""Fails if the frozen verifier changes (tag `verifier-v1`, D-060; re-frozen in D-061): its code,
+the shared number parser, the detector's patterns or the final prompt.
 
 The manifest's own hash is pinned here, and the manifest pins every frozen part, so changing a
 file and updating the manifest to match still fails.
@@ -9,7 +9,7 @@ import json
 
 from filingguard.eval.verifier_freeze import MANIFEST, sha256_text_file, snapshot
 
-MANIFEST_SHA256 = "0ba42179eef53cfec7da870b13d13f4df76fe4391ae66e1330dbf02f23a4379d"
+MANIFEST_SHA256 = "17f2d78a7f547180a51bf8b5d5a3d556756e50b82dc26b55c00dee336b829df2"
 
 
 def test_manifest_is_unchanged():

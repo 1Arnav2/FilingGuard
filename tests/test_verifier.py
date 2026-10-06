@@ -232,3 +232,16 @@ def test_excerpt_keeps_a_metric_row_late_in_the_chunk():
     out = _excerpt(text, ("total liabilities",))
     assert len(out) == EXCERPT_CHARS and "2,965,960" in out
     assert _excerpt("short text", ("total liabilities",)) == "short text"
+
+
+def test_h032_restatement_inside_the_tolerance_is_stale_at_printed_precision(store):
+    """BAC total liabilities, fiscal 2024: $2,965,960M in the asked (original) filing, $2,967,336M in
+    the later one, 0.046% apart. The later value given for the asked filing is stale."""
+    q = ("According to Bank of America's 10-K annual report for fiscal 2024 filed on February 25, 2025, what were "
+         "its total liabilities at the end of fiscal 2024?")
+    stale = run(store, q, "BAC", "Total liabilities at December 31, 2024 were $2,967,336 million.", quote_rule=False)
+    assert stale.decision == "block" and stale.reasons[0].code == "stale_value"
+    asked = run(store, q, "BAC", "Total liabilities at December 31, 2024 were $2,965,960 million.", quote_rule=False)
+    assert asked.decision != "block"
+    coarse = run(store, q, "BAC", "Total liabilities at December 31, 2024 were $2.97 trillion.", quote_rule=False)
+    assert not any(r.code == "stale_value" for r in coarse.reasons)  # both values print as 2.97

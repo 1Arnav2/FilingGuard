@@ -9,7 +9,7 @@
     "src/filingguard/agents/verifier/instructions.py": "96f2d22905deff6a79e64b3562b029fe8cf478f93f906c75598ebb342eb72bcb",
     "src/filingguard/agents/verifier/lexicon.py": "7d4fc2c05010da74e2705f448f0ed059ffb74c0069b04f48963b36d3a62d8206",
     "src/filingguard/agents/verifier/question.py": "07c38fe65360e53415c8583d38c135de7a1f59910e53ee174c289285d8a1801a",
-    "src/filingguard/agents/verifier/verifier.py": "397adb7081ecb5c79560acec98dbf9af45f824579faa7f5e009b3b5031f98ada",
+    "src/filingguard/agents/verifier/verifier.py": "e23ac7aea145525bd6067b82ff14f5fbaec8a8e41515635dee85d99f19d75a5a",
     "src/filingguard/figures.py": "0265c1c8a719c418a10ea108f37bf7c476e400f5fabbe7a69160cb97dcaac3ff",
     "src/filingguard/agents/schema.py": "05efa9d807e40a28596e9cfde6753bb7b77277559bdb72d87d7d1dac0c0f9975"
   }

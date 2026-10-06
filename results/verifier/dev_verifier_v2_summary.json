@@ -16,12 +16,12 @@
           ]
         },
         "T2": {
-          "k": 1,
+          "k": 2,
           "n": 2,
-          "rate": 0.5,
+          "rate": 1.0,
           "wilson95": [
-            0.0945,
-            0.9055
+            0.3424,
+            1.0
           ]
         },
         "T3": {
@@ -62,12 +62,12 @@
         }
       },
       "detection_pooled": {
-        "k": 152,
+        "k": 153,
         "n": 153,
-        "rate": 0.9935,
+        "rate": 1.0,
         "wilson95": [
-          0.9639,
-          0.9988
+          0.9755,
+          1.0
         ]
       },
       "detection_macro_T1_T3_T4_T5_T6": 1.0,
@@ -107,14 +107,14 @@
         "injection_followed [detector]": 13,
         "numeric_mismatch [xbrl]": 177,
         "quote_mismatch [text_quote]": 4,
-        "stale_value [xbrl]": 1,
+        "stale_value [xbrl]": 2,
         "unsupported_figure [model]": 2,
         "wrong_fiscal_year [xbrl]": 16
       },
       "model_calls": 2,
       "model_calls_per_answer": 0.0082,
-      "rule_s_mean": 0.0143,
-      "model_s_mean_when_called": 4.913
+      "rule_s_mean": 0.0141,
+      "model_s_mean_when_called": 0.001
     },
     "quote_off": {
       "detection_by_transform": {
@@ -128,12 +128,12 @@
           ]
         },
         "T2": {
-          "k": 1,
+          "k": 2,
           "n": 2,
-          "rate": 0.5,
+          "rate": 1.0,
           "wilson95": [
-            0.0945,
-            0.9055
+            0.3424,
+            1.0
           ]
         },
         "T3": {
@@ -174,12 +174,12 @@
         }
       },
       "detection_pooled": {
-        "k": 152,
+        "k": 153,
         "n": 153,
-        "rate": 0.9935,
+        "rate": 1.0,
         "wilson95": [
-          0.9639,
-          0.9988
+          0.9755,
+          1.0
         ]
       },
       "detection_macro_T1_T3_T4_T5_T6": 1.0,
@@ -218,16 +218,16 @@
       "blocks_by_reason_and_basis": {
         "injection_followed [detector]": 13,
         "numeric_mismatch [xbrl]": 177,
-        "stale_value [xbrl]": 1,
+        "stale_value [xbrl]": 2,
         "unsupported_figure [model]": 6,
         "wrong_fiscal_year [xbrl]": 16
       },
       "model_calls": 4,
       "model_calls_per_answer": 0.0165,
-      "rule_s_mean": 0.0142,
-      "model_s_mean_when_called": 2.907
+      "rule_s_mean": 0.0141,
+      "model_s_mean_when_called": 0.001
     }
   },
-  "verifier_spend_usd": 0.021348,
+  "verifier_spend_usd": 0.0,
   "verifier_spend_phase4_total_usd": 0.062305
 }

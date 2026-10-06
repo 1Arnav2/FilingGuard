@@ -89,6 +89,19 @@ def _claims(answer: dict[str, Any]) -> list[Claim]:
 RESTATES_PREVIOUS = re.compile(r"^[\s,;(]*(?:or|i\.e\.|that is|approximately|about|roughly)[\s,]*$", re.IGNORECASE)
 
 
+_DIGITS = re.compile(r"\d[\d,]*(?:\.(\d+))?")
+
+
+def _printed_step(f: Figure, printed: str) -> float | None:
+    """The size of one unit in the last digit the answer prints for this figure, in base units
+    ("$2,967,336 million" -> 1e6; "$1.19" -> 0.01)."""
+    m = _DIGITS.search(printed)
+    if m is None:
+        return None
+    unit = 0.01 if f.scale_word == "cents" else (f.scale or 1.0)
+    return unit * 10 ** -len(m.group(1) or "")
+
+
 def names_metric(line: str, phrases: tuple[str, ...]) -> bool:
     """A table row whose label starts with the metric's name (optionally after "total" or
     "consolidated"), or a sentence that names it. A segment row ("Biopharma total revenues")
@@ -241,7 +254,7 @@ class Verifier:
             fy = None
         signed = not (asked and ask.sign_named)
         if asked and fy is not None and ask.accession:
-            stale = self._stale(f, ask, ticker, fy, signed, sentence)
+            stale = self._stale(f, ask, ticker, fy, signed, sentence, text[f.start:f.end])
             if stale is not None:
                 return [stale]
         if fy is not None:
@@ -299,15 +312,20 @@ class Verifier:
                 return Reason("wrong_fiscal_year", "xbrl", True, f"{value:,.4g} is the fiscal {year} value, given for {fy}")
         return Reason("numeric_mismatch", "xbrl", True, f"{f.metric} {value:,.4g} does not match the fact for {fy}")
 
-    def _stale(self, f: Figure, ask: Ask, ticker: str, fy: int, signed: bool, sentence: str) -> Reason | None:
-        """A figure that matches another filing's value for the year and not the named filing's."""
+    def _stale(self, f: Figure, ask: Ask, ticker: str, fy: int, signed: bool, sentence: str,
+               printed: str) -> Reason | None:
+        """A figure that matches another filing's value for the year and not the named filing's.
+        At printed precision first (H-032: a restatement can be smaller than the tolerance), then
+        within the tolerance."""
         value = f.value if signed else abs(f.value)
-        own = self.store.values(ticker, f.metric, fy, ask.accession)
-        others = self.store.other_filing_values(ticker, f.metric, fy, ask.accession)
-        if any(_near(value, v if signed else abs(v)) for v in own):
-            return None
-        if not any(_near(value, v if signed else abs(v)) for v in others):
-            return None
+        own = [v if signed else abs(v) for v in self.store.values(ticker, f.metric, fy, ask.accession)]
+        others = [v if signed else abs(v) for v in self.store.other_filing_values(ticker, f.metric, fy, ask.accession)]
+        step = _printed_step(f, printed)
+        exact_other = step is not None and any(abs(value - v) <= step / 2 for v in others if v not in own)
+        exact_own = step is not None and any(abs(value - v) <= step / 2 for v in own)
+        if not (exact_other and not exact_own):
+            if any(_near(value, v) for v in own) or not any(_near(value, v) for v in others):
+                return None
         attributed = re.search(r"\b(?:restated|originally|previously|prior|earlier|before|split|recast)\b",
                                sentence, re.IGNORECASE)
         return Reason("stale_value", "xbrl", not attributed, f"{value:,.4g} is another filing's value for {fy}")
