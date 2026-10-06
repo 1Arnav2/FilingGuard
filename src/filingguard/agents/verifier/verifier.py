@@ -29,6 +29,9 @@ EXCERPT_CHARS = 1500
 ADJUSTED = re.compile(r"\bnon-GAAP\b|\badjusted\s+(?:basis|net|diluted|basic|earnings|eps|operating|income|ebitda|"
                       r"revenues?|free|gross)\b|\bcore\s+(?:earnings|eps|net|operating|income|revenues?)\b",
                       re.IGNORECASE)
+PART_OF_TOTAL = re.compile(r"\bgeographic\w*|\bin the (?:United States|U\.S\.)|\binternationally\b|\boutside the "
+                           r"(?:United States|U\.S\.)|\bsegment\b|\bregion\w*|\bby (?:product|region|segment)\b",
+                           re.IGNORECASE)
 FISCAL_NAMED = re.compile(r"\bfiscal\b|\bFY\s*'?\d|\b(?:year|period)s?\s+ended\b|\bended\b", re.IGNORECASE)
 CORRECTION = re.compile(r"\b(?:did not|didn't|was not|wasn't|were not|not an?|no (?:net |operating )?loss|rather than|"
                         r"instead|actually|in fact|contrary|incorrect|premise|not accurate|did not (?:increase|decline|decrease))\b",
@@ -81,13 +84,38 @@ def _claims(answer: dict[str, Any]) -> list[Claim]:
     return [c if isinstance(c, Claim) else Claim(**{k: c.get(k) for k in keep}) for c in answer.get("claims", [])]
 
 
+RESTATES_PREVIOUS = re.compile(r"^[\s,;(]*(?:or|i\.e\.|that is|approximately|about|roughly)[\s,]*$", re.IGNORECASE)
+
+
+def names_metric(line: str, phrases: tuple[str, ...]) -> bool:
+    """A table row whose label starts with the metric's name (optionally after "total" or
+    "consolidated"), or a sentence that names it. A segment row ("Biopharma total revenues")
+    does not count."""
+    low = line.lower()
+    if "|" not in low:
+        return any(p in low for p in phrases)
+    label = low.split("|")[0].strip()
+    return any(label.startswith(prefix + p) for p in phrases for prefix in ("", "total ", "consolidated "))
+
+
+SCALE_AFTER = re.compile(r"^\s*\)?\s*(thousand|million|billion|trillion)s?\b", re.IGNORECASE)
+SCALE_OF = {"thousand": 1e3, "million": 1e6, "billion": 1e9, "trillion": 1e12}
+
+
 def holds(text: str, value: float, per_share: bool, signed: bool) -> bool:
-    """Whether `text` prints `value` at some scale (as printed in a table or sentence)."""
-    scales = (1.0, 0.01) if per_share else (1.0, 1e3, 1e6, 1e9)
+    """Whether `text` prints `value`: a number followed by a scale word at that scale; a bare
+    number (a table cell) in millions or thousands only; per-share amounts as printed."""
     for m in NUMBER.finditer(text):
         n = float(m.group(3).replace(",", ""))
         if (m.group(1) and m.group(4)) or m.group(2):
             n = -n
+        word = SCALE_AFTER.match(text[m.end():])
+        if per_share:
+            scales = (1.0, 0.01)
+        elif word:
+            scales = (SCALE_OF[word.group(1).lower()],)
+        else:
+            scales = (1e6, 1e3)
         for s in scales:
             if _near(n * s if signed else abs(n * s), value if signed else abs(value)):
                 return True
@@ -145,8 +173,14 @@ class Verifier:
             if f.metric == "eps":
                 f.metric = ask.metric if ask.metric in ("eps_basic", "eps_diluted") else "eps_basic"
             prev_end = figures[i - 1].end if i and figures[i - 1].sentence == f.sentence else s
+            if i and figures[i - 1].sentence == f.sentence and RESTATES_PREVIOUS.match(text[prev_end:f.start]):
+                f.value = abs(f.value) * (-1 if figures[i - 1].value < 0 else 1)  # "..., or $11.8 billion"
+                f.negative = figures[i - 1].negative
             nxt = figures[i + 1].start if i + 1 < len(figures) and figures[i + 1].sentence == f.sentence else e
-            f.adjusted = bool(ADJUSTED.search(text[prev_end:f.start] + " " + text[f.end:min(nxt, e, f.end + 40)]))
+            clause = text[prev_end:f.start] + " " + text[f.end:min(nxt, e, f.end + 40)]
+            f.adjusted = bool(ADJUSTED.search(clause))
+            if PART_OF_TOTAL.search(clause):
+                f.metric = "other"  # a region or segment's share, not the total
         if not found and len(figures) == 1 and ask.metric:
             figures[0].metric = ask.metric
         return [f for f in figures if f.metric and f.metric != "other" and not f.adjusted]
@@ -187,10 +221,37 @@ class Verifier:
             if facts:
                 if any(_near(f.value if signed else abs(f.value), v if signed else abs(v)) for v in facts):
                     return []
+                if asked and self._other_printed_line(f, ask, inp, facts, signed):
+                    return [Reason("alternative_line", "text_search", False,
+                                   f"{f.value:,.4g} is printed for the metric but is not the XBRL line")]
                 return [self._mismatch(f, ask, ticker, fy, asked, signed, sentence)]
+            if asked and (year := self._other_year(f, ticker, fy, signed)) is not None:
+                return [Reason("wrong_fiscal_year", "xbrl", True,
+                               f"{f.value:,.4g} is the fiscal {year} value, given for {fy}")]
         if not asked:
             return []
         return self._text_support(f, ask, inp, sentence, unresolved, signed)
+
+    def _other_year(self, f: Figure, ticker: str, fy: int, signed: bool) -> int | None:
+        """The other fiscal year whose fact (any concept for the metric) the figure matches."""
+        value = f.value if signed else abs(f.value)
+        if any(_near(value, v if signed else abs(v)) for v in self.store.values(ticker, f.metric, fy)):
+            return None
+        for year, vals in self.store.other_years(ticker, f.metric, fy).items():
+            if any(_near(value, v if signed else abs(v)) for v in vals):
+                return year
+        return None
+
+    def _other_printed_line(self, f: Figure, ask: Ask, inp: VerifierInput, facts: list[float], signed: bool) -> bool:
+        """With no line named, net income or equity may be given on its other printed line
+        (consolidated rather than parent): within 10% of the fact and printed for the metric."""
+        if ask.line is not None or f.metric not in ("net_income", "equity"):
+            return False
+        if not any(_near(f.value, v, 0.10) for v in facts):
+            return False
+        phrases = METRICS[f.metric].phrases
+        return any(names_metric(line, phrases) and holds(line, f.value, f.per_share, signed)
+                   for c in inp.chunks for line in c["text"].splitlines())
 
     def _facts(self, metric: str, ticker: str, fy: int, ask: Ask | None) -> list[float]:
         """XBRL values for the metric and year; the question's filing and named line respected."""
@@ -237,7 +298,7 @@ class Verifier:
         phrases = METRICS[f.metric].phrases
         for chunk in inp.chunks:
             for line in chunk["text"].splitlines():
-                if any(p in line.lower() for p in phrases) and holds(line, f.value, f.per_share, signed):
+                if names_metric(line, phrases) and holds(line, f.value, f.per_share, signed):
                     return []
         unresolved.append((f, sentence))
         return []
