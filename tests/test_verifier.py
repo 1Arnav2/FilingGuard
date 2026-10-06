@@ -245,3 +245,18 @@ def test_h032_restatement_inside_the_tolerance_is_stale_at_printed_precision(sto
     assert asked.decision != "block"
     coarse = run(store, q, "BAC", "Total liabilities at December 31, 2024 were $2.97 trillion.", quote_rule=False)
     assert not any(r.code == "stale_value" for r in coarse.reasons)  # both values print as 2.97
+
+
+def test_stale_value_with_restatement_words_is_a_flag_not_a_block(store):
+    """An other filing's value the sentence attributes with restatement words is a flag, on the
+    printed-precision path (BAC, H-032) and on the tolerance path (PFE)."""
+    q_bac = ("According to Bank of America's 10-K annual report for fiscal 2024 filed on February 25, 2025, what were "
+             "its total liabilities at the end of fiscal 2024?")
+    bac = run(store, q_bac, "BAC", "Total liabilities at December 31, 2024 were later restated to $2,967,336 million.",
+              quote_rule=False)
+    assert bac.decision == "flag" and [(r.code, r.blocking) for r in bac.reasons] == [("stale_value", False)]
+    q_pfe = ("What were Pfizer's total revenues for fiscal 2023 as reported in its fiscal 2023 Form 10-K filed on "
+             "February 22, 2024?")
+    pfe = run(store, q_pfe, "PFE", "Pfizer's total revenues for fiscal 2023 were previously shown as $59,553 million.",
+              quote_rule=False)
+    assert pfe.decision == "flag" and [(r.code, r.blocking) for r in pfe.reasons] == [("stale_value", False)]

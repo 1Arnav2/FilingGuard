@@ -48,7 +48,9 @@ extras, were not chosen.)
 **Measured projection for the test batch (step 2, 2026-10-06):** $2.02 at dev's mean output per
 item; $2.60 if every item produced dev's 90th-percentile output. Before each sub-batch the code
 projects the remainder at no less than $0.013 per item. So if real costs run near the 90th
-percentile, the gate stops before the last sub-batch. That stop would be reported, not overridden.
+percentile, the gate stops before the last sub-batch. That stop would be reported, not overridden:
+the unsubmitted items are reported as not run, and resubmitting them needs the owner's approval
+(D-063, 2026-10-06, before any test-split call).
 
 ## Order of steps
 1. **Judge hand-check on dev (owner, EVAL §5).** A sheet of the 16 dev premise items with the judge's

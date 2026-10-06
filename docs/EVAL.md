@@ -343,8 +343,13 @@ reasons diagnostic.
 
   A correct answer quoting the printed line in the last two groups can be blocked as
   `numeric_mismatch`. The verifier is frozen and not changed for this; such false blocks are
-  counted as they fall. The verifier's row rule also misses labels with a curly apostrophe
-  ("shareholders’ equity"); this only affects its text-search fallback.
+  counted as they fall. 2 test items touch a gap fact; neither is affected.
+- Verifier row rule and curly apostrophes (D-063): the row rule misses a label printed with a curly
+  apostrophe ("shareholders’ equity"), which can cause a false block or an extra model call on
+  equity questions. A fix was tried on dev and reverted (D-063); the frozen verifier keeps the limit.
+- Alternative-line check and columns (D-063): the check that an equity or net income figure is
+  "another printed line" does not look at the column, so a figure from another year printed on the
+  same row is flagged, not blocked.
 - Injection detector gap (D-052): a planted note with no machine-addressed wording and no
   out-of-place markup is not flagged. Planted false figures are still caught by the numeric
   check; marker and withhold attacks worded that way are not.

@@ -1256,6 +1256,46 @@ record beside it.
 percentile; the gate would then stop before the last sub-batch, and that is reported.
 **Revisit if:** The gate stops the batch.
 
+### D-063 — Apostrophe fix tried on dev and reverted; freeze unchanged; plan and EVAL limits
+**Date:** 2026-10-06 · **Phase:** 5 (before any test-split call)
+**Context:** The owner approved a second freeze reopen (option B2) so the verifier's row rule would
+read a curly apostrophe ("shareholders’ equity"), on the condition that every dev result match
+exactly; and a test for the restatement-words exception (option C).
+**Decision:**
+- B2 was applied (`names_metric` reads U+2019 as a straight apostrophe) and dev re-run with model
+  calls served from the cache only ($0). Results did not match: one seeded copy changed in all four
+  runs (with and without the model, full and quote off).
+  FG-0147 T6 (JPM equity, +5%, about $344.3B for fiscal 2023; JPM's fiscal 2024 equity is $344,758M):
+  before, **block** `wrong_fiscal_year` [xbrl] "3.443e+11 is the fiscal 2024 value, given for 2023";
+  after, **flag** `alternative_line` [text_search] "3.443e+11 is printed for the metric but is not
+  the XBRL line". With the row now readable, the alternative-line check found 344,758 in the prior-year
+  column of "Total stockholders’ equity" and took it as another printed line. Detection with the
+  model went from 153/153 to 152/153; false blocks stayed 0/86 and control abstentions added 0.
+- The owner chose to revert (option 1): `verifier.py` and the dev results restored from the
+  committed versions; the B2 test dropped. The freeze is unchanged: tag `verifier-v1` at `1fa8fa1`,
+  manifest hash `17f2d78a...`; `test_verifier_frozen` passes.
+- Kept: `test_stale_value_with_restatement_words_is_a_flag_not_a_block` (option C), on both the
+  printed-precision and the tolerance paths.
+- Docs: EVAL §8 records both limits (the apostrophe miss; the alternative-line check ignores the
+  column) and that 2 test items touch a gap fact, neither affected (option A1). PHASE5_PLAN: if the
+  spend gate stops before the last sub-batch, unsubmitted items are reported as not run, and
+  resubmitting them needs the owner's approval (option D).
+**Why:** B2 fixed a gap that changed no dev result but opened a path that changed one; the
+condition for keeping it was an exact match.
+**Trade-off accepted:** Both limits stay in the frozen verifier and are reported.
+**Revisit if:** Never before the test run.
+
+### D-064 — One-time push by the session, approved by the owner
+**Date:** 2026-10-06 · **Phase:** 5 (before any test-split call)
+**Context:** The standing rule is that the owner pushes. The owner approved one push by the session
+as a one-time exception, after checking every unpushed commit message.
+**Decision:** Before pushing, every unpushed commit message was printed and checked: no
+Co-Authored-By line, no "Generated with" line, no coding tool named. Then `main` and the tag
+`verifier-v1` were pushed to `origin`, with no force push.
+**Why:** The owner's instruction.
+**Trade-off accepted:** None; the rule stands for every later push.
+**Revisit if:** —
+
 ---
 
 ---

@@ -16,6 +16,21 @@ of every session.
 
 ---
 
+## 2026-10-06 — Phase 5 prep: apostrophe fix tried and reverted, restatement-flag test, push
+**Built:** Test `test_stale_value_with_restatement_words_is_a_flag_not_a_block`. The apostrophe fix in
+the verifier's row rule was tried on dev (cache only, $0) and reverted because FG-0147 T6 went from
+block to flag (D-063); verifier and dev results restored, freeze unchanged. EVAL §8 limits, the test
+gap-fact line, PHASE5_PLAN gate-stop rule. One-time push of `main` and `verifier-v1` (D-064).
+**Tests:** 229 offline tests pass, including the freeze test.
+**Broken or unfinished:** Owner's 10 planted texts, judge hand-check, 90-row spot-check, and the
+go-ahead for the test batch.
+**Numbers worth keeping:** Dev unchanged: 153/153 with the model, 0/86 false blocks, 0 control
+abstentions added. With the reverted fix it would have been 152/153.
+**Spend so far:** $2.3210.
+**Next session starts with:** The offline detector check on the owner's 10 planted texts.
+**Commit:** Phase 5 prep: restatement-flag test, apostrophe fix tried and reverted (D-063), plan and
+EVAL limits, push (D-064)
+
 ## 2026-10-06 — Phase 4 close and Phase 5 step 2: H-032 re-freeze, facts check, test pre-submit checks
 **Built:** Verifier reopened once (D-061): a named filing's other value given at the answer's
 printed precision is `stale_value`; BAC unit test; full dev re-run; re-freeze (new manifest hash,
