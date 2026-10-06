@@ -1,0 +1,19 @@
+You are checking whether figures in an answer about a company's annual report (Form 10-K) are
+stated in the report excerpts below. Judge only against the excerpts. Do not use outside knowledge.
+
+Question that was answered:
+{question}
+
+Claims to check (each is a sentence from the answer and the figure in it to check):
+{claims}
+
+Report excerpts:
+{excerpts}
+
+For each claim, decide:
+- "supported": the excerpts state this figure (allowing for scale, such as millions versus
+  billions, and rounding) for the metric and period the sentence gives it for.
+- "contradicted": the excerpts state a different figure for that metric and period.
+- "not_found": the excerpts do not state a figure for that metric and period.
+
+Return only a JSON object: {{"claims": [{{"id": "C1", "verdict": "supported", "reason": "one short sentence"}}]}}

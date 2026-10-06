@@ -3,7 +3,7 @@ on either split existed (D-047)."""
 
 import pytest
 
-from filingguard.eval.figures import parse_figures, question_names_sign, says_not_in_filing
+from filingguard.figures import parse_figures, question_names_sign, says_not_in_filing
 from filingguard.eval.score import score_answer
 
 TOL = 0.005

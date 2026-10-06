@@ -11,7 +11,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Any
 
 from filingguard.agents.schema import Claim
-from filingguard.eval.figures import (
+from filingguard.figures import (
     Figure, assign_periods, fill_from_claims, names_fiscal_period, parse_figures, period_matches,
     periods, question_names_sign, says_not_in_filing, sentence_text,
 )
@@ -138,7 +138,7 @@ def metric_mentions(text: str, company: str, extra: dict[str, list[str]] | None 
 def attribute_metrics(text: str, figures: list[Figure], company: str, extra: dict[str, list[str]]) -> None:
     """Attribute each figure to the nearest metric named before it in its sentence; else the
     nearest after it in its sentence; else the last one named earlier in the answer; else None."""
-    from filingguard.eval.figures import sentences
+    from filingguard.figures import sentences
     bounds = sentences(text)
     mentions = metric_mentions(text, company, extra)
     for f in figures:
@@ -158,7 +158,7 @@ def mark_adjusted(text: str, figures: list[Figure]) -> None:
     """Flag figures the answer explicitly labels adjusted, non-GAAP or core: the label in the
     figure's own stretch of text, from the previous figure (or the sentence start) up to the
     figure, or from the figure to the next figure or the sentence end (within 40 characters)."""
-    from filingguard.eval.figures import sentences
+    from filingguard.figures import sentences
     bounds = sentences(text)
     for i, f in enumerate(figures):
         s, e = bounds[f.sentence] if bounds else (0, len(text))
