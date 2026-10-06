@@ -52,11 +52,12 @@ One phase per working session. Each phase ends with: tests pass, roadmap ticked,
       baseline dev report and the 90-row score sheet — all done 2026-10-05; **owner spot-check
       of the sheet pending** (ticked after it)
 - [x] Owner approves `docs/INJECTION_DETECTOR.md` (D-052) and the seeded-error design (D-057)
-- [ ] Dev seeded-error set with sanity gate (`docs/SEEDED_ERRORS.md`)
-- [ ] Claim extraction
-- [ ] Span, numeric, period, and injection checks with reason codes
-- [ ] Unit tests for every deterministic check
-- [ ] Tune on dev split only
+- [x] Dev seeded-error set with sanity gate (`docs/SEEDED_ERRORS.md`): 151 kept, 3 dropped (H-030)
+- [x] Claim extraction
+- [x] Span, numeric, period, and injection checks with reason codes; premise check
+- [x] Unit tests for every deterministic check (`tests/test_verifier.py`)
+- [x] Tune on dev split only (prompt v1 only; rule changes in D-058); **owner review of the dev
+      report pending; verifier not frozen or tagged**
 - **Done when:** verifier is frozen and tagged; dev results logged.
 
 ## Phase 5 — Eval run (1 day)

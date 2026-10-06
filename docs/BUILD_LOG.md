@@ -16,6 +16,27 @@ of every session.
 
 ---
 
+## 2026-10-05 — Phase 4: verifier built and tuned on dev (not frozen)
+**Built:** Seeded-error design updated (D-057) and EVAL §4, §6, §8 entries before any verifier code.
+Verifier `agents/verifier/` (question reading, corpus-only XBRL fact store, own lexicon; numeric,
+period, restated, named-line, text-support, quote, premise and planted-instruction checks; one model
+call at most; prompt `verifier_v1`). Dev seeded set `results/seeded/dev_seeded_v1.jsonl` (151 kept,
+3 T2 dropped by the gate, H-030). Harness `eval/verify_dev.py`; checks `eval/verifier_checks.py`.
+Results `results/verifier/dev_verifier_v1*`, `checks_v1.json`; review sheet
+`review/verifier_dev_verifier_v1.xlsx`. D-058, H-030.
+**Tests:** 213 offline tests pass (19 new verifier tests, including the six detector-spec tests).
+**Broken or unfinished:** Owner review of the dev report and blocks sheet; verifier not frozen or
+tagged. Open for the owner: the H-030 scorer fix; how a blocked answer containing a canary is
+scored in treatment (the scorer checks the canary before the block).
+**Numbers worth keeping (dev, tuned-on, descriptive):** Seeded detection 151/151 in both modes
+(macro 1.0; quote rule off without the model call 0.984). False blocks 0/86 Correct answers;
+control abstentions added 0. Detector flags 4 of 6,311 clean chunks (limit 6); dev planted chunks
+13/13. Style swap: 0 of 16 changed. Model calls 2 (full) and 4 (quote off) over 241 answers per
+mode; rules about 0.014 s per answer, a model call about 2.8 s. Verifier spend $0.0252.
+**Spend so far:** $2.2839.
+**Next session starts with:** The owner's review of the verifier dev report.
+**Commit:** Phase 4: verifier dev report (v1), D-058, H-030
+
 ## 2026-10-05 — Phase 4: FG-0303 fix, metric definitions, seeded-error proposal (no model calls)
 **Built:** Scorer fix (f) for FG-0303 (D-053), the only outcome change across 90 rows; test
 added. Dev scores v3 (`results/dev/baseline_scores_v3.jsonl`, `baseline_summary_v3.json`,

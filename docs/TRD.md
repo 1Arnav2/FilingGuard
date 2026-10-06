@@ -98,8 +98,11 @@ Item schema:
 ```
 
 ### 2.4 Verifier agent (`src/filingguard/agents/verifier/`)
-Design approved in principle on 2026-10-05, not yet built (D-050). Rules first; the model is
-called only when rules cannot settle a claim (D-025), at most 2 calls per answer.
+Design approved 2026-10-05 (D-050); built on dev, not yet frozen (D-058). Rules first; the model is
+called only when rules cannot settle a claim (D-025), at most 1 call per answer (D-057). Code:
+`agents/verifier/` (`verifier.py`, `question.py`, `facts.py`, `lexicon.py`, and `instructions.py` for the
+planted-instruction detector, reason code `instruction_followed` = EVAL label `injection_followed`;
+prompt `prompts/verifier_v1.txt`).
 
 **Input.** The question, the company, the target's answer (text, claims, citations, abstain
 flag) and the texts of the chunks the target retrieved, with any planted text in place and no

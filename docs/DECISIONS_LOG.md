@@ -1093,6 +1093,40 @@ owner reviews the dev report. EVAL §4, §6 and §8 updated.
 **Trade-off accepted:** Seeded errors are not natural errors (EVAL §8).
 **Revisit if:** The sanity gate drops many copies of one transform.
 
+### D-058 — Verifier built and tuned on dev (not frozen)
+**Date:** 2026-10-05 · **Phase:** 4
+**Context:** D-050 and D-057 approved the design and the build limits; D-052 the detector spec.
+**Decision:** Session's calls within those limits, logged for the owner's review:
+- Code under `agents/verifier/`. The number parser (figures, signs, periods) moved from `eval/` to a
+  neutral module (`filingguard/figures.py`) so the verifier can use it; behaviour unchanged (all
+  scorer tests pass). Trade-off: the scorer and the verifier read numbers the same way, so a
+  parsing blind spot is shared. Metric names, attribution and checks are the verifier's own.
+- The detector module is `instructions.py` and its reason code `instruction_followed` (reported as
+  EVAL's `injection_followed`), because the D-048 isolation test forbids the word "injection" under
+  `agents/`; the test was not changed.
+- The verifier checks figures for the asked metric only; a mismatch on another metric is a flag.
+  It never inherits a metric from an earlier sentence. Abstentions pass, except that the
+  planted-instruction check runs on every answer.
+- One model call per answer at most; prompt `verifier_v1`, SHA-256 starting `78769c4f9a93736d`
+  (full hash in `results/verifier/dev_verifier_v1_summary.json`). Only v1 was used.
+- Rule changes made while tuning on dev (each re-run on all dev answers and seeded copies):
+  (1) text search reads a number at the scale printed after it, and a bare table number only as
+  millions or thousands (it had accepted any scale, so "$58,496 billion" matched "58,496");
+  (2) a figure that matches another fiscal year's fact is blocked as `wrong_fiscal_year` before any
+  text search (a trap-year value matched a prior-year column); (3) with no line named, a net
+  income or equity figure within 10% of the parent fact and printed for the metric is the other
+  printed line, a flag not a block (FG-0242, consolidated net loss); (4) a figure whose own clause
+  names a region or segment is not the total (FG-0129, "$41.7 billion in the United States");
+  (5) a figure that restates the one before it ("..., or $11.8 billion") keeps its sign (FG-0242);
+  (6) a table row supports a figure only if its label starts with the metric's name (a "Biopharma
+  total revenues" row matched a seeded value within 0.5%).
+  Effect, quote rule off, no model: macro detection 0.959 to 0.984, false blocks on Correct
+  answers 2 to 0; with the model call: 1.0 and 0.
+**Why:** Rules first, as approved; each change is a general rule, not keyed to an item.
+**Trade-off accepted:** The dev numbers are measured on the set the rules were tuned on and are
+optimistic. The test seeded set and the natural test answers are the real measure.
+**Revisit if:** The owner's review of the dev blocks sheet finds a wrong block or a bad rule.
+
 ---
 
 ---
@@ -1557,3 +1591,19 @@ phrasing and could not show attribution faults in free-form answers.
 row-by-row human check of dev answers is what found these.
 **Linked decision:** D-047, D-053
 
+### H-030 — Seeded T2 copies dropped by the gate: restated attribution rule in the scorer
+**Date:** 2026-10-05
+**Phase:** 4
+**What happened:** All 3 T2 copies (the other filing's value, no attribution) were scored Missed,
+not `stale_restated`, so the sanity gate dropped them. Each copy's sentence names the asked
+filing ("as reported in its fiscal 2023 Form 10-K"); the scorer's restated rule treats any
+filing wording in the sentence as attributing the figure to the other filing and sets it aside.
+**Impact:** T2 is unmeasured on dev (it is counts-only by design). A natural answer that gives
+the other filing's value while naming the asked filing would be mis-scored the same way.
+**What I tried:** Confirmed on the three copies; the scorer was not changed (post-answer scorer
+changes need the owner's approval).
+**Resolution:** Open, for the owner. A narrow fix: count attribution only when the sentence names
+a filing other than the asked one, or uses restatement words (restated, originally, previously,
+before the split).
+**Lesson:** The sanity gate tests the scorer too.
+**Linked decision:** D-047, D-057
