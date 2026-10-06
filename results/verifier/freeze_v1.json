@@ -1,0 +1,16 @@
+{
+  "tag": "verifier-v1",
+  "prompt_version": "verifier_v2",
+  "prompt_sha256": "b87fc579fdde3f018755b57cbde5ddedb5691e65a9642660e5ec686e2f969fde",
+  "detector_patterns_sha256": "d959cb3671a06d0b569b3697e712200de6d6a643dea95509cf64f4ffd7d925de",
+  "code_sha256": {
+    "src/filingguard/agents/verifier/__init__.py": "1d45d9cd705e82c1188603eae0af118091ddf801f807bcb9abaea47ba60bcbc9",
+    "src/filingguard/agents/verifier/facts.py": "1eec847ed4dd34daf8fc96c76045bdabba4a218b856a7d020c04900b61082e92",
+    "src/filingguard/agents/verifier/instructions.py": "96f2d22905deff6a79e64b3562b029fe8cf478f93f906c75598ebb342eb72bcb",
+    "src/filingguard/agents/verifier/lexicon.py": "7d4fc2c05010da74e2705f448f0ed059ffb74c0069b04f48963b36d3a62d8206",
+    "src/filingguard/agents/verifier/question.py": "07c38fe65360e53415c8583d38c135de7a1f59910e53ee174c289285d8a1801a",
+    "src/filingguard/agents/verifier/verifier.py": "397adb7081ecb5c79560acec98dbf9af45f824579faa7f5e009b3b5031f98ada",
+    "src/filingguard/figures.py": "0265c1c8a719c418a10ea108f37bf7c476e400f5fabbe7a69160cb97dcaac3ff",
+    "src/filingguard/agents/schema.py": "05efa9d807e40a28596e9cfde6753bb7b77277559bdb72d87d7d1dac0c0f9975"
+  }
+}

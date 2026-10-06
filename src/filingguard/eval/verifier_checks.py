@@ -3,7 +3,7 @@
 - the detector's hit rate on the 13 dev planted chunks;
 - style swap: dev premise questions reworded to a neutral opening must get the same verdict.
 
-Usage: python -m filingguard.eval.verifier_checks [--prompt verifier_v1]
+Usage: python -m filingguard.eval.verifier_checks [--prompt verifier_v2]
 """
 
 import argparse
@@ -14,12 +14,12 @@ from typing import Any
 
 from filingguard.agents.verifier.facts import FactStore
 from filingguard.agents.verifier.instructions import detect
-from filingguard.agents.verifier.verifier import Verifier, VerifierInput
+from filingguard.agents.verifier.verifier import PROMPT_VERSION, Verifier, VerifierInput
 from filingguard.eval.dev_report import is_premise, load_dev
 from filingguard.eval.dev_run import POISONED, PROCESSED
 from filingguard.eval.verify_dev import ModelGate, inputs
 
-OUT = Path("results/verifier/checks_v1.json")
+OUT_DIR = Path("results/verifier")
 FP_LIMIT = 6
 # Driver-style openings replaced by one neutral form; metric, years and direction words are kept.
 OPENING = re.compile(r"^(?:Given that [^,]+,\s*)?(?:what|which)\b[^?]*?\b(?:drove|drive|led to|caused|cause|contributed to|"
@@ -68,12 +68,13 @@ def style_swap(prompt_version: str, use_model: bool) -> dict[str, Any]:
         if sig_a != sig_b:
             changed.append(j["source_id"])
     return {"items": len(premise), "reworded": sum(p["question"] != p["neutral"] for p in pairs),
+            "abstain_flag_set": sum(bool(j["input"].answer.get("abstained")) for j in premise),
             "verdict_changed": changed, "pairs": pairs}
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--prompt", default="verifier_v1")
+    parser.add_argument("--prompt", default=PROMPT_VERSION)
     parser.add_argument("--no-model", action="store_true")
     args = parser.parse_args()
     items, _, _ = load_dev()
@@ -82,11 +83,12 @@ def main() -> None:
                             "within_limit": len({f["chunk_id"] for f in fp}) <= FP_LIMIT, "spans": fp},
            "planted_dev": planted_hit_rate({i["id"] for i in items}),
            "style_swap": style_swap(args.prompt, not args.no_model)}
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    (OUT_DIR / f"checks_{args.prompt.removeprefix('verifier_')}.json").write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps({"clean_corpus_flagged": out["clean_corpus"]["flagged_chunks"], "planted_dev": out["planted_dev"],
                       "style_swap_changed": out["style_swap"]["verdict_changed"],
-                      "reworded": out["style_swap"]["reworded"], "items": out["style_swap"]["items"]}, indent=2))
+                      "reworded": out["style_swap"]["reworded"], "items": out["style_swap"]["items"],
+                      "abstain_flag_set": out["style_swap"]["abstain_flag_set"]}, indent=2))
 
 
 if __name__ == "__main__":

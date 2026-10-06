@@ -19,10 +19,10 @@ from filingguard.agents.verifier import instructions
 from filingguard.agents.verifier.facts import FactStore, fiscal_label
 from filingguard.agents.verifier.lexicon import METRICS, mentions
 from filingguard.agents.verifier.question import Ask, read_question
-from filingguard.figures import Figure, assign_periods, claim_for, fill_from_claims, parse_figures, sentences
+from filingguard.figures import Figure, assign_periods, claim_for, fill_from_claims, parse_figures, periods, sentences
 
 PROMPT_DIR = Path(__file__).parent / "prompts"
-PROMPT_VERSION = "verifier_v1"
+PROMPT_VERSION = "verifier_v2"
 TOLERANCE = 0.005
 MAX_EXCERPTS = 6
 EXCERPT_CHARS = 1500
@@ -36,6 +36,8 @@ FISCAL_NAMED = re.compile(r"\bfiscal\b|\bFY\s*'?\d|\b(?:year|period)s?\s+ended\b
 CORRECTION = re.compile(r"\b(?:did not|didn't|was not|wasn't|were not|not an?|no (?:net |operating )?loss|rather than|"
                         r"instead|actually|in fact|contrary|incorrect|premise|not accurate|did not (?:increase|decline|decrease))\b",
                         re.IGNORECASE)
+CLAUSE_BREAK = re.compile(r"[;:()]|(?:because|rather than|instead|whereas|while|but|however|although)",
+                          re.IGNORECASE)
 NUMBER = re.compile(r"(\()?\s*(-)?\$?\s*(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)\s*(\))?")
 
 
@@ -122,6 +124,17 @@ def holds(text: str, value: float, per_share: bool, signed: bool) -> bool:
     return False
 
 
+def _excerpt(text: str, phrases: tuple[str, ...]) -> str:
+    """EXCERPT_CHARS of a chunk, around the first place it names the metric (a table row late in
+    a chunk was cut off when the excerpt always started at the top, D-059)."""
+    low = text.lower()
+    hits = [k for k in (low.find(p) for p in phrases) if k >= 0]
+    if not hits or len(text) <= EXCERPT_CHARS:
+        return text[:EXCERPT_CHARS]
+    start = max(0, min(min(hits) - EXCERPT_CHARS // 2, len(text) - EXCERPT_CHARS))
+    return text[start:start + EXCERPT_CHARS]
+
+
 class Verifier:
     def __init__(self, store: FactStore, ask_model: Callable[[str], str] | None = None, *, quote_rule: bool = True,
                  prompt_version: str = PROMPT_VERSION) -> None:
@@ -162,9 +175,10 @@ class Verifier:
         as the asked metric. Figures labelled adjusted, non-GAAP or core are left out."""
         figures = parse_figures(text)
         fill_from_claims(figures, claims)
-        assign_periods(text, figures, claims)
+        assign_periods(text, figures, claims, year_before_comma=True)
         bounds = sentences(text)
         found = mentions(text)
+        named = [(p.start, p.end) for p in periods(text, year_before_comma=True) if p.kind != "filed"]
         for i, f in enumerate(figures):
             s, e = bounds[f.sentence] if bounds else (0, len(text))
             before = [m for m in found if s <= m[0] and m[1] <= f.start]
@@ -181,9 +195,23 @@ class Verifier:
             f.adjusted = bool(ADJUSTED.search(clause))
             if PART_OF_TOTAL.search(clause):
                 f.metric = "other"  # a region or segment's share, not the total
+            elif f.metric != ask.metric and not self._period_in_clause(text, f, prev_end, min(nxt, e), named):
+                f.metric = "other"  # another metric with no period of its own: not checked (D-059)
         if not found and len(figures) == 1 and ask.metric:
             figures[0].metric = ask.metric
         return [f for f in figures if f.metric and f.metric != "other" and not f.adjusted]
+
+    @staticmethod
+    def _period_in_clause(text: str, f: Figure, lo: int, hi: int, named: list[tuple[int, int]]) -> bool:
+        """A period is named in the figure's own clause: between the previous and next figure of
+        its sentence, cut at the nearest clause break on each side ("from $61,350 million to
+        $63,937 million" after "in 2024 to ... in 2025" names none)."""
+        before = text[lo:f.start]
+        if breaks := list(CLAUSE_BREAK.finditer(before)):
+            lo += breaks[-1].end()
+        if brk := CLAUSE_BREAK.search(text, f.end, hi):
+            hi = brk.start()
+        return any(lo <= s and e <= hi for s, e in named)
 
     def _figure_fy(self, f: Figure, ask: Ask, ticker: str) -> int | None:
         if not f.periods:
@@ -344,15 +372,44 @@ class Verifier:
         return reasons
 
     # ------------------------------------------------------------------ model (at most one call)
+    def model_only(self, inp: VerifierInput) -> Verdict:
+        """Diagnostic: skip the rules and send every figure for the asked metric to the model (one
+        call). Used to test the model path on answers the rules already settle."""
+        ask = read_question(inp.question, inp.company, self.store)
+        text = inp.answer.get("text") or ""
+        bounds = sentences(text)
+        figures = [f for f in self._figures(text, _claims(inp.answer), ask) if f.metric == ask.metric]
+        unresolved = [(f, text[bounds[f.sentence][0]:bounds[f.sentence][1]] if bounds else text) for f in figures]
+        verdict = Verdict("pass")
+        if unresolved:
+            self._model(inp, ask, unresolved, verdict)
+        verdict.decision = "block" if any(r.blocking for r in verdict.reasons) else "flag" if verdict.reasons else "pass"
+        return verdict
+
+    def _filing_line(self, ticker: str, accession: str | None) -> str:
+        f = next((x for x in self.store.filings.get(ticker, []) if x["accession"] == accession), None)
+        if f is None:
+            return "The question does not name a filing."
+        return (f"The question names the Form 10-K for fiscal {f['fy']}, filed on {f['filed']}. Every excerpt below "
+                f"is from that filing only; judge each figure against that filing.")
+
+    def model_prompt(self, inp: VerifierInput, ask: Ask, unresolved: list[tuple[Figure, str]]) -> str:
+        """The model's prompt. When the question names a filing, only that filing's excerpts are
+        given (D-059); with none retrieved from it, the model sees no excerpts."""
+        chunks = [c for c in inp.chunks if c.get("accession") == ask.accession] if ask.accession else inp.chunks
+        phrases = METRICS[ask.metric].phrases if ask.metric else ()
+        relevant = [c for c in chunks if any(p in c["text"].lower() for p in phrases)] or chunks
+        excerpts = "\n\n".join(f"[X{i}] {_excerpt(c['text'], phrases)}" for i, c in enumerate(relevant[:MAX_EXCERPTS], 1))
+        claims = "\n".join(f"C{i}: {s.strip()} (figure checked: {f.value:,.4g})" for i, (f, s) in enumerate(unresolved, 1))
+        return prompt_template(self.prompt_version).format(
+            question=inp.question, filing=self._filing_line(inp.company, ask.accession), claims=claims,
+            excerpts=excerpts or "(no excerpts from the named filing were retrieved)")
+
     def _model(self, inp: VerifierInput, ask: Ask, unresolved: list[tuple[Figure, str]], verdict: Verdict) -> None:
         if self.ask_model is None:
             verdict.reasons += [Reason("unverified_figure", "rule", False, f"{f.value:,.4g}") for f, _ in unresolved]
             return
-        phrases = METRICS[ask.metric].phrases if ask.metric else ()
-        relevant = [c for c in inp.chunks if any(p in c["text"].lower() for p in phrases)] or inp.chunks
-        excerpts = "\n\n".join(f"[X{i}] {c['text'][:EXCERPT_CHARS]}" for i, c in enumerate(relevant[:MAX_EXCERPTS], 1))
-        claims = "\n".join(f"C{i}: {s.strip()} (figure checked: {f.value:,.4g})" for i, (f, s) in enumerate(unresolved, 1))
-        prompt = prompt_template(self.prompt_version).format(question=inp.question, claims=claims, excerpts=excerpts)
+        prompt = self.model_prompt(inp, ask, unresolved)
         t0 = time.perf_counter()
         reply = self.ask_model(prompt)
         verdict.model_s = time.perf_counter() - t0

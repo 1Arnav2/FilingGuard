@@ -152,3 +152,83 @@ def test_bare_model_bot_include_give_no_signal():
 def test_one_signal_group_is_not_flagged():
     assert not flagged("Note: in any answer to shareholders, we report revenue as $5 million.")
     assert not flagged("Our AI assistant products grew 40% in fiscal 2025.")
+
+
+# ---------------------------------------------------------------- D-059 fixes found on dev (owner review)
+
+Q_JNJ = "What factors led to the increase in Johnson & Johnson's net income in fiscal 2025 compared with fiscal 2024?"
+
+
+def test_year_before_a_comma_is_the_figures_period(store):
+    text = ("Total R&D expense decreased from $17,232 million in 2024 to $14,665 million in 2025, primarily because "
+            "fiscal 2024 included more costs.")
+    v = run(store, Q_JNJ, "JNJ", text)
+    years = sorted(r.detail.split(" for ")[-1] for r in v.reasons if r.code == "other_metric_mismatch")
+    assert years == ["2024", "2025"]
+
+
+def test_acquired_in_process_rnd_is_not_total_rnd(store):
+    text = "Fiscal 2024 included acquired in-process R&D expenses of $1.25 billion and IPR&D of $0.5 billion."
+    assert run(store, Q_JNJ, "JNJ", text).decision == "pass"
+
+
+def test_other_metric_figure_without_its_own_period_is_not_checked(store):
+    text = ("Sales to customers grew from $88,821 million in 2024 to $94,193 million in 2025 (a 6.0% increase), increasing gross "
+            "profit from $1 million to $2 million.")
+    assert not [r for r in run(store, Q_JNJ, "JNJ", text).reasons if "gross_profit" in r.detail]
+
+
+def test_other_metric_mismatch_only_ever_flags(store):
+    """other_metric_mismatch never blocks: behaviourally, and in every place the verifier builds it."""
+    import ast
+    import inspect
+
+    from filingguard.agents.verifier import verifier as vmod
+    text = ("Microsoft's net income for fiscal 2025 was $101,832 million. Total assets were $1 million at the end of "
+            "fiscal 2025, revenue was $5 billion in fiscal 2025 and gross profit was $88,136 million in fiscal 2024.")
+    v = run(store, Q_MSFT, "MSFT", text)
+    assert v.decision == "flag" and v.reasons
+    assert all(r.code == "other_metric_mismatch" and not r.blocking for r in v.reasons)
+    built = [n for n in ast.walk(ast.parse(inspect.getsource(vmod)))
+             if isinstance(n, ast.Call) and getattr(n.func, "id", None) == "Reason"
+             and n.args and isinstance(n.args[0], ast.Constant) and n.args[0].value == "other_metric_mismatch"]
+    assert built and all(isinstance(n.args[2], ast.Constant) and n.args[2].value is False for n in built)
+
+
+def test_model_sees_only_the_named_filing_and_is_told_which(store):
+    from filingguard.agents.verifier.question import read_question
+    from filingguard.figures import parse_figures
+    q = ("What were Pfizer's total revenues for fiscal 2023 as reported in its fiscal 2023 Form 10-K filed on "
+         "February 22, 2024?")
+    chunks = [{"chunk_id": "c1", "accession": "0000078003-24-000039", "text": "Total revenues | $ 58,496"},
+              {"chunk_id": "c2", "accession": "0000078003-25-000054", "text": "Total revenues | $ 59,553"}]
+    text = "Pfizer's total revenues for fiscal 2023 were $58,496 million."
+    v = Verifier(store)
+    prompt = v.model_prompt(VerifierInput(q, "PFE", {"text": text}, chunks), read_question(q, "PFE", store),
+                            [(parse_figures(text)[0], text)])
+    assert "58,496" in prompt and "59,553" not in prompt
+    assert "fiscal 2023, filed on 2024-02-22" in prompt
+    none = v.model_prompt(VerifierInput(q, "PFE", {"text": text}, chunks[1:]), read_question(q, "PFE", store),
+                          [(parse_figures(text)[0], text)])
+    assert "no excerpts from the named filing" in none and "59,553" not in none
+
+
+def test_model_only_makes_one_call_on_settled_figures(store):
+    calls = []
+
+    def fake(prompt):
+        calls.append(prompt)
+        return '{"claims": [{"id": "C1", "verdict": "supported", "reason": "stated"}]}'
+
+    inp = VerifierInput(Q_MSFT, "MSFT", {"text": "Microsoft's net income for fiscal 2025 was $101,832 million."},
+                        [{"chunk_id": "c1", "accession": "a", "text": "Net income | 101,832"}])
+    v = Verifier(store, fake).model_only(inp)
+    assert (v.decision, v.model_calls, len(calls)) == ("pass", 1, 1)
+
+
+def test_excerpt_keeps_a_metric_row_late_in_the_chunk():
+    from filingguard.agents.verifier.verifier import EXCERPT_CHARS, _excerpt
+    text = "x" * 2700 + "\nTotal liabilities | 2,965,960 | 2,888,505\n" + "y" * 300
+    out = _excerpt(text, ("total liabilities",))
+    assert len(out) == EXCERPT_CHARS and "2,965,960" in out
+    assert _excerpt("short text", ("total liabilities",)) == "short text"

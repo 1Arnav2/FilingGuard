@@ -52,12 +52,15 @@ One phase per working session. Each phase ends with: tests pass, roadmap ticked,
       baseline dev report and the 90-row score sheet — all done 2026-10-05; **owner spot-check
       of the sheet pending** (ticked after it)
 - [x] Owner approves `docs/INJECTION_DETECTOR.md` (D-052) and the seeded-error design (D-057)
-- [x] Dev seeded-error set with sanity gate (`docs/SEEDED_ERRORS.md`): 151 kept, 3 dropped (H-030)
+- [x] Dev seeded-error set with sanity gate (`docs/SEEDED_ERRORS.md`): 151 kept, 3 dropped (H-030);
+      v2 after the H-030 scorer fix: 153 kept, 1 dropped (D-059)
 - [x] Claim extraction
 - [x] Span, numeric, period, and injection checks with reason codes; premise check
 - [x] Unit tests for every deterministic check (`tests/test_verifier.py`)
-- [x] Tune on dev split only (prompt v1 only; rule changes in D-058); **owner review of the dev
-      report pending; verifier not frozen or tagged**
+- [x] Tune on dev split only (rule changes in D-058); owner's review of the dev report done
+      2026-10-06, fixes A and B and prompt `verifier_v2` (D-059); `results/verifier/dev_report.md`
+- [x] Verifier frozen and tagged `verifier-v1` (D-060); dev results logged
+- [ ] Owner's 10 planted texts for the offline detector check (after the freeze; reported as is)
 - **Done when:** verifier is frozen and tagged; dev results logged.
 
 ## Phase 5 — Eval run (1 day)
@@ -69,7 +72,14 @@ latency sample about $0.6–$0.7, judge about $0.1, verifier on test $0.4–$1.3
 **$6.0–$8.5**: the $5 warning trips in Phase 4 or early Phase 5, and the high end passes the $7
 cap. Options: one verifier model call per answer on test; test verifier calls through the Batch
 API; skip the robustness set.
+**Re-projected 2026-10-06** from measured unit costs, after the verifier freeze ($2.321 spent):
+Phase 5 $2.69–$3.46, project end **$5.01–$5.78**, under the $7 cap (`docs/PHASE5_PLAN.md`).
+- [ ] Owner approves `docs/PHASE5_PLAN.md` (order, cost, budget option); test batch needs a
+      separate go-ahead
+- [ ] Owner's judge hand-check on the 16 dev premise items (EVAL §5)
 - [ ] Baseline and treatment on test split, once
+- [ ] Owner hand-checks 30 scored test rows chosen by seed, both conditions; agreement reported
+      (EVAL §10 4a)
 - [ ] Metrics, intervals, McNemar, bootstrap by type
 - [ ] Failure taxonomy labels
 - [ ] `results/summary.json`

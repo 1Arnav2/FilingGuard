@@ -58,6 +58,9 @@ _PERIOD_PATTERNS = (
     ("calendar", re.compile(r"\bcalendar(?:\s+years?)?\s+(?P<year>(?:19|20)\d{2})\b", re.IGNORECASE)),
     ("year", re.compile(r"(?<![\d,.$])(?P<year>(?:19|20)\d{2})(?![\d,])")),
 )
+# The verifier also reads a bare year followed by a comma ("in 2025, primarily ..."), which the
+# year pattern above leaves out; the scorer keeps the pattern above (D-059).
+_YEAR_BEFORE_COMMA = ("year", re.compile(r"(?<![\d,.$])(?P<year>(?:19|20)\d{2})(?!\d|,\d)"))
 _QUARTER_WORDS = {"first": 1, "1st": 1, "second": 2, "2nd": 2, "third": 3, "3rd": 3, "fourth": 4, "4th": 4}
 
 _SENTENCE_END = re.compile(r"(?<=[.!?;])\s+(?=[A-Z(\[$\"'])|\n+")
@@ -128,11 +131,13 @@ def _month_number(name: str) -> int:
     return next(i + 1 for i, m in enumerate(MONTHS) if m.startswith(name[:3]))
 
 
-def periods(text: str) -> list[Period]:
-    """Every period mention in `text`, with overlapping weaker matches dropped."""
+def periods(text: str, year_before_comma: bool = False) -> list[Period]:
+    """Every period mention in `text`, with overlapping weaker matches dropped. With
+    `year_before_comma`, a bare year followed by a comma is read too (verifier only)."""
     found: list[Period] = []
     taken: list[tuple[int, int]] = []
-    for kind, pattern in _PERIOD_PATTERNS:
+    patterns = _PERIOD_PATTERNS[:-1] + (_YEAR_BEFORE_COMMA,) if year_before_comma else _PERIOD_PATTERNS
+    for kind, pattern in patterns:
         for m in pattern.finditer(text):
             if any(s < m.end() and m.start() < e for s, e in taken):
                 continue
@@ -249,11 +254,11 @@ def fill_from_claims(figures: list[Figure], claims: list[Claim]) -> None:
             f.value = (-1 if f.negative else 1) * f.raw * factor
 
 
-def assign_periods(text: str, figures: list[Figure], claims: list[Claim]) -> None:
+def assign_periods(text: str, figures: list[Figure], claims: list[Claim], year_before_comma: bool = False) -> None:
     """Attach to each figure the period mention nearest to it in its sentence; with none, the
     period of the claim that states it (D-047); with neither, no period."""
     bounds = sentences(text)
-    mentions = [p for p in periods(text) if p.kind != "filed"]
+    mentions = [p for p in periods(text, year_before_comma) if p.kind != "filed"]
     for f in figures:
         s, e = bounds[f.sentence] if bounds else (0, len(text))
         local = [p for p in mentions if s <= p.start < e]

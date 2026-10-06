@@ -53,7 +53,8 @@ OTHER_PHRASES = (
     "before taxes", "operating expenses", "total expenses", "investing activities", "financing activities",
     "free cash flow", "capital expenditures", "dividends", "repurchase", "interest expense", "income taxes",
     "income tax", "net interest income", "noninterest income", "current portion of long-term debt", "short-term debt",
-    "total debt", "segment", "other income", "other (income)",
+    "total debt", "segment", "other income", "other (income)", "in-process research and development",
+    "in-process r&d", "ipr&d", "acquired in-process",
 )
 GENERIC_EPS = ("earnings per share", "net income per share", "per share", "eps")
 _SEGMENT_QUALIFIERS = {"segment", "product", "products", "service", "services", "subscription", "advertising",

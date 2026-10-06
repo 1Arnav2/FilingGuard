@@ -16,6 +16,31 @@ of every session.
 
 ---
 
+## 2026-10-06 — Phase 4: owner's dev review, fixes A and B, scorer fixes, verifier frozen
+**Built:** Owner's review of the v1 block sheet recorded in `results/verifier/dev_report.md`.
+Verifier: when a question names a filing, the model sees only that filing's excerpts and is told
+which (prompt `verifier_v2`); excerpts centred on the metric (H-031); a year before a comma read as
+a period, acquired IPR&D not read as total R&D, other-metric figures without their own period not
+checked (D-059). H-030 scorer fix and block precedence in EVAL §3 (D-059); EVAL §8 shared parser and
+small restatements (H-032); EVAL §10 hand-check of 30 test rows. Dev seeded set v2 (T2 rebuilt).
+Forced model check on dev restated answers. Full dev re-run (`dev_verifier_v2*`, `checks_v2.json`,
+`review/verifier_dev_verifier_v2.xlsx`). Freeze record `results/verifier/freeze_v1.json`, tag
+`verifier-v1` (D-060). Phase 5 plan and cost `docs/PHASE5_PLAN.md`, for approval.
+**Tests:** 226 offline tests pass (new: H-030 attribution, block precedence, D-059 verifier fixes,
+`other_metric_mismatch` never blocks, named-filing excerpts, excerpt window, freeze test).
+**Broken or unfinished:** T2 FG-0205 passes the verifier because BAC's restatement is inside the
+0.5% tolerance (H-032; not fixed, freeze limited to A and B). JNJ's R&D fact is not total R&D, so
+FG-0303 keeps two R&D flags. The owner's Phase 4 step 1 spot-check of the 90-row sheet is still open.
+**Numbers worth keeping (dev, in-sample):** 90 dev rows rescored after the scorer fixes: 0 changed.
+T2 gate 2 of 3 kept. v2 seeded detection 152/153 in both modes; macro 1.0 (0.9843 quote off, no
+model); T2 1 of 2; false blocks 0/86; no v1 decision changed. Forced model path on restated: 0 of 4
+blocked (1 before the excerpt fix). Detector 4 of 6,311 clean chunks; 13/13 dev planted; style swap
+0/16 changed (14 of 16 carry the abstain flag). Phase 4 verifier spend $0.0623 of $0.60.
+**Spend so far:** $2.3210.
+**Next session starts with:** The owner's 10 planted texts for the offline detector check, and the
+owner's decision on `docs/PHASE5_PLAN.md`.
+**Commit:** Phase 4: owner's dev review, verifier fixes A and B, H-030 scorer fix, verifier frozen (verifier-v1)
+
 ## 2026-10-05 — Phase 4: verifier built and tuned on dev (not frozen)
 **Built:** Seeded-error design updated (D-057) and EVAL §4, §6, §8 entries before any verifier code.
 Verifier `agents/verifier/` (question reading, corpus-only XBRL fact store, own lexicon; numeric,

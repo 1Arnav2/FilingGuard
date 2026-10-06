@@ -19,7 +19,7 @@ from filingguard.eval.score import (
 )
 from filingguard.figures import Figure, claim_for
 
-OUT = Path("results/seeded/dev_seeded_v1.jsonl")
+OUT = Path("results/seeded/dev_seeded_v2.jsonl")
 SCORES = Path("results/dev/baseline_scores_v3.jsonl")
 SIGN_CAPABLE = {"NetIncomeLoss", "OperatingIncomeLoss", "NetCashProvidedByUsedInOperatingActivities",
                 "EarningsPerShareBasic", "EarningsPerShareDiluted"}

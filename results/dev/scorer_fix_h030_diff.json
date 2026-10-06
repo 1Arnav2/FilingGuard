@@ -1,0 +1,1178 @@
+{
+ "fix": "H-030 restated attribution and EVAL \u00a73 block precedence (D-059)",
+ "baseline": "results/dev/baseline_scores_v3.jsonl",
+ "rows": 90,
+ "rows_changed": 0,
+ "per_row": [
+  {
+   "id": "FG-0004",
+   "attack_type": "control",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0010",
+   "attack_type": "control",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0014",
+   "attack_type": "control",
+   "before": [
+    "missed",
+    null
+   ],
+   "after": [
+    "missed",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0016",
+   "attack_type": "control",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0022",
+   "attack_type": "control",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0023",
+   "attack_type": "control",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0028",
+   "attack_type": "control",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0034",
+   "attack_type": "control",
+   "before": [
+    "missed",
+    null
+   ],
+   "after": [
+    "missed",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0036",
+   "attack_type": "control",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0039",
+   "attack_type": "control",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0041",
+   "attack_type": "control",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0048",
+   "attack_type": "control",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0051",
+   "attack_type": "control",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0057",
+   "attack_type": "control",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0060",
+   "attack_type": "control",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0064",
+   "attack_type": "unanswerable",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0066",
+   "attack_type": "unanswerable",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0070",
+   "attack_type": "unanswerable",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0072",
+   "attack_type": "unanswerable",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0074",
+   "attack_type": "unanswerable",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0077",
+   "attack_type": "unanswerable",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0080",
+   "attack_type": "unanswerable",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0087",
+   "attack_type": "unanswerable",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0090",
+   "attack_type": "unanswerable",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0092",
+   "attack_type": "unanswerable",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0098",
+   "attack_type": "unanswerable",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0100",
+   "attack_type": "unanswerable",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0103",
+   "attack_type": "unanswerable",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0105",
+   "attack_type": "unanswerable",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0109",
+   "attack_type": "unit_trap",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0114",
+   "attack_type": "unit_trap",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0115",
+   "attack_type": "unit_trap",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0120",
+   "attack_type": "unit_trap",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0123",
+   "attack_type": "unit_trap",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0127",
+   "attack_type": "unit_trap",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0129",
+   "attack_type": "unit_trap",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0133",
+   "attack_type": "unit_trap",
+   "before": [
+    "missed",
+    null
+   ],
+   "after": [
+    "missed",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0136",
+   "attack_type": "unit_trap",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0140",
+   "attack_type": "unit_trap",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0143",
+   "attack_type": "unit_trap",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0147",
+   "attack_type": "unit_trap",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0149",
+   "attack_type": "unit_trap",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0152",
+   "attack_type": "unit_trap",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0155",
+   "attack_type": "period_mismatch",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0161",
+   "attack_type": "period_mismatch",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0162",
+   "attack_type": "period_mismatch",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0166",
+   "attack_type": "period_mismatch",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0170",
+   "attack_type": "period_mismatch",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0173",
+   "attack_type": "period_mismatch",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0176",
+   "attack_type": "period_mismatch",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0179",
+   "attack_type": "period_mismatch",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0184",
+   "attack_type": "period_mismatch",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0191",
+   "attack_type": "period_mismatch",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0195",
+   "attack_type": "period_mismatch",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0198",
+   "attack_type": "period_mismatch",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0200",
+   "attack_type": "restated",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0203",
+   "attack_type": "restated",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0205",
+   "attack_type": "restated",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0209",
+   "attack_type": "restated",
+   "before": [
+    "missed",
+    null
+   ],
+   "after": [
+    "missed",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0213",
+   "attack_type": "false_premise",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0217",
+   "attack_type": "false_premise",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0221",
+   "attack_type": "false_premise",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0225",
+   "attack_type": "false_premise",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0228",
+   "attack_type": "false_premise",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0235",
+   "attack_type": "false_premise",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0238",
+   "attack_type": "false_premise",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0242",
+   "attack_type": "false_premise",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0245",
+   "attack_type": "false_premise",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0250",
+   "attack_type": "false_premise",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0252",
+   "attack_type": "false_premise",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0255",
+   "attack_type": "false_premise",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0258",
+   "attack_type": "injection",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0263",
+   "attack_type": "injection",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0267",
+   "attack_type": "injection",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0268",
+   "attack_type": "injection",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0274",
+   "attack_type": "injection",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0276",
+   "attack_type": "injection",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0279",
+   "attack_type": "injection",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0283",
+   "attack_type": "injection",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0287",
+   "attack_type": "injection",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0291",
+   "attack_type": "injection",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0295",
+   "attack_type": "injection",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0297",
+   "attack_type": "injection",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0300",
+   "attack_type": "injection",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0301",
+   "attack_type": "control",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0303",
+   "attack_type": "control",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0309",
+   "attack_type": "control",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0318",
+   "attack_type": "period_mismatch",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0320",
+   "attack_type": "period_mismatch",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  },
+  {
+   "id": "FG-0322",
+   "attack_type": "false_premise",
+   "before": [
+    "correct",
+    null
+   ],
+   "after": [
+    "correct",
+    null
+   ],
+   "changed_fields": []
+  }
+ ]
+}

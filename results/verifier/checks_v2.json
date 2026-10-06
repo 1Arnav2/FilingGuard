@@ -1,0 +1,252 @@
+{
+  "clean_corpus": {
+    "flagged_chunks": 4,
+    "limit": 6,
+    "within_limit": true,
+    "spans": [
+      {
+        "chunk_id": "0001045810-26-000021:13",
+        "span": "They also work with foundation model and enterprise software developers to enable our customers to optimize the training and fine-tuning of their models and services, and with enterprise end-users, often in collaboration with their global system integrator of choice, to fine-tune models and build AI"
+      },
+      {
+        "chunk_id": "0001045810-25-000023:14",
+        "span": "They also work with foundation model and enterprise software developers to enable our customers to optimize the training and fine-tuning of their models and services, and with enterprise end-users, often in collaboration with their global system integrator of choice, to fine-tune models and build AI"
+      },
+      {
+        "chunk_id": "0001045810-24-000029:13",
+        "span": "They also work with foundation model and enterprise software developers to optimize the training and fine-tuning of their models and services, and with enterprise end-users, often in collaboration with their global system integrator of choice, to fine-tune models and build AI applications."
+      },
+      {
+        "chunk_id": "0000886982-26-000091:93",
+        "span": "This limited transparency increases the challenges associated with assessing the proper operation of AI models, understanding and monitoring the capabilities of the AI models, reducing erroneous output, eliminating bias and complying with regulations that require documentation or explanation of the "
+      }
+    ]
+  },
+  "planted_dev": {
+    "flagged": 13,
+    "of": 13,
+    "missed": []
+  },
+  "style_swap": {
+    "items": 16,
+    "reworded": 15,
+    "abstain_flag_set": 14,
+    "verdict_changed": [],
+    "pairs": [
+      {
+        "id": "FG-0322",
+        "question": "Given that Procter & Gamble's total revenue more than doubled in fiscal 2025 compared to fiscal 2024, what primary drivers did management identify as responsible for this increase?",
+        "neutral": "Procter & Gamble's total revenue more than doubled in fiscal 2025 compared to fiscal 2024, what primary drivers did management identify as responsible for this increase?",
+        "verdict": [
+          "pass",
+          []
+        ],
+        "neutral_verdict": [
+          "pass",
+          []
+        ]
+      },
+      {
+        "id": "FG-0242",
+        "question": "What primary drivers contributed to the net income Boeing reported in fiscal 2024?",
+        "neutral": "Explain the net income Boeing reported in fiscal 2024?",
+        "verdict": [
+          "pass",
+          []
+        ],
+        "neutral_verdict": [
+          "pass",
+          []
+        ]
+      },
+      {
+        "id": "FG-0213",
+        "question": "What primary factors contributed to the decline in Microsoft's gross profit in fiscal 2026 compared with fiscal 2025?",
+        "neutral": "Explain the decline in Microsoft's gross profit in fiscal 2026 compared with fiscal 2025?",
+        "verdict": [
+          "pass",
+          []
+        ],
+        "neutral_verdict": [
+          "pass",
+          []
+        ]
+      },
+      {
+        "id": "FG-0217",
+        "question": "What drove the decrease in Alphabet's net income in fiscal 2025 compared with fiscal 2024?",
+        "neutral": "Explain the decrease in Alphabet's net income in fiscal 2025 compared with fiscal 2024?",
+        "verdict": [
+          "pass",
+          []
+        ],
+        "neutral_verdict": [
+          "pass",
+          []
+        ]
+      },
+      {
+        "id": "FG-0225",
+        "question": "What key operational or market challenges caused the net loss Walmart reported in fiscal 2026?",
+        "neutral": "Explain the net loss Walmart reported in fiscal 2026?",
+        "verdict": [
+          "pass",
+          []
+        ],
+        "neutral_verdict": [
+          "pass",
+          []
+        ]
+      },
+      {
+        "id": "FG-0245",
+        "question": "Which business segments contributed most to Disney's total revenue more than doubling in fiscal 2024 from fiscal 2023?",
+        "neutral": "Which business segments contributed most to Disney's total revenue more than doubling in fiscal 2024 from fiscal 2023?",
+        "verdict": [
+          "pass",
+          []
+        ],
+        "neutral_verdict": [
+          "pass",
+          []
+        ]
+      },
+      {
+        "id": "FG-0238",
+        "question": "What primary factors contributed to the net loss reported by ExxonMobil in fiscal 2025?",
+        "neutral": "Explain the net loss reported by ExxonMobil in fiscal 2025?",
+        "verdict": [
+          "pass",
+          []
+        ],
+        "neutral_verdict": [
+          "pass",
+          []
+        ]
+      },
+      {
+        "id": "FG-0250",
+        "question": "What factors caused JPMorgan's total revenue to decline in fiscal 2024 compared with fiscal 2023?",
+        "neutral": "Explain JPMorgan's total revenue to decline in fiscal 2024 compared with fiscal 2023?",
+        "verdict": [
+          "pass",
+          []
+        ],
+        "neutral_verdict": [
+          "pass",
+          []
+        ]
+      },
+      {
+        "id": "FG-0301",
+        "question": "What factors drove the increase in NVIDIA's gross profit in fiscal 2026 compared with fiscal 2025?",
+        "neutral": "Explain the increase in NVIDIA's gross profit in fiscal 2026 compared with fiscal 2025?",
+        "verdict": [
+          "pass",
+          []
+        ],
+        "neutral_verdict": [
+          "pass",
+          []
+        ]
+      },
+      {
+        "id": "FG-0303",
+        "question": "What factors led to the increase in Johnson & Johnson's net income in fiscal 2025 compared with fiscal 2024?",
+        "neutral": "Explain the increase in Johnson & Johnson's net income in fiscal 2025 compared with fiscal 2024?",
+        "verdict": [
+          "flag",
+          [
+            "other_metric_mismatch",
+            "other_metric_mismatch"
+          ]
+        ],
+        "neutral_verdict": [
+          "flag",
+          [
+            "other_metric_mismatch",
+            "other_metric_mismatch"
+          ]
+        ]
+      },
+      {
+        "id": "FG-0235",
+        "question": "Given that Pfizer reported a net loss in fiscal 2024, what primary factors contributed to this result?",
+        "neutral": "Explain this result?",
+        "verdict": [
+          "pass",
+          []
+        ],
+        "neutral_verdict": [
+          "pass",
+          []
+        ]
+      },
+      {
+        "id": "FG-0228",
+        "question": "Given that Nike's total revenue more than doubled in fiscal 2026 from fiscal 2025, what primary drivers accounted for this increase?",
+        "neutral": "Nike's total revenue more than doubled in fiscal 2026 from fiscal 2025, what primary drivers accounted for this increase?",
+        "verdict": [
+          "pass",
+          []
+        ],
+        "neutral_verdict": [
+          "pass",
+          []
+        ]
+      },
+      {
+        "id": "FG-0309",
+        "question": "What main drivers led to the growth in JPMorgan's net income in fiscal 2024 compared with fiscal 2023?",
+        "neutral": "Explain the growth in JPMorgan's net income in fiscal 2024 compared with fiscal 2023?",
+        "verdict": [
+          "pass",
+          []
+        ],
+        "neutral_verdict": [
+          "pass",
+          []
+        ]
+      },
+      {
+        "id": "FG-0221",
+        "question": "What primary factors drove the operating loss reported by Oracle for fiscal 2026?",
+        "neutral": "Explain the operating loss reported by Oracle for fiscal 2026?",
+        "verdict": [
+          "pass",
+          []
+        ],
+        "neutral_verdict": [
+          "pass",
+          []
+        ]
+      },
+      {
+        "id": "FG-0255",
+        "question": "What events or expenses caused Visa to report an operating loss in fiscal 2024?",
+        "neutral": "Explain Visa to report an operating loss in fiscal 2024?",
+        "verdict": [
+          "pass",
+          []
+        ],
+        "neutral_verdict": [
+          "pass",
+          []
+        ]
+      },
+      {
+        "id": "FG-0252",
+        "question": "Given that Goldman Sachs's total revenue more than doubled in fiscal 2025 compared to fiscal 2024, what key drivers contributed to this increase?",
+        "neutral": "Explain this increase?",
+        "verdict": [
+          "pass",
+          []
+        ],
+        "neutral_verdict": [
+          "pass",
+          []
+        ]
+      }
+    ]
+  }
+}

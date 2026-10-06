@@ -6,7 +6,7 @@ the frozen planted text in place for injection items). It never sees item metada
 or gold. Model calls go through a gate that refuses any uncached call once Phase 4 verifier spend
 would pass the owner's cap.
 
-Usage: python -m filingguard.eval.verify_dev [--prompt verifier_v1] [--no-model]
+Usage: python -m filingguard.eval.verify_dev [--prompt verifier_v2] [--no-model]
 """
 
 import argparse
@@ -14,18 +14,19 @@ import json
 import random
 import statistics
 from collections import Counter, defaultdict
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
 from filingguard.agents.verifier.facts import FactStore
-from filingguard.agents.verifier.verifier import Verifier, VerifierInput, prompt_sha256
+from filingguard.agents.verifier.verifier import PROMPT_VERSION, Verifier, VerifierInput, prompt_sha256
 from filingguard.eval.dev_report import load_dev, load_judge
 from filingguard.eval.dev_run import POISONED, PROCESSED
 from filingguard.eval.score import score_answer
 from filingguard.eval.stats import wilson
 from filingguard.llm.cache import cache_key
 
-SEEDED = Path("results/seeded/dev_seeded_v1.jsonl")
+SEEDED = Path("results/seeded/dev_seeded_v2.jsonl")
 OUT_DIR = Path("results/verifier")
 SHEET_DIR = Path("review")
 SPEND_CAP_USD = 0.60
@@ -211,11 +212,37 @@ def write_sheet(rows: list[dict], jobs: list[dict], by_id: dict, gold: dict, pat
     wb.save(path)
 
 
+def force_restated(prompt_version: str) -> dict[str, Any]:
+    """The model path forced on every untouched dev `restated` answer (D-059): one call each, rules
+    skipped. None should be blocked; the model's reasons are kept for review."""
+    items, _, runs = load_dev()
+    _, jobs = inputs(items, runs)
+    restated = {i["id"] for i in items if i["attack_type"] == "restated"}
+    gate = ModelGate()
+    spent_before = gate.spent()
+    v = Verifier(FactStore(), gate, prompt_version=prompt_version)
+    rows = []
+    for j in sorted((j for j in jobs if j["kind"] == "natural" and j["source_id"] in restated), key=lambda j: j["key"]):
+        verdict = v.model_only(j["input"])
+        rows.append({"source_id": j["source_id"], "decision": verdict.decision, "model_calls": verdict.model_calls,
+                     "reasons": [asdict(r) for r in verdict.reasons]})
+    out = {"prompt_version": prompt_version, "prompt_sha256": prompt_sha256(prompt_version), "rows": rows,
+           "blocked": sum(r["decision"] == "block" for r in rows),
+           "verifier_spend_usd": round(gate.spent() - spent_before, 6)}
+    path = OUT_DIR / f"dev_forced_model_restated_{prompt_version}.json"
+    path.write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
+    return out
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--prompt", default="verifier_v1")
+    parser.add_argument("--prompt", default=PROMPT_VERSION)
     parser.add_argument("--no-model", action="store_true")
+    parser.add_argument("--force-restated", action="store_true", help="force the model path on dev restated answers")
     args = parser.parse_args()
+    if args.force_restated:
+        print(json.dumps(force_restated(args.prompt), indent=2))
+        return
     summary = run(args.prompt, not args.no_model)
     for mode, m in summary["modes"].items():
         print(mode, json.dumps({k: m[k] for k in ("detection_by_transform", "detection_macro_T1_T3_T4_T5_T6",

@@ -2,6 +2,8 @@
 
 **Status:** Approved by the owner with changes, 2026-10-05 (D-057), after the dev baseline (v3: 0
 Unsupported of 90) and before any verifier code existed. No model calls in building it.
+**Dev set:** `results/seeded/dev_seeded_v1.jsonl` (151 kept; all 3 T2 dropped, H-030), rebuilt as
+`dev_seeded_v2.jsonl` after the H-030 scorer fix (153 kept; T2 2 of 3, D-059).
 
 ## Why
 On the dev baseline the target makes no unsupported claims (EVAL §6 testability note, D-056;

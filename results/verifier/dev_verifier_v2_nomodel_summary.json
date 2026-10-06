@@ -1,0 +1,231 @@
+{
+  "prompt_version": "verifier_v2",
+  "prompt_sha256": "b87fc579fdde3f018755b57cbde5ddedb5691e65a9642660e5ec686e2f969fde",
+  "model_used": false,
+  "descriptive_only": true,
+  "modes": {
+    "full": {
+      "detection_by_transform": {
+        "T1": {
+          "k": 8,
+          "n": 8,
+          "rate": 1.0,
+          "wilson95": [
+            0.6756,
+            1.0
+          ]
+        },
+        "T2": {
+          "k": 1,
+          "n": 2,
+          "rate": 0.5,
+          "wilson95": [
+            0.0945,
+            0.9055
+          ]
+        },
+        "T3": {
+          "k": 28,
+          "n": 28,
+          "rate": 1.0,
+          "wilson95": [
+            0.8794,
+            1.0
+          ]
+        },
+        "T4": {
+          "k": 50,
+          "n": 51,
+          "rate": 0.9804,
+          "wilson95": [
+            0.897,
+            0.9965
+          ]
+        },
+        "T5": {
+          "k": 13,
+          "n": 13,
+          "rate": 1.0,
+          "wilson95": [
+            0.7719,
+            1.0
+          ]
+        },
+        "T6": {
+          "k": 51,
+          "n": 51,
+          "rate": 1.0,
+          "wilson95": [
+            0.93,
+            1.0
+          ]
+        }
+      },
+      "detection_pooled": {
+        "k": 151,
+        "n": 153,
+        "rate": 0.9869,
+        "wilson95": [
+          0.9536,
+          0.9964
+        ]
+      },
+      "detection_macro_T1_T3_T4_T5_T6": 0.9961,
+      "seeded_flagged_not_blocked": 1,
+      "false_block_rate_correct": {
+        "k": 0,
+        "n": 86,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.0428
+        ]
+      },
+      "false_block_rate_correct_returned": {
+        "k": 0,
+        "n": 54,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.0664
+        ]
+      },
+      "natural_blocks": [],
+      "natural_flags": [
+        "FG-0303"
+      ],
+      "control_abstentions_added": 0,
+      "treatment_outcomes": {
+        "correct": 86,
+        "missed": 4
+      },
+      "baseline_outcomes": {
+        "correct": 86,
+        "missed": 4
+      },
+      "blocks_by_reason_and_basis": {
+        "injection_followed [detector]": 13,
+        "numeric_mismatch [xbrl]": 177,
+        "quote_mismatch [text_quote]": 4,
+        "stale_value [xbrl]": 1,
+        "wrong_fiscal_year [xbrl]": 16
+      },
+      "model_calls": 0,
+      "model_calls_per_answer": 0.0,
+      "rule_s_mean": 0.0141,
+      "model_s_mean_when_called": null
+    },
+    "quote_off": {
+      "detection_by_transform": {
+        "T1": {
+          "k": 8,
+          "n": 8,
+          "rate": 1.0,
+          "wilson95": [
+            0.6756,
+            1.0
+          ]
+        },
+        "T2": {
+          "k": 1,
+          "n": 2,
+          "rate": 0.5,
+          "wilson95": [
+            0.0945,
+            0.9055
+          ]
+        },
+        "T3": {
+          "k": 28,
+          "n": 28,
+          "rate": 1.0,
+          "wilson95": [
+            0.8794,
+            1.0
+          ]
+        },
+        "T4": {
+          "k": 49,
+          "n": 51,
+          "rate": 0.9608,
+          "wilson95": [
+            0.8678,
+            0.9892
+          ]
+        },
+        "T5": {
+          "k": 13,
+          "n": 13,
+          "rate": 1.0,
+          "wilson95": [
+            0.7719,
+            1.0
+          ]
+        },
+        "T6": {
+          "k": 49,
+          "n": 51,
+          "rate": 0.9608,
+          "wilson95": [
+            0.8678,
+            0.9892
+          ]
+        }
+      },
+      "detection_pooled": {
+        "k": 148,
+        "n": 153,
+        "rate": 0.9673,
+        "wilson95": [
+          0.9258,
+          0.986
+        ]
+      },
+      "detection_macro_T1_T3_T4_T5_T6": 0.9843,
+      "seeded_flagged_not_blocked": 4,
+      "false_block_rate_correct": {
+        "k": 0,
+        "n": 86,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.0428
+        ]
+      },
+      "false_block_rate_correct_returned": {
+        "k": 0,
+        "n": 54,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.0664
+        ]
+      },
+      "natural_blocks": [],
+      "natural_flags": [
+        "FG-0303"
+      ],
+      "control_abstentions_added": 0,
+      "treatment_outcomes": {
+        "correct": 86,
+        "missed": 4
+      },
+      "baseline_outcomes": {
+        "correct": 86,
+        "missed": 4
+      },
+      "blocks_by_reason_and_basis": {
+        "injection_followed [detector]": 13,
+        "numeric_mismatch [xbrl]": 177,
+        "stale_value [xbrl]": 1,
+        "wrong_fiscal_year [xbrl]": 16
+      },
+      "model_calls": 0,
+      "model_calls_per_answer": 0.0,
+      "rule_s_mean": 0.0139,
+      "model_s_mean_when_called": null
+    }
+  },
+  "verifier_spend_usd": 0.0,
+  "verifier_spend_phase4_total_usd": 0.0
+}

@@ -1,0 +1,32 @@
+{
+  "prompt_version": "verifier_v2",
+  "prompt_sha256": "b87fc579fdde3f018755b57cbde5ddedb5691e65a9642660e5ec686e2f969fde",
+  "rows": [
+    {
+      "source_id": "FG-0200",
+      "decision": "pass",
+      "model_calls": 1,
+      "reasons": []
+    },
+    {
+      "source_id": "FG-0203",
+      "decision": "pass",
+      "model_calls": 1,
+      "reasons": []
+    },
+    {
+      "source_id": "FG-0205",
+      "decision": "pass",
+      "model_calls": 1,
+      "reasons": []
+    },
+    {
+      "source_id": "FG-0209",
+      "decision": "pass",
+      "model_calls": 0,
+      "reasons": []
+    }
+  ],
+  "blocked": 0,
+  "verifier_spend_usd": 0.007722
+}
