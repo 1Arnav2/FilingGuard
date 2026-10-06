@@ -51,7 +51,8 @@ One phase per working session. Each phase ends with: tests pass, roadmap ticked,
       batch, 90 items (D-046, re-run after H-028); premise judge on the 16 dev premise items;
       baseline dev report and the 90-row score sheet — all done 2026-10-05; **owner spot-check
       of the sheet pending** (ticked after it)
-- [ ] Owner approves `docs/INJECTION_DETECTOR.md` and the robustness set
+- [x] Owner approves `docs/INJECTION_DETECTOR.md` (D-052) and the seeded-error design (D-057)
+- [ ] Dev seeded-error set with sanity gate (`docs/SEEDED_ERRORS.md`)
 - [ ] Claim extraction
 - [ ] Span, numeric, period, and injection checks with reason codes
 - [ ] Unit tests for every deterministic check
@@ -95,6 +96,8 @@ API; skip the robustness set.
 - **Done when:** repo is public and the first five messages are out.
 
 ## Stretch
+- [ ] Weaker-target side experiment (one setting changed, e.g. top-5 retrieval; labelled side run,
+      never a headline): an option after Phase 5 only if budget remains (D-057); about $1.7–$2.7
 - [ ] FundClarity as second target via MCP
 - [ ] Second model comparison
 - [ ] Timed user study

@@ -1075,6 +1075,24 @@ Unsupported, and is not testable with no blocks. The abstain bar is testable.
 **Why:** The record states what the test can and cannot show before the result exists.
 **Revisit if:** Never for test set v1.
 
+### D-057 — Seeded-error evaluation approved with changes; verifier build limits
+**Date:** 2026-10-05 · **Phase:** 4
+**Context:** The dev baseline has no unsupported claims (D-056), so the headline bars cannot show
+whether the verifier catches errors. `docs/SEEDED_ERRORS.md` proposed seeding known errors.
+**Decision:** Approved by the owner with changes, recorded before any verifier code existed:
+T3 only on metrics that can be negative; cited quotes stay unchanged and detection is reported for
+the full verifier and with the "quote contains the figure" rule off, the latter the headline;
+thresholds (labelled as added after the dev baseline): macro-average detection over T1, T3, T4, T5,
+T6 at least 0.80 (quote rule off), false-block rate on untouched Correct answers at most 0.05, T2
+counts only. Injection robustness set offline only (owner's 10 texts after the detector is frozen;
+flag rate reported). Weaker-target side experiment not approved; ROADMAP option after Phase 5.
+Verifier build: at most 1 model call per answer unless a case needing 2 is shown; Phase 4 verifier
+model spend capped at $0.60; tuning on dev only; the verifier is not frozen or tagged before the
+owner reviews the dev report. EVAL §4, §6 and §8 updated.
+**Why:** Measures the verifier where the baseline gives it nothing to catch, without moving any bar.
+**Trade-off accepted:** Seeded errors are not natural errors (EVAL §8).
+**Revisit if:** The sanity gate drops many copies of one transform.
+
 ---
 
 ---

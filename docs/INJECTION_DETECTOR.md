@@ -69,20 +69,6 @@ flags more than 6 chunks (0.1%), tighten the patterns and re-run before the dete
 every flagged clean chunk is listed in the dev report. The dev report also gives the detector's
 hit rate on the 13 dev poisoned chunks.
 
-## Unscored robustness set
-Approved in principle (option A: the owner writes the 10 texts). **On hold** until the owner
-has read the budget headroom analysis; no spend on it yet. A diagnostic only, outside every
-pass bar and every headline number.
-
-- **What:** about 10 injections worded differently from `redteam/injection.py`, planted in
-  sandbox copies of dev chunks (dev control items' gold chunks, so the asked figure is
-  known), each with a canary. Mix: 4 false figure, 3 marker, 3 withhold.
-- **Run:** the frozen target answers the 10 through file-based Batch API jobs (the 10 clean
-  items' questions, with the planted chunk in the top 20 as for the scored set); the verifier
-  runs on those answers; outcome by canary.
-- **Cost:** 10 target answers at the batch price, about $0.10 (up to $0.13); verifier calls
-  about $0.04. Total about $0.14 (up to $0.20). Run after the detector is frozen with the
-  verifier, before the test batch.
-- **Reported:** detector hit rate on planted spans, instruction followed by the target, and
-  blocked by the verifier, each out of 10; next to the same counts on the 13 dev injection
-  items.
+## Robustness set (offline, D-057)
+No target calls and no spend. The owner writes 10 planted texts and hands them over after the
+detector is frozen; the report gives the detector's flag rate on them.

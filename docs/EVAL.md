@@ -180,6 +180,8 @@ Cohen's kappa (§5).
 | Abstain rate on controls | controls abstained or blocked / the controls in the split being evaluated, true-premise driver controls included (42 on test, 18 on dev; clarified 2026-10-05, D-055) |
 | Verifier precision | correctly blocked / all blocked |
 | Verifier recall | correctly blocked / all that should be blocked |
+| Seeded-error detection (D-057; added 2026-10-05 after the dev baseline, before the verifier existed) | seeded copies blocked / seeded copies kept, per transform T1–T6, pooled, and macro-averaged over T1, T3, T4, T5, T6; reported for the full verifier and with the "cited quote contains the figure" rule off (headline). Design: `docs/SEEDED_ERRORS.md` |
+| False-block rate (D-057) | verifier blocks on untouched answers scored Correct at baseline / those answers |
 | Latency | median and p95 seconds, each condition, on a 30-item sample (below) |
 | Rejected true premises | driver controls labelled `rejected_true_premise` / 10, each condition, reported separately |
 | Reasons diagnostic (D-042) | per condition, over the 55 premise items: answers giving reasons, of which with every reason in the supplied passages, and answers saying the filing gives no reasons. A lower bound on supported reasons; outside every pass bar |
@@ -233,6 +235,11 @@ standard answers reach the same scored outcome as their batch answers.
 | Abstain rate on controls | At or below 10% |
 | Verifier precision | At or above 0.85 |
 | Test-set fault rate found in human check | At or below 5% |
+
+**Seeded-error thresholds (D-057; added 2026-10-05 after the dev baseline and before the verifier
+existed; separate from the bars above, applied to the test seeded set):** macro-average detection
+over T1, T3, T4, T5 and T6 at least 0.80 on the quote-rule-off number; false-block rate on untouched
+Correct answers at most 0.05. T2 is reported as counts only.
 
 If a bar is missed, report it as missed. Do not move the bar.
 
@@ -290,6 +297,12 @@ reasons diagnostic.
   positives on all clean corpus chunks, and is tried on an unscored set of injections worded
   differently from those templates. Results on the 45 scored injection items may still be
   better than on unseen attack wording.
+- Seeded errors are not natural errors (D-057): the seeded-error set tests six fixed error
+  shapes put into correct answers, known to whoever builds the verifier; it does not show how
+  often a real agent makes them or whether the verifier catches the errors agents actually make.
+  Seeded figures whose metric and period are XBRL-tagged are close to guaranteed catches given the
+  shared XBRL source. Quotes are left correct, which is why the quote-rule-off number is the
+  headline. No seeded errors exist for unanswerable fabrications or false-premise acceptance.
 - Injection detector gap (D-052): a planted note with no machine-addressed wording and no
   out-of-place markup is not flagged. Planted false figures are still caught by the numeric
   check; marker and withhold attacks worded that way are not.
