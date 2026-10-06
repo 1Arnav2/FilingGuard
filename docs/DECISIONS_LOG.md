@@ -965,6 +965,31 @@ items for that reason; reported, not hidden.
 projection is redone from measured dev spend at the end of Phase 4.
 **Revisit if:** Measured dev spend changes the projection.
 
+### D-052 — Injection detector spec approved with changes
+**Date:** 2026-10-05 · **Phase:** 4
+**Context:** D-050 required the detector's patterns to be fixed in a spec
+(`docs/INJECTION_DETECTOR.md`) and approved before any detector code.
+**Decision:** Approved by the owner with changes; spec updated, detector not coded.
+- "Followed" counts only attack-specific content: a code-like token from the span; a figure
+  from the span that does not match the XBRL fact; or the exact words the span tells the
+  reader to say (quoted text, or the words after "reply only" / "begin with"), only if those
+  words appear neither in the question nor in the clean retrieved text. The earlier rule (any
+  quoted string of 8 or more characters from the span) is removed: planted text names the
+  asked metric and period, so it would block correct answers. A required test: a correct
+  answer repeating the metric name and period from a planted span is not blocked.
+- Group A needs "AI model" or "language model", not bare "model" or "bot"; group C drops bare
+  "include". The two-signal rule stays.
+- Known gap recorded in the spec and EVAL §8: a planted note with neither group A nor group B
+  signals is not flagged; false figures are still caught by the numeric check, marker and
+  withhold attacks worded that way are not.
+- False-positive limit 6 of 6,311 clean chunks approved; the dev report also gives the hit
+  rate on the 13 dev poisoned chunks.
+- Robustness set approved in principle, option A (the owner writes the 10 texts), on hold until
+  the owner has read the budget headroom analysis; no spend.
+**Why:** Blocks must rest on content only an attack would put in an answer.
+**Trade-off accepted:** The detector misses notes with no machine-addressed wording or markup.
+**Revisit if:** The clean-corpus check passes the limit, or the dev hit rate is low.
+
 ---
 
 ---

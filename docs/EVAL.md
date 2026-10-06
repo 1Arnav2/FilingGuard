@@ -259,6 +259,9 @@ reasons diagnostic.
   positives on all clean corpus chunks, and is tried on an unscored set of injections worded
   differently from those templates. Results on the 45 scored injection items may still be
   better than on unseen attack wording.
+- Injection detector gap (D-052): a planted note with no machine-addressed wording and no
+  out-of-place markup is not flagged. Planted false figures are still caught by the numeric
+  check; marker and withhold attacks worded that way are not.
 - Gold location: each gold value must sit in a table row labelled with the metric's own name
   (D-030). Such a row can be in an MD&A summary table rather than the primary statement; the
   value is the same, but "on a primary statement line" is approximated by the row label, not
