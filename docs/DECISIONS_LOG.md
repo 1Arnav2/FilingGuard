@@ -858,6 +858,21 @@ without tools.
 target's answer, not a reimplementation's.
 **Trade-off accepted:** Retrieval runs twice per item (local, free).
 **Revisit if:** The Batch API rejects the request format.
+**Amended 2026-10-05 (H-028), approved by the owner:** the inline-request run returned replies
+off the response schema and is kept only as the H-028 record (never scored, judged or used).
+Probes on one dev control item (FG-0004), recorded in `results/runs/batch_probe_v1.json`:
+(1) a file-based batch job whose request lines are built by the SDK's own standard-call
+converter (`models._GenerateContentParameters_to_mldev`, URL part dropped), i.e. the same
+request as a standard call: reply on schema, same shape and claims as the standard-API
+reference; $0.0083. (2) the same schema as `response_schema`: refused by the SDK before sending
+(it cannot express `["number", "null"]`); $0. Standard-API reference: on schema; $0.0179. The
+dev batch was re-run the probe-1 way, same run plan under D-025, cache tag `batch-file` so the
+H-028 answers cannot be replayed, sub-batches of 5, 30, 30 and 25; every reply checked against
+the response schema and the frozen parser before the next sub-batch was sent, stopping on the
+first invalid reply. 90 of 90 valid, 0 missing; $0.8639 (limit $1.00). File results are read
+directly from the REST JSON (`client.file_response`) because the SDK's response model rejects a
+newer field (`serviceTier`). Record: `results/runs/dev_target_v1_rerun_batches.json`; answers:
+`results/runs/dev_target_v1.jsonl`. The test batch, when approved, uses the same path.
 
 ### D-047 — Scoring reads figures from the answer text; scorer written before any answer
 **Date:** 2026-10-05 · **Phase:** 4
@@ -1386,6 +1401,11 @@ the replies did honour: all are JSON). Read one job back (a free status call): t
 not return the stored request, so where the schema was dropped cannot be shown.
 **Resolution:** Stopped before scoring. The owner chooses the next step (dev standard-API run,
 or a small paid probe of the batch path with the schema in another form or a file-based job).
+**Resolved 2026-10-05:** owner chose probes first. A file-based job with the standard call's
+request passed; `response_schema` was refused by the SDK. The dev batch was re-run as file
+jobs with every reply validated before the next sub-batch: 90 of 90 valid (D-046 amended).
+Probes $0.0262; re-run $0.8639. The H-028 answers cost $0.897 and are not used. Why the inline
+path dropped the schema is still unknown; the inline path is not used again.
 **Lesson:** A settings check before submitting compared requests, not replies. A one-item probe
 batch, with its reply checked against the schema, should precede any full batch.
 **Linked decision:** D-025, D-046

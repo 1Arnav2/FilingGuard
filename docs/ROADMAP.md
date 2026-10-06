@@ -48,8 +48,9 @@ One phase per working session. Each phase ends with: tests pass, roadmap ticked,
 
 ## Phase 4 — Verifier (1 to 2 days)
 - [ ] Step 1, dev baseline: scorer and §3 tests written before any answer (D-047); dev target
-      batch, 90 items (D-046); premise judge on the 16 dev premise items; baseline dev report
-      and the 90-row score sheet; **owner spot-checks the sheet before anything else**
+      batch, 90 items (D-046, re-run after H-028); premise judge on the 16 dev premise items;
+      baseline dev report and the 90-row score sheet — all done 2026-10-05; **owner spot-check
+      of the sheet pending** (ticked after it)
 - [ ] Owner approves `docs/INJECTION_DETECTOR.md` and the robustness set
 - [ ] Claim extraction
 - [ ] Span, numeric, period, and injection checks with reason codes
@@ -58,12 +59,14 @@ One phase per working session. Each phase ends with: tests pass, roadmap ticked,
 - **Done when:** verifier is frozen and tagged; dev results logged.
 
 ## Phase 5 — Eval run (1 day)
-**Budget risk (D-051), to be decided by the owner before Phase 5:** projected Phase 5 spend is
-about $3.2–$4.9 (test batch $1.9–$2.7, latency sample about $0.6, judge about $0.25, verifier
-on test $0.4–$1.3). With Phase 4 at about $1.1–$2.8, the project ends near $4.7–$8.2: the $5
-warning will likely trip in Phase 5 and the high end reaches the $7 cap. Options include one
-verifier model call per answer on test, or the test verifier calls through the Batch API.
-Re-projected from measured dev spend at the end of Phase 4.
+**Budget risk (D-051), to be decided by the owner before Phase 5.** Re-projected 2026-10-05 from
+measured spend: $2.26 spent (H-028 cost $0.90 of it). Measured: $0.0096 per dev item through
+file batch jobs; $0.002 per judge call. Still to come in Phase 4: verifier tuning about
+$0.5–$1.5, robustness set about $0.13–$0.20 if approved. Phase 5: test batch about $2.0–$2.4,
+latency sample about $0.6–$0.7, judge about $0.1, verifier on test $0.4–$1.3. Project end about
+**$6.0–$8.5**: the $5 warning trips in Phase 4 or early Phase 5, and the high end passes the $7
+cap. Options: one verifier model call per answer on test; test verifier calls through the Batch
+API; skip the robustness set.
 - [ ] Baseline and treatment on test split, once
 - [ ] Metrics, intervals, McNemar, bootstrap by type
 - [ ] Failure taxonomy labels

@@ -16,6 +16,35 @@ of every session.
 
 ---
 
+## 2026-10-05 — Phase 4: Verifier, step 1 (dev baseline; stopped at the owner's spot check)
+**Built:** Probes after H-028 (`eval/batch_probe.py`, `results/runs/batch_probe_v1.json`): file-based
+batch job with the standard call's request passed; `response_schema` refused by the SDK. File
+batch backend (`gemini_file_batch_backend`, `file_response`), cache tags per batch run, reply
+validator (`dev_run.schema_errors`, `reply_errors`: response schema plus the frozen parser).
+Dev batch re-run as file jobs, 5/30/30/25, each sub-batch validated before the next (D-046
+amended). Run file `results/runs/dev_target_v1.jsonl`; judge decisions
+`results/judge/dev_judge_v1.jsonl`; scores `results/dev/baseline_scores_v1.jsonl`; summary
+`results/dev/baseline_summary_v1.json`; sheet `review/dev_score_sheet_v1.xlsx`. ROADMAP budget
+note re-projected.
+**Tests:** 186 offline tests pass (new: validator rejects H-028-style replies, batch tags kept
+apart, a sub-batch with an invalid reply stops the run after 5 items).
+**Broken or unfinished:** Owner's spot check of the 90-row sheet pending. Seen in scored rows,
+not fixed (scorer frozen before answers; owner decides): a possessive company name before a
+metric ("Procter & Gamble's", "Bank of America's", "UnitedHealth Group's") is read as a segment
+line, making 4 correct answers Missed (FG-0028, FG-0057, FG-0283, FG-0320); a filing date in
+FG-0203 is read as the figure's period, making a correct restated answer `wrong_period`; an
+added non-GAAP "adjusted" figure is scored as a second figure for the asked metric (FG-0004,
+FG-0161, Unsupported). The verifier is not started.
+**Numbers worth keeping (baseline, dev, descriptive, as scored):** 90 items: Correct 79,
+Unsupported 3, Missed 8. Unsupported-claim rate 3/54 (5.6%, Wilson 1.9–15.1%). Abstain rate on
+dev controls 2/18 (11.1%). Injection followed 0/13. Rejected true premises 0/3. Parse errors 0;
+110/110 cited quotes found verbatim. Re-run tokens 1,696,431 in, 121,448 out; $0.0096 per item.
+Judge $0.0318 for 16 calls.
+**Spend so far:** $2.2587 (H-028 run $0.897, probes $0.0262, re-run $0.8639, judge $0.0318).
+**Next session starts with:** The owner's spot-check findings and decisions on the scorer
+points above; then the injection detector spec; then the verifier.
+**Commit:** Phase 4: dev baseline (re-run as file batch jobs), judge, scores and score sheet
+
 ## 2026-10-05 — Phase 4: Verifier, step 1 (stopped: batch answers ignored the schema)
 **Built:** Scorer (`eval/figures.py`, `eval/score.py` on `eval/rules.py`) with EVAL §3 tests and a
 check that answers stating each dev gold value score Correct, all committed before the batch
