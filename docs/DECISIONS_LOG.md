@@ -1030,6 +1030,14 @@ gold-row check passes. v1 scores and sheet are kept (`results/dev/baseline_score
   sentence names no metric and the answer gives a matching figure for the asked item elsewhere)
   needs the owner's approval.
 **Result:** v2: Correct 85, Missed 4, Unsupported 1 (FG-0303, the artefact above); 0 on reading.
+- **(f), approved by the owner as a further post-answer fix:** on true-premise driver controls, a
+  figure whose metric was only inherited from an earlier sentence is not checked; figures with
+  the metric named in their own sentence, or with no metric named anywhere (a lone figure), are
+  checked as before. Narrowest of the options: a first draft that also dropped lone figures
+  failed the gold-row check and was not used. Across all 90 dev rows the only outcome change is
+  FG-0303 Unsupported (`wrong_number`) to Correct. Test added. Scores v3
+  (`results/dev/baseline_scores_v3.jsonl`, `review/dev_score_sheet_v3.xlsx`): Correct 86,
+  Missed 4, Unsupported 0.
 **Why:** The faults were in the scorer, not the answers; the fixes are general rules, each tested.
 **Trade-off accepted:** These rules were changed after dev answers were seen; they are fixed
 before any test run and apply identically to both conditions.
@@ -1040,6 +1048,31 @@ before any test run and apply identically to both conditions.
 **Context:** The abstain bar (§6) mixes the target's own abstentions with the verifier's blocks.
 **Decision:** Chosen by the owner; added to EVAL §4, outside every pass bar: treatment minus
 baseline abstentions on controls, as a count and a rate. The 10% bar is unchanged.
+**Revisit if:** Never for test set v1.
+
+### D-055 — Verified-answer rate defined; control abstain denominator clarified
+**Date:** 2026-10-05 · **Phase:** 4
+**Context:** EVAL §4's "correct answers returned / all items" counted correct abstentions as not
+returned (47 of 90 on dev v1); §4 also divided the control abstain rate by "all 60 controls",
+but the test split holds 42.
+**Decision:** Chosen by the owner, recorded in EVAL §4 and §6 before any test run. Verified-answer
+rate is two numbers: correct handling (Correct outcomes / all items) and answer coverage (Correct
+outcomes that state a figure for the asked item / items whose answer is in the filing: control
+with drivers, unit_trap, period_mismatch, restated, injection). A calendar clarification with no
+figure, or a driver confirmed in words only, counts toward handling, not coverage. The control
+abstain rate is over the controls in the split being evaluated, drivers included (42 on test);
+the 10% bar is unchanged. Dev v3: handling 86/90, coverage 51/63, control abstain 2/18.
+**Revisit if:** Never for test set v1.
+
+### D-056 — Bars kept as written; testability recorded
+**Date:** 2026-10-05 · **Phase:** 4
+**Context:** The dev baseline has 0 Unsupported answers of 90 (`results/dev/headroom_v1.md`).
+**Decision:** Chosen by the owner, recorded in EVAL §6 before any test run: the bars stay exactly
+as written and each is reported as met, not met or not testable. The unsupported-rate bar is
+unlikely to be testable (McNemar needs at least 6 test items Unsupported at baseline and
+blocked). The precision bar fails by construction if any block falls on an answer that was not
+Unsupported, and is not testable with no blocks. The abstain bar is testable.
+**Why:** The record states what the test can and cannot show before the result exists.
 **Revisit if:** Never for test set v1.
 
 ---

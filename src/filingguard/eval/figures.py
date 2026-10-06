@@ -90,6 +90,7 @@ class Figure:
     metric: str | None = None   # metric key it is attributed to, "other", or None
     periods: list["Period"] = field(default_factory=list)  # nearest period mention(s)
     adjusted: bool = False  # labelled adjusted, non-GAAP or core (EVAL §3, D-053)
+    metric_in_sentence: bool = False  # its metric is named in its own sentence, not inherited
 
 
 @dataclass(frozen=True)

@@ -176,8 +176,8 @@ Cohen's kappa (§5).
 | Metric | Formula |
 |---|---|
 | Unsupported-claim rate | unsupported / answers returned |
-| Verified-answer rate (North Star) | correct answers returned / all items |
-| Abstain rate on controls | controls abstained or blocked / all 60 controls, the 10 true-premise driver controls included |
+| Verified-answer rate (North Star; defined 2026-10-05 before any test run, D-055) | reported as two numbers. **Correct handling:** Correct outcomes / all items. **Answer coverage:** Correct outcomes that state a figure for the asked item / items whose answer is in the filing (control, true-premise drivers included; unit_trap; period_mismatch; restated; injection). A calendar-wording clarification with no figure, or a driver confirmed in words only, counts toward correct handling, not coverage |
+| Abstain rate on controls | controls abstained or blocked / the controls in the split being evaluated, true-premise driver controls included (42 on test, 18 on dev; clarified 2026-10-05, D-055) |
 | Verifier precision | correctly blocked / all blocked |
 | Verifier recall | correctly blocked / all that should be blocked |
 | Latency | median and p95 seconds, each condition, on a 30-item sample (below) |
@@ -241,6 +241,26 @@ abstention when its outcome is Missed, not when the target's abstain flag is set
 control counts as an abstention when it is "Abstained" as defined in §3 (abstain flag,
 verifier block, or no figure plus a statement that the filing lacks it), which for regular
 controls is the same set as Missed.
+
+**Clarification of the abstain bar (D-055, 2026-10-05, before any test run).** The rate is
+computed over the controls in the split being evaluated, true-premise driver controls
+included: 42 on test. The 10% bar is unchanged.
+
+**Testability of the bars (D-056, recorded 2026-10-05 after the dev baseline and before any
+test run).** The bars above stay exactly as written. Each is reported as **met**, **not met**
+or **not testable**.
+- *Unsupported-claim rate falls, p < 0.05.* The dev baseline has 0 Unsupported answers of 90 on
+  reading. A verifier block can only remove an unsupported claim, so McNemar's exact test needs
+  at least 6 test items that are Unsupported at baseline and blocked (two-sided p = 0.031). On
+  this baseline that is unlikely: the bar is unlikely to be testable. Reported as not testable
+  if the test baseline has too few Unsupported answers for the test to reach p < 0.05 even with
+  every one blocked. Analysis: `results/dev/headroom_v1.md`.
+- *Verifier precision at or above 0.85.* A block is correct only on an answer whose baseline
+  outcome is Unsupported (§4, D-049). With few or no such answers, precision fails by
+  construction as soon as any block occurs on an answer that was not Unsupported; with no
+  blocks at all it is not testable.
+- *Abstain rate on controls at or below 10%.* Testable; on the dev baseline alone it is about
+  even odds (2 of 18 dev controls abstained), and every verifier block on a control lowers it.
 
 ## 7. Failure taxonomy
 Each unsupported claim gets one label:

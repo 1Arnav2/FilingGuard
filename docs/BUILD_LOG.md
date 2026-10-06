@@ -16,6 +16,22 @@ of every session.
 
 ---
 
+## 2026-10-05 — Phase 4: FG-0303 fix, metric definitions, seeded-error proposal (no model calls)
+**Built:** Scorer fix (f) for FG-0303 (D-053), the only outcome change across 90 rows; test
+added. Dev scores v3 (`results/dev/baseline_scores_v3.jsonl`, `baseline_summary_v3.json`,
+`review/dev_score_sheet_v3.xlsx`). EVAL §4 verified-answer rate as correct handling and answer
+coverage, control abstain denominator clarified (D-055); EVAL §6 testability of the bars (D-056).
+Seeded-error evaluation proposal `docs/SEEDED_ERRORS.md` (not built).
+**Tests:** 194 offline tests pass.
+**Broken or unfinished:** Seeded-error design, thresholds and the weaker-target side experiment
+await the owner. Verifier not started.
+**Numbers worth keeping (dev v3, descriptive):** Correct 86, Missed 4, Unsupported 0. Correct
+handling 86/90 (95.6%); answer coverage 51/63 (81.0%); control abstain 2/18 (11.1%).
+Seeded-error set: 161 dev copies from 51 source answers; about 362 on test.
+**Spend so far:** $2.2587 (no calls).
+**Next session starts with:** The owner's decisions on the seeded-error design and thresholds.
+**Commit:** Phase 4: FG-0303 scorer fix, verified-answer definition, testability, seeded-error proposal
+
 ## 2026-10-05 — Phase 4: scorer fixes, dev re-score, headroom analysis (no model calls)
 **Built:** Scorer fixes a to e (D-053) with a unit test each; gold-row check re-run (passes).
 Dev re-scored: `results/dev/baseline_scores_v2.jsonl`, `baseline_summary_v2.json`,

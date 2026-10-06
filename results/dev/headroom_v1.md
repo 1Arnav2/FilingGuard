@@ -1,7 +1,10 @@
 # Headroom analysis — dev baseline v2 (no model calls)
 
 **Date:** 2026-10-05. **Source:** `results/dev/baseline_scores_v2.jsonl` (dev, 90 items, after the
-D-053 scorer fixes). Descriptive. No change to the bars, the target or the test set is proposed.
+D-053 scorer fixes). Descriptive.
+
+**Update, same day:** D-053 (f) fixed FG-0303; scores v3 have 0 Unsupported of 90 as scored,
+matching the reading below. No other row changed. No change to the bars, the target or the test set is proposed.
 
 ## How a verifier can change an outcome
 The verifier passes, flags or blocks. A flag returns the answer, so it never changes an

@@ -492,3 +492,23 @@ def test_fix_e_form_number_is_not_a_figure():
     assert [f.value for f in parse_figures(text)] == [0.17]
     assert [f.value for f in parse_figures("Form 8-K filed; EPS was $2.10 per share.")] == [2.10]
     assert parse_figures("Diluted EPS was 7.46 per diluted share.")[0].per_share
+
+
+def test_fix_f_driver_reasons_figures_do_not_inherit_the_asked_metric():
+    text = ("Johnson & Johnson's net earnings increased from $14,066 million in fiscal 2024 to $26,804 million in "
+            "fiscal 2025. Other (income) expense, net showed an increase in income of $11.9 billion, from an "
+            "expense of $4.7 billion in 2024.")
+    it = item("control", "true_premise_driver",
+              "What factors led to the increase in Johnson & Johnson's net income in fiscal 2025?", "JNJ")
+    g = gold_row(value=26_804e6, metric="net income", concept="NetIncomeLoss", fiscal_year=2025,
+                 period_end="2025-12-28", row_label="Net earnings", true_values={"2024": 14_066e6, "2025": 26_804e6})
+    assert score(it, g, ans(text), judge=NO).outcome == "correct"
+    wrong = "Johnson & Johnson's net earnings rose to $25,000 million in fiscal 2025."
+    assert score(it, g, ans(wrong), judge=NO).label == "wrong_number", "a figure named in its own sentence is checked"
+
+
+def test_answer_coverage_counts_only_correct_answers_with_a_figure():
+    s = score(cal_item(), cal_gold(), ans("Apple reports fiscal years ending in September. Which period do you mean?"))
+    assert s.outcome == "correct" and not s.gives_figure
+    s = score(item(), gold_row(), ans("Cash and cash equivalents were $29,943 million at the end of fiscal 2024."))
+    assert s.outcome == "correct" and s.gives_figure
