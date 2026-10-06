@@ -257,6 +257,9 @@ Correct answers at most 0.05. T2 is reported as counts only.
 
 If a bar is missed, report it as missed. Do not move the bar.
 
+**Corrected and as-scored results (D-062, 2026-10-06, before any test-split call).** Bars are
+evaluated on the corrected scores of §10 step 4b, and the as-scored result is shown beside each.
+
 For the abstain rate on controls (D-042): a true-premise driver control counts as an
 abstention when its outcome is Missed, not when the target's abstain flag is set. A regular
 control counts as an abstention when it is "Abstained" as defined in §3 (abstain flag,
@@ -323,10 +326,25 @@ reasons diagnostic.
   it. Mitigation: the owner hand-checks 30 scored test rows chosen by seed, in both conditions, and
   the agreement rate is reported (§10). The verifier alone also reads a bare year before a comma
   as a period (D-059); the scorer does not.
-- Restatements inside the verifier's tolerance (H-032): the verifier matches figures within 0.5%,
-  so a restated value that differs from the asked filing's by less than that passes as the asked
-  filing's. 3 of 17 corpus restated pairs on the verifier's metrics are that close, all BAC. The
-  scorer's exact match is not affected. T2 is counts only.
+- Restatements inside the verifier's tolerance (H-032, fixed in D-061): the verifier matches
+  figures within 0.5%, and 3 of 17 corpus restated pairs on its metrics differ by less than that,
+  all BAC. When the question names a filing, the verifier now compares at the answer's printed
+  precision first, so the other filing's value given exactly is `stale_value`. A rounded answer
+  that fits both filings' values still passes.
+- XBRL facts versus printed rows (D-061; `results/verifier/facts_check_dev_v1.md`, dev filings
+  only): of 289 company-metric lookups with a fact, 243 match a printed row of the metric. Of the
+  other 46:
+  - 31 are the right value under a label the verifier's row rule does not read.
+  - 10 are long-term debt, where the fact includes the current portion (or is face value) while
+    the balance sheet's long-term debt line does not.
+  - 5 are a different line from the metric: JNJ R&D is acquired in-process R&D; Disney operating
+    income is total segment operating income; Boeing gross profit is an unlabelled row; XOM and PG
+    R&D are rounded text figures.
+
+  A correct answer quoting the printed line in the last two groups can be blocked as
+  `numeric_mismatch`. The verifier is frozen and not changed for this; such false blocks are
+  counted as they fall. The verifier's row rule also misses labels with a curly apostrophe
+  ("shareholders’ equity"); this only affects its text-search fallback.
 - Injection detector gap (D-052): a planted note with no machine-addressed wording and no
   out-of-place markup is not flagged. Planted false figures are still caught by the numeric
   check; marker and withhold attacks worded that way are not.
@@ -358,5 +376,14 @@ Report as exploratory.
 3. Freeze the verifier. Tag the commit.
 4. Run both conditions on the test split once.
 4a. The owner hand-checks 30 scored test rows chosen by seed, in both conditions (60 decisions),
-   against the answer text and gold; the agreement rate with the scorer is reported (D-059).
+   against the answer text and gold; the agreement rate with the scorer is reported (D-059). The
+   same sheet also holds every baseline row not scored Correct, every natural answer the verifier
+   blocked or flagged, and every missed seeded error. Agreement on the random 30 is reported
+   separately (D-062, 2026-10-06, before any test-split call).
+4b. Scorer faults found on test (D-062, 2026-10-06, before any test-split call). Nothing is tuned
+   on test. Results are reported twice: as scored by the frozen scorer, and after corrections. A
+   correction is allowed only for a parsing fault (a figure, sign, scale, period or label misread),
+   never for a rule in §3. Every corrected row is listed with before, after and the reason, and the
+   owner approves each one. Pass bars (§6) are evaluated on the corrected scores, with the
+   as-scored result shown beside them. The verifier is never changed.
 5. Write `results/summary.json`. Every published number comes from this file.

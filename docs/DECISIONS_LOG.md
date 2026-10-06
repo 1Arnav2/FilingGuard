@@ -1192,6 +1192,70 @@ pins the manifest's own hash and fails if any part changes. No rule or prompt ch
 test; that is intended, because the verifier shares the parser.
 **Revisit if:** Never before the test run. A fault found on test is reported, not fixed.
 
+### D-061 — Freeze reopened once for H-032; facts check reported
+**Date:** 2026-10-06 · **Phase:** 4
+**Context:** H-032: the verifier's 0.5% tolerance let a BAC restated value pass as the asked filing's.
+The owner approved reopening the freeze for this one rule, with no other changes.
+**Decision:**
+- **Rule (owner's wording).** When the question names a filing and the corpus holds a different value
+  for the same metric and period in another filing, the verifier blocks `stale_value` if the
+  answer's figure equals the other filing's value at the precision the answer prints, and does not
+  equal the asked filing's value at that precision. The 0.5% tolerance stays everywhere else. The
+  existing restatement-words exception (a figure the sentence attributes to the earlier filing is
+  a flag) is unchanged.
+- **Dev re-run.** Only the two FG-0205 T2 rows changed (pass to block, both modes). T2 is now 2 of 2;
+  seeded detection 153 of 153; false blocks 0 of 86. The 4 untouched restated answers are not
+  blocked: neither by the rules nor on the forced model path, which still blocks 0 of 4 (cached, $0).
+  The prompt is unchanged (`verifier_v2`).
+- **Re-freeze.** `results/verifier/freeze_v1.json` was rewritten (verifier.py hash only changed);
+  `tests/test_verifier_frozen.py` pins the new manifest hash `17f2d78a...`. The local tag
+  `verifier-v1` was moved to the re-freeze commit.
+- **Facts check (owner, report only; `eval/facts_check.py`, `results/verifier/facts_check_dev_v1.md`).**
+  Dev filings only, no model calls, no gold. Of 364 company-metric pairs, 75 have no fact, 243 match a
+  printed row of the metric exactly, 46 do not. Of the 46: 31 are a label the row rule does not read,
+  10 are long-term debt (the fact includes the current portion, or is face value), and 5 are a
+  different line (JNJ R&D, DIS operating income, BA gross profit, XOM and PG R&D). Added to EVAL §8.
+  The verifier is not changed.
+**Why the freeze was reopened:** The owner judged a known miss on a whole attack shape (restatements
+smaller than the tolerance, all BAC in the corpus) worth one narrow change before any test call. The
+freeze exists to stop changes after test results are seen, and no test result exists yet.
+**Trade-off accepted:** Dev T2 is now 2 of 2 on a rule written after seeing that miss: in-sample.
+The facts gaps can cause false blocks on test; they are counted, not fixed.
+**Revisit if:** Never before the test run.
+
+### D-062 — Phase 5 plan approved with changes; test harness built, checks run, nothing submitted
+**Date:** 2026-10-06 · **Phase:** 5 (plan), recorded before any test-split call
+**Context:** The owner approved `docs/PHASE5_PLAN.md` with changes.
+**Decision:**
+- Budget option 1: the verifier on the standard API, one model call per answer at most. Spend gates as
+  written (test batch $2.60, Phase 5 verifier $0.40, project $7). The $5 warning is expected; the run
+  continues past it and stops only at a gate or the cap.
+- Scorer faults found on test: results reported as scored and after corrections; corrections only for
+  parsing faults (figure, sign, scale, period, label), never for a §3 rule; every corrected row listed
+  with before, after and reason, each approved by the owner; bars evaluated on corrected scores with
+  the as-scored result beside them; the verifier never changed (EVAL §6, §10 4b).
+- Hand-check sheet (step 9): the seeded random 30 in both conditions, plus every baseline row not
+  Correct, every natural answer blocked or flagged, and every missed seeded error; agreement on the
+  random 30 reported separately (EVAL §10 4a).
+- The owner's 10 planted texts run through the frozen detector after the re-freeze and before the
+  test batch (plan step 2a).
+- Harness (step 2, session's build): `eval/dev_run.py` takes `--split`. The test split loads only
+  when asked; `submit` and `write` on test refuse to run without `--owner-approved-test`. Sub-batches
+  1, 30, 30, 50, 50, 49. Pre-submit checks on test add: the verifier freeze test passes, 0 test answers
+  already cached, and a cost projection calibrated on dev's measured tokens. The freeze test runs as
+  a subprocess because `dev_run` may not import other `eval/` modules (gold isolation test).
+- Checks run 2026-10-06, nothing submitted: no problems. Batch price half of standard; target code
+  equals `target-v1`; verifier matches its freeze record; 32 test injection chunks match their frozen
+  hashes; freeze-time prompts rebuild exactly; 210 test items, 0 dev; 0 test answers cached.
+  Projected cost $2.02 (dev mean output), $2.60 (dev 90th-percentile output for every item), limit
+  $2.60. No spend.
+- Judge hand-check sheet for step 1: `review/judge_handcheck_dev_v1.xlsx` (16 items, 32 decisions).
+**Why:** The owner's changes make every correction visible and keep the frozen scorer's result on
+record beside it.
+**Trade-off accepted:** The batch limit has no margin if every reply runs as long as dev's 90th
+percentile; the gate would then stop before the last sub-batch, and that is reported.
+**Revisit if:** The gate stops the batch.
+
 ---
 
 ---
@@ -1700,7 +1764,8 @@ the verifier's metrics differ by less than 0.5%, all BAC (assets 2024 0.007%, li
 0.046%, equity 2023 0.493%).
 **Impact:** T2 on dev is 1 of 2. On test, a stale BAC value in a natural answer can pass the verifier.
 **What I tried:** Counted the affected pairs from corpus facts only (no test items read).
-**Resolution:** Not fixed: the owner allowed only fixes A and B before the freeze. Recorded in EVAL §8
-and the dev report; T2 stays counts-only.
+**Resolution:** Not fixed at the first freeze (only fixes A and B were allowed). The owner then
+approved reopening the freeze for it (D-061): figures are compared at printed precision first when a
+question names a filing. Dev T2 2 of 2; no other dev row changed. T2 stays counts only.
 **Lesson:** A tolerance that suits rounded figures is too loose for restatements, which can be tiny.
-**Linked decision:** D-057, D-060
+**Linked decision:** D-057, D-060, D-061

@@ -193,3 +193,20 @@ def test_submit_stops_after_a_sub_batch_with_an_invalid_reply(tmp_path, ledger, 
     assert fake.submitted == 1 and len(fake.jobs["batches/1"]) == 5, "only the first 5-item sub-batch was sent"
     record = json.loads((tmp_path / "rerun.json").read_text())
     assert record["sub_batches"][0]["invalid_replies"] and not record["sub_batches"][0]["complete"]
+
+
+def test_test_split_needs_an_explicit_switch_and_the_owner_flag_to_submit(monkeypatch):
+    """D-062: the test split loads only with allow_test; submit and write need --owner-approved-test."""
+    import sys
+
+    from filingguard.eval import dev_run
+
+    with pytest.raises(ValueError):
+        dev_run.load_items("test")
+    spec = dev_run.SPECS["test"]
+    assert sum(spec.sub_batch_sizes) == spec.count == 210 and spec.sub_batch_sizes[0] == 1
+    assert spec.limit_usd == 2.60 and spec.out != dev_run.OUT and spec.batches != dev_run.BATCHES
+    for step in ("submit", "write"):
+        monkeypatch.setattr(sys, "argv", ["dev_run", step, "--split", "test"])
+        with pytest.raises(SystemExit, match="owner's go-ahead"):
+            dev_run.main()

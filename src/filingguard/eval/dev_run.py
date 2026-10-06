@@ -1,19 +1,23 @@
-"""Run the frozen target (`target-v1`) on the dev split through the Batch API (D-025, D-046).
+"""Run the frozen target (`target-v1`) on a split through the Batch API (D-025, D-046, Phase 5 plan).
 
 Pass 1 builds each item's exact request with the target's own code and a recorder in place of
 the model. The requests go out in sub-batches through `LLMClient.generate_batch`. Pass 2 runs
 the target again with a client that serves only the stored batch answers, so prompt-building
-and parsing are the frozen code's own. This module reads no gold labels and refuses any split
-but dev.
+and parsing are the frozen code's own. This module reads no gold labels.
 
-Usage: python -m filingguard.eval.dev_run {check,submit,write}
+The test split (D-062): `check` builds the requests locally and makes no model call; `submit`
+and `write` refuse to run without `--owner-approved-test`.
+
+Usage: python -m filingguard.eval.dev_run {check,submit,write} [--split test [--owner-approved-test]]
 """
 
 import argparse
 import hashlib
 import json
+import statistics
 import subprocess
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -87,15 +91,37 @@ def reply_errors(text: str, hits: list[Any]) -> list[str]:
     return [parse_error] if parse_error else []
 
 
-def load_items(split: str = SPLIT) -> list[dict[str, Any]]:
-    """Dev items only, in ID order. The test split is dropped before anything else is done."""
-    if split != SPLIT:
-        raise ValueError("only the dev split may be run in Phase 4; the test batch needs the owner's approval")
+@dataclass(frozen=True)
+class RunSpec:
+    split: str
+    count: int
+    out: Path
+    batches: Path
+    sub_batch_sizes: tuple[int, ...]
+    limit_usd: float
+    reason: str
+
+
+SPECS = {
+    "dev": RunSpec("dev", DEV_COUNT, OUT, BATCHES, SUB_BATCH_SIZES, 1.00,
+                   "re-run of the dev batch under D-025 after H-028; file-based jobs"),
+    # Phase 5 plan (D-062): a one-item probe first; the $2.60 limit is the owner's.
+    "test": RunSpec("test", 210, RUNS / "test_target_v1.jsonl", RUNS / "test_target_v1_batches.json",
+                    (1, 30, 30, 50, 50, 49), 2.60, "test batch under D-025 and docs/PHASE5_PLAN.md; file-based jobs"),
+}
+
+
+def load_items(split: str = SPLIT, allow_test: bool = False) -> list[dict[str, Any]]:
+    """One split's items, in ID order; the other split is dropped before anything else is done.
+    The test split loads only when the caller says so (`allow_test`)."""
+    if split not in SPECS or (split == "test" and not allow_test):
+        raise ValueError("only the dev split loads by default; the test split needs allow_test")
+    spec = SPECS[split]
     rows = [json.loads(line) for line in ITEMS.read_text(encoding="utf-8").splitlines() if line.strip()]
-    dev = sorted((r for r in rows if r["split"] == SPLIT), key=lambda r: r["id"])
-    if len(dev) != DEV_COUNT or any(r["split"] != SPLIT for r in dev):
-        raise RuntimeError(f"expected {DEV_COUNT} dev items, found {len(dev)}")
-    return dev
+    chosen = sorted((r for r in rows if r["split"] == split), key=lambda r: r["id"])
+    if len(chosen) != spec.count:
+        raise RuntimeError(f"expected {spec.count} {split} items, found {len(chosen)}")
+    return chosen
 
 
 def sha256(text: str) -> str:
@@ -180,28 +206,35 @@ def build_requests(h: Harness, items: list[dict[str, Any]], model: str) -> list[
     return out
 
 
-def _load_batches() -> dict[str, Any]:
-    return json.loads(BATCHES.read_text(encoding="utf-8")) if BATCHES.exists() else {"sub_batches": []}
+def _batches_path(spec: RunSpec) -> Path:
+    return BATCHES if spec.split == "dev" else spec.batches  # dev's path can be patched in tests
 
 
-def _save_batches(record: dict[str, Any]) -> None:
-    BATCHES.parent.mkdir(parents=True, exist_ok=True)
-    BATCHES.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+def _load_batches(spec: RunSpec = SPECS["dev"]) -> dict[str, Any]:
+    path = _batches_path(spec)
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"sub_batches": []}
 
 
-def submit(h: Harness, items: list[dict[str, Any]], llm: LLMClient, batch_backend: Any, limit_usd: float) -> dict[str, Any]:
-    """Send the dev requests in sub-batches (SUB_BATCH_SIZES), one after another, recording each
-    job before waiting on it so an interrupted run resumes instead of resubmitting. Every reply
-    in a sub-batch is checked against the response schema and the frozen parser before the next
-    is sent; the run stops on the first invalid reply or missing item (H-028)."""
+def _save_batches(record: dict[str, Any], spec: RunSpec = SPECS["dev"]) -> None:
+    path = _batches_path(spec)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+
+
+def submit(h: Harness, items: list[dict[str, Any]], llm: LLMClient, batch_backend: Any, limit_usd: float,
+           spec: RunSpec = SPECS["dev"]) -> dict[str, Any]:
+    """Send the requests in the split's sub-batches, one after another, recording each job before
+    waiting on it so an interrupted run resumes instead of resubmitting. Every reply in a
+    sub-batch is checked against the response schema and the frozen parser before the next is
+    sent; the run stops on the first invalid reply or missing item (H-028)."""
     requests = build_requests(h, items, llm.model)
-    record = _load_batches()
+    record = _load_batches(spec)
     record.setdefault("tag", TAG)
-    record.setdefault("reason", "re-run of the dev batch under D-025 after H-028; file-based jobs")
+    record.setdefault("reason", spec.reason)
     record.setdefault("spend_before_usd", llm.ledger.total()["cost_usd"])
     by_id = {it["id"]: it for it in items}
     lo = 0
-    for n, size in enumerate(SUB_BATCH_SIZES, start=1):
+    for n, size in enumerate(spec.sub_batch_sizes, start=1):
         chunk, lo = requests[lo:lo + size], lo + size
         entry = next((b for b in record["sub_batches"] if b["n"] == n), None)
         if entry is None:
@@ -214,17 +247,17 @@ def submit(h: Harness, items: list[dict[str, Any]], llm: LLMClient, batch_backen
         per_item = max(HIGH_COST_PER_ITEM, spent / done if done else 0.0)
         projected = spent + len(chunk) * per_item
         if projected > limit_usd:
-            raise RuntimeError(f"sub-batch {n}: projected dev batch spend ${projected:.4f} is above the approved "
+            raise RuntimeError(f"sub-batch {n}: projected {spec.split} batch spend ${projected:.4f} is above the approved "
                                f"${limit_usd:.2f}; stopping")
 
         def on_submit(job: str, entry: dict[str, Any] = entry) -> None:
             entry["job"] = job
-            _save_batches(record)
+            _save_batches(record, spec)
 
         answers, errors = llm.generate_batch(
             [(r["prompt"], r["params"]) for r in chunk], batch_backend, purpose="target_batch_file",
-            display_name=f"filingguard-dev-target-v1-file-{n}", resume_job=entry["job"], on_submit=on_submit,
-            tag=TAG)
+            display_name=f"filingguard-{spec.split}-target-v1-file-{n}", resume_job=entry["job"],
+            on_submit=on_submit, tag=TAG)
         entry["answered"] = sum(1 for r in chunk if r["key"] in answers)
         entry["errors"] = {r["id"]: errors[r["key"]] for r in chunk if r["key"] in errors}
         invalid = {}
@@ -237,20 +270,21 @@ def submit(h: Harness, items: list[dict[str, Any]], llm: LLMClient, batch_backen
         entry["invalid_replies"] = invalid
         entry["complete"] = not entry["errors"] and not invalid
         record["spend_after_usd"] = llm.ledger.total()["cost_usd"]
-        _save_batches(record)
+        _save_batches(record, spec)
         if not entry["complete"]:
             raise RuntimeError(f"sub-batch {n}: {len(invalid)} invalid repl(ies), {len(entry['errors'])} missing; "
                                f"stopping before any further submission: {invalid or entry['errors']}")
     return record
 
 
-def write_rows(h: Harness, items: list[dict[str, Any]], llm: LLMClient) -> list[dict[str, Any]]:
+def write_rows(h: Harness, items: list[dict[str, Any]], llm: LLMClient,
+               spec: RunSpec = SPECS["dev"]) -> list[dict[str, Any]]:
     """Pass 2: run the frozen agent on stored batch answers and write one row per item. Rows
     carry no attack type, subtype or gold."""
     head = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
     target = subprocess.run(["git", "rev-parse", f"{TARGET_TAG}^{{commit}}"], capture_output=True, text=True).stdout.strip()
-    jobs = {i: b.get("job") for b in _load_batches()["sub_batches"] for i in b["ids"]}
-    subs = {i: b["n"] for b in _load_batches()["sub_batches"] for i in b["ids"]}
+    jobs = {i: b.get("job") for b in _load_batches(spec)["sub_batches"] for i in b["ids"]}
+    subs = {i: b["n"] for b in _load_batches(spec)["sub_batches"] for i in b["ids"]}
     rows = []
     for it in items:
         answer = h.agent(it, BatchReplayClient(llm, TAG)).answer(it["question"], it["company"])
@@ -269,8 +303,8 @@ def write_rows(h: Harness, items: list[dict[str, Any]], llm: LLMClient) -> list[
             "raw_response": t["raw_response"], "usage": {"input_tokens": inp, "output_tokens": out},
             "target_commit": target, "run_commit": head,
         })
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8")
+    spec.out.parent.mkdir(parents=True, exist_ok=True)
+    spec.out.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8")
     return rows
 
 
@@ -280,8 +314,36 @@ def _request_of(h: Harness, it: dict[str, Any], model: str) -> tuple[str, dict[s
     return rec.requests[0]
 
 
-def pre_submit_checks(h: Harness, items: list[dict[str, Any]], llm: LLMClient) -> dict[str, Any]:
-    """Every check that must pass before a batch is sent. Raises on any failure."""
+def check_frozen_verifier() -> list[str]:
+    """The verifier matches its freeze record (`verifier-v1`, D-060, D-061): its pinned test passes.
+    Run as a subprocess, because this module imports nothing else from `eval/` (gold isolation)."""
+    test = subprocess.run([sys.executable, "-m", "pytest", "-q", "tests/test_verifier_frozen.py"], capture_output=True)
+    return [] if test.returncode == 0 else ["verifier differs from its freeze record"]
+
+
+def project_cost(h: Harness, requests: list[dict[str, Any]], llm: LLMClient, batch: Any) -> dict[str, Any]:
+    """Projected batch cost of `requests`, calibrated on the dev batch: input tokens from prompt
+    characters at dev's measured tokens per character; output tokens at dev's mean and 90th
+    percentile. No model call."""
+    dev_rows = [json.loads(line) for line in OUT.read_text(encoding="utf-8").splitlines() if line.strip()]
+    dev_items = {i["id"]: i for i in load_items("dev")}
+    dev_chars = sum(len(_request_of(h, dev_items[r["id"]], llm.model)[0]) for r in dev_rows)
+    per_char = sum(r["usage"]["input_tokens"] for r in dev_rows) / dev_chars
+    outs = sorted(r["usage"]["output_tokens"] for r in dev_rows)
+    tokens_in = per_char * sum(len(r["prompt"]) for r in requests)
+
+    def usd(out_per_item: float) -> float:
+        return round((tokens_in * batch.input_per_1m + len(requests) * out_per_item * batch.output_per_1m) / 1e6, 4)
+
+    return {"items": len(requests), "input_tokens_per_char_dev": round(per_char, 4),
+            "projected_input_tokens": round(tokens_in), "projected_usd_mean_output": usd(statistics.mean(outs)),
+            "projected_usd_p90_output": usd(outs[int(0.9 * len(outs))]),
+            "worst_case_usd_at_dev_high_cost": round(len(requests) * HIGH_COST_PER_ITEM, 4)}
+
+
+def pre_submit_checks(h: Harness, items: list[dict[str, Any]], llm: LLMClient,
+                      spec: RunSpec = SPECS["dev"]) -> dict[str, Any]:
+    """Every check that must pass before a batch is sent. Raises on any failure. Makes no model call."""
     from datetime import date
 
     from filingguard.llm.spend import price_for
@@ -292,9 +354,21 @@ def pre_submit_checks(h: Harness, items: list[dict[str, Any]], llm: LLMClient) -
     problems += check_frozen_target()
     problems += check_poisoned(items, h.index.chunks)
     problems += check_prompt_identity(h, llm)
-    report = {"dev_items": len(items), "test_items": sum(1 for i in items if i["split"] != SPLIT),
+    other = sum(1 for i in items if i["split"] != spec.split)
+    if other or len(items) != spec.count:
+        problems.append(f"expected {spec.count} {spec.split} items and no others; got {len(items)}, {other} others")
+    report = {"split": spec.split, "items": len(items), "other_split_items": other,
               "injection_items": sum(1 for i in items if i.get("injection")), "problems": problems,
               "batch_price": [batch.input_per_1m, batch.output_per_1m]}
+    if spec.split == "test":
+        problems += check_frozen_verifier()
+        requests = build_requests(h, items, llm.model)
+        cached = sum(1 for r in requests if llm.cache.get(r["key"]) is not None)
+        if cached:
+            problems.append(f"{cached} test answers are already in the cache")
+        report.update(test_answers_already_cached=cached, sub_batches=list(spec.sub_batch_sizes),
+                      limit_usd=spec.limit_usd, cost=project_cost(h, requests, llm, batch),
+                      spend_so_far_usd=round(llm.ledger.total()["cost_usd"], 4))
     if problems:
         raise RuntimeError(f"pre-submit checks failed: {problems}")
     return report
@@ -307,17 +381,24 @@ def main() -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument("step", choices=("check", "submit", "write"))
-    parser.add_argument("--limit-usd", type=float, default=1.00)
+    parser.add_argument("--split", choices=tuple(SPECS), default="dev")
+    parser.add_argument("--owner-approved-test", action="store_true",
+                        help="required for submit and write on the test split (owner's go-ahead)")
+    parser.add_argument("--limit-usd", type=float)
     args = parser.parse_args()
-    items = load_items()
+    spec = SPECS[args.split]
+    if spec.split == "test" and args.step != "check" and not args.owner_approved_test:
+        raise SystemExit("the test batch needs the owner's go-ahead: pass --owner-approved-test")
+    items = load_items(spec.split, allow_test=spec.split == "test")
     h, llm = Harness(), client_from_env("TARGET_MODEL")
-    report = pre_submit_checks(h, items, llm)
+    report = pre_submit_checks(h, items, llm, spec)
     print(json.dumps(report, indent=2))
     if args.step == "submit":
-        print(json.dumps(submit(h, items, llm, gemini_file_batch_backend(os.environ["GEMINI_API_KEY"]), args.limit_usd), indent=2))
+        backend = gemini_file_batch_backend(os.environ["GEMINI_API_KEY"])
+        print(json.dumps(submit(h, items, llm, backend, args.limit_usd or spec.limit_usd, spec), indent=2))
     elif args.step == "write":
-        rows = write_rows(h, items, llm)
-        print(f"wrote {len(rows)} rows to {OUT}")
+        rows = write_rows(h, items, llm, spec)
+        print(f"wrote {len(rows)} rows to {spec.out}")
 
 
 if __name__ == "__main__":

@@ -59,8 +59,11 @@ One phase per working session. Each phase ends with: tests pass, roadmap ticked,
 - [x] Unit tests for every deterministic check (`tests/test_verifier.py`)
 - [x] Tune on dev split only (rule changes in D-058); owner's review of the dev report done
       2026-10-06, fixes A and B and prompt `verifier_v2` (D-059); `results/verifier/dev_report.md`
-- [x] Verifier frozen and tagged `verifier-v1` (D-060); dev results logged
-- [ ] Owner's 10 planted texts for the offline detector check (after the freeze; reported as is)
+- [x] Verifier frozen and tagged `verifier-v1` (D-060); reopened once for H-032 and re-frozen,
+      tag moved (D-061); dev results logged
+- [x] Facts check on dev filings, report only (D-061, EVAL §8)
+- [ ] Owner's 10 planted texts for the offline detector check (after the re-freeze, before the test
+      batch; reported as is)
 - **Done when:** verifier is frozen and tagged; dev results logged.
 
 ## Phase 5 — Eval run (1 day)
@@ -74,12 +77,16 @@ cap. Options: one verifier model call per answer on test; test verifier calls th
 API; skip the robustness set.
 **Re-projected 2026-10-06** from measured unit costs, after the verifier freeze ($2.321 spent):
 Phase 5 $2.69–$3.46, project end **$5.01–$5.78**, under the $7 cap (`docs/PHASE5_PLAN.md`).
-- [ ] Owner approves `docs/PHASE5_PLAN.md` (order, cost, budget option); test batch needs a
-      separate go-ahead
-- [ ] Owner's judge hand-check on the 16 dev premise items (EVAL §5)
+- [x] Owner approves `docs/PHASE5_PLAN.md` (approved with changes 2026-10-06, D-062); test batch
+      needs a separate go-ahead
+- [x] Test harness generalised; pre-submit checks run on test, nothing submitted (D-062)
+- [ ] Owner's judge hand-check on the 16 dev premise items (EVAL §5); sheet
+      `review/judge_handcheck_dev_v1.xlsx` built
 - [ ] Baseline and treatment on test split, once
-- [ ] Owner hand-checks 30 scored test rows chosen by seed, both conditions; agreement reported
-      (EVAL §10 4a)
+- [ ] Owner hand-checks 30 scored test rows chosen by seed, both conditions, plus every non-Correct
+      baseline row, every blocked or flagged answer and every missed seeded error; agreement on the
+      random 30 reported separately (EVAL §10 4a)
+- [ ] Results reported as scored and after owner-approved parsing corrections (EVAL §10 4b)
 - [ ] Metrics, intervals, McNemar, bootstrap by type
 - [ ] Failure taxonomy labels
 - [ ] `results/summary.json`

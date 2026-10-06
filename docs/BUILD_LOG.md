@@ -16,6 +16,30 @@ of every session.
 
 ---
 
+## 2026-10-06 — Phase 4 close and Phase 5 step 2: H-032 re-freeze, facts check, test pre-submit checks
+**Built:** Verifier reopened once (D-061): a named filing's other value given at the answer's
+printed precision is `stale_value`; BAC unit test; full dev re-run; re-freeze (new manifest hash,
+freeze test updated, tag `verifier-v1` moved). Facts check on dev filings, report only
+(`eval/facts_check.py`, `results/verifier/facts_check_dev_v1.md`, EVAL §8). Phase 5 plan approved
+with changes and updated (D-062; EVAL §6, §10 4a and 4b). Harness `eval/dev_run.py` generalised by
+split with `--owner-approved-test` for submit and write; test pre-submit checks run, nothing
+submitted. Judge hand-check sheet `review/judge_handcheck_dev_v1.xlsx` (32 decisions).
+**Tests:** 228 offline tests pass (new: H-032 BAC pair, test-split harness guards).
+**Broken or unfinished:** Facts gaps (long-term debt in 10 companies; JNJ, XOM, PG R&D; DIS operating
+income; BA gross profit) can cause false blocks on test; reported, not fixed. The test batch limit
+($2.60) equals the projection at dev's 90th-percentile output. Open for the owner: the 10 planted
+texts, the judge hand-check, the 90-row spot-check, and the test batch go-ahead.
+**Numbers worth keeping:** Dev after D-061: seeded 153/153 both modes, T2 2 of 2, false blocks 0/86,
+forced restated 0 of 4 blocked; only FG-0205 T2 changed. Facts check: 364 pairs, 243 match, 75 no
+fact, 46 not on a row the verifier reads (31 label, 10 long-term debt, 5 different line). Test
+pre-submit: 0 problems, 210 items, 0 dev, 32 injection chunks match, 0 test answers cached; projected
+$2.02 (mean output) to $2.60 (p90 output), limit $2.60.
+**Spend so far:** $2.3210 (no calls this session part).
+**Next session starts with:** The offline detector check on the owner's 10 planted texts, then the
+owner's go-ahead for the test batch.
+**Commit:** Phase 4: H-032 fix and verifier re-freeze (D-061), facts check; Phase 5: plan approved
+with changes, test harness and pre-submit checks (D-062)
+
 ## 2026-10-06 — Phase 4: owner's dev review, fixes A and B, scorer fixes, verifier frozen
 **Built:** Owner's review of the v1 block sheet recorded in `results/verifier/dev_report.md`.
 Verifier: when a question names a filing, the model sees only that filing's excerpts and is told
