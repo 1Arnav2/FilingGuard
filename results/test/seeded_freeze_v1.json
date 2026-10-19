@@ -1,0 +1,61 @@
+{
+  "file": "results/test/seeded_v1.jsonl",
+  "sha256": "fe59b19e382b63ed241277bb1cea0a147421dbb9a19d4d63159f3958a72b40b7",
+  "rows": 345,
+  "kept": 334,
+  "kept_by_transform": {
+    "T1": 13,
+    "T2": 3,
+    "T3": 62,
+    "T4": 113,
+    "T5": 30,
+    "T6": 113
+  },
+  "made_by_transform": {
+    "T1": 19,
+    "T2": 6,
+    "T3": 64,
+    "T4": 113,
+    "T5": 30,
+    "T6": 113
+  },
+  "dropped_by_transform": {
+    "T1": 6,
+    "T2": 3,
+    "T3": 2,
+    "T4": 0,
+    "T5": 0,
+    "T6": 0
+  },
+  "drop_reasons": {
+    "T1: gate: scored unsupported/wrong_number, expected ['wrong_period']": 6,
+    "T2: gate: scored missed/None, expected ['stale_restated']": 3,
+    "T3: gate: scored correct/None, expected ['wrong_number']": 1,
+    "T3: sign or scale stated in words; cannot render": 1
+  },
+  "macro_set_size_T1_T3_T4_T5_T6": 331,
+  "correct_as_scored": 186,
+  "pool": 113,
+  "pool_by_type": {
+    "control": 29,
+    "unit_trap": 29,
+    "period_mismatch": 19,
+    "restated": 6,
+    "injection": 30
+  },
+  "excluded_corrected_rows": [
+    "FG-0001",
+    "FG-0015",
+    "FG-0033",
+    "FG-0044",
+    "FG-0058",
+    "FG-0138",
+    "FG-0142",
+    "FG-0206",
+    "FG-0296",
+    "FG-0302",
+    "FG-0306"
+  ],
+  "decision": "D-072",
+  "frozen_before_any_verifier_run": true
+}

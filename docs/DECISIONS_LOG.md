@@ -1425,6 +1425,32 @@ smallest two-sided p = 0.25), so the headline bar is not testable on the correct
 **Why:** Bars are judged on what the target said, not on the scorer's misreads; rules are not relaxed.
 **Revisit if:** —
 
+### D-072 — Test seeded-error set built and frozen before any verifier run; fourth one-time push
+**Date:** 2026-10-19 · **Phase:** 5 (step 5)
+**Context:** Owner's go-ahead for step 5: build and freeze the test seeded set from answers the
+frozen scorer scored Correct as scored, excluding the D-071 corrected rows, with the dev transforms,
+rules and seed method; then push so the set is public before the verifier sees it.
+**Decision:**
+- Pool: of 186 answers Correct as scored, the 113 that state a figure for the asked item in the
+  answer-in-filing types (control 29, unit_trap 29, period_mismatch 19, restated 6, injection 30), as on
+  dev. The 11 corrected rows were not Correct as scored and are excluded.
+- Built by `eval/scripts/build_test_seeded.py`, which calls the dev code (`eval/seeded.py`) unchanged:
+  same transforms, same opaque keys (SHA-256 of item and transform), items in ID order, no randomness.
+  Gate as on dev: a copy is kept only if the frozen scorer scores it Unsupported with the transform's
+  expected label. 345 copies made, 334 kept (T1 13, T2 3, T3 62, T4 113, T5 30, T6 113); dropped:
+  T1 6 (scored Unsupported but `wrong_number`, not `wrong_period`), T2 3 (scored Missed), T3 2 (one
+  scored Correct, one could not be rendered). Macro set (T1, T3–T6): 331.
+- Frozen: `results/test/seeded_v1.jsonl`, SHA-256 `fe59b19e382b63ed241277bb1cea0a147421dbb9a19d4d63159f3958a72b40b7`,
+  recorded in `results/test/seeded_freeze_v1.json` (manifest SHA-256 `171d5e71...`), pinned by
+  `tests/test_seeded_test_frozen.py`. No frozen file changed.
+- Push: a one-time exception approved by the owner, so the set is public before the verifier sees it.
+  Every unpushed commit message checked (no Co-Authored-By, no "Generated with", no coding tool named;
+  `CLAUDE.md`, `AGENTS.md`, `.claude/` untracked); `main` pushed, no force.
+**Why:** A set frozen and public before the verifier runs cannot be fitted to the verifier.
+**Trade-off accepted:** The 6 T1 copies that scored `wrong_number` are dropped by the dev gate rule
+(expected label), though they are Unsupported.
+**Revisit if:** —
+
 ---
 
 ---

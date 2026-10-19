@@ -103,6 +103,8 @@ the unsubmitted items are reported as not run, and resubmitting them needs the o
    This writes `results/test/baseline_scores_v1.jsonl`.
 5. **Test seeded set.** Copies of baseline answers scored Correct with a figure, made with the same
    six transforms and gate. It is frozen with its hash before the verifier sees any of it. No calls.
+   *Done 2026-10-19 (D-072): pool 113, 334 copies kept, macro set 331; `results/test/seeded_v1.jsonl`,
+   SHA-256 `fe59b19e…`, pinned by `tests/test_seeded_test_frozen.py`.*
 6. **Verifier run.** The frozen verifier runs once on the 210 natural answers and the seeded set,
    in both modes (full; quote rule off for the seeded headline). Natural answers use the full mode
    for treatment.

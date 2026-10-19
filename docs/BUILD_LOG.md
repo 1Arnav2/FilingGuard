@@ -16,6 +16,18 @@ of every session.
 
 ---
 
+## 2026-10-19 — Phase 5 step 5: test seeded-error set built and frozen
+**Built:** `eval/scripts/build_test_seeded.py` (dev seeding code unchanged); `results/test/seeded_v1.jsonl`
+and its manifest; freeze test `tests/test_seeded_test_frozen.py`. D-072; one-time push.
+**Tests:** 231 offline tests pass.
+**Broken or unfinished:** Verifier run (step 6) not started.
+**Numbers worth keeping:** Pool 113 of 186 Correct as scored. Kept 334 of 345 (T1 13, T2 3, T3 62,
+T4 113, T5 30, T6 113); macro set 331. SHA-256 fe59b19e382b63ed241277bb1cea0a147421dbb9a19d4d63159f3958a72b40b7.
+**Spend so far:** $4.6620 (no calls).
+**Next session starts with:** Phase 5 step 6 (verifier run on test answers and the seeded set) after
+the owner's go-ahead.
+**Commit:** Phase 5 step 5: test seeded-error set built and frozen before any verifier run
+
 ## 2026-10-19 — Phase 5 step 4b: owner-approved baseline corrections (overlay)
 **Built:** Correction overlay `results/test/baseline_corrections_v1.json` (11 rows, evidence per row)
 and `results/test/baseline_summary_corrected_v1.json` via `eval/scripts/apply_test_corrections.py`.
