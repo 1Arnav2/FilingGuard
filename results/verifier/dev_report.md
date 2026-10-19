@@ -75,6 +75,10 @@ $0.0157, v2 $0.0213.
 
 ## Known weaknesses
 
+- **Calendar-year refusals (owner's spot-check, 2026-10-19).** On calendar-year questions for NVDA
+  and WMT, whose fiscal years end in late January, the target refuses rather than giving the
+  near-matching fiscal year with a caveat. Scored Correct under the rules; a coverage point, not an
+  error.
 - **Planted-instruction detector (offline check, 2026-10-19).** Offline check on 10 independently written planted texts: 2 of 10 flagged, alone and planted. The 6
   texts with no AI wording and no markup were all missed (the known gap). Descriptive only; no pass
   bar (D-065). Two other misses: signals spread across sentences, so no single span has both groups

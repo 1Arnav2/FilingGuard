@@ -58,8 +58,9 @@ the unsubmitted items are reported as not run, and resubmitting them needs the o
    none was blocked). Cohen's kappa is reported overall and per condition. No cost. *Sheet built
    2026-10-06: `review/judge_handcheck_dev_v1.xlsx`. Done 2026-10-19: 32 of 32 agreement on
    rejects_premise, confirms_change, gives_reasons and says_no_reasons_given (kappa 1.0, both
-   conditions); reasons_in_filing 28 of 32, the 4 differences being FG-0242 and FG-0303 in both
-   conditions, where the judge had no passages (`results/judge/handcheck_dev_v1.json`).*
+   conditions); reasons_in_filing rated on 4 rows; owner and judge disagree on all 4 (judge had no
+   passages; FG-0242 and FG-0303, both conditions); 28 rows not rated by either
+   (`results/judge/handcheck_dev_v1.json`).*
 2. **Test run harness.** *Built and checks run 2026-10-06, nothing submitted (D-062).* `dev_run` is generalised to take the split, and the test split is refused
    without an explicit `--owner-approved-test` flag. Pre-submit checks, where any failure stops:
    - batch price is half of standard
@@ -73,6 +74,10 @@ the unsubmitted items are reported as not run, and resubmitting them needs the o
    detector after the re-freeze and before the test batch. No model calls. The result is reported as
    is, and the detector is not changed afterwards. *Done 2026-10-19: 2 of 10 flagged, alone and
    planted; descriptive only, no pass bar (D-065); `results/verifier/detector_check_v1.json`.*
+2b. **Dev score-sheet spot-check (owner).** *Done 2026-10-19: the owner reviewed 10 rows of
+   `review/dev_score_sheet_v3.xlsx` (FG-0014, FG-0034, FG-0133, FG-0209, the 4 abstentions;
+   FG-0155, FG-0162, FG-0166, FG-0173, FG-0191, FG-0198, the calendar-year rows); all 10 are
+   scored correctly.*
 3. **Test target batch (after the go-ahead).** File-based jobs only, the same request path as
    the dev re-run (H-028).
    - Sub-batches of 1, 30, 30, 50, 50 and 49 items in ID order. The first is a one-item probe.

@@ -47,10 +47,11 @@ One phase per working session. Each phase ends with: tests pass, roadmap ticked,
 - **Done when:** `data/testset/v1.jsonl` is frozen and tagged.
 
 ## Phase 4 — Verifier (1 to 2 days)
-- [ ] Step 1, dev baseline: scorer and §3 tests written before any answer (D-047); dev target
+- [x] Step 1, dev baseline: scorer and §3 tests written before any answer (D-047); dev target
       batch, 90 items (D-046, re-run after H-028); premise judge on the 16 dev premise items;
-      baseline dev report and the 90-row score sheet — all done 2026-10-05; **owner spot-check
-      of the sheet pending** (ticked after it)
+      baseline dev report and the 90-row score sheet — all done 2026-10-05; owner spot-check of
+      the sheet done 2026-10-19 (10 rows: the 4 abstentions and the 6 calendar-year rows, all
+      scored correctly)
 - [x] Owner approves `docs/INJECTION_DETECTOR.md` (D-052) and the seeded-error design (D-057)
 - [x] Dev seeded-error set with sanity gate (`docs/SEEDED_ERRORS.md`): 151 kept, 3 dropped (H-030);
       v2 after the H-030 scorer fix: 153 kept, 1 dropped (D-059)
@@ -81,7 +82,8 @@ Phase 5 $2.69–$3.46, project end **$5.01–$5.78**, under the $7 cap (`docs/PH
       needs a separate go-ahead
 - [x] Test harness generalised; pre-submit checks run on test, nothing submitted (D-062)
 - [x] Owner's judge hand-check on the 16 dev premise items (EVAL §5), 2026-10-19: scoring fields
-      32/32 (kappa 1.0); reasons_in_filing 28/32 (`results/judge/handcheck_dev_v1.json`)
+      32/32 (kappa 1.0); reasons_in_filing rated on 4 rows, disagree on all 4 (judge had no
+      passages), 28 not rated by either (`results/judge/handcheck_dev_v1.json`)
 - [ ] Baseline and treatment on test split, once
 - [ ] Owner hand-checks 30 scored test rows chosen by seed, both conditions, plus every non-Correct
       baseline row, every blocked or flagged answer and every missed seeded error; agreement on the

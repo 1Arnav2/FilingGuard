@@ -1310,6 +1310,17 @@ D-057 never asked for one.
 **Trade-off accepted:** The check shows robustness descriptively; it cannot fail.
 **Revisit if:** —
 
+### D-066 — Second one-time push by the session, approved by the owner
+**Date:** 2026-10-19 · **Phase:** 5 (before any test-split call)
+**Context:** The standing rule is that the owner pushes. The owner approved one more push by the
+session as a one-time exception, after the pre-batch items were closed.
+**Decision:** Before pushing, every unpushed commit message was printed and checked: no
+Co-Authored-By line, no "Generated with" line, no coding tool named; `CLAUDE.md`, `AGENTS.md` and
+`.claude/` confirmed untracked. Then `main` only was pushed to `origin`, with no force push.
+**Why:** The owner's instruction.
+**Trade-off accepted:** None; the rule stands for every later push.
+**Revisit if:** —
+
 ---
 
 ---

@@ -16,6 +16,22 @@ of every session.
 
 ---
 
+## 2026-10-19 — Phase 5 pre-batch close: dev spot-check, wording fix, push
+**Built:** Owner's spot-check of the dev score sheet recorded: 10 rows reviewed (the 4 abstentions
+FG-0014, FG-0034, FG-0133, FG-0209; the 6 calendar-year rows FG-0155, FG-0162, FG-0166, FG-0173,
+FG-0191, FG-0198), all 10 scored correctly. Dev report: calendar-year refusals for late-January
+fiscal years noted as a coverage point. Judge hand-check wording fixed: reasons_in_filing is
+reported as rated on 4 rows, disagree on all 4, 28 not rated by either; kappa kept only for the
+four fields rated on all 32 rows. PHASE5_PLAN step 2b and ROADMAP Phase 4 step 1 marked done.
+One-time push of `main` (D-066).
+**Tests:** full offline suite passes.
+**Broken or unfinished:** Every pre-batch item is done except the owner's go-ahead for the test
+batch.
+**Numbers worth keeping:** Spot-check 10 of 10 scored correctly.
+**Spend so far:** $2.3210 (no calls).
+**Next session starts with:** The owner's go-ahead for the test batch (plan step 3).
+**Commit:** Phase 5 pre-batch: owner's dev spot-check, judge hand-check wording, D-066
+
 ## 2026-10-19 — Phase 5 step 1: owner's judge hand-check recorded
 **Built:** Agreement between the owner's labels and the premise judge on the 32 dev decisions
 (`results/judge/handcheck_dev_v1.json`, owner's sheet committed). EVAL §4 reasons-diagnostic note;
@@ -24,9 +40,9 @@ plan step 1 and ROADMAP marked done.
 **Broken or unfinished:** The owner's 90-row dev spot-check (10 rows prepared), then the test batch
 go-ahead.
 **Numbers worth keeping:** rejects_premise, confirms_change, gives_reasons, says_no_reasons_given:
-32/32 each, kappa 1.0, baseline 16/16 and treatment 16/16. reasons_in_filing: 28/32; on the 4 rows
-both rated, 0 of 4 agree (FG-0242, FG-0303, both conditions: judge False with no passages, owner
-True).
+32/32 each, kappa 1.0, baseline 16/16 and treatment 16/16. reasons_in_filing: rated on 4 rows;
+owner and judge disagree on all 4 (judge had no passages; FG-0242 and FG-0303, both conditions,
+judge False, owner True); 28 rows not rated by either.
 **Spend so far:** $2.3210 (no calls).
 **Next session starts with:** The owner's 90-row spot-check.
 **Commit:** Phase 5 step 1: owner's judge hand-check recorded, reasons-check note in EVAL 4

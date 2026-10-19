@@ -2,7 +2,7 @@
   "sheet": "review/judge_handcheck_dev_v1.xlsx",
   "rows": 32,
   "items": 16,
-  "note": "kappa is null where both raters used one label only (agreement is then total but kappa is undefined)",
+  "note": "kappa is given only for the four fields rated on all 32 rows",
   "fields": {
     "rejects_premise": {
       "all": {
@@ -65,23 +65,19 @@
       }
     },
     "reasons_in_filing": {
-      "all": {
-        "agree": 28,
-        "of": 32,
-        "kappa_on_rated": 0.0,
-        "rated": 4
-      },
-      "baseline": {
-        "agree": 14,
-        "of": 16,
-        "kappa_on_rated": 0.0,
-        "rated": 2
-      },
-      "treatment": {
-        "agree": 14,
-        "of": 16,
-        "kappa_on_rated": 0.0,
-        "rated": 2
+      "summary": "rated on 4 rows; owner and judge disagree on all 4 (judge had no passages); 28 rows not rated by either",
+      "rated": 4,
+      "disagree_on_rated": 4,
+      "not_rated_by_either": 28,
+      "by_condition": {
+        "baseline": {
+          "rated": 2,
+          "disagree_on_rated": 2
+        },
+        "treatment": {
+          "rated": 2,
+          "disagree_on_rated": 2
+        }
       }
     },
     "says_no_reasons_given": {
