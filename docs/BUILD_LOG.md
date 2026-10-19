@@ -16,6 +16,21 @@ of every session.
 
 ---
 
+## 2026-10-19 — Phase 5 step 4b: owner-approved baseline corrections (overlay)
+**Built:** Correction overlay `results/test/baseline_corrections_v1.json` (11 rows, evidence per row)
+and `results/test/baseline_summary_corrected_v1.json` via `eval/scripts/apply_test_corrections.py`.
+Step 3 run drivers and step 4 scoring driver committed unchanged under `src/filingguard/eval/scripts/`.
+D-071; H-033 resolved.
+**Tests:** full offline suite passes.
+**Broken or unfinished:** FG-0307 flagged (not corrected: its 2024 figure is outside the tolerance).
+Verifier run and later steps not started.
+**Numbers worth keeping:** As scored 186/11/13 → corrected 197/10/3 (Correct/Missed/Unsupported).
+Correct handling 88.6% → 93.8%; answer coverage 77.4% → 84.9%; control abstain 11.9% both;
+unsupported-claim rate 13/124 → 3/124. McNemar not testable on corrected scores.
+**Spend so far:** $4.6620 (no calls).
+**Next session starts with:** Phase 5 step 5 (test seeded set) after the owner's go-ahead.
+**Commit:** Phase 5 step 4b: owner-approved baseline corrections as an overlay, drivers committed
+
 ## 2026-10-19 — Phase 5 steps 3 and 4: test batch answered, baseline scored (as scored)
 **Built:** Test batch: 210 of 210 answers saved over 9 file-batch sub-batches (D-067 to D-069); 2
 runaway replies unparseable (FG-0020, FG-0308). Premise judge on the 38 parseable test premise

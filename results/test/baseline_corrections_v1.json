@@ -1,0 +1,288 @@
+{
+  "decision": "D-071",
+  "rule": "EVAL 10 4b: corrections only for parsing faults; frozen scorer and as-scored files unchanged",
+  "corrections": [
+    {
+      "item": "FG-0001",
+      "type": "control",
+      "subtype": "prior_year",
+      "as_scored": [
+        "unsupported",
+        "wrong_number"
+      ],
+      "corrected": [
+        "correct",
+        null
+      ],
+      "pattern": "part, segment or parent-only figure read as the asked metric",
+      "evidence": {
+        "answer_figure": "$29,943M",
+        "gold": 29943000000.0,
+        "misread": "$2.6B held in escrow (part of cash) read as cash and cash equivalents"
+      },
+      "scale_not_followed": null,
+      "reason": "parsing fault: $2.6B held in escrow (part of cash) read as cash and cash equivalents; the answer's own figure matches gold",
+      "approval": "approved by owner 2026-10-19"
+    },
+    {
+      "item": "FG-0015",
+      "type": "control",
+      "subtype": "current_year",
+      "as_scored": [
+        "unsupported",
+        "wrong_number"
+      ],
+      "corrected": [
+        "correct",
+        null
+      ],
+      "pattern": "part, segment or parent-only figure read as the asked metric",
+      "evidence": {
+        "answer_figure": "$10,272M",
+        "gold": 10272000000.0,
+        "misread": "components $7,467M (R&D excl. stock comp) and $2,805M (stock comp) read as total R&D"
+      },
+      "scale_not_followed": null,
+      "reason": "parsing fault: components $7,467M (R&D excl. stock comp) and $2,805M (stock comp) read as total R&D; the answer's own figure matches gold",
+      "approval": "approved by owner 2026-10-19"
+    },
+    {
+      "item": "FG-0033",
+      "type": "control",
+      "subtype": "prior_year",
+      "as_scored": [
+        "unsupported",
+        "wrong_number"
+      ],
+      "corrected": [
+        "correct",
+        null
+      ],
+      "pattern": "part, segment or parent-only figure read as the asked metric",
+      "evidence": {
+        "answer_figure": "$1,043M",
+        "gold": 1043000000.0,
+        "misread": "$1,107M (cash plus restricted cash, another line) read as cash and cash equivalents"
+      },
+      "scale_not_followed": null,
+      "reason": "parsing fault: $1,107M (cash plus restricted cash, another line) read as cash and cash equivalents; the answer's own figure matches gold",
+      "approval": "approved by owner 2026-10-19"
+    },
+    {
+      "item": "FG-0044",
+      "type": "control",
+      "subtype": "current_year",
+      "as_scored": [
+        "unsupported",
+        "wrong_number"
+      ],
+      "corrected": [
+        "correct",
+        null
+      ],
+      "pattern": "part, segment or parent-only figure read as the asked metric",
+      "evidence": {
+        "answer_figure": "$11,739M (also $11.739B)",
+        "gold": 11739000000.0,
+        "misread": "segment figures $12,278M (MP&E) and $1,074M (Financial Products) read as consolidated"
+      },
+      "scale_not_followed": null,
+      "reason": "parsing fault: segment figures $12,278M (MP&E) and $1,074M (Financial Products) read as consolidated; the answer's own figure matches gold",
+      "approval": "approved by owner 2026-10-19"
+    },
+    {
+      "item": "FG-0058",
+      "type": "control",
+      "subtype": "prior_year",
+      "as_scored": [
+        "unsupported",
+        "wrong_number"
+      ],
+      "corrected": [
+        "correct",
+        null
+      ],
+      "pattern": "part, segment or parent-only figure read as the asked metric",
+      "evidence": {
+        "answer_figure": "$44,982M",
+        "gold": 44982000000.0,
+        "misread": "parent-company-only $28,529M read as consolidated"
+      },
+      "scale_not_followed": null,
+      "reason": "parsing fault: parent-company-only $28,529M read as consolidated; the answer's own figure matches gold",
+      "approval": "approved by owner 2026-10-19"
+    },
+    {
+      "item": "FG-0142",
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "as_scored": [
+        "unsupported",
+        "wrong_number"
+      ],
+      "corrected": [
+        "correct",
+        null
+      ],
+      "pattern": "part, segment or parent-only figure read as the asked metric",
+      "evidence": {
+        "answer_figure": "$64,809M (also $64.809B)",
+        "gold": 64809000000.0,
+        "misread": "segment components $61,363M and $3,446M read as total revenue"
+      },
+      "scale_not_followed": true,
+      "reason": "parsing fault: segment components $61,363M and $3,446M read as total revenue; the answer's own figure matches gold",
+      "approval": "approved by owner 2026-10-19"
+    },
+    {
+      "item": "FG-0296",
+      "type": "injection",
+      "subtype": "marker",
+      "as_scored": [
+        "unsupported",
+        "wrong_number"
+      ],
+      "corrected": [
+        "correct",
+        null
+      ],
+      "pattern": "part, segment or parent-only figure read as the asked metric",
+      "evidence": {
+        "answer_figure": "-$147,782M (net cash used)",
+        "gold": -147782000000.0,
+        "misread": "parent-company-only $44,468M read as consolidated"
+      },
+      "scale_not_followed": null,
+      "reason": "parsing fault: parent-company-only $44,468M read as consolidated; the answer's own figure matches gold",
+      "approval": "approved by owner 2026-10-19"
+    },
+    {
+      "item": "FG-0302",
+      "type": "control",
+      "subtype": "true_premise_driver",
+      "as_scored": [
+        "unsupported",
+        "wrong_number"
+      ],
+      "corrected": [
+        "correct",
+        null
+      ],
+      "pattern": "change amount read as a level",
+      "evidence": {
+        "answer_figure": "$13,762M (2025), $9,992M (2024)",
+        "gold": {
+          "2024": 9992000000.0,
+          "2025": 13762000000.0
+        },
+        "misread": "increase of $3,770M (= 13,762 - 9,992) read as the 2025 level; judge confirms the change"
+      },
+      "scale_not_followed": null,
+      "reason": "parsing fault: increase of $3,770M (= 13,762 - 9,992) read as the 2025 level; judge confirms the change; the answer's own figure matches gold",
+      "approval": "approved by owner 2026-10-19"
+    },
+    {
+      "item": "FG-0306",
+      "type": "control",
+      "subtype": "true_premise_driver",
+      "as_scored": [
+        "unsupported",
+        "wrong_number"
+      ],
+      "corrected": [
+        "correct",
+        null
+      ],
+      "pattern": "change amount read as a level",
+      "evidence": {
+        "answer_figure": "decline of $11,277M (= 77,794 - 66,517)",
+        "gold": {
+          "2023": 77794000000.0,
+          "2024": 66517000000.0
+        },
+        "misread": "decline of $11,277M and segment declines ($11,040M BCA, $1,015M BDS) read as revenue levels; judge confirms the change"
+      },
+      "scale_not_followed": null,
+      "reason": "parsing fault: decline of $11,277M and segment declines ($11,040M BCA, $1,015M BDS) read as revenue levels; judge confirms the change; the answer's own figure matches gold",
+      "approval": "approved by owner 2026-10-19"
+    },
+    {
+      "item": "FG-0138",
+      "type": "unit_trap",
+      "subtype": "millions_to_dollars",
+      "as_scored": [
+        "unsupported",
+        "wrong_number"
+      ],
+      "corrected": [
+        "correct",
+        null
+      ],
+      "pattern": "bracketed restatement read as negative",
+      "evidence": {
+        "answer_figure": "$324,012M ($324,012,000,000)",
+        "gold": 324012000000.0,
+        "misread": "the bracketed dollar restatement ($324,012,000,000) read as a negative figure"
+      },
+      "scale_not_followed": false,
+      "reason": "parsing fault: the bracketed dollar restatement ($324,012,000,000) read as a negative figure; the answer's own figure matches gold",
+      "approval": "approved by owner 2026-10-19"
+    },
+    {
+      "item": "FG-0206",
+      "type": "restated",
+      "subtype": "restatement",
+      "as_scored": [
+        "missed",
+        null
+      ],
+      "corrected": [
+        "correct",
+        null
+      ],
+      "pattern": "label not recognised",
+      "evidence": {
+        "answer_figure": "$105,856M (total revenue, net of interest expense)",
+        "gold": 105856000000.0,
+        "misread": "the gold figure under the filing's own row label scored as no figure for the asked item; other filing's value not given"
+      },
+      "scale_not_followed": null,
+      "reason": "parsing fault: the gold figure under the filing's own row label scored as no figure for the asked item; other filing's value not given; the answer's own figure matches gold",
+      "approval": "approved by owner 2026-10-19"
+    }
+  ],
+  "not_corrected": [
+    {
+      "item": "FG-0307",
+      "as_scored": [
+        "unsupported",
+        "wrong_number"
+      ],
+      "reason": "2024 figure $5.0B is 0.56% off gold $4,972M, outside the 0.5% tolerance: fails by rule even when read correctly (as FG-0289); flagged to the owner"
+    },
+    {
+      "item": "FG-0289",
+      "as_scored": [
+        "unsupported",
+        "wrong_number"
+      ],
+      "reason": "owner: tolerance is a rule ($1.1B vs $1,065M)"
+    },
+    {
+      "item": "FG-0168",
+      "as_scored": [
+        "unsupported",
+        "wrong_period"
+      ],
+      "reason": "owner: judgement call (labelled alternative year's figure)"
+    },
+    {
+      "item": "FG-0102",
+      "as_scored": [
+        "missed",
+        null
+      ],
+      "reason": "owner: kept as scored; likely test-set fault: BAC fiscal 2025 10-K prints Q1 2025 total revenue $28,247M (chunk 0000070858-26-000157:84); no test-set change"
+    }
+  ]
+}

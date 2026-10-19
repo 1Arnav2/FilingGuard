@@ -1400,6 +1400,31 @@ Co-Authored-By line, no "Generated with" line, no coding tool named; `CLAUDE.md`
 **Trade-off accepted:** None; the rule stands for every later push.
 **Revisit if:** —
 
+### D-071 — Test baseline corrections approved (parsing faults only, as an overlay)
+**Date:** 2026-10-19 · **Phase:** 5 (after step 4; before the verifier run)
+**Context:** H-033 listed likely scorer misreads in the test baseline. EVAL §10 4b allows corrections
+only for parsing faults, each approved by the owner, with the as-scored result kept beside them.
+**Decision (owner, approved 2026-10-19):**
+- Corrected to Correct after the session showed each row's evidence (the answer's figure, the gold
+  value, the figure misread): FG-0001, FG-0015, FG-0033, FG-0044, FG-0058, FG-0142, FG-0296 (part,
+  segment or parent-only figure read as the metric); FG-0302, FG-0306 (change read as a level);
+  FG-0138 (bracketed restatement read as negative); FG-0206 (label not recognised). 11 rows.
+- Not corrected: FG-0307 — the owner listed it for correction, but its 2024 figure ($5.0B) is 0.56%
+  off the gold $4,972M, outside the 0.5% tolerance, so it fails by rule even when read correctly; the
+  session flagged it and left it as scored. FG-0289 (tolerance is a rule) and FG-0168 (judgement
+  call) kept as scored. FG-0102 kept as scored and recorded as a likely test-set fault (BAC prints the
+  Q1 2025 figure, chunk `0000070858-26-000157:84`); no test-set change.
+- Overlay: `results/test/baseline_corrections_v1.json` (item, as-scored, corrected, pattern, evidence,
+  reason, approval) and `results/test/baseline_summary_corrected_v1.json`, written by
+  `eval/scripts/apply_test_corrections.py`. The frozen scorer and the as-scored files are unchanged.
+- Reproducibility: the step 3 run drivers and the step 4 scoring driver are committed unchanged under
+  `src/filingguard/eval/scripts/`.
+**Result:** as scored 186 Correct / 11 Missed / 13 Unsupported; corrected 197 / 10 / 3. With 3
+baseline-Unsupported answers, McNemar's exact test cannot reach p < 0.05 (at most 3 discordant pairs;
+smallest two-sided p = 0.25), so the headline bar is not testable on the corrected scores (D-056).
+**Why:** Bars are judged on what the target said, not on the scorer's misreads; rules are not relaxed.
+**Revisit if:** —
+
 ---
 
 ---
@@ -1938,9 +1963,10 @@ misreads are corrected under EVAL §10 4b, the count would be about 0–1, and t
 testable. The control abstain rate is 5/42 (11.9%) as scored, 2 of them runaway unparseable replies.
 **What I tried:** Read every non-Correct row; checked FG-0296's gold sign (−147,782, the answer's
 sign is right) and FG-0102's filing text. Nothing was changed.
-**Resolution:** Open, for the owner: corrections are allowed only for parsing faults, each approved
-by the owner (EVAL §10 4b, D-062); the frozen scorer's result is reported beside them. FG-0102 goes to
-the test-set fault-rate check.
+**Resolution:** Owner approved 11 parsing-fault corrections on 2026-10-19 (D-071); FG-0307 not
+corrected (fails the tolerance rule even when read correctly), FG-0289 and FG-0168 kept as scored,
+FG-0102 kept as scored and recorded as a likely test-set fault. Corrected: 197 / 10 / 3; McNemar not
+testable on the corrected scores.
 **Lesson:** As on dev (H-029), most non-Correct rows on first read are scorer misreads, not target
 errors; multi-figure answers are where the scorer is weakest.
 **Linked decision:** D-047, D-053, D-062
