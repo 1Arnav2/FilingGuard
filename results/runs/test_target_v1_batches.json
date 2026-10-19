@@ -102,10 +102,50 @@
       "errors": {},
       "invalid_replies": {},
       "complete": true
+    },
+    {
+      "n": 4,
+      "ids": [
+        "FG-0101",
+        "FG-0102",
+        "FG-0104",
+        "FG-0106",
+        "FG-0107",
+        "FG-0108",
+        "FG-0110",
+        "FG-0111",
+        "FG-0112",
+        "FG-0113",
+        "FG-0116",
+        "FG-0117",
+        "FG-0118",
+        "FG-0119",
+        "FG-0121",
+        "FG-0122",
+        "FG-0124",
+        "FG-0125",
+        "FG-0126",
+        "FG-0128",
+        "FG-0130",
+        "FG-0131",
+        "FG-0132",
+        "FG-0134",
+        "FG-0135",
+        "FG-0137",
+        "FG-0138",
+        "FG-0139",
+        "FG-0141",
+        "FG-0142"
+      ],
+      "job": "batches/e07o9a8xwkoc6bqiy9j2xxukuntbteyqcrmn",
+      "answered": 30,
+      "errors": {},
+      "invalid_replies": {},
+      "complete": true
     }
   ],
   "tag": "batch-file",
   "reason": "test batch under D-025 and docs/PHASE5_PLAN.md; file-based jobs",
   "spend_before_usd": 2.321006,
-  "spend_after_usd": 2.974546
+  "spend_after_usd": 3.249046
 }
