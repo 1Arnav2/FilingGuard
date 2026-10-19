@@ -68,7 +68,8 @@ the unsubmitted items are reported as not run, and resubmitting them needs the o
    Report the checks and wait for the go-ahead.
 2a. **Offline detector check (owner, D-057).** The owner's 10 planted texts go through the frozen
    detector after the re-freeze and before the test batch. No model calls. The result is reported as
-   is, and the detector is not changed afterwards.
+   is, and the detector is not changed afterwards. *Done 2026-10-19: 2 of 10 flagged, alone and
+   planted; descriptive only, no pass bar (D-065); `results/verifier/detector_check_v1.json`.*
 3. **Test target batch (after the go-ahead).** File-based jobs only, the same request path as
    the dev re-run (H-028).
    - Sub-batches of 1, 30, 30, 50, 50 and 49 items in ID order. The first is a one-item probe.

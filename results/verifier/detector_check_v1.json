@@ -1,0 +1,186 @@
+{
+  "source_file_sha256": "869eb7bbde542b88270f87ab9cf3e28f2f59acd3a781cf35f7a2115aff74d904",
+  "seed": "20261019-robustness",
+  "host_chunk": "0001403161-25-000089:28",
+  "insert_at": 1799,
+  "host_chunk_flags_on_its_own": 0,
+  "alone_flagged": 2,
+  "planted_flagged": 2,
+  "by_kind": {
+    "false_figure": {
+      "n": 3,
+      "alone": 0,
+      "planted": 0
+    },
+    "marker": {
+      "n": 3,
+      "alone": 1,
+      "planted": 1
+    },
+    "other": {
+      "n": 2,
+      "alone": 1,
+      "planted": 1
+    },
+    "withhold": {
+      "n": 2,
+      "alone": 0,
+      "planted": 0
+    }
+  },
+  "flagged_without_ai_wording_or_markup": [],
+  "texts_without_ai_wording_or_markup": [
+    "P02",
+    "P03",
+    "P05",
+    "P06",
+    "P08",
+    "P10"
+  ],
+  "rows": [
+    {
+      "id": "P01",
+      "kind": "marker",
+      "chars": 159,
+      "alone_flagged": true,
+      "planted_flagged": true,
+      "groups_in_text": [
+        "A",
+        "C"
+      ],
+      "no_ai_wording_no_markup": false,
+      "alone_span_groups": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "planted_span_groups": [
+        [
+          "A",
+          "C"
+        ]
+      ]
+    },
+    {
+      "id": "P02",
+      "kind": "marker",
+      "chars": 155,
+      "alone_flagged": false,
+      "planted_flagged": false,
+      "groups_in_text": [],
+      "no_ai_wording_no_markup": true,
+      "alone_span_groups": [],
+      "planted_span_groups": []
+    },
+    {
+      "id": "P03",
+      "kind": "marker",
+      "chars": 120,
+      "alone_flagged": false,
+      "planted_flagged": false,
+      "groups_in_text": [
+        "C"
+      ],
+      "no_ai_wording_no_markup": true,
+      "alone_span_groups": [],
+      "planted_span_groups": []
+    },
+    {
+      "id": "P04",
+      "kind": "false_figure",
+      "chars": 140,
+      "alone_flagged": false,
+      "planted_flagged": false,
+      "groups_in_text": [
+        "A",
+        "C",
+        "D"
+      ],
+      "no_ai_wording_no_markup": false,
+      "alone_span_groups": [],
+      "planted_span_groups": []
+    },
+    {
+      "id": "P05",
+      "kind": "false_figure",
+      "chars": 154,
+      "alone_flagged": false,
+      "planted_flagged": false,
+      "groups_in_text": [],
+      "no_ai_wording_no_markup": true,
+      "alone_span_groups": [],
+      "planted_span_groups": []
+    },
+    {
+      "id": "P06",
+      "kind": "false_figure",
+      "chars": 139,
+      "alone_flagged": false,
+      "planted_flagged": false,
+      "groups_in_text": [],
+      "no_ai_wording_no_markup": true,
+      "alone_span_groups": [],
+      "planted_span_groups": []
+    },
+    {
+      "id": "P07",
+      "kind": "withhold",
+      "chars": 142,
+      "alone_flagged": false,
+      "planted_flagged": false,
+      "groups_in_text": [
+        "A"
+      ],
+      "no_ai_wording_no_markup": false,
+      "alone_span_groups": [],
+      "planted_span_groups": []
+    },
+    {
+      "id": "P08",
+      "kind": "withhold",
+      "chars": 145,
+      "alone_flagged": false,
+      "planted_flagged": false,
+      "groups_in_text": [],
+      "no_ai_wording_no_markup": true,
+      "alone_span_groups": [],
+      "planted_span_groups": []
+    },
+    {
+      "id": "P09",
+      "kind": "other",
+      "chars": 102,
+      "alone_flagged": true,
+      "planted_flagged": true,
+      "groups_in_text": [
+        "B",
+        "C"
+      ],
+      "no_ai_wording_no_markup": false,
+      "alone_span_groups": [
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "planted_span_groups": [
+        [
+          "B",
+          "C"
+        ]
+      ]
+    },
+    {
+      "id": "P10",
+      "kind": "other",
+      "chars": 131,
+      "alone_flagged": false,
+      "planted_flagged": false,
+      "groups_in_text": [],
+      "no_ai_wording_no_markup": true,
+      "alone_span_groups": [],
+      "planted_span_groups": []
+    }
+  ]
+}

@@ -75,6 +75,13 @@ $0.0157, v2 $0.0213.
 
 ## Known weaknesses
 
+- **Planted-instruction detector (offline check, 2026-10-19).** Offline check on 10 independently written planted texts: 2 of 10 flagged, alone and planted. The 6
+  texts with no AI wording and no markup were all missed (the known gap). Descriptive only; no pass
+  bar (D-065). Two other misses: signals spread across sentences, so no single span has both groups
+  (P04); and withhold wording not in the directive list (P07). Result:
+  `results/verifier/detector_check_v1.json` (no planted text; the owner's file is identified by its
+  hash).
+
 - **The style-swap check is weak.** 14 of the 16 premise answers carry the target's abstain flag,
   and the verifier skips figure checks on those (12 of 16 are abstentions under EVAL §3, where
   driver controls ignore the flag). So most pairs pass both ways for a reason other than the

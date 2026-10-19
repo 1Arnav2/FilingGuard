@@ -16,6 +16,22 @@ of every session.
 
 ---
 
+## 2026-10-19 — Phase 5 step 2a: offline detector check on the owner's planted texts
+**Built:** D-065 (no pass bar, descriptive only), committed before the owner's file was opened.
+Offline check of the frozen detector on 10 owner-written planted texts, alone and planted in one
+seeded clean chunk; no-text result `results/verifier/detector_check_v1.json`. EVAL §8, dev report,
+plan step 2a and ROADMAP updated. `AGENTS.md` added to `.git/info/exclude` (local only).
+**Tests:** full offline suite passes.
+**Broken or unfinished:** The judge hand-check, the 90-row spot-check, and the go-ahead for the test
+batch.
+**Numbers worth keeping:** 2 of 10 flagged alone, 2 of 10 planted (marker 1/3, other 1/2,
+false_figure 0/3, withhold 0/2). The 6 texts with no AI wording and no markup: all missed. Host
+chunk `0001403161-25-000089:28`, seed `20261019-robustness`.
+**Spend so far:** $2.3210 (no calls).
+**Next session starts with:** The owner's judge hand-check and 90-row spot-check, then the test
+batch go-ahead.
+**Commit:** Phase 5 step 2a: offline detector check on the owner's planted texts, no-text result
+
 ## 2026-10-06 — Phase 5 prep: apostrophe fix tried and reverted, restatement-flag test, push
 **Built:** Test `test_stale_value_with_restatement_words_is_a_flag_not_a_block`. The apostrophe fix in
 the verifier's row rule was tried on dev (cache only, $0) and reverted because FG-0147 T6 went from

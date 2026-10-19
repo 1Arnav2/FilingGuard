@@ -62,8 +62,8 @@ One phase per working session. Each phase ends with: tests pass, roadmap ticked,
 - [x] Verifier frozen and tagged `verifier-v1` (D-060); reopened once for H-032 and re-frozen,
       tag moved (D-061); dev results logged
 - [x] Facts check on dev filings, report only (D-061, EVAL §8)
-- [ ] Owner's 10 planted texts for the offline detector check (after the re-freeze, before the test
-      batch; reported as is)
+- [x] Owner's 10 planted texts for the offline detector check (after the re-freeze, before the test
+      batch; reported as is): 2 of 10 flagged, descriptive only (D-065), 2026-10-19
 - **Done when:** verifier is frozen and tagged; dev results logged.
 
 ## Phase 5 — Eval run (1 day)

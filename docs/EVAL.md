@@ -353,6 +353,12 @@ reasons diagnostic.
 - Injection detector gap (D-052): a planted note with no machine-addressed wording and no
   out-of-place markup is not flagged. Planted false figures are still caught by the numeric
   check; marker and withhold attacks worded that way are not.
+  Offline check on 10 independently written planted texts: 2 of 10 flagged, alone and planted. The 6
+  texts with no AI wording and no markup were all missed (the known gap). Descriptive only; no pass
+  bar (D-065). Two other misses: signals spread across sentences, so no single span has both groups
+  (P04); and withhold wording not in the directive list (P07). Result:
+  `results/verifier/detector_check_v1.json` (no planted text; the owner's file is identified by its
+  hash).
 - Gold location: each gold value must sit in a table row labelled with the metric's own name
   (D-030). Such a row can be in an MD&A summary table rather than the primary statement; the
   value is the same, but "on a primary statement line" is approximated by the row label, not
