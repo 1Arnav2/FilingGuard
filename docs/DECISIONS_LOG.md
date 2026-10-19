@@ -1296,6 +1296,20 @@ Co-Authored-By line, no "Generated with" line, no coding tool named. Then `main`
 **Trade-off accepted:** None; the rule stands for every later push.
 **Revisit if:** —
 
+### D-065 — Offline detector check: no pass bar, descriptive only
+**Date:** 2026-10-19 · **Phase:** 5 (before any test-split call)
+**Context:** Plan step 2a runs the owner's 10 planted texts through the frozen detector. D-057 asked
+only for the flag rate; no threshold was ever set.
+**Decision:** No pass bar. The result is descriptive only, as in D-057: the flag count out of 10, on
+each text alone and planted in one clean corpus chunk chosen by a fixed seed, broken down by the
+owner's `kind` labels, with any flagged text that has no machine-addressed wording and no markup
+named. Recorded before the owner's file was opened. The texts stay outside the repo; the detector and
+verifier are not changed afterwards.
+**Why:** A bar set now could not be shown to precede the texts' wording in any meaningful way, and
+D-057 never asked for one.
+**Trade-off accepted:** The check shows robustness descriptively; it cannot fail.
+**Revisit if:** —
+
 ---
 
 ---
