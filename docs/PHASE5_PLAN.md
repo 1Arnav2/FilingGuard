@@ -41,8 +41,9 @@ stops only at a spend gate or the $7 cap. (Options 2, file batch for the verifie
 extras, were not chosen.)
 
 **Spend gates in code (approved as written):**
-- Test batch: a limit of $2.75, checked before each sub-batch, as on dev (raised from $2.60 on
-  2026-10-19 before any test call, D-067; passed as `--limit-usd 2.75`, the code default is unchanged).
+- Test batch: a limit of $3.00, checked before each sub-batch, as on dev (raised from $2.60 to
+  $2.75 before any test call, D-067, and to $3.00 after sub-batch 2, D-068; passed as `--limit-usd`,
+  the code default is unchanged).
 - Verifier: a Phase 5 cap of $0.40, counted from Phase 5's start.
 - Project: the $7 hard cap.
 
@@ -83,7 +84,11 @@ the unsubmitted items are reported as not run, and resubmitting them needs the o
 3. **Test target batch (after the go-ahead, given 2026-10-19).** After each sub-batch returns, its raw
    output, its validated answers and the batch record are written under `results/runs/` (and the
    cache) and committed locally before the next is sent; an item with a saved valid answer is never
-   resent, and later steps read the saved answers instead of calling the target (D-067).
+   resent, and later steps read the saved answers instead of calling the target (D-067). From
+   sub-batch 3 (D-068): an answer invalid only because it was cut off at the output limit
+   (`MAX_TOKENS`) is recorded as unparseable (Missed, counted separately, EVAL §3) and the run
+   continues; any other invalid answer, a job error or expiry, or more than 2 invalid answers in one
+   sub-batch stops the run. FG-0020 (sub-batch 2) stands as unparseable and is not resent.
    File-based jobs only, the same request path as
    the dev re-run (H-028).
    - Sub-batches of 1, 30, 30, 50, 50 and 49 items in ID order. The first is a one-item probe.

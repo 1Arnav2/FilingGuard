@@ -1342,6 +1342,28 @@ nothing is paid for twice.
 **Trade-off accepted:** The gate allows up to $0.15 more than the old limit.
 **Revisit if:** The gate stops the run.
 
+### D-068 — Runaway reply FG-0020 stands as unparseable; stop rule and gate for sub-batches 3–6
+**Date:** 2026-10-19 · **Phase:** 5 (step 3, after sub-batch 2; before any further call)
+**Context:** Sub-batch 2 (`batches/l4bklx5x9826oa6w5vgji9bk3kqsptccfxym`) returned 30 answers; 29
+valid. FG-0020's reply began correctly, then degenerated into a run of zeros until the output limit
+(finish reason `MAX_TOKENS`, 65,522 output tokens, $0.130), so its JSON is cut off. The run stopped
+under the stop-on-any-invalid rule. Batch spend so far $0.4013; 179 items not run.
+**Decision (owner):**
+- FG-0020 stands as the target's real answer: unparseable, scored Missed and counted separately
+  under the existing EVAL §3 rule ("Unparseable answer: Missed, counted separately"). It is not resent.
+- Sub-batch 2 is marked complete in `results/runs/test_target_v1_batches.json` (a data change, with
+  the reason recorded in the entry). No harness code change.
+- Stop rule for sub-batches 3–6: an answer invalid only because it was cut off at the output limit
+  (finish reason `MAX_TOKENS`) is recorded as unparseable and the run continues. The run stops if any
+  other invalid answer appears, if a job errors or expires, or if a sub-batch has more than 2 invalid
+  answers. Applied by the run driver around the unchanged `dev_run.submit`.
+- Step 3 gate raised from $2.75 to $3.00 of batch spend, through `--limit-usd`, so runaway replies
+  cannot cut the run short. The $7 project cap is unchanged.
+**Why:** A retry would cherry-pick the target's output; EVAL §3 already scores an unparseable answer.
+The original stop rule exists to catch systematic schema failure (H-028), not one runaway generation.
+**Trade-off accepted:** Each runaway reply costs about $0.13 and counts as Missed for the target.
+**Revisit if:** A sub-batch has more than 2 invalid answers, or any invalid answer is not `MAX_TOKENS`.
+
 ---
 
 ---

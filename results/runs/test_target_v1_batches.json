@@ -53,7 +53,15 @@
           "invalid JSON: Expecting ',' delimiter: line 9 column 64631 (char 65596)"
         ]
       },
-      "complete": false
+      "complete": true,
+      "owner_ruling": {
+        "date": "2026-10-19",
+        "decision": "D-068",
+        "unparseable": {
+          "FG-0020": "MAX_TOKENS"
+        },
+        "reason": "runaway reply cut off at the output limit; stands as the target's answer, scored Missed (unparseable) under EVAL 3; not resent"
+      }
     }
   ],
   "tag": "batch-file",
