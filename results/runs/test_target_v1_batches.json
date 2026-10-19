@@ -1,0 +1,19 @@
+{
+  "sub_batches": [
+    {
+      "n": 1,
+      "ids": [
+        "FG-0001"
+      ],
+      "job": "batches/30ca6vki3i70nayde1pdipaxn1b7hch9ppe3",
+      "answered": 1,
+      "errors": {},
+      "invalid_replies": {},
+      "complete": true
+    }
+  ],
+  "tag": "batch-file",
+  "reason": "test batch under D-025 and docs/PHASE5_PLAN.md; file-based jobs",
+  "spend_before_usd": 2.321006,
+  "spend_after_usd": 2.331524
+}
