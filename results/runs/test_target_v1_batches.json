@@ -62,10 +62,50 @@
         },
         "reason": "runaway reply cut off at the output limit; stands as the target's answer, scored Missed (unparseable) under EVAL 3; not resent"
       }
+    },
+    {
+      "n": 3,
+      "ids": [
+        "FG-0054",
+        "FG-0055",
+        "FG-0058",
+        "FG-0059",
+        "FG-0061",
+        "FG-0062",
+        "FG-0063",
+        "FG-0065",
+        "FG-0067",
+        "FG-0068",
+        "FG-0069",
+        "FG-0071",
+        "FG-0073",
+        "FG-0075",
+        "FG-0076",
+        "FG-0078",
+        "FG-0079",
+        "FG-0081",
+        "FG-0083",
+        "FG-0085",
+        "FG-0086",
+        "FG-0088",
+        "FG-0089",
+        "FG-0091",
+        "FG-0093",
+        "FG-0094",
+        "FG-0095",
+        "FG-0096",
+        "FG-0097",
+        "FG-0099"
+      ],
+      "job": "batches/l44v34ap8ezwrg0d8gno89aa09bnk5hzet1b",
+      "answered": 30,
+      "errors": {},
+      "invalid_replies": {},
+      "complete": true
     }
   ],
   "tag": "batch-file",
   "reason": "test batch under D-025 and docs/PHASE5_PLAN.md; file-based jobs",
   "spend_before_usd": 2.321006,
-  "spend_after_usd": 2.722254
+  "spend_after_usd": 2.974546
 }
