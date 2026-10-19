@@ -1996,3 +1996,29 @@ testable on the corrected scores.
 **Lesson:** As on dev (H-029), most non-Correct rows on first read are scorer misreads, not target
 errors; multi-figure answers are where the scorer is weakest.
 **Linked decision:** D-047, D-053, D-062
+
+### H-034 — Verifier on test: likely faults found, not fixed (frozen verifier)
+**Date:** 2026-10-19
+**Phase:** 5 (steps 6–7)
+**What happened:** The frozen verifier ran once on the 210 test answers and 334 seeded copies
+(`results/test/verifier_v1.jsonl`). Quote-off macro detection 0.9337 (threshold 0.80 met). Reading the
+blocks and the 25 missed copies shows four likely faults:
+(1) Shared parser misreads cause false blocks: the verifier blocks 9 answers that are Correct after the
+D-071 corrections (FG-0015, FG-0033, FG-0044, FG-0058, FG-0138, FG-0142, FG-0296, FG-0302, FG-0306)
+on the same misreads as the scorer (parts, segments and parent-only figures read as the metric; change
+read as level; bracketed restatement read as negative) — the EVAL §8 shared-parser threat, observed.
+(2) Abstain-flagged answers are never checked (D-058 design: abstentions pass): six calendar-wording
+answers that set the abstain flag but state fiscal-year figures (FG-0156, FG-0178, FG-0180, FG-0181,
+FG-0317, FG-0321) were seeded, and all 17 of their copies pass. Dev had no such source answers.
+(3) EPS wording not read as EPS: "basic net earnings per common share" read as net income (FG-0027,
+3 copies flagged, not blocked); Walmart's EPS wording not read as the asked metric (FG-0172, 4 copies pass).
+(4) Question reading: "10-K annual report for fiscal 2023 … for fiscal 2022" read as fiscal 2023
+(FG-0204), so its T2 copy passes with the quote rule off (blocked with it on).
+**Impact:** As-scored precision 12/13; on corrected scores 3/13 (bar 0.85 not met). False-block rate on
+Correct answers 0/186 as scored, 9/197 (0.0457) corrected (seeded threshold 0.05 met, narrowly).
+Control abstentions added 7 (control abstain rate 5/42 → 12/42).
+**What I tried:** Traced each missed copy and each block; no change to the verifier, scorer or sets.
+**Resolution:** Open, reported as found. The verifier is frozen; nothing is tuned on test (plan rule).
+**Lesson:** A seeded pool built from abstaining answers measures nothing for a verifier that passes
+abstentions; and the shared parser turns one misread into both a scoring error and a false block.
+**Linked decision:** D-058, D-060, D-061, D-071, D-072

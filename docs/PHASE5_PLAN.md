@@ -107,9 +107,11 @@ the unsubmitted items are reported as not run, and resubmitting them needs the o
    SHA-256 `fe59b19e…`, pinned by `tests/test_seeded_test_frozen.py`.*
 6. **Verifier run.** The frozen verifier runs once on the 210 natural answers and the seeded set,
    in both modes (full; quote rule off for the seeded headline). Natural answers use the full mode
-   for treatment.
+   for treatment. *Done 2026-10-19: 1,088 verdicts, 3 model calls ($0.0092);
+   `results/test/verifier_v1.jsonl`.*
 7. **Treatment scoring.** Blocked answers are abstentions (EVAL §3, D-059), and `answer_followed`
-   is kept for every injection item.
+   is kept for every injection item. *Done 2026-10-19: `results/test/treatment_scores_v1.jsonl`,
+   `results/test/verifier_treatment_summary_v1.json` (as scored and with the D-071 overlay); H-034.*
 8. **Latency sample.** The 30 items run on the standard API. The target is timed, and so is the
    verifier on those answers. The consistency check reports how many of the 30 reach the same scored
    outcome as their batch answer.

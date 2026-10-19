@@ -16,6 +16,22 @@ of every session.
 
 ---
 
+## 2026-10-19 — Phase 5 steps 6 and 7: verifier run on test, treatment scored
+**Built:** One run of the frozen verifier (full and quote-off) on the 210 test answers and the 334
+frozen seeded copies (hash checked); verdicts committed before scoring. Treatment scored by the frozen
+scorer (block = abstention; no judge calls), as scored and with the D-071 overlay. Driver
+`eval/scripts/verify_test.py`. Likely verifier faults listed, not fixed (H-034).
+**Tests:** full offline suite passes.
+**Broken or unfinished:** Latency sample, owner hand-check, statistics and summary.json not started.
+**Numbers worth keeping:** Seeded detection, quote off: T1 12/13, T3 55/62, T4 105/113, T5 30/30,
+T6 105/113, macro 0.9337; T2 2/3 (3/3 full). False blocks on Correct: 0/186 as scored, 9/197 corrected.
+Natural blocks 13, flags 3. Control abstentions added 7. Baseline → treatment: as scored 186/11/13 →
+186/23/1; corrected 197/10/3 → 188/22/0. Precision 12/13 as scored, 3/13 corrected; recall 12/13 and
+3/3. Model calls 3 (seeded only), verifier spend $0.0092; rules 0.0137 s per answer.
+**Spend so far:** $4.6712.
+**Next session starts with:** The owner's review of H-034, then step 8 (latency sample).
+**Commit:** Phase 5 step 7: treatment scored from the saved verdicts, likely verifier faults listed
+
 ## 2026-10-19 — Phase 5 step 5: test seeded-error set built and frozen
 **Built:** `eval/scripts/build_test_seeded.py` (dev seeding code unchanged); `results/test/seeded_v1.jsonl`
 and its manifest; freeze test `tests/test_seeded_test_frozen.py`. D-072; one-time push.
