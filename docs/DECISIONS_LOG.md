@@ -1389,6 +1389,17 @@ not model this per-job check.
 **Trade-off accepted:** About six more jobs instead of three; more batch turnaround time.
 **Revisit if:** A cap check refuses a job.
 
+### D-070 — Third one-time push by the session, approved by the owner
+**Date:** 2026-10-19 · **Phase:** 5 (after step 4, test baseline scored)
+**Context:** The standing rule is that the owner pushes. The owner approved one more push by the
+session as a one-time exception, after the test baseline was scored.
+**Decision:** Before pushing, every unpushed commit message was printed and checked: no
+Co-Authored-By line, no "Generated with" line, no coding tool named; `CLAUDE.md`, `AGENTS.md` and
+`.claude/` confirmed untracked. Then `main` only was pushed to `origin`, with no force push.
+**Why:** The owner's instruction.
+**Trade-off accepted:** None; the rule stands for every later push.
+**Revisit if:** —
+
 ---
 
 ---
@@ -1902,3 +1913,34 @@ approved reopening the freeze for it (D-061): figures are compared at printed pr
 question names a filing. Dev T2 2 of 2; no other dev row changed. T2 stays counts only.
 **Lesson:** A tolerance that suits rounded figures is too loose for restatements, which can be tiny.
 **Linked decision:** D-057, D-060, D-061
+
+### H-033 — Test baseline as scored: likely scorer faults and one likely test-set fault (not fixed)
+**Date:** 2026-10-19
+**Phase:** 5
+**What happened:** The frozen scorer scored the 210 test answers: Correct 186, Missed 11,
+Unsupported 13. On reading every non-Correct row against its gold, 12 or 13 of the 13 Unsupported
+rows look like scorer misreads of correct answers, in five patterns:
+(a) a part, segment, restricted-cash total or parent-company-only figure read as the asked metric
+(FG-0001, FG-0015, FG-0033, FG-0044, FG-0058, FG-0142, FG-0296);
+(b) a change amount ("increased by $7.4 billion") read as the level (FG-0302, FG-0306, FG-0307);
+(c) a parenthetical restatement "($324,012,000,000)" read as negative (FG-0138);
+(d) a rounded restatement of the same figure ("approximately $1.1 billion") outside the tolerance
+(FG-0289);
+(e) a prior-year end date one day before the gold period's start read as in period, so the clearly
+labelled alternative year's figure counted against the answer (FG-0168).
+Two Missed rows also look like misreads: FG-0206 gives the exact gold figure under the label "total
+revenue, net of interest expense" but scored "no figure"; FG-0102 gives a figure for the asked
+quarter but scored "no figure". FG-0102 is also a likely test-set fault: it is marked unanswerable
+(single quarter), but the BAC fiscal 2025 10-K prints quarterly total revenue (chunk
+`0000070858-26-000157:84`, Q1 2025 $28,247 million, the figure the answer gives).
+**Impact:** As scored, 13 baseline Unsupported answers (enough for McNemar to be testable); if the
+misreads are corrected under EVAL §10 4b, the count would be about 0–1, and the bar likely not
+testable. The control abstain rate is 5/42 (11.9%) as scored, 2 of them runaway unparseable replies.
+**What I tried:** Read every non-Correct row; checked FG-0296's gold sign (−147,782, the answer's
+sign is right) and FG-0102's filing text. Nothing was changed.
+**Resolution:** Open, for the owner: corrections are allowed only for parsing faults, each approved
+by the owner (EVAL §10 4b, D-062); the frozen scorer's result is reported beside them. FG-0102 goes to
+the test-set fault-rate check.
+**Lesson:** As on dev (H-029), most non-Correct rows on first read are scorer misreads, not target
+errors; multi-figure answers are where the scorer is weakest.
+**Linked decision:** D-047, D-053, D-062

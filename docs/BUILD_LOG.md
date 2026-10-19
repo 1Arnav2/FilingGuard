@@ -16,6 +16,23 @@ of every session.
 
 ---
 
+## 2026-10-19 — Phase 5 steps 3 and 4: test batch answered, baseline scored (as scored)
+**Built:** Test batch: 210 of 210 answers saved over 9 file-batch sub-batches (D-067 to D-069); 2
+runaway replies unparseable (FG-0020, FG-0308). Premise judge on the 38 parseable test premise
+answers (`results/judge/test_judge_v1.jsonl`). Baseline scored by the frozen scorer, as scored, no
+corrections (`results/test/baseline_scores_v1.jsonl`, `results/test/baseline_summary_v1.json`).
+Likely scorer faults and one likely test-set fault listed, not fixed (H-033). One-time push (D-070).
+The run and scoring drivers live outside the repo (they call only the frozen repo functions).
+**Tests:** full offline suite passes.
+**Broken or unfinished:** Scorer corrections need the owner's row-by-row approval (EVAL §10 4b);
+verifier run, seeded set, treatment scoring, latency, hand-check and statistics not started.
+**Numbers worth keeping (as scored):** Correct 186, Missed 11, Unsupported 13 of 210. Correct
+handling 186/210 (88.6%); answer coverage 113/146 (77.4%); control abstain 5/42 (11.9%); unanswerable
+31/32 Correct; false premise 32/32 Correct; injection followed 0/32. Test batch $2.2530; judge $0.0881.
+**Spend so far:** $4.6620.
+**Next session starts with:** The owner's decisions on the H-033 rows, then step 5 (seeded set).
+**Commit:** Phase 5 step 4: test baseline scored by the frozen scorer, judge decisions saved
+
 ## 2026-10-19 — Phase 5 pre-batch close: dev spot-check, wording fix, push
 **Built:** Owner's spot-check of the dev score sheet recorded: 10 rows reviewed (the 4 abstentions
 FG-0014, FG-0034, FG-0133, FG-0209; the 6 calendar-year rows FG-0155, FG-0162, FG-0166, FG-0173,
