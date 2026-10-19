@@ -1,0 +1,50 @@
+{
+  "sample": 30,
+  "run": 29,
+  "measured_on": "a 30-item sample (EVAL \u00a74)",
+  "standard_answers_already_cached": [],
+  "target_llm_s": {
+    "n": 29,
+    "p50": 6.631,
+    "p95": 23.437,
+    "mean": 10.33
+  },
+  "target_wall_s": {
+    "n": 29,
+    "p50": 6.64,
+    "p95": 23.449,
+    "mean": 10.34
+  },
+  "verifier_rule_s": {
+    "n": 29,
+    "p50": 0.01,
+    "p95": 0.02,
+    "mean": 0.012
+  },
+  "verifier_model_s_when_called": {},
+  "verifier_model_calls": 0,
+  "verifier_wall_s": {
+    "n": 29,
+    "p50": 0.01,
+    "p95": 0.02,
+    "mean": 0.012
+  },
+  "end_to_end_s": {
+    "n": 29,
+    "p50": 6.647,
+    "p95": 23.459,
+    "mean": 10.352
+  },
+  "consistency_with_batch": {
+    "checked_non_premise": 24,
+    "same_outcome": 23,
+    "premise_items_not_checked": [
+      "FG-0234",
+      "FG-0236",
+      "FG-0243",
+      "FG-0248",
+      "FG-0302"
+    ]
+  },
+  "spend_after": 5.252098
+}

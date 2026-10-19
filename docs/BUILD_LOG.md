@@ -16,6 +16,20 @@ of every session.
 
 ---
 
+## 2026-10-19 — Phase 5 step 8 (latency) and step 9 sheet
+**Built:** Latency sample run end to end on the standard API (target, then the frozen verifier), one
+call at a time, saved apart from the batch answers (`eval/scripts/latency_test.py`). Owner's
+hand-check sheet `review/test_handcheck_v1.xlsx` (`eval/scripts/handcheck_sheet_test.py`).
+**Tests:** full offline suite passes.
+**Broken or unfinished:** FG-0316 not run (the $5.50 limit's worst-case check). The consistency check
+skips the 5 premise items (no judge calls). Owner's hand-check, statistics and summary.json pending.
+**Numbers worth keeping (29 items):** target p50 6.63 s, p95 23.44 s; verifier rules p50 0.010 s,
+p95 0.020 s, 0 model calls; end to end p50 6.65 s, p95 23.46 s. Consistency with batch outcome 23/24
+non-premise (FG-0012 differs). Latency cost $0.5809. Sheet 78 rows, 15 pre-filled.
+**Spend so far:** $5.2521.
+**Next session starts with:** The owner's hand-check of `review/test_handcheck_v1.xlsx`.
+**Commit:** Phase 5 step 8: latency sample (29 of 30) and the step 9 hand-check sheet
+
 ## 2026-10-19 — Phase 5 steps 6 and 7: verifier run on test, treatment scored
 **Built:** One run of the frozen verifier (full and quote-off) on the 210 test answers and the 334
 frozen seeded copies (hash checked); verdicts committed before scoring. Treatment scored by the frozen

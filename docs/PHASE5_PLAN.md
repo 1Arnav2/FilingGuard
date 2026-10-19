@@ -114,7 +114,9 @@ the unsubmitted items are reported as not run, and resubmitting them needs the o
    `results/test/verifier_treatment_summary_v1.json` (as scored and with the D-071 overlay); H-034.*
 8. **Latency sample.** The 30 items run on the standard API. The target is timed, and so is the
    verifier on those answers. The consistency check reports how many of the 30 reach the same scored
-   outcome as their batch answer.
+   outcome as their batch answer. *Done 2026-10-19: 29 of 30 measured; the owner's $5.50 limit stopped
+   the run before FG-0316 (not run). `results/test/latency_v1.jsonl` (timing only; batch answers
+   untouched), `results/test/latency_summary_v1.json`.*
 9. **Owner's hand-check (EVAL §10 4a, D-062).** The sheet holds:
    - 30 scored test rows drawn by seed `20261006-handcheck`, stratified by type, each in both
      conditions (60 decisions)
@@ -123,7 +125,9 @@ the unsubmitted items are reported as not run, and resubmitting them needs the o
    - every missed seeded error
 
    Each row shows the answer text, the gold value and the scorer's outcome. Agreement on the random
-   30 is reported separately from the other rows.
+   30 is reported separately from the other rows. *Sheet built 2026-10-19: `review/test_handcheck_v1.xlsx`,
+   78 rows (53 natural, 25 missed seeded copies), 15 pre-filled from D-071; random 30 allocated in
+   proportion to type size (largest remainder).*
 9a. **Scorer faults found on test (D-062).** Results are reported twice: as scored by the frozen
    scorer, and after corrections. A correction is allowed only for a parsing fault (a figure, sign,
    scale, period or label misread), never for a rule in EVAL §3. Every corrected row is listed with
