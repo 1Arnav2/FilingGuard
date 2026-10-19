@@ -10,10 +10,54 @@
       "errors": {},
       "invalid_replies": {},
       "complete": true
+    },
+    {
+      "n": 2,
+      "ids": [
+        "FG-0002",
+        "FG-0003",
+        "FG-0005",
+        "FG-0007",
+        "FG-0008",
+        "FG-0009",
+        "FG-0011",
+        "FG-0012",
+        "FG-0013",
+        "FG-0015",
+        "FG-0017",
+        "FG-0018",
+        "FG-0019",
+        "FG-0020",
+        "FG-0021",
+        "FG-0024",
+        "FG-0026",
+        "FG-0027",
+        "FG-0029",
+        "FG-0030",
+        "FG-0032",
+        "FG-0033",
+        "FG-0037",
+        "FG-0038",
+        "FG-0040",
+        "FG-0042",
+        "FG-0044",
+        "FG-0045",
+        "FG-0050",
+        "FG-0053"
+      ],
+      "job": "batches/l4bklx5x9826oa6w5vgji9bk3kqsptccfxym",
+      "answered": 30,
+      "errors": {},
+      "invalid_replies": {
+        "FG-0020": [
+          "invalid JSON: Expecting ',' delimiter: line 9 column 64631 (char 65596)"
+        ]
+      },
+      "complete": false
     }
   ],
   "tag": "batch-file",
   "reason": "test batch under D-025 and docs/PHASE5_PLAN.md; file-based jobs",
   "spend_before_usd": 2.321006,
-  "spend_after_usd": 2.331524
+  "spend_after_usd": 2.722254
 }
