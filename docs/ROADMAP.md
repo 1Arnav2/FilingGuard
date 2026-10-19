@@ -80,8 +80,8 @@ Phase 5 $2.69–$3.46, project end **$5.01–$5.78**, under the $7 cap (`docs/PH
 - [x] Owner approves `docs/PHASE5_PLAN.md` (approved with changes 2026-10-06, D-062); test batch
       needs a separate go-ahead
 - [x] Test harness generalised; pre-submit checks run on test, nothing submitted (D-062)
-- [ ] Owner's judge hand-check on the 16 dev premise items (EVAL §5); sheet
-      `review/judge_handcheck_dev_v1.xlsx` built
+- [x] Owner's judge hand-check on the 16 dev premise items (EVAL §5), 2026-10-19: scoring fields
+      32/32 (kappa 1.0); reasons_in_filing 28/32 (`results/judge/handcheck_dev_v1.json`)
 - [ ] Baseline and treatment on test split, once
 - [ ] Owner hand-checks 30 scored test rows chosen by seed, both conditions, plus every non-Correct
       baseline row, every blocked or flagged answer and every missed seeded error; agreement on the

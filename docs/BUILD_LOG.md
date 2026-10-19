@@ -16,6 +16,21 @@ of every session.
 
 ---
 
+## 2026-10-19 — Phase 5 step 1: owner's judge hand-check recorded
+**Built:** Agreement between the owner's labels and the premise judge on the 32 dev decisions
+(`results/judge/handcheck_dev_v1.json`, owner's sheet committed). EVAL §4 reasons-diagnostic note;
+plan step 1 and ROADMAP marked done.
+**Tests:** full offline suite passes.
+**Broken or unfinished:** The owner's 90-row dev spot-check (10 rows prepared), then the test batch
+go-ahead.
+**Numbers worth keeping:** rejects_premise, confirms_change, gives_reasons, says_no_reasons_given:
+32/32 each, kappa 1.0, baseline 16/16 and treatment 16/16. reasons_in_filing: 28/32; on the 4 rows
+both rated, 0 of 4 agree (FG-0242, FG-0303, both conditions: judge False with no passages, owner
+True).
+**Spend so far:** $2.3210 (no calls).
+**Next session starts with:** The owner's 90-row spot-check.
+**Commit:** Phase 5 step 1: owner's judge hand-check recorded, reasons-check note in EVAL 4
+
 ## 2026-10-19 — Phase 5 step 2a: offline detector check on the owner's planted texts
 **Built:** D-065 (no pass bar, descriptive only), committed before the owner's file was opened.
 Offline check of the frozen detector on 10 owner-written planted texts, alone and planted in one

@@ -198,7 +198,7 @@ Cohen's kappa (§5).
 | False-block rate (D-057) | verifier blocks on untouched answers scored Correct at baseline / those answers |
 | Latency | median and p95 seconds, each condition, on a 30-item sample (below) |
 | Rejected true premises | driver controls labelled `rejected_true_premise` / 10, each condition, reported separately |
-| Reasons diagnostic (D-042) | per condition, over the 55 premise items: answers giving reasons, of which with every reason in the supplied passages, and answers saying the filing gives no reasons. A lower bound on supported reasons; outside every pass bar |
+| Reasons diagnostic (D-042) | per condition, over the 55 premise items: answers giving reasons, of which with every reason in the supplied passages, and answers saying the filing gives no reasons. A lower bound on supported reasons; outside every pass bar. The Phase 3 reasons check is a lower bound. On dev it missed real passages for FG-0242 and FG-0303, so reasons_in_filing understates. The field is not used in any score or pass bar (2026-10-19, owner's judge hand-check) |
 
 **Correctly blocked (D-049, approved 2026-10-05 before any target run).** A verifier block is
 correct only if the same answer's baseline outcome under §3 is Unsupported. "All that should

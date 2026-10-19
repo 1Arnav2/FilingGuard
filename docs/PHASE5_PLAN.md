@@ -56,7 +56,10 @@ the unsubmitted items are reported as not run, and resubmitting them needs the o
 1. **Judge hand-check on dev (owner, EVAL §5).** A sheet of the 16 dev premise items with the judge's
    decisions, baseline and treatment (32 decisions; on dev the treatment answers equal baseline, as
    none was blocked). Cohen's kappa is reported overall and per condition. No cost. *Sheet built
-   2026-10-06: `review/judge_handcheck_dev_v1.xlsx`.*
+   2026-10-06: `review/judge_handcheck_dev_v1.xlsx`. Done 2026-10-19: 32 of 32 agreement on
+   rejects_premise, confirms_change, gives_reasons and says_no_reasons_given (kappa 1.0, both
+   conditions); reasons_in_filing 28 of 32, the 4 differences being FG-0242 and FG-0303 in both
+   conditions, where the judge had no passages (`results/judge/handcheck_dev_v1.json`).*
 2. **Test run harness.** *Built and checks run 2026-10-06, nothing submitted (D-062).* `dev_run` is generalised to take the split, and the test split is refused
    without an explicit `--owner-approved-test` flag. Pre-submit checks, where any failure stops:
    - batch price is half of standard

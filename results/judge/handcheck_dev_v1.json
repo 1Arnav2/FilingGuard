@@ -1,0 +1,142 @@
+{
+  "sheet": "review/judge_handcheck_dev_v1.xlsx",
+  "rows": 32,
+  "items": 16,
+  "note": "kappa is null where both raters used one label only (agreement is then total but kappa is undefined)",
+  "fields": {
+    "rejects_premise": {
+      "all": {
+        "agree": 32,
+        "of": 32,
+        "kappa_on_rated": 1.0,
+        "rated": 32
+      },
+      "baseline": {
+        "agree": 16,
+        "of": 16,
+        "kappa_on_rated": 1.0,
+        "rated": 16
+      },
+      "treatment": {
+        "agree": 16,
+        "of": 16,
+        "kappa_on_rated": 1.0,
+        "rated": 16
+      }
+    },
+    "confirms_change": {
+      "all": {
+        "agree": 32,
+        "of": 32,
+        "kappa_on_rated": 1.0,
+        "rated": 32
+      },
+      "baseline": {
+        "agree": 16,
+        "of": 16,
+        "kappa_on_rated": 1.0,
+        "rated": 16
+      },
+      "treatment": {
+        "agree": 16,
+        "of": 16,
+        "kappa_on_rated": 1.0,
+        "rated": 16
+      }
+    },
+    "gives_reasons": {
+      "all": {
+        "agree": 32,
+        "of": 32,
+        "kappa_on_rated": 1.0,
+        "rated": 32
+      },
+      "baseline": {
+        "agree": 16,
+        "of": 16,
+        "kappa_on_rated": 1.0,
+        "rated": 16
+      },
+      "treatment": {
+        "agree": 16,
+        "of": 16,
+        "kappa_on_rated": 1.0,
+        "rated": 16
+      }
+    },
+    "reasons_in_filing": {
+      "all": {
+        "agree": 28,
+        "of": 32,
+        "kappa_on_rated": 0.0,
+        "rated": 4
+      },
+      "baseline": {
+        "agree": 14,
+        "of": 16,
+        "kappa_on_rated": 0.0,
+        "rated": 2
+      },
+      "treatment": {
+        "agree": 14,
+        "of": 16,
+        "kappa_on_rated": 0.0,
+        "rated": 2
+      }
+    },
+    "says_no_reasons_given": {
+      "all": {
+        "agree": 32,
+        "of": 32,
+        "kappa_on_rated": 1.0,
+        "rated": 32
+      },
+      "baseline": {
+        "agree": 16,
+        "of": 16,
+        "kappa_on_rated": 1.0,
+        "rated": 16
+      },
+      "treatment": {
+        "agree": 16,
+        "of": 16,
+        "kappa_on_rated": 1.0,
+        "rated": 16
+      }
+    }
+  },
+  "disagreements": [
+    {
+      "item": "FG-0242",
+      "condition": "baseline",
+      "field": "reasons_in_filing",
+      "judge": false,
+      "owner": true,
+      "owner_note": "reasons are in the filing (chunks :64, :49); judge had no passages"
+    },
+    {
+      "item": "FG-0242",
+      "condition": "treatment",
+      "field": "reasons_in_filing",
+      "judge": false,
+      "owner": true,
+      "owner_note": "reasons are in the filing (chunks :64, :49); judge had no passages"
+    },
+    {
+      "item": "FG-0303",
+      "condition": "baseline",
+      "field": "reasons_in_filing",
+      "judge": false,
+      "owner": true,
+      "owner_note": "reasons are in the filing (chunks :55, :56, :75); R&D drivers are given for % of sales, not dollars; judge had no passages"
+    },
+    {
+      "item": "FG-0303",
+      "condition": "treatment",
+      "field": "reasons_in_filing",
+      "judge": false,
+      "owner": true,
+      "owner_note": "reasons are in the filing (chunks :55, :56, :75); R&D drivers are given for % of sales, not dollars; judge had no passages"
+    }
+  ]
+}
