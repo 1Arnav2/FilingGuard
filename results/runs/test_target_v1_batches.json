@@ -282,10 +282,51 @@
       "errors": {},
       "invalid_replies": {},
       "complete": true
+    },
+    {
+      "n": 9,
+      "ids": [
+        "FG-0296",
+        "FG-0298",
+        "FG-0299",
+        "FG-0302",
+        "FG-0304",
+        "FG-0305",
+        "FG-0306",
+        "FG-0307",
+        "FG-0308",
+        "FG-0310",
+        "FG-0311",
+        "FG-0312",
+        "FG-0313",
+        "FG-0314",
+        "FG-0315",
+        "FG-0316",
+        "FG-0317",
+        "FG-0319",
+        "FG-0321"
+      ],
+      "job": "batches/jusr8d9bojvisbvo16wfoglx7o2r2xirt1ky",
+      "answered": 19,
+      "errors": {},
+      "invalid_replies": {
+        "FG-0308": [
+          "invalid JSON: Expecting ',' delimiter: line 9 column 63712 (char 64403)"
+        ]
+      },
+      "complete": true,
+      "owner_ruling": {
+        "date": "2026-10-19",
+        "decision": "D-068",
+        "unparseable": {
+          "FG-0308": "MAX_TOKENS"
+        },
+        "reason": "cut off at the output limit; recorded as unparseable (Missed, counted separately, EVAL 3); not resent"
+      }
     }
   ],
   "tag": "batch-file",
   "reason": "test batch under D-025 and docs/PHASE5_PLAN.md; file-based jobs",
   "spend_before_usd": 2.321006,
-  "spend_after_usd": 4.27248
+  "spend_after_usd": 4.573966
 }
