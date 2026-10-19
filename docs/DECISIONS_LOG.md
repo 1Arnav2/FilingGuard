@@ -1364,6 +1364,31 @@ The original stop rule exists to catch systematic schema failure (H-028), not on
 **Trade-off accepted:** Each runaway reply costs about $0.13 and counts as Missed for the target.
 **Revisit if:** A sub-batch has more than 2 invalid answers, or any invalid answer is not `MAX_TOKENS`.
 
+### D-069 — Remaining test items in smaller sub-batches sized to the $7 cap check; raw files never edited
+**Date:** 2026-10-19 · **Phase:** 5 (step 3, after sub-batch 3; before any further call)
+**Context:** Sub-batch 4 (50 items) was refused before submission by the project's hard-cap check
+(`llm/spend.py`, `check_many`), which prices every call at the maximum output (65,536 tokens,
+about $0.1306 per item at the batch price): $2.9745 + $6.5314 would pass $7. No job was created and
+nothing was spent. 61 of 210 answers are saved; 149 items are not run. The pre-submit projections did
+not model this per-job check.
+**Decision (owner, option A):**
+- The remaining 149 items go in smaller sub-batches. Before each job its size is recomputed from the
+  actual spend: at most floor((7 − current spend) / 0.1306) items, capped at 30. The sub-batches
+  continue in ID order after the first three (1, 30, 30). The $7 cap and the $3.00 batch gate are
+  unchanged. No code change: the harness already takes the sizes.
+- Everything else as before: file batch only; each sub-batch validated before the next; the D-068
+  stop rule; each sub-batch saved and committed as it returns; no item with a saved answer resent;
+  no retries; no scoring, judge, verifier or latency calls; no push.
+- Raw files are never edited once saved. Commit `80b8ebc` added a `finish_reason` field to the
+  already-saved raw files of sub-batches 1 and 2; checked against `a8a6358`: only that field was
+  added, nothing removed or changed, and every answer text is byte-identical. From now on any added
+  field goes in a separate file (`results/runs/test_target_v1_raw/finish_reasons.jsonl`), and new
+  answer rows are appended to `results/runs/test_target_v1.jsonl` without rewriting earlier rows.
+- If a cap check refuses a job again, the run stops and is reported; the cap is not changed.
+**Why:** The cap check is a hard safety rule; sizing jobs to it keeps the rule intact.
+**Trade-off accepted:** About six more jobs instead of three; more batch turnaround time.
+**Revisit if:** A cap check refuses a job.
+
 ---
 
 ---

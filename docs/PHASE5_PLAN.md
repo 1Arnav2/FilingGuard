@@ -89,6 +89,10 @@ the unsubmitted items are reported as not run, and resubmitting them needs the o
    (`MAX_TOKENS`) is recorded as unparseable (Missed, counted separately, EVAL §3) and the run
    continues; any other invalid answer, a job error or expiry, or more than 2 invalid answers in one
    sub-batch stops the run. FG-0020 (sub-batch 2) stands as unparseable and is not resent.
+   After sub-batch 3 (D-069): the remaining items go in sub-batches sized before each job to the $7
+   cap check, at most floor((7 − spend) / 0.1306) items, capped at 30, recomputed from the actual
+   spend; a refused job stops the run. Saved raw files are never edited; added fields go in a
+   separate file.
    File-based jobs only, the same request path as
    the dev re-run (H-028).
    - Sub-batches of 1, 30, 30, 50, 50 and 49 items in ID order. The first is a one-item probe.
