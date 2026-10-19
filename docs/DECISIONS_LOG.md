@@ -1321,6 +1321,27 @@ Co-Authored-By line, no "Generated with" line, no coding tool named; `CLAUDE.md`
 **Trade-off accepted:** None; the rule stands for every later push.
 **Revisit if:** —
 
+### D-067 — Test batch spend gate raised to $2.75; save and commit after every sub-batch
+**Date:** 2026-10-19 · **Phase:** 5 (before any test-split call)
+**Context:** The owner's go-ahead for step 3 said to stop if the projection was above $2.60. The
+re-run pre-submit check gave $2.0156 (dev mean output), $2.6041 (dev 90th-percentile output for every
+item) and $2.73 (the code's fixed worst case, $0.013 per item). The session stopped before submitting
+and asked; the owner ruled the "$2.60" rule ambiguous.
+**Decision:**
+- The step 3 spend gate is $2.75, which covers the code's fixed worst case, so the run is not cut
+  short. Applied through the harness's existing `--limit-usd` parameter; no code change (the $2.60
+  default in `eval/dev_run.py` stays, and its test still pins it). Expected cost stays about $2.02.
+  The $7 project cap is unchanged.
+- Saving: after each sub-batch returns, its raw output, the validated answers so far and the batch
+  record are written under `results/runs/` (answers are also in the cache) and committed locally
+  before the next sub-batch is sent. If the run stops, no item with a saved valid answer is resent;
+  a restart needs the owner's approval and sends only the missing items. Later steps read the saved
+  answers and never call the target again.
+**Why:** The gate exists to stop runaway cost, not to cut a normal run; the saving rule makes sure
+nothing is paid for twice.
+**Trade-off accepted:** The gate allows up to $0.15 more than the old limit.
+**Revisit if:** The gate stops the run.
+
 ---
 
 ---

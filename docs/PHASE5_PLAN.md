@@ -41,12 +41,14 @@ stops only at a spend gate or the $7 cap. (Options 2, file batch for the verifie
 extras, were not chosen.)
 
 **Spend gates in code (approved as written):**
-- Test batch: a limit of $2.60, checked before each sub-batch, as on dev.
+- Test batch: a limit of $2.75, checked before each sub-batch, as on dev (raised from $2.60 on
+  2026-10-19 before any test call, D-067; passed as `--limit-usd 2.75`, the code default is unchanged).
 - Verifier: a Phase 5 cap of $0.40, counted from Phase 5's start.
 - Project: the $7 hard cap.
 
-**Measured projection for the test batch (step 2, 2026-10-06):** $2.02 at dev's mean output per
-item; $2.60 if every item produced dev's 90th-percentile output. Before each sub-batch the code
+**Measured projection for the test batch (step 2, re-run 2026-10-19):** $2.0156 at dev's mean output
+per item; $2.6041 if every item produced dev's 90th-percentile output; $2.73 at the code's fixed worst
+case ($0.013 per item). The $2.75 gate (D-067) covers all three. Before each sub-batch the code
 projects the remainder at no less than $0.013 per item. So if real costs run near the 90th
 percentile, the gate stops before the last sub-batch. That stop would be reported, not overridden:
 the unsubmitted items are reported as not run, and resubmitting them needs the owner's approval
@@ -78,7 +80,11 @@ the unsubmitted items are reported as not run, and resubmitting them needs the o
    `review/dev_score_sheet_v3.xlsx` (FG-0014, FG-0034, FG-0133, FG-0209, the 4 abstentions;
    FG-0155, FG-0162, FG-0166, FG-0173, FG-0191, FG-0198, the calendar-year rows); all 10 are
    scored correctly.*
-3. **Test target batch (after the go-ahead).** File-based jobs only, the same request path as
+3. **Test target batch (after the go-ahead, given 2026-10-19).** After each sub-batch returns, its raw
+   output, its validated answers and the batch record are written under `results/runs/` (and the
+   cache) and committed locally before the next is sent; an item with a saved valid answer is never
+   resent, and later steps read the saved answers instead of calling the target (D-067).
+   File-based jobs only, the same request path as
    the dev re-run (H-028).
    - Sub-batches of 1, 30, 30, 50, 50 and 49 items in ID order. The first is a one-item probe.
    - Every reply is checked against the response schema and the frozen parser before the next
