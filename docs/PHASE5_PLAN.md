@@ -127,7 +127,9 @@ the unsubmitted items are reported as not run, and resubmitting them needs the o
    Each row shows the answer text, the gold value and the scorer's outcome. Agreement on the random
    30 is reported separately from the other rows. *Sheet built 2026-10-19: `review/test_handcheck_v1.xlsx`,
    78 rows (53 natural, 25 missed seeded copies), 15 pre-filled from D-071; random 30 allocated in
-   proportion to type size (largest remainder).*
+   proportion to type size (largest remainder). Owner's review done 2026-10-19: all 63 non-pre-filled
+   rows "ok", none marked wrong. Agreement with the as-scored outcome: random 30 29/30 (FG-0001, a
+   D-071 correction); other rows 38/48 (the 10 other D-071 corrections).*
 9a. **Scorer faults found on test (D-062).** Results are reported twice: as scored by the frozen
    scorer, and after corrections. A correction is allowed only for a parsing fault (a figure, sign,
    scale, period or label misread), never for a rule in EVAL §3. Every corrected row is listed with
@@ -135,7 +137,11 @@ the unsubmitted items are reported as not run, and resubmitting them needs the o
 10. **Statistics and summary.** Wilson intervals, McNemar's exact test, bootstrap by type, the
     failure taxonomy and `results/summary.json`. Every bar is marked met, not met or not testable
     (D-056), with the seeded-error thresholds alongside. The bars are evaluated on the corrected
-    scores, with the as-scored result shown beside each.
+    scores, with the as-scored result shown beside each. *Done 2026-10-19: `results/summary.json`
+    (`eval/scripts/summary_test.py`). Corrected: unsupported-claim bar not testable (3 baseline
+    Unsupported; best p 0.25); control abstain 12/42 not met; precision 3/13 not met; fault rate 0/60
+    met; seeded macro 0.9337 met; false blocks 9/197 met. As scored: McNemar p 0.0005 met; precision
+    12/13 met; abstain not met.*
 
 ## What I report
 - After step 2: the pre-submit checks, and the test batch's projected cost against its limit.

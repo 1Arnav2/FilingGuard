@@ -1451,6 +1451,25 @@ rules and seed method; then push so the set is public before the verifier sees i
 (expected label), though they are Unsupported.
 **Revisit if:** —
 
+### D-073 — Phase 5 closed: pass bars evaluated; fifth one-time push
+**Date:** 2026-10-19 · **Phase:** 5 (step 10)
+**Context:** Owner's go-ahead for step 10 after the hand-check (all 63 non-pre-filled rows "ok").
+**Decision:** Bars evaluated exactly as written (D-056) by `eval/scripts/summary_test.py` into
+`results/summary.json`, on the corrected scores (D-071 overlay) with the as-scored result beside each.
+Corrected: unsupported-claim rate falls p < 0.05 — not testable (3 baseline Unsupported, best possible
+exact p 0.25; observed 3 → 0); abstain rate on controls ≤ 10% (treatment) — not met (12/42, 28.6%);
+verifier precision ≥ 0.85 — not met (3/13); test-set fault rate ≤ 5% — met (0/60, Phase 3). Seeded:
+macro detection (quote off) 0.9337 ≥ 0.80 — met; false-block rate 9/197 (0.0457) ≤ 0.05 — met. As
+scored: McNemar exact p 0.0005 — met; precision 12/13 — met; abstain — not met; false blocks 0/186.
+Push: a one-time exception approved by the owner; every unpushed commit message checked (no
+Co-Authored-By, no "Generated with", no coding tool named; `CLAUDE.md`, `AGENTS.md`, `.claude/`
+untracked); `main` pushed, no force.
+**Why:** Bars set in advance are reported as they fall; the corrected basis judges the target on
+what it said.
+**Trade-off accepted:** The headline before/after claim cannot be tested on this target: it makes too
+few unsupported claims.
+**Revisit if:** —
+
 ---
 
 ---

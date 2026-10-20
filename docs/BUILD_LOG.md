@@ -16,6 +16,22 @@ of every session.
 
 ---
 
+## 2026-10-19 — Phase 5 steps 9 and 10: owner's hand-check, pass bars, summary.json (Phase 5 done)
+**Built:** Owner's hand-check recorded (sheet committed): all 63 non-pre-filled rows "ok", none wrong;
+agreement with as-scored outcome: random 30 29/30, other rows 38/48 (the gaps are the 11 D-071
+corrections). `eval/scripts/summary_test.py` and `results/summary.json`: bars on corrected and as-scored
+bases, Wilson intervals, McNemar exact, paired bootstrap by type, spend, latency, limitations. Phase 5
+marked done in ROADMAP. D-073; one-time push.
+**Tests:** full offline suite passes.
+**Broken or unfinished:** Phase 6 (dashboard) not started.
+**Numbers worth keeping (corrected; as scored in brackets):** baseline 197/10/3 (186/11/13),
+treatment 188/22/0 (186/23/1). Unsupported-claim rate 3/124 → 0/112 (13/124 → 1/112); McNemar not
+testable (p 0.0005, met). Precision 3/13 (12/13). Control abstain treatment 12/42. Seeded macro 0.9337;
+false blocks 9/197 (0/186). Latency p50 6.65 s, p95 23.46 s end to end. Spend $5.2521.
+**Spend so far:** $5.2521.
+**Next session starts with:** Phase 6a (dashboard API and scaffold) after the owner's go-ahead.
+**Commit:** Phase 5 step 10: pass bars and results/summary.json; Phase 5 done
+
 ## 2026-10-19 — Phase 5 step 8 (latency) and step 9 sheet
 **Built:** Latency sample run end to end on the standard API (target, then the frozen verifier), one
 call at a time, saved apart from the batch answers (`eval/scripts/latency_test.py`). Owner's

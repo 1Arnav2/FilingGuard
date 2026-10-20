@@ -84,14 +84,15 @@ Phase 5 $2.69–$3.46, project end **$5.01–$5.78**, under the $7 cap (`docs/PH
 - [x] Owner's judge hand-check on the 16 dev premise items (EVAL §5), 2026-10-19: scoring fields
       32/32 (kappa 1.0); reasons_in_filing rated on 4 rows, disagree on all 4 (judge had no
       passages), 28 not rated by either (`results/judge/handcheck_dev_v1.json`)
-- [ ] Baseline and treatment on test split, once
-- [ ] Owner hand-checks 30 scored test rows chosen by seed, both conditions, plus every non-Correct
+- [x] Baseline and treatment on test split, once (D-067–D-069; 2026-10-19)
+- [x] Owner hand-checks 30 scored test rows chosen by seed, both conditions, plus every non-Correct
       baseline row, every blocked or flagged answer and every missed seeded error; agreement on the
-      random 30 reported separately (EVAL §10 4a)
-- [ ] Results reported as scored and after owner-approved parsing corrections (EVAL §10 4b)
-- [ ] Metrics, intervals, McNemar, bootstrap by type
-- [ ] Failure taxonomy labels
-- [ ] `results/summary.json`
+      random 30 reported separately (EVAL §10 4a): random 30 29/30, others 38/48
+- [x] Results reported as scored and after owner-approved parsing corrections (EVAL §10 4b, D-071)
+- [x] Metrics, intervals, McNemar, bootstrap by type
+- [x] Failure taxonomy labels (per type in `results/summary.json`)
+- [x] `results/summary.json` — Phase 5 done 2026-10-19; every bar marked met, not met or not
+      testable
 - **Done when:** every pass bar in `EVAL.md` is marked met or missed.
 
 ## Phase 6 — Dashboard (3 days, two sessions)
