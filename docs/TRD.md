@@ -140,31 +140,47 @@ detector is run over every clean corpus chunk to count false positives.
 - `taxonomy.py`: assign a failure label to each wrong answer.
 
 ### 2.6 Dashboard (`web/`)
-Next.js (React, TypeScript), built as a static export and served by the same FastAPI service,
-the pattern already used for FundClarity's new UI. Charts with Recharts.
+Next.js (React, TypeScript), built as a static export and served by the same FastAPI service.
+Redesigned in Phase 6c (D-076) from `DESIGN_SPEC.md` (kept outside the repo): neutral palette, Geist
+type with tabular figures, light and dark mode (system by default, with a toggle), shadcn/ui base
+components and four Magic UI accents on the Overview only. Sources and licences:
+`docs/THIRD_PARTY.md`.
 
-Views:
-- **Scorecard:** headline metrics with intervals, baseline vs verifier.
-- **By attack type:** before/after bars for each of the seven item types.
-- **Item explorer:** filter by attack type, verdict, and failure label; open any item to see
-  question, answer, verdict, reason code, and the evidence span.
-- **Method:** short plain-language summary linking to `EVAL.md`.
+Pages (nav: Overview · Results · Items · Method · Limitations · Code):
+- **Overview** (`/`): what it is, the headline, three stat cards (planted errors caught, correct
+  answers wrongly blocked, controls left unanswered) linking to their evidence, a how-it-works
+  diagram, pass bars at a glance, "Why two numbers?", how it was kept honest, the limitations that
+  affect the headline, author block, outreach line, and a demo-video slot hidden until set.
+- **Results** (`/results/`): pass-bar cards (chosen basis first, the other only where it differs),
+  outcomes without and with the verifier, metrics, by attack type (`/attack-types/` redirects
+  here), planted errors by kind, latency and cost. Every count links to the matching Items view.
+- **Items** (`/items/`): preset views with live counts, labelled filters, removable filter chips,
+  a table on wide screens and cards on narrow ones.
+- **Item detail** (`/item/?id=`): what happened (outcome, verdict, outcome, plus a sentence from fixed
+  templates), expected vs given answer, verifier reasons in plain words, D-071 correction, owner's
+  hand-check, judge, and collapsed technical evidence.
+- **Method** and **Limitations** (`/method/`, `/limitations/`): calm text pages; limitations are
+  grouped by a content file and shown in full.
+
+Plain names for every code come from `web/content/labels.json`; page copy from
+`web/content/copy.json`; the author block from `web/content/author.json`; the demo video from
+`web/content/media.json`.
 
 Read-only API (`src/filingguard/api/routes.py`, data loaded by `api/results.py`; D-074, D-075):
 - `GET /api/summary` returns `results/summary.json` unchanged, plus `generated_from`
 - `GET /api/meta` returns `results/dashboard/meta_v1.json` (split counts, freeze tags and commits,
   when the bars were set, the correction rule, input hashes), plus `generated_from`
-- `GET /api/items?attack_type=&outcome=&label=&verdict=&basis=&condition=&page=&page_size=`
-  returns paged item results; `basis` is `corrected` (default) or `as_scored`, and `outcome` and
-  `label` apply to `condition` (`treatment` by default)
+- `GET /api/items?attack_type=&outcome=&label=&verdict=&basis=&condition=&corrected=&unparseable=&handchecked=&page=&page_size=`
+  returns paged item results; `basis` is `corrected` (default) or `as_scored`, `outcome` and
+  `label` apply to `condition` (`treatment` by default), and the three flags back the Items presets
 - `GET /api/items/{id}` returns one item: answer, claims, citations, retrieval list, outcomes on
   both bases, both verifier modes, and any D-071 correction
 
 The API reads only `results/` (directory set by `FILINGGUARD_RESULTS`, default `results`).
 Per-item data comes from `results/dashboard/items_v1.jsonl`, written by
 `eval/scripts/export_dashboard.py` (only `eval/` reads gold); the corrected basis in it is applied
-by the Phase 5 summary's own overlay. Fixed prose lives in `web/content/` (headline, method); every
-number in it is a declared value or a placeholder filled from the API (`tests/test_web_content.py`).
+by the Phase 5 summary's own overlay. Fixed prose lives in `web/content/`; every number in it is a declared value or a placeholder filled
+from the API, and every code in the results has a plain label (`tests/test_web_content.py`).
 In development, `npm run dev` in `web/` forwards `/api` to uvicorn on port 8000.
 
 The dashboard reads committed results only. It makes no live LLM calls.
@@ -177,7 +193,7 @@ The dashboard reads committed results only. It makes no live LLM calls.
 | Embeddings + vector store | `jinaai/jina-embeddings-v2-small-en` via fastembed; numpy exact cosine search | D-016 |
 | API | FastAPI | Target agent endpoint |
 | Storage | SQLite + JSONL | |
-| Dashboard | Next.js (React, TypeScript), Recharts, static export | Served by FastAPI; same pattern as FundClarity's new UI |
+| Dashboard | Next.js (React, TypeScript), shadcn/ui, Magic UI accents, Geist, next-themes, static export | Served by FastAPI; D-076, `docs/THIRD_PARTY.md` |
 | Tests | pytest | Verifier steps 2 to 4 get unit tests |
 | Deploy | Render free tier, Docker, one service | FastAPI serves the API and the static dashboard |
 

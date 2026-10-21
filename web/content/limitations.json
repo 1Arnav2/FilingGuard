@@ -1,0 +1,7 @@
+{
+  "note": "Groups for results/summary.json limitations, by position in that list. Every position appears exactly once (checked by tests/test_web_content.py). The text itself is never copied here.",
+  "groups": [
+    { "id": "headline", "title": "Affect the headline numbers", "items": [0, 1, 5] },
+    { "id": "scope", "title": "Affect scope or single questions", "items": [2, 3, 4, 6] }
+  ]
+}

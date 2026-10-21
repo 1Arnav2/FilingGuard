@@ -16,6 +16,32 @@ of every session.
 
 ---
 
+## 2026-10-21 — Phase 6c: dashboard redesign (Must tier)
+**Built:** New look and structure from the owner's DESIGN_SPEC.md, Must tier (D-076). Pages:
+Overview (headline with Border Beam, three Number Ticker stat cards linked to their evidence, an
+Animated Beam how-it-works diagram in a Bento Grid, pass bars at a glance, "Why two numbers?", how it
+was kept honest, headline limitations, author block, outreach line, hidden demo-video slot),
+Results (pass-bar cards, outcomes, metrics, by attack type, planted errors, latency and cost),
+Items (presets with live counts, filters, chips, table/cards), item detail (decision first, "what
+happened" sentence), Method, Limitations; `/attack-types/` redirects into Results. shadcn/ui base,
+Geist, light/dark/system theme. API flag filters for the presets. Content files for labels, copy,
+author, media, limitation groups. `docs/THIRD_PARTY.md`.
+**Tests:** content tests extended (11: placeholders and stat paths resolve on both bases, presets use
+API filters, every code in results/ has a plain label, limitation groups cover each item once,
+author/media links); API tests +6 (flag filters, presets match summary.json, bad flag 422). Full
+suite passes. `web/`: typecheck, lint (0 warnings), `npm test`, static export build pass; `npm audit
+--omit=dev` 0. Production build checked (API + export on one origin, scratch server not committed):
+6 pages × 1440/375 px × light/dark: text contrast measured on every text element, 0 failures; focus
+ring 17.9:1 light, 15.7:1 dark; one h1 and a unique title per page; no horizontal scroll; tap
+targets ≥ 44 px at 375 px; skip link first; theme toggle overrides the system; reduced motion shows
+final values with no beams; tickers end on the exact values and screen readers get only those.
+**Broken or unfinished:** Should/Could tiers (search, sorting, prev/next, section nav, glossary,
+skeletons). LinkedIn URL and demo video for the owner to fill in. Deploy step of 6b.
+**Numbers worth keeping:** none new. Screenshots: FilingGuard_screens/v2 (24, outside the repo).
+**Spend so far:** $5.2521 (no model calls).
+**Next session starts with:** Owner's review of the redesign.
+**Commit:** Phase 6c: dashboard redesign, Must tier
+
 ## 2026-10-21 — Phase 6b fix: correction evidence display
 **Built:** The item page printed `gold: [object Object]` in the D-071 evidence for FG-0302 and
 FG-0306, whose gold evidence is a `{year: value}` object. New `evidenceText()` in `web/lib/format.ts`

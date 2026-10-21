@@ -1,5 +1,9 @@
-import ItemsExplorer from "@/components/ItemsExplorer";
+import type { Metadata } from "next";
 
-export default function ItemsPage() {
-  return <ItemsExplorer />;
+import Items from "@/components/pages/Items";
+
+export const metadata: Metadata = { title: "Items" };
+
+export default function Page() {
+  return <Items />;
 }

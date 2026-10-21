@@ -1535,6 +1535,40 @@ keep it tied to its inputs.
 
 ---
 
+### D-076 — Phase 6c: dashboard redesign, Must tier
+**Date:** 2026-10-21 · **Phase:** 6c
+**Context:** The owner approved a redesign from `DESIGN_SPEC.md` (outside the repo), Must tier only,
+with changes: nav Overview · Results · Items · Method · Limitations · Code; By attack type as a
+Results section; an author block, a demo-video slot and an outreach line; a Vercel/Mercury look with
+shadcn/ui and a few Magic UI and Aceternity accents; light and dark mode.
+**Decisions (minor, logged):**
+(1) Stack: shadcn/ui (`radix-nova` style) for Button, Popover, Dropdown Menu, Sheet; Geist from the
+`geist` package rather than Google Fonts, so builds need no font download; next-themes, system by
+default. Recharts removed: outcome bars are plain HTML with text alternatives and linked counts.
+(2) Magic UI Number Ticker, Bento Grid (container only), Animated Beam and Border Beam, copied into
+`web/components/ui/` and changed for reduced motion and screen readers (`docs/THIRD_PARTY.md`).
+(3) Aceternity UI not used: no licence is stated for its free components, so the hero grid is our
+own two-line CSS. (4) API: `corrected`, `unparseable` and `handchecked` filters on
+`/api/items` back the Items presets; tests check the False blocks and Controls-unanswered presets
+against `summary.json` on both bases. (5) Content files: `labels.json` (plain names for every code,
+tested against every code in `results/`), `copy.json` (all page copy; numbers only as placeholders
+or stat paths, tested), `author.json` (LinkedIn left empty for the owner; empty hides the link),
+`media.json` (empty hides the video slot), `limitations.json` (groups by position, every limitation
+exactly once, tested). Two definitional numbers are exempt in the content test: transform names
+"Scale shifted by 1,000" and "Off by 5%" (docs/SEEDED_ERRORS.md) and the "95th percentile" label.
+(6) Limitation groups: "Affect the headline numbers" = items 0, 1, 5 (H-034, shared parser, seeded
+not natural); "Affect scope or single questions" = 2, 3, 4, 6. The owner may regroup. (7) Overview
+stat cards bind to `summary.json` paths with `{basis}`; the third card shows the with-verifier
+control rate with the without-verifier rate beside it. (8) Item detail at `/item/?id=` keeps a back
+link to the last Items view in session storage (a per-viewer convenience only).
+**Why:** The spec's Must tier, with every number still bound to `results/` by test.
+**Trade-off accepted:** More dependencies (all MIT/ISC/Apache/OFL, pinned exactly); the Number Ticker
+is a modified copy that will not take upstream fixes automatically.
+**Revisit if:** the owner wants the Should tier, a different limitation grouping, or Aceternity
+after confirming its licence.
+
+---
+
 ## Hurdles
 
 ### H-001 — 503 "high demand" from Gemini on a test call
@@ -2102,3 +2136,24 @@ Control abstentions added 7 (control abstain rate 5/42 → 12/42).
 **Lesson:** A seeded pool built from abstaining answers measures nothing for a verifier that passes
 abstentions; and the shared parser turns one misread into both a scoring error and a false block.
 **Linked decision:** D-058, D-060, D-061, D-071, D-072
+
+
+### H-035 — Phase 6c: two display bugs found by tests and the browser check
+**Date:** 2026-10-21
+**Phase:** 6c
+**What happened:** (1) A summary key contains a dot (`unsupported_claim_rate_falls_p_lt_0.05`), so
+splitting placeholder paths on "." failed; the page would have shown "—" for that number. The
+extended content test caught it. (2) The Number Ticker reset its text to 0 on every re-render; if
+the spring had already reached its target, the card could stay at 0. Seen in a timing log on the
+production build. Two smaller ones: the hand-check verdict for pre-filled rows showed "—", and the
+judge's relative change printed as a raw float.
+**Impact:** About an hour; no number or result file affected.
+**What I tried:** Logged ticker text every 500 ms; measured the headless browser's frame rate
+(about 1.5 frames a second, which made counting look slow there but was not the bug).
+**Resolution:** Path resolver in `web/lib/content.ts` (and the test's copy) joins segments until a
+key matches. Ticker counts once per value, jumps the spring to the start, and always writes the
+exact final text on a timer and on cleanup; verified settling on 93.4%, 9, 28.6% with screen readers
+given the final value throughout. Verdict lookup and the change format fixed.
+**Lesson:** Bind-by-path code needs a test against the real keys; animation code needs a check of the
+final state, not only the motion.
+**Linked decision:** D-076

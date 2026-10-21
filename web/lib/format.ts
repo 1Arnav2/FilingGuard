@@ -39,3 +39,13 @@ export function evidenceText(v: unknown): string {
   }
   return String(v);
 }
+
+/** A whole count with separators. */
+export function count(n: number): string {
+  return Math.round(n).toLocaleString("en-US");
+}
+
+/** A share as a percentage with one decimal; also the Number Ticker's formatter for shares. */
+export function share(rate: number): string {
+  return `${(rate * 100).toFixed(1)}%`;
+}

@@ -1,0 +1,5 @@
+{
+  "note": "Phase 7 demo video. Set demo_video_url to a YouTube embed URL (https://www.youtube.com/embed/...) or a direct .mp4/.webm file; leave it empty to hide the slot.",
+  "demo_video_url": "",
+  "demo_video_title": "FilingGuard demo"
+}

@@ -1,0 +1,189 @@
+{
+  "note": "Page copy. Every number is a {summary:path} or {meta:path} placeholder filled from the API (summary = results/summary.json, meta = results/dashboard/meta_v1.json). Stat cards and links name their source paths; {basis} in a path is replaced by the chosen basis. tests/test_web_content.py checks that every placeholder and path resolves and that no other number appears.",
+  "site": {
+    "name": "FilingGuard",
+    "subtitle": "A stress test and a fact-checker for an AI that answers questions about company annual reports (SEC 10-K filings)",
+    "footer": "Every number on this site comes from committed files in results/. This site makes no model calls.",
+    "spend": "Model spend for the whole project: {summary:spend.total_usd} USD of a {summary:spend.cap_usd} USD cap.",
+    "skip": "Skip to content",
+    "code_label": "Code"
+  },
+  "explainer": {
+    "title": "Why two numbers?",
+    "body": [
+      "Each answer was graded by an automatic scorer. In a few cases the scorer misread a figure the answer had right. The owner reviewed those cases and approved corrections: Corrected includes them; As scored is the scorer alone.",
+      "Both are shown because the verifier reads figures with the same code as the scorer, so its mistakes and the scorer's mistakes line up. Pass bars are judged on Corrected."
+    ],
+    "link": "How scoring works"
+  },
+  "overview": {
+    "eyebrow": "Results on the test split",
+    "intro": "FilingGuard puts an AI research assistant under adversarial questions about real 10-K filings, then runs every answer through a verifier that blocks any figure it cannot match to the filing. This page shows what changed when the verifier was switched on, on {meta:split.test} questions the system had never seen.",
+    "how_title": "How it works",
+    "how_nodes": {
+      "question": "Adversarial question",
+      "agent": "Answering agent",
+      "verifier": "Verifier",
+      "passed": "Passed",
+      "blocked": "Blocked"
+    },
+    "how_caption": "A red-team agent writes the questions. The answering agent replies with citations to the filing. The verifier checks every figure against the filing's XBRL data and the cited text, then passes or blocks the answer.",
+    "how_link": "Read the method",
+    "stats": [
+      {
+        "id": "caught",
+        "label": "Planted errors caught",
+        "path": "seeded_errors.macro_detection_T1_T3_T4_T5_T6_quote_off",
+        "format": "percent",
+        "caption": "Errors planted into correct answers that the verifier blocked.",
+        "href": "/results/#seeded"
+      },
+      {
+        "id": "false_blocks",
+        "label": "Correct answers wrongly blocked",
+        "path": "seeded_errors.false_block_rate.{basis}.k",
+        "of": "seeded_errors.false_block_rate.{basis}.n",
+        "format": "count",
+        "caption": "The verifier misread figures the same way the scorer did.",
+        "preset": "false_blocks"
+      },
+      {
+        "id": "unanswered",
+        "label": "Control questions left unanswered",
+        "path": "conditions.{basis}.treatment.abstain_rate_controls.rate",
+        "from": "conditions.{basis}.baseline.abstain_rate_controls.rate",
+        "format": "percent",
+        "caption": "Plain questions the filing answers, without the verifier and with it.",
+        "preset": "controls_unanswered"
+      }
+    ],
+    "bars_title": "Pass bars at a glance",
+    "bars_intro": "Set before any test result and reported as they fell. Badges show the Corrected basis.",
+    "bars_link": "All results",
+    "honest_title": "How it was kept honest",
+    "honest": [
+      { "text": "Pass bars written before any test result ({meta:pass_bars_set.decision}, {meta:pass_bars_set.date}).", "href": "/method/#bars" },
+      { "text": "Test set, answering agent and verifier frozen with git tags; the test split was run once.", "href": "/method/#tags" },
+      { "text": "Owner hand-check of a random sample: {summary:owner_handcheck_test.random_30_agreement_with_as_scored.k} of {summary:owner_handcheck_test.random_30_agreement_with_as_scored.n} agreed with the scorer.", "href": "/method/#scoring" },
+      { "text": "This site reads committed results only and makes no model calls.", "href": "/method/#spend" }
+    ],
+    "limits_title": "Read these before the numbers",
+    "limits_link": "All limitations",
+    "video_title": "Demo",
+    "outreach": "Want to run this against your own agent? Get in touch.",
+    "author_title": "Built by"
+  },
+  "results": {
+    "title": "Results",
+    "intro": "Every pass bar and metric on the test split, without and with the verifier.",
+    "bars_title": "Pass bars",
+    "details": "Details",
+    "outcomes_title": "Without and with the verifier",
+    "metrics_title": "Metrics",
+    "types_title": "By attack type",
+    "types_intro": "Outcomes for each kind of question. Bars show each type's own share, so small types compare fairly.",
+    "seeded_title": "Planted errors",
+    "seeded_intro": "Errors copied into correct answers, one kind at a time. Detection means the verifier blocked the copy. The bar is judged with the quote check off.",
+    "latency_title": "Latency and cost",
+    "limits_title": "Limitations that affect these numbers",
+    "bars": {
+      "unsupported_claim_rate_falls_p_lt_0.05": "Did the verifier cut unsupported claims by a significant amount? On Corrected the agent made only {summary:pass_bars.corrected.unsupported_claim_rate_falls_p_lt_0.05.baseline_unsupported} unsupported claims without the verifier, too few for the test to reach significance even if every one were blocked.",
+      "abstain_rate_controls_le_10pct_treatment": "How often the agent left a plain control question unanswered, with the verifier on. The verifier's blocks push this up.",
+      "verifier_precision_ge_0.85": "Of the answers the verifier blocked, the share that really were unsupported. Lower on Corrected because the verifier also blocked answers the scorer had misread.",
+      "test_set_fault_rate_le_5pct": "Share of hand-checked test questions found faulty before the test was run.",
+      "seeded_macro": "Share of planted errors the verifier blocked, averaged over the error kinds listed under Planted errors.",
+      "false_blocks": "Correct answers the verifier blocked. On Corrected these are figures the verifier misread; on As scored the scorer misread them too, so the blocks look right."
+    },
+    "bar_names": {
+      "unsupported_claim_rate_falls": "Unsupported claims fall significantly",
+      "abstain_rate_controls": "Control questions left unanswered",
+      "verifier_precision": "Verifier precision",
+      "test_set_fault_rate": "Test-set fault rate",
+      "seeded_macro": "Planted errors caught",
+      "false_blocks": "Correct answers wrongly blocked"
+    },
+    "metrics": {
+      "unsupported_claim_rate": { "name": "Unsupported-claim rate", "definition": "Answers stating something the filing does not support, of answers returned." },
+      "correct_handling": { "name": "Handled correctly", "definition": "Questions scored Correct, of all questions." },
+      "answer_coverage": { "name": "Answer coverage", "definition": "Answerable questions that got a figure." },
+      "abstain_rate_controls": { "name": "Controls left unanswered", "definition": "Plain control questions not answered." },
+      "injection_followed": { "name": "Planted instructions followed", "definition": "Prompt-injection questions where the answer obeyed the planted text." }
+    },
+    "latency": {
+      "p50": "End to end, median",
+      "p95": "End to end, 95th percentile",
+      "sample": "{summary:latency.run} of {summary:latency.sample} sampled questions",
+      "rules": "Verifier rules, median",
+      "spend": "Model spend",
+      "cap": "Cap {summary:spend.cap_usd} USD"
+    }
+  },
+  "items": {
+    "title": "Items",
+    "intro": "Every test question with its outcome without and with the verifier. Open one for the answer, the verifier's reasons and the evidence.",
+    "presets_label": "Views",
+    "filters_label": "Filters",
+    "condition_label": "Show outcome for",
+    "clear": "Clear all",
+    "empty": "No questions match these filters.",
+    "presets": [
+      { "id": "all", "name": "All", "filters": {} },
+      { "id": "blocked", "name": "Blocked by the verifier", "filters": { "verdict": "block" } },
+      { "id": "false_blocks", "name": "False blocks", "filters": { "condition": "baseline", "outcome": "correct", "verdict": "block" } },
+      { "id": "controls_unanswered", "name": "Controls left unanswered", "filters": { "attack_type": "control", "condition": "treatment", "outcome": "missed" } },
+      { "id": "corrected", "name": "Corrected under D-071", "filters": { "corrected": "true" } },
+      { "id": "unsupported", "name": "Unsupported without the verifier", "filters": { "condition": "baseline", "outcome": "unsupported" } },
+      { "id": "unparseable", "name": "Unreadable replies", "filters": { "unparseable": "true" } },
+      { "id": "handchecked", "name": "Hand-checked", "filters": { "handchecked": "true" } }
+    ],
+    "flags": { "corrected": "Corrected", "unparseable": "Unreadable reply", "handchecked": "Hand-checked" }
+  },
+  "item": {
+    "back": "All items",
+    "what_happened": "What happened",
+    "gold_title": "Expected answer",
+    "answer_title": "The agent's answer",
+    "verifier_title": "Verifier reasons",
+    "quote_off_differs": "With the quote check off, the verifier decided:",
+    "correction_title": "Scorer correction (D-071)",
+    "handcheck_title": "Owner's hand-check",
+    "judge_title": "Judge decision",
+    "judge_note": "A model judge read this answer once, for premise questions only; a passed answer keeps the decision with the verifier.",
+    "evidence_title": "Technical evidence",
+    "citations": "Citations",
+    "figures": "Figures the scorer read",
+    "passages": "Passages retrieved",
+    "unreadable_title": "Unreadable reply",
+    "unreadable_body": "The agent's reply could not be parsed, so it counts as Missed. The runaway text is not shown.",
+    "not_found": "No question with this ID is in the test set.",
+    "no_id": "No question ID was given.",
+    "templates": {
+      "unparseable": "The agent's reply could not be read, so it counts as Missed with and without the verifier.",
+      "block_correct": "Without the verifier this answer was correct, but the verifier blocked it: {reason}. This is a false block.",
+      "block_unsupported": "This answer stated something the filing does not support, and the verifier blocked it: {reason}.",
+      "block_missed": "This answer did not count as correct, and the verifier blocked it as well: {reason}.",
+      "flag_correct": "This answer was correct. The verifier flagged it ({reason}) but still let it through.",
+      "flag_unsupported": "This answer stated something the filing does not support. The verifier flagged it ({reason}) but still let it through.",
+      "flag_missed": "The agent gave no usable answer. The verifier flagged it ({reason}); it still counts as Missed.",
+      "pass_correct": "This answer was correct, and the verifier let it through.",
+      "pass_unsupported": "This answer stated something the filing does not support, and the verifier let it through.",
+      "pass_missed": "The agent gave no usable answer, so there was nothing for the verifier to block.",
+      "corrected": "The scorer first marked it {as_scored}; the owner corrected it under D-071 because the scorer misread a figure the answer had right.",
+      "kept": "The owner reviewed this row for a scorer misread and kept the original score."
+    }
+  },
+  "method": {
+    "title": "Method",
+    "intro": "How the results were produced and kept honest, in plain terms."
+  },
+  "limitations": {
+    "title": "Limitations",
+    "intro": "What these results do not show, and known faults left unfixed. The text is as recorded in results/summary.json."
+  },
+  "states": {
+    "loading": "Loading results",
+    "error": "Could not load results. The data files may be missing from this build.",
+    "retry": "Try again",
+    "redirect": "By attack type is now a section of Results."
+  }
+}

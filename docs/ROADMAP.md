@@ -104,11 +104,22 @@ Phase 5 $2.69–$3.46, project end **$5.01–$5.78**, under the $7 cap (`docs/PH
 **6b. Views and deploy**
 - [x] Fixes to 6a: per-item data from a results export, overlay not re-stated in the API (D-075);
       headline as a content file, checked against summary.json
-- [x] Before/after by attack type (Recharts)
+- [x] Before/after by attack type (Recharts in 6b; plain HTML bars since 6c)
 - [x] Item explorer with filters and evidence drill-down (gold, figures read, judge, both bases,
       verdict, D-071 correction, owner's hand-check)
 - [x] Method page (2026-10-21)
-- [ ] Static export served by FastAPI; Dockerfile; deploy to Render
+- [ ] Static export served by FastAPI; Dockerfile; deploy to Render (after 6c review)
+
+**6c. Redesign (owner's DESIGN_SPEC.md, Must tier; D-076)**
+- [x] Overview page with stat cards, how-it-works diagram, author block, outreach line, video slot
+- [x] "Why two numbers?" explainer; corrected primary, as scored only where it differs
+- [x] Numbers link to pre-filtered Items views; Items presets (API flag filters)
+- [x] Mobile: tables become cards, nothing hidden; 44 px tap targets
+- [x] Accessibility (spec 4.8): contrast measured in light and dark, focus ring, titles, skip link,
+      labelled landmarks, live regions, text alternatives, reduced motion
+- [x] Item detail in decision-first order with the "what happened" sentence
+- [x] Plain names instead of codes (spec 4.7 copy); light and dark mode with a toggle (2026-10-21)
+- [ ] Should and Could tiers (search, sorting, prev/next, section nav, glossary): later
 - **Done when:** the public link loads from committed results on desktop and mobile.
 
 ## Phase 7 — Ship (1 day)

@@ -181,3 +181,27 @@ def test_items_add_up_to_summary_by_type(client, basis, condition):
     for attack_type, block in by_type.items():
         counts = Counter(i[condition]["outcome"] for i in all_items(client, basis=basis, attack_type=attack_type))
         assert counts == Counter(block["outcomes"]), (basis, condition, attack_type)
+
+
+@pytest.mark.parametrize(("flag", "count"), [("corrected", 11), ("unparseable", 2), ("handchecked", 53)])
+def test_flag_filters(client, flag, count):
+    assert len(all_items(client, **{flag: "true"})) == count
+    assert len(all_items(client, **{flag: "false"})) == 210 - count
+
+
+def test_preset_false_blocks_matches_summary(client):
+    """The Items preset "False blocks": correct without the verifier, blocked by it."""
+    for basis in ("corrected", "as_scored"):
+        rows = all_items(client, basis=basis, condition="baseline", outcome="correct", verdict="block")
+        assert len(rows) == SUMMARY["seeded_errors"]["false_block_rate"][basis]["k"]
+
+
+def test_preset_controls_not_answered_matches_summary(client):
+    """The Items preset for control questions not answered, per condition."""
+    for condition in ("baseline", "treatment"):
+        rows = all_items(client, attack_type="control", condition=condition, outcome="missed")
+        assert len(rows) == SUMMARY["conditions"]["corrected"][condition]["abstain_rate_controls"]["k"]
+
+
+def test_bad_flag_is_rejected(client):
+    assert client.get("/api/items", params={"corrected": "maybe"}).status_code == 422

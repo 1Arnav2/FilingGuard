@@ -289,9 +289,14 @@ def meta() -> dict[str, Any]:
 @router.get("/items", response_model=ItemPage)
 def items(attack_type: AttackType | None = None, outcome: Outcome | None = None, label: Label | None = None,
           verdict: Decision | None = None, basis: Basis = "corrected", condition: Condition = "treatment",
+          corrected: bool | None = None, unparseable: bool | None = None, handchecked: bool | None = None,
           page: int = Query(1, ge=1), page_size: int = Query(50, ge=1, le=500)) -> ItemPage:
-    """The test items, filtered; `outcome` and `label` apply to `condition` on `basis`."""
+    """The test items, filtered; `outcome` and `label` apply to `condition` on `basis`; the three flags
+    select D-071 corrected rows, unparseable replies and rows in the owner's hand-check."""
     rows = [_row(item, basis) for item in load().items.values()]
+    for flag, wanted in (("corrected", corrected), ("unparseable", unparseable), ("handchecked", handchecked)):
+        if wanted is not None:
+            rows = [r for r in rows if getattr(r, flag) == wanted]
     if attack_type:
         rows = [r for r in rows if r.attack_type == attack_type]
     if verdict:

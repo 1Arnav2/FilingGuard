@@ -1,13 +1,9 @@
-"use client";
+import type { Metadata } from "next";
 
-import Method from "@/components/Method";
-import { Loading } from "@/components/ui";
-import { getMeta, getSummary } from "@/lib/api";
-import { useData } from "@/lib/useData";
+import Method from "@/components/pages/Method";
 
-export default function MethodPage() {
-  const summary = useData(getSummary);
-  const meta = useData(getMeta);
-  if (!summary.data || !meta.data) return <Loading error={summary.error ?? meta.error} />;
-  return <Method summary={summary.data} meta={meta.data} />;
+export const metadata: Metadata = { title: "Method" };
+
+export default function Page() {
+  return <Method />;
 }

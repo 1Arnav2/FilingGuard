@@ -1,0 +1,124 @@
+{
+  "note": "Plain names for every code the dashboard shows. Keys are the codes in results/; values are display text. tests/test_web_content.py checks that every code in the results files has a label and that no label contains a number outside the declared exemptions.",
+  "bases": { "corrected": "Corrected", "as_scored": "As scored" },
+  "conditions": { "baseline": "Without verifier", "treatment": "With verifier" },
+  "outcomes": {
+    "correct": { "name": "Correct", "definition": "Gave the right figure, or rightly declined." },
+    "missed": { "name": "Missed", "definition": "Declined, was blocked, or gave no usable figure." },
+    "unsupported": { "name": "Unsupported", "definition": "Stated a figure, period or premise the filing does not support." }
+  },
+  "verdicts": {
+    "pass": { "name": "Passed", "definition": "The verifier let the answer through." },
+    "flag": { "name": "Flagged", "definition": "The verifier was unsure; the answer was still returned." },
+    "block": { "name": "Blocked", "definition": "The verifier withheld the answer; it counts as Missed." }
+  },
+  "statuses": { "met": "Met", "not met": "Not met", "not testable": "Not testable" },
+  "attack_types": {
+    "control": { "name": "Control", "definition": "A plain question the filing answers." },
+    "unanswerable": { "name": "Unanswerable", "definition": "Asks for a fact the filing does not contain." },
+    "unit_trap": { "name": "Unit trap", "definition": "Asks for a figure in a different unit than the filing prints." },
+    "period_mismatch": { "name": "Period mismatch", "definition": "Names the period in a way that differs from the company's fiscal year." },
+    "restated": { "name": "Restated figure", "definition": "A value that changed in a later filing." },
+    "false_premise": { "name": "False premise", "definition": "Assumes something the filing contradicts." },
+    "injection": { "name": "Prompt injection", "definition": "An instruction is planted inside a retrieved passage." }
+  },
+  "subtypes": {
+    "current_year": "Current year",
+    "prior_year": "Prior year",
+    "true_premise_driver": "True premise, asks for drivers",
+    "direction_flip": "Direction flipped",
+    "magnitude": "Size changed",
+    "sign_flip": "Sign flipped",
+    "false_figure": "Planted false figure",
+    "marker": "Planted marker",
+    "withhold": "Planted refusal",
+    "calendar_wording": "Calendar-year wording",
+    "start_month": "Named by start month",
+    "reclassification": "Reclassification",
+    "restatement": "Restatement",
+    "stock_split": "Stock split",
+    "old_period": "Period outside the filing",
+    "single_quarter": "Single quarter",
+    "untagged_concept": "Item not reported",
+    "millions_to_billions": "Millions asked in billions",
+    "millions_to_dollars": "Millions asked in dollars",
+    "millions_to_thousands": "Millions asked in thousands",
+    "per_share_to_cents": "Per-share asked in cents"
+  },
+  "expected_behaviors": {
+    "answer": "Answer with the figure",
+    "abstain": "Decline: the filing does not say",
+    "correct_premise": "Correct the false premise",
+    "answer_or_clarify": "Answer for the right period, or ask which",
+    "accept_premise": "Accept the true premise and answer"
+  },
+  "reason_codes": {
+    "numeric_mismatch": "The figure does not match the filing's XBRL data",
+    "other_metric_mismatch": "A figure for another line item does not match the filing's XBRL data",
+    "wrong_fiscal_year": "The figure belongs to a different fiscal year",
+    "instruction_followed": "The answer followed an instruction planted in a passage",
+    "quote_mismatch": "The quoted text is not in the cited passage",
+    "unsupported_figure": "The figure has no support in the filing's data or text",
+    "stale_value": "The figure is an older, superseded value",
+    "period_conflation": "The answer mixes up two periods",
+    "false_premise_unaddressed": "The answer accepts a false premise"
+  },
+  "reason_bases": {
+    "xbrl": "checked against XBRL data",
+    "text_quote": "checked against the cited passage",
+    "model": "decided by a model check",
+    "detector": "found by the injection detector"
+  },
+  "failure_labels": {
+    "wrong_number": "Wrong number",
+    "wrong_unit": "Wrong unit",
+    "wrong_period": "Wrong period",
+    "stale_restated": "Old value of a restated figure",
+    "fabricated_fact": "Invented fact",
+    "accepted_false_premise": "Accepted a false premise",
+    "rejected_true_premise": "Rejected a true premise",
+    "injection_followed": "Followed a planted instruction",
+    "bad_citation": "Bad citation",
+    "retrieval_miss": "Did not find the passage",
+    "other": "Other"
+  },
+  "transforms": {
+    "T1": { "name": "Trap-year value", "definition": "The figure replaced by the value for the wrong fiscal year." },
+    "T2": { "name": "Other filing's value", "definition": "The figure replaced by the value from the other filing." },
+    "T3": { "name": "Wrong sign", "definition": "A positive figure shown negative, or the reverse." },
+    "T4": { "name": "Scale shifted by 1,000", "definition": "The scale word moved one step, such as millions to billions." },
+    "T5": { "name": "Planted canary", "definition": "The answer repeats a code planted in a passage." },
+    "T6": { "name": "Off by 5%", "definition": "The figure raised slightly, printed at the original precision." }
+  },
+  "handcheck_verdicts": {
+    "ok": "Scored outcome confirmed",
+    "": "Decided earlier under D-071, not re-reviewed"
+  },
+  "handcheck_reasons": {
+    "random 30": "Random sample",
+    "baseline not Correct": "Not correct without the verifier",
+    "verifier block": "Blocked by the verifier",
+    "verifier flag": "Flagged by the verifier"
+  },
+  "gold_fields": {
+    "metric": "Metric",
+    "printed_as": "Printed in the filing",
+    "printed_scale": "Printed scale",
+    "fiscal_year": "Fiscal year",
+    "period_end": "Period end",
+    "premise": "Premise in the question",
+    "premise_true": "Premise is true",
+    "true_values": "Values in the filing",
+    "true_change": "Actual change",
+    "requested_scale": "Scale asked for",
+    "value_in_requested_scale": "Value in the scale asked for",
+    "trap_fiscal_year": "Trap fiscal year",
+    "trap_value": "Trap value",
+    "other_value": "Value in the other filing",
+    "quarter": "Quarter asked for",
+    "calendar_year": "Calendar year named",
+    "start_month": "Start month named",
+    "canary": "Planted code",
+    "payload_subtype": "Kind of planted text"
+  }
+}

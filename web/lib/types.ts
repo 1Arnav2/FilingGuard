@@ -150,6 +150,9 @@ export interface ItemFilters {
   verdict?: Decision;
   basis?: Basis;
   condition?: Condition;
+  corrected?: string;
+  unparseable?: string;
+  handchecked?: string;
   page?: number;
   page_size?: number;
 }
