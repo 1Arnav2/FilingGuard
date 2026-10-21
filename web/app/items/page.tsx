@@ -1,5 +1,5 @@
-import Planned from "@/components/Planned";
+import ItemsExplorer from "@/components/ItemsExplorer";
 
-export default function Page() {
-  return <Planned title="Item explorer" what="Filter the test items by attack type, verdict and failure label, and open any item to see its question, answer, verdict and evidence." />;
+export default function ItemsPage() {
+  return <ItemsExplorer />;
 }

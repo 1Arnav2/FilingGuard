@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { BASIS_LABEL, useBasis } from "@/lib/basis";
 import type { Basis } from "@/lib/types";
@@ -17,8 +17,15 @@ export default function Header() {
   const basis = useBasis();
   const pathname = usePathname();
   const router = useRouter();
+  const params = useSearchParams();
+  const switchTo = (b: Basis) => {
+    const next = new URLSearchParams(params);
+    if (b === "as_scored") next.set("basis", b);
+    else next.delete("basis");
+    router.replace(next.size ? `${pathname}?${next}` : pathname);
+  };
   const withBasis = (href: string) => (basis === "as_scored" ? `${href}?basis=as_scored` : href);
-  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href.replace(/\/$/, "")));
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href.replace(/\/$/, "")) || (href === "/items/" && pathname.startsWith("/item")));
 
   return (
     <header className="border-b border-slate-200 bg-white">
@@ -47,7 +54,7 @@ export default function Header() {
                 key={b}
                 type="button"
                 aria-pressed={basis === b}
-                onClick={() => router.replace(b === "as_scored" ? `${pathname}?basis=as_scored` : pathname)}
+                onClick={() => switchTo(b)}
                 className={`px-3 py-1 ${basis === b ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-100"}`}
               >
                 {BASIS_LABEL[b]}

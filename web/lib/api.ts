@@ -1,6 +1,6 @@
 // Typed client for the read-only results API. Always same-origin: the dev server forwards /api.
 
-import type { ItemDetail, ItemFilters, ItemPage, Summary } from "./types";
+import type { ItemDetail, ItemFilters, ItemPage, Meta, Summary } from "./types";
 
 async function get<T>(path: string): Promise<T> {
   const response = await fetch(path, { headers: { Accept: "application/json" } });
@@ -12,6 +12,10 @@ async function get<T>(path: string): Promise<T> {
 
 export function getSummary(): Promise<Summary> {
   return get<Summary>("/api/summary");
+}
+
+export function getMeta(): Promise<Meta> {
+  return get<Meta>("/api/meta");
 }
 
 export function getItems(filters: ItemFilters = {}): Promise<ItemPage> {

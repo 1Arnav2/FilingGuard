@@ -1,7 +1,7 @@
-"""Read-only results routes for the dashboard: summary, items list, item detail.
+"""Read-only results routes for the dashboard: summary, method facts, items list, item detail.
 
 Every response comes from committed `results/` files (see `results.py`); nothing is computed
-beyond the D-071 overlay and filtering.
+beyond filtering and paging. The corrected basis is in the export, applied by the Phase 5 overlay.
 """
 
 from typing import Any, Literal
@@ -9,7 +9,7 @@ from typing import Any, Literal
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, ConfigDict
 
-from filingguard.api.results import SUMMARY, load
+from filingguard.api.results import META, SUMMARY, load
 
 router = APIRouter(prefix="/api")
 
@@ -101,10 +101,33 @@ class Summary(Open):
     generated_from: str
 
 
+class Tag(BaseModel):
+    commit: str
+    url: str
+
+
+class Meta(Open):
+    split: dict[str, int]
+    attack_types_test: dict[str, int]
+    companies: int
+    freeze_tags: dict[str, Tag]
+    repo: str
+    pass_bars_set: dict[str, str]
+    corrections: dict[str, str | int]
+    handcheck: dict[str, str | int]
+    inputs_sha256: dict[str, str]
+    generated_from: str
+
+
 class ScoreView(BaseModel):
     outcome: Outcome
     label: str | None
     notes: list[str]
+    abstained: bool
+    scale_not_followed: bool
+    unparseable: bool
+    injection: str | None
+    answer_followed: bool | None
 
 
 class ItemRow(BaseModel):
@@ -118,6 +141,8 @@ class ItemRow(BaseModel):
     verdict: Decision
     reason_codes: list[str]
     corrected: bool
+    unparseable: bool
+    handchecked: bool
 
 
 class ItemPage(BaseModel):
@@ -148,11 +173,12 @@ class Citation(BaseModel):
 
 
 class Answer(BaseModel):
-    text: str
+    text: str | None  # None when the reply was unparseable; the runaway text is not served
     abstained: bool
     claims: list[Claim]
     citations: list[Citation]
     parse_error: str | None
+    unparseable_chars: int | None
 
 
 class Retrieved(BaseModel):
@@ -161,6 +187,35 @@ class Retrieved(BaseModel):
     item: str | None
     source: str
     score: float
+
+
+class Figure(BaseModel):
+    value: float
+    scale: str | None
+    negative: bool
+    metric: str | None
+    adjusted: bool
+    asked: bool
+    period: str | None
+    period_ok: bool | None
+
+
+class Gold(Open):
+    expected_behavior: str
+    text: str
+    value: float | None
+    unit: str | None
+    metric: str | None
+    fiscal_year: int | None
+
+
+class Judge(BaseModel):
+    rejects_premise: bool | None
+    confirms_change: bool | None
+    gives_reasons: bool | None
+    reasons_in_filing: bool | None
+    says_no_reasons_given: bool | None
+    reason: str | None
 
 
 class Reason(BaseModel):
@@ -176,10 +231,20 @@ class Verdict(BaseModel):
 
 
 class Correction(BaseModel):
-    pattern: str
-    evidence: dict[str, Any]
+    status: Literal["corrected", "kept as scored"]
+    as_scored: list[str | None]
+    corrected: list[str | None] | None
+    pattern: str | None
+    evidence: dict[str, Any] | None
     reason: str
-    approval: str
+    approval: str | None
+
+
+class HandCheck(BaseModel):
+    why_listed: str
+    verdict: str | None
+    note: str | None
+    pre_filled: str | None
 
 
 class ItemDetail(BaseModel):
@@ -188,28 +253,25 @@ class ItemDetail(BaseModel):
     attack_type: str
     subtype: str
     question: str
+    gold: Gold
     answer: Answer
     retrieved: list[Retrieved]
+    figures: list[Figure]
+    judge: Judge | None
     outcomes: dict[Basis, dict[Condition, ScoreView]]
     verdict: dict[Literal["full", "quote_off"], Verdict]
     correction: Correction | None
-    scale_not_followed: bool
-    unparseable: bool
-    injection: str | None
+    handcheck: HandCheck | None
 
 
-def _score(row: dict[str, Any]) -> ScoreView:
-    return ScoreView(outcome=row["outcome"], label=row["label"], notes=row["notes"])
-
-
-def _row(item_id: str, basis: Basis) -> ItemRow:
-    data = load()
-    answer, base = data.answers[item_id], data.scores[basis]["baseline"][item_id]
-    verdict = data.verdicts["full"][item_id]
-    return ItemRow(id=item_id, company=answer["company"], attack_type=base["attack_type"], subtype=base["subtype"],
-                   question=answer["question"], baseline=_score(base),
-                   treatment=_score(data.scores[basis]["treatment"][item_id]), verdict=verdict["decision"],
-                   reason_codes=[r["code"] for r in verdict["reasons"]], corrected=item_id in data.corrections)
+def _row(item: dict[str, Any], basis: Basis) -> ItemRow:
+    full = item["verdict"]["full"]
+    outcomes = item["outcomes"][basis]
+    return ItemRow(id=item["id"], company=item["company"], attack_type=item["attack_type"], subtype=item["subtype"],
+                   question=item["question"], baseline=outcomes["baseline"], treatment=outcomes["treatment"],
+                   verdict=full["decision"], reason_codes=[r["code"] for r in full["reasons"]],
+                   corrected=(item["correction"] or {}).get("status") == "corrected",
+                   unparseable=item["answer"]["parse_error"] is not None, handchecked=item["handcheck"] is not None)
 
 
 @router.get("/summary", response_model=Summary)
@@ -218,12 +280,18 @@ def summary() -> dict[str, Any]:
     return {**load().summary, "generated_from": f"results/{SUMMARY}"}
 
 
+@router.get("/meta", response_model=Meta)
+def meta() -> dict[str, Any]:
+    """Method facts from the dashboard export: split, freeze tags, when the bars were set, input hashes."""
+    return {**load().meta, "generated_from": f"results/{META}"}
+
+
 @router.get("/items", response_model=ItemPage)
 def items(attack_type: AttackType | None = None, outcome: Outcome | None = None, label: Label | None = None,
           verdict: Decision | None = None, basis: Basis = "corrected", condition: Condition = "treatment",
           page: int = Query(1, ge=1), page_size: int = Query(50, ge=1, le=500)) -> ItemPage:
-    """The 210 test items, filtered; `outcome` and `label` apply to `condition` on `basis`."""
-    rows = [_row(i, basis) for i in load().order]
+    """The test items, filtered; `outcome` and `label` apply to `condition` on `basis`."""
+    rows = [_row(item, basis) for item in load().items.values()]
     if attack_type:
         rows = [r for r in rows if r.attack_type == attack_type]
     if verdict:
@@ -237,20 +305,10 @@ def items(attack_type: AttackType | None = None, outcome: Outcome | None = None,
 
 
 @router.get("/items/{item_id}", response_model=ItemDetail)
-def item(item_id: str) -> ItemDetail:
-    """One item: question, answer, retrieval, both bases, both verifier modes, any correction."""
-    data = load()
-    if item_id not in data.answers:
+def item(item_id: str) -> dict[str, Any]:
+    """One item as exported: gold, answer, figures read, judge, both bases, both verifier modes,
+    any D-071 correction and the owner's hand-check."""
+    row = load().items.get(item_id)
+    if row is None:
         raise HTTPException(status_code=404, detail=f"unknown item {item_id}")
-    run, base = data.answers[item_id], data.scores["as_scored"]["baseline"][item_id]
-    fix = data.corrections.get(item_id)
-    return ItemDetail(
-        id=item_id, company=run["company"], attack_type=base["attack_type"], subtype=base["subtype"],
-        question=run["question"], answer=Answer(**run["answer"]), retrieved=run["retrieved"],
-        outcomes={b: {c: _score(data.scores[b][c][item_id]) for c in ("baseline", "treatment")}
-                  for b in ("corrected", "as_scored")},
-        verdict={m: Verdict(decision=data.verdicts[m][item_id]["decision"], reasons=data.verdicts[m][item_id]["reasons"])
-                 for m in ("full", "quote_off")},
-        correction=Correction(**{k: fix[k] for k in ("pattern", "evidence", "reason", "approval")}) if fix else None,
-        scale_not_followed=base["scale_not_followed"], unparseable=base["unparseable"], injection=base["injection"],
-    )
+    return row

@@ -1,0 +1,62 @@
+{
+  "generated_by": "src/filingguard/eval/scripts/export_dashboard.py",
+  "items_file": "results/dashboard/items_v1.jsonl",
+  "split": {
+    "dev": 90,
+    "test": 210,
+    "total": 300
+  },
+  "attack_types_test": {
+    "control": 42,
+    "false_premise": 32,
+    "injection": 32,
+    "period_mismatch": 32,
+    "restated": 8,
+    "unanswerable": 32,
+    "unit_trap": 32
+  },
+  "companies": 25,
+  "freeze_tags": {
+    "target-v1": {
+      "commit": "53b585f5d976b0c1d86c11176eb33b16a230eeb8",
+      "url": "https://github.com/1Arnav2/FilingGuard/tree/53b585f5d976b0c1d86c11176eb33b16a230eeb8"
+    },
+    "testset-v1": {
+      "commit": "0ccf7ef8f1036594364e124822f7cf2e6c3229e2",
+      "url": "https://github.com/1Arnav2/FilingGuard/tree/0ccf7ef8f1036594364e124822f7cf2e6c3229e2"
+    },
+    "verifier-v1": {
+      "commit": "1fa8fa195e314f26a0034092a9e302bcdc786e6d",
+      "url": "https://github.com/1Arnav2/FilingGuard/tree/1fa8fa195e314f26a0034092a9e302bcdc786e6d"
+    }
+  },
+  "repo": "https://github.com/1Arnav2/FilingGuard",
+  "pass_bars_set": {
+    "decision": "D-056",
+    "title": "Bars kept as written; testability recorded",
+    "date": "2026-10-05",
+    "where": "EVAL §6"
+  },
+  "corrections": {
+    "decision": "D-071",
+    "rule": "EVAL 10 4b: corrections only for parsing faults; frozen scorer and as-scored files unchanged",
+    "corrected": 11,
+    "kept_as_scored": 4
+  },
+  "handcheck": {
+    "sheet": "review/test_handcheck_v1.xlsx",
+    "natural_rows": 53,
+    "with_note": 5
+  },
+  "inputs_sha256": {
+    "results/runs/test_target_v1.jsonl": "5841094d5648fa49233db34ccba6a9c21e3c665f10f9ab79b57d0b449ebf423f",
+    "results/test/baseline_scores_v1.jsonl": "16fc9256197c074acb91f73fd765d3ee0368c172044a093edcccc74682f5bb64",
+    "results/test/treatment_scores_v1.jsonl": "ba7eb853b6921bba5da62c5c5be9ac7a415f825f5cd4a546ff8a031a0bbabc96",
+    "results/test/baseline_corrections_v1.json": "4b686ec93e5c0b0684cc2ae705b2d0e0e508483d5ba6b7611ce6ad141ab37e1d",
+    "results/test/verifier_v1.jsonl": "dc6b9785145c7fb8e2b5593843e18303e4c8c73865b6b6b163fecf382eed274b",
+    "results/judge/test_judge_v1.jsonl": "6b4611c6b6d0a08d1de6fa522c892188427a3fca50375b49e4d38ce0661dd100",
+    "data/gold/gold_v1.jsonl": "e9084549d983e2688e0b38706a84e3bde4dd9490bd1cce208cce00d85ae760df",
+    "data/testset/v1.jsonl": "e728c60ee547f204f6db11f0ffc544e1e6a5b19c519e1d4249cbe7c0718038fc",
+    "review/test_handcheck_v1.xlsx": "4bd6f274f62675964db3f498a9187c55186260f4e19e30e711ac7a653430765e"
+  }
+}

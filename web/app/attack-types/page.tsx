@@ -1,5 +1,13 @@
-import Planned from "@/components/Planned";
+"use client";
 
-export default function Page() {
-  return <Planned title="By attack type" what="Before/after bars for each attack type." />;
+import AttackTypes from "@/components/AttackTypes";
+import { Loading } from "@/components/ui";
+import { getSummary } from "@/lib/api";
+import { useBasis } from "@/lib/basis";
+import { useData } from "@/lib/useData";
+
+export default function AttackTypesPage() {
+  const basis = useBasis();
+  const { data, error } = useData(getSummary);
+  return data ? <AttackTypes summary={data} basis={basis} /> : <Loading error={error} />;
 }

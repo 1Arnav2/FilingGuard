@@ -1,0 +1,8 @@
+{
+  "text": "On 210 unseen test questions, the verifier caught 93% of planted errors, but it also blocked 9 correct answers, because it reads figures with the same code as the scorer. The agent's real weakness is refusing questions it could answer, not stating unsupported figures.",
+  "numbers": [
+    { "shown": "210", "file": "results/summary.json", "path": "n_items", "as": "count" },
+    { "shown": "93%", "file": "results/summary.json", "path": "seeded_errors.macro_detection_T1_T3_T4_T5_T6_quote_off", "as": "percent" },
+    { "shown": "9", "file": "results/summary.json", "path": "seeded_errors.false_block_rate.corrected.k", "as": "count" }
+  ]
+}

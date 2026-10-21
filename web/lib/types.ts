@@ -46,8 +46,15 @@ export interface PassBars {
   test_set_fault_rate_le_5pct: FaultBar;
 }
 
+export interface TypeSummary {
+  n: number;
+  outcomes: Partial<Record<Outcome, number>>;
+  labels: Record<string, number>;
+}
+
 export interface ConditionSummary {
   outcomes: Partial<Record<Outcome, number>>;
+  by_type: Record<string, TypeSummary>;
   unsupported_claim_rate: Rate;
   correct_handling: Rate;
   answer_coverage: Rate;
@@ -79,8 +86,26 @@ export interface Summary {
   seeded_errors: Seeded;
   conditions: Record<Basis, Record<Condition, ConditionSummary>>;
   latency: { sample: number; run: number; end_to_end_s: Timing; verifier_rule_s: Timing };
-  spend: { total_usd: number; cap_usd: number };
+  spend: { total_usd: number; cap_usd: number; by_purpose_usd: Record<string, number> };
+  bootstrap_by_type_corrected: Record<
+    string,
+    Record<"unsupported_share" | "correct_share", { change: number; bootstrap95: [number, number] }>
+  >;
   limitations: string[];
+  generated_from: string;
+}
+
+export interface Meta {
+  split: { dev: number; test: number; total: number };
+  attack_types_test: Record<string, number>;
+  companies: number;
+  freeze_tags: Record<string, { commit: string; url: string }>;
+  repo: string;
+  pass_bars_set: { decision: string; title: string; date: string; where: string };
+  corrections: { decision: string; rule: string; corrected: number; kept_as_scored: number };
+  handcheck: { sheet: string; natural_rows: number; with_note: number };
+  inputs_sha256: Record<string, string>;
+  generated_by: string;
   generated_from: string;
 }
 
@@ -88,6 +113,11 @@ export interface ScoreView {
   outcome: Outcome;
   label: string | null;
   notes: string[];
+  abstained: boolean;
+  scale_not_followed: boolean;
+  unparseable: boolean;
+  injection: string | null;
+  answer_followed: boolean | null;
 }
 
 export interface ItemRow {
@@ -101,6 +131,8 @@ export interface ItemRow {
   verdict: Decision;
   reason_codes: string[];
   corrected: boolean;
+  unparseable: boolean;
+  handchecked: boolean;
 }
 
 export interface ItemPage {
@@ -129,14 +161,43 @@ export interface Reason {
   detail: string;
 }
 
+export interface Figure {
+  value: number;
+  scale: string | null;
+  negative: boolean;
+  metric: string | null;
+  adjusted: boolean;
+  asked: boolean;
+  period: string | null;
+  period_ok: boolean | null;
+}
+
+export interface Judge {
+  rejects_premise: boolean | null;
+  confirms_change: boolean | null;
+  gives_reasons: boolean | null;
+  reasons_in_filing: boolean | null;
+  says_no_reasons_given: boolean | null;
+  reason: string | null;
+}
+
 export interface ItemDetail {
   id: string;
   company: string;
   attack_type: string;
   subtype: string;
   question: string;
-  answer: {
+  gold: {
+    expected_behavior: string;
     text: string;
+    value: number | null;
+    unit: string | null;
+    metric: string | null;
+    fiscal_year: number | null;
+    [key: string]: unknown;
+  };
+  answer: {
+    text: string | null;
     abstained: boolean;
     claims: {
       text: string | null;
@@ -156,12 +217,21 @@ export interface ItemDetail {
       quote_found: boolean;
     }[];
     parse_error: string | null;
+    unparseable_chars: number | null;
   };
   retrieved: { rank: number; chunk_id: string; item: string | null; source: string; score: number }[];
+  figures: Figure[];
+  judge: Judge | null;
   outcomes: Record<Basis, Record<Condition, ScoreView>>;
   verdict: Record<"full" | "quote_off", { decision: Decision; reasons: Reason[] }>;
-  correction: { pattern: string; evidence: Record<string, unknown>; reason: string; approval: string } | null;
-  scale_not_followed: boolean;
-  unparseable: boolean;
-  injection: string | null;
+  correction: {
+    status: "corrected" | "kept as scored";
+    as_scored: (string | null)[];
+    corrected: (string | null)[] | null;
+    pattern: string | null;
+    evidence: Record<string, unknown> | null;
+    reason: string;
+    approval: string | null;
+  } | null;
+  handcheck: { why_listed: string; verdict: string | null; note: string | null; pre_filled: string | null } | null;
 }

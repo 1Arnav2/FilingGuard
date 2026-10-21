@@ -150,8 +150,10 @@ Views:
   question, answer, verdict, reason code, and the evidence span.
 - **Method:** short plain-language summary linking to `EVAL.md`.
 
-Read-only API (`src/filingguard/api/routes.py`, data loaded by `api/results.py`; D-074):
+Read-only API (`src/filingguard/api/routes.py`, data loaded by `api/results.py`; D-074, D-075):
 - `GET /api/summary` returns `results/summary.json` unchanged, plus `generated_from`
+- `GET /api/meta` returns `results/dashboard/meta_v1.json` (split counts, freeze tags and commits,
+  when the bars were set, the correction rule, input hashes), plus `generated_from`
 - `GET /api/items?attack_type=&outcome=&label=&verdict=&basis=&condition=&page=&page_size=`
   returns paged item results; `basis` is `corrected` (default) or `as_scored`, and `outcome` and
   `label` apply to `condition` (`treatment` by default)
@@ -159,6 +161,10 @@ Read-only API (`src/filingguard/api/routes.py`, data loaded by `api/results.py`;
   both bases, both verifier modes, and any D-071 correction
 
 The API reads only `results/` (directory set by `FILINGGUARD_RESULTS`, default `results`).
+Per-item data comes from `results/dashboard/items_v1.jsonl`, written by
+`eval/scripts/export_dashboard.py` (only `eval/` reads gold); the corrected basis in it is applied
+by the Phase 5 summary's own overlay. Fixed prose lives in `web/content/` (headline, method); every
+number in it is a declared value or a placeholder filled from the API (`tests/test_web_content.py`).
 In development, `npm run dev` in `web/` forwards `/api` to uvicorn on port 8000.
 
 The dashboard reads committed results only. It makes no live LLM calls.

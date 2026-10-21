@@ -1502,6 +1502,39 @@ gold.
 
 ---
 
+### D-075 — Phase 6b: per-item dashboard export; headline and method as checked content
+**Date:** 2026-10-21 · **Phase:** 6b
+**Context:** The owner asked that the API take the D-071 overlay from the corrections file, not
+re-state it (D-074 (1)), and that item detail show gold, the judge decision and the owner's
+hand-check. Gold sits in `data/gold/` (only `eval/` may read it), the hand-check in
+`review/test_handcheck_v1.xlsx`, and no file holds per-item corrected treatment outcomes.
+**Options considered:** a new export file under `results/` written by an `eval/` script; the API
+reading `data/gold` and the sheet directly; leaving gold out. Owner chose the export.
+**Decision:** (1) `eval/scripts/export_dashboard.py` writes `results/dashboard/items_v1.jsonl` (210
+rows: gold with the hand-check sheet's gold text, answer, figures the scorer read, judge, both bases
+for both conditions, both verifier modes, the correction record, the owner's hand-check) and
+`results/dashboard/meta_v1.json` (split counts, company count, freeze tags with commits, D-056 and
+its date read from this log, correction rule and counts, SHA-256 of every input). The corrected
+basis is applied by importing `overlay` from `summary_test.py`, so it exists once. No existing
+results file changes. (2) The API serves the export as is; `api/results.py` no longer re-states
+anything (supersedes D-074 (1)). Tests: the export rebuilds byte for byte; input hashes match;
+per-item outcomes add up to `summary.json` by basis, condition and attack type, and the corrected
+baseline matches `baseline_summary_corrected_v1.json` by type. (3) Unparseable replies (FG-0020,
+FG-0308) are exported with no text, only the parse error and the reply length. (4) The judge ran
+once per answer (baseline); the export carries one judge decision per item (38 items: 32 false
+premises, 6 true-premise controls). (5) The headline is `web/content/headline.json`; each number
+in it is declared with its `summary.json` path and checked by a test (210 = `n_items`; 93% =
+macro detection 0.9337; 9 = corrected false blocks, 9/197). All three matched; no change. (6)
+Method prose is `web/content/method.json`; every number is a placeholder filled from the API, and
+a test fails on any other number. Bar titles take their thresholds from the summary keys. (7)
+Item detail lives at `/item/?id=` (static export, no dynamic routes). Recharts 3.10.1 pinned.
+**Why:** The dashboard stays results-only and gold stays behind `eval/`, with no logic copied.
+**Trade-off accepted:** A second copy of per-item data in `results/`; the rebuild and hash tests
+keep it tied to its inputs.
+**Revisit if:** any input file changes (the hash test fails first).
+
+---
+
 ## Hurdles
 
 ### H-001 — 503 "high demand" from Gemini on a test call

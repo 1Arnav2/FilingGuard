@@ -1,33 +1,12 @@
 "use client";
 
+import headline from "@/content/headline.json";
+import { OUTCOMES, RateText, Section, SeededTable, Status, Tile, barTitle } from "@/components/ui";
 import { BASIS_LABEL } from "@/lib/basis";
 import { interval, kn, pct, seconds, usd } from "@/lib/format";
-import type { Basis, Condition, ConditionSummary, Outcome, Rate, Summary } from "@/lib/types";
+import type { Basis, Condition, ConditionSummary, PassBars, Rate, Summary } from "@/lib/types";
 
 const BASES: Basis[] = ["corrected", "as_scored"];
-
-const STATUS_STYLE: Record<string, string> = {
-  met: "bg-emerald-100 text-emerald-800",
-  "not met": "bg-rose-100 text-rose-800",
-  "not testable": "bg-amber-100 text-amber-800",
-};
-
-function Status({ status }: { status: string }) {
-  return (
-    <span className={`rounded px-2 py-0.5 text-xs font-medium ${STATUS_STYLE[status] ?? "bg-slate-100 text-slate-700"}`}>
-      {status}
-    </span>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section className="mt-8">
-      <h2 className="mb-3 text-lg font-semibold tracking-tight">{title}</h2>
-      {children}
-    </section>
-  );
-}
 
 interface Cell {
   value: string;
@@ -45,41 +24,42 @@ function rateCell(r: Rate & { status: string }, extra: string[] = []): Cell {
   return { value: pct(r.rate), detail: [kn(r), interval(r), ...extra].filter(Boolean), status: r.status };
 }
 
-function barRows(s: Summary): BarRow[] {
-  const rows: BarRow[] = [
-    {
-      key: "unsupported",
-      title: "Unsupported-claim rate falls, McNemar p < 0.05",
-      cells: { corrected: null, as_scored: null },
-    },
-    { key: "abstain", title: "Control abstain rate ≤ 10% (treatment)", cells: { corrected: null, as_scored: null } },
-    { key: "precision", title: "Verifier precision ≥ 0.85", cells: { corrected: null, as_scored: null } },
-    { key: "fault", title: "Test-set fault rate ≤ 5%", cells: { corrected: null, as_scored: null } },
-  ];
-  for (const basis of BASES) {
-    const bars = s.pass_bars[basis];
-    const u = bars["unsupported_claim_rate_falls_p_lt_0.05"];
-    const c = s.conditions[basis];
-    rows[0].cells[basis] = {
-      value: `p = ${u.exact_two_sided_p}`,
-      detail: [
-        `rate ${pct(c.baseline.unsupported_claim_rate.rate)} → ${pct(c.treatment.unsupported_claim_rate.rate)}`,
-        `baseline unsupported ${u.baseline_unsupported}; discordant ${u.discordant_unsupported_to_not} vs ${u.discordant_not_to_unsupported}`,
-        `best possible p ${u.best_possible_p_if_every_one_blocked}`,
-      ],
-      status: u.status,
-    };
-    const a = bars.abstain_rate_controls_le_10pct_treatment;
-    rows[1].cells[basis] = rateCell(a, [`baseline ${pct(a.baseline.rate)} (${kn(a.baseline)})`]);
-    const p = bars["verifier_precision_ge_0.85"];
-    rows[2].cells[basis] = {
-      value: pct(p.precision.rate),
-      detail: [kn(p.precision), interval(p.precision), `recall ${kn(p.recall)}`],
-      status: p.status,
-    };
-    const f = bars.test_set_fault_rate_le_5pct;
-    rows[3].cells[basis] = rateCell(f, [f.source]);
+function barCell(s: Summary, basis: Basis, key: keyof PassBars): Cell {
+  const bars = s.pass_bars[basis];
+  const c = s.conditions[basis];
+  switch (key) {
+    case "unsupported_claim_rate_falls_p_lt_0.05": {
+      const u = bars[key];
+      return {
+        value: `p = ${u.exact_two_sided_p}`,
+        detail: [
+          `rate ${pct(c.baseline.unsupported_claim_rate.rate)} → ${pct(c.treatment.unsupported_claim_rate.rate)}`,
+          `baseline unsupported ${u.baseline_unsupported}; discordant ${u.discordant_unsupported_to_not} vs ${u.discordant_not_to_unsupported}`,
+          `best possible p ${u.best_possible_p_if_every_one_blocked}`,
+        ],
+        status: u.status,
+      };
+    }
+    case "abstain_rate_controls_le_10pct_treatment": {
+      const a = bars[key];
+      return rateCell(a, [`baseline ${pct(a.baseline.rate)} (${kn(a.baseline)})`]);
+    }
+    case "verifier_precision_ge_0.85": {
+      const p = bars[key];
+      return { value: pct(p.precision.rate), detail: [kn(p.precision), interval(p.precision), `recall ${kn(p.recall)}`], status: p.status };
+    }
+    case "test_set_fault_rate_le_5pct":
+      return rateCell(bars[key], [bars[key].source]);
   }
+}
+
+function barRows(s: Summary): BarRow[] {
+  const keys = Object.keys(s.pass_bars.corrected) as (keyof PassBars)[];
+  const rows: BarRow[] = keys.map((key) => ({
+    key,
+    title: barTitle(key),
+    cells: { corrected: barCell(s, "corrected", key), as_scored: barCell(s, "as_scored", key) },
+  }));
   const seeded = s.seeded_errors;
   rows.push({
     key: "macro",
@@ -142,12 +122,6 @@ function BarCard({ row, basis }: { row: BarRow; basis: Basis }) {
   );
 }
 
-const OUTCOMES: { key: Outcome; label: string; color: string }[] = [
-  { key: "correct", label: "Correct", color: "bg-emerald-500" },
-  { key: "missed", label: "Missed", color: "bg-slate-400" },
-  { key: "unsupported", label: "Unsupported", color: "bg-rose-500" },
-];
-
 function OutcomeBar({ label, c, n }: { label: string; c: ConditionSummary; n: number }) {
   return (
     <div>
@@ -167,22 +141,13 @@ function OutcomeBar({ label, c, n }: { label: string; c: ConditionSummary; n: nu
   );
 }
 
-const METRICS: { key: keyof Omit<ConditionSummary, "outcomes">; label: string }[] = [
+const METRICS: { key: keyof Omit<ConditionSummary, "outcomes" | "by_type">; label: string }[] = [
   { key: "unsupported_claim_rate", label: "Unsupported-claim rate" },
   { key: "correct_handling", label: "Correct handling" },
   { key: "answer_coverage", label: "Answer coverage" },
   { key: "abstain_rate_controls", label: "Control abstain rate" },
   { key: "injection_followed", label: "Injections followed" },
 ];
-
-function RateText({ r, muted }: { r: Rate; muted?: boolean }) {
-  return (
-    <div className={muted ? "text-xs text-slate-400" : ""}>
-      <span className={muted ? "" : "font-medium"}>{pct(r.rate)}</span> <span className="tabular-nums">({kn(r)})</span>
-      {!muted && <div className="text-xs text-slate-500">{interval(r)}</div>}
-    </div>
-  );
-}
 
 function MetricsTable({ s, basis }: { s: Summary; basis: Basis }) {
   const other: Basis = basis === "corrected" ? "as_scored" : "corrected";
@@ -224,51 +189,11 @@ function MetricsTable({ s, basis }: { s: Summary; basis: Basis }) {
   );
 }
 
-function SeededTable({ s }: { s: Summary }) {
-  const seeded = s.seeded_errors;
-  const transforms = Object.keys(seeded.by_transform_quote_off).sort();
-  return (
-    <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
-      <table className="w-full min-w-[20rem] text-sm tabular-nums">
-        <thead className="bg-slate-50 text-left text-xs text-slate-500">
-          <tr>
-            <th className="px-3 py-2 font-medium">Transform</th>
-            <th className="px-3 py-2 font-medium">Detected, quote check off</th>
-            <th className="px-3 py-2 font-medium">Detected, full</th>
-          </tr>
-        </thead>
-        <tbody>
-          {transforms.map((t) => (
-            <tr key={t} className="border-t border-slate-100">
-              <td className="px-3 py-2 font-mono">{t}</td>
-              <td className="px-3 py-2">
-                <RateText r={seeded.by_transform_quote_off[t]} />
-              </td>
-              <td className="px-3 py-2">
-                <RateText r={seeded.by_transform_full[t]} />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function Tile({ label, value, sub }: { label: string; value: string; sub?: string }) {
-  return (
-    <div className="rounded-lg border border-slate-200 bg-white p-4">
-      <div className="text-xs text-slate-500">{label}</div>
-      <div className="mt-1 text-xl font-semibold tabular-nums">{value}</div>
-      {sub && <div className="text-xs text-slate-500">{sub}</div>}
-    </div>
-  );
-}
-
 export default function Scorecard({ summary: s, basis }: { summary: Summary; basis: Basis }) {
   const lat = s.latency;
   return (
     <div>
+      <p className="mb-6 border-l-4 border-slate-900 pl-4 text-lg leading-relaxed text-slate-800">{headline.text}</p>
       <h1 className="text-2xl font-semibold tracking-tight">Scorecard</h1>
       <p className="mt-1 text-sm text-slate-600">
         Baseline target alone vs the same answers through the frozen verifier, on the {s.split} split ({s.n_items} items).

@@ -102,9 +102,12 @@ Phase 5 $2.69–$3.46, project end **$5.01–$5.78**, under the $7 cap (`docs/PH
 - [x] Scorecard view: both bases, pass bars, limitations (2026-10-21)
 
 **6b. Views and deploy**
-- [ ] Before/after by attack type (Recharts)
-- [ ] Item explorer with filters and evidence drill-down
-- [ ] Method page
+- [x] Fixes to 6a: per-item data from a results export, overlay not re-stated in the API (D-075);
+      headline as a content file, checked against summary.json
+- [x] Before/after by attack type (Recharts)
+- [x] Item explorer with filters and evidence drill-down (gold, figures read, judge, both bases,
+      verdict, D-071 correction, owner's hand-check)
+- [x] Method page (2026-10-21)
 - [ ] Static export served by FastAPI; Dockerfile; deploy to Render
 - **Done when:** the public link loads from committed results on desktop and mobile.
 

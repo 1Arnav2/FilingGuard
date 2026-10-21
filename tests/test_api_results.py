@@ -135,3 +135,49 @@ def test_api_reads_no_gold_or_testset_and_no_llm():
                 names = [a.name for a in node.names] + [getattr(node, "module", None) or ""]
                 assert not any(n.startswith(("filingguard.llm", "filingguard.agents", "filingguard.eval"))
                                for n in names), f"{path.name} imports {names}"
+
+
+def test_meta_is_the_file_unchanged(client):
+    body = client.get("/api/meta").json()
+    assert body.pop("generated_from") == "results/dashboard/meta_v1.json"
+    assert body == json.loads((ROOT / "results" / "dashboard" / "meta_v1.json").read_text(encoding="utf-8"))
+    assert body["split"] == {"dev": 90, "test": 210, "total": 300}
+    assert body["pass_bars_set"]["decision"] == "D-056" and body["pass_bars_set"]["date"] == "2026-10-05"
+    assert set(body["freeze_tags"]) == {"target-v1", "testset-v1", "verifier-v1"}
+
+
+def test_every_item_detail_validates_and_has_gold(client):
+    for row in all_items(client):
+        body = client.get(f"/api/items/{row['id']}").json()
+        assert body["gold"]["expected_behavior"] and body["gold"]["text"]
+        assert body["outcomes"]["corrected"]["treatment"]["outcome"] == row["treatment"]["outcome"]
+
+
+def test_unparseable_answers_are_not_reproduced(client):
+    unparseable = [i for i in all_items(client) if i["unparseable"]]
+    assert sorted(i["id"] for i in unparseable) == ["FG-0020", "FG-0308"]
+    for item in unparseable:
+        answer = client.get(f"/api/items/{item['id']}").json()["answer"]
+        assert answer["text"] is None and answer["parse_error"] and answer["unparseable_chars"] > 60_000
+
+
+def test_judge_correction_and_handcheck_fields(client):
+    items = all_items(client)
+    details = {i["id"]: client.get(f"/api/items/{i['id']}").json() for i in items}
+    judged = [d for d in details.values() if d["judge"] is not None]
+    assert len(judged) == 38 and {d["attack_type"] for d in judged} == {"false_premise", "control"}  # 32 false premises, 6 true-premise controls
+    statuses = Counter((d["correction"] or {}).get("status") for d in details.values())
+    assert statuses == {None: 195, "corrected": 11, "kept as scored": 4}
+    checked = [d for d in details.values() if d["handcheck"]]
+    assert len(checked) == 53 and sum(i["handchecked"] for i in items) == 53
+    assert sum(bool(d["handcheck"]["note"]) for d in checked) == 5
+    assert details["FG-0001"]["figures"][0]["metric"] == "CashAndCashEquivalentsAtCarryingValue"
+
+
+@pytest.mark.parametrize("basis", ["corrected", "as_scored"])
+@pytest.mark.parametrize("condition", ["baseline", "treatment"])
+def test_items_add_up_to_summary_by_type(client, basis, condition):
+    by_type = SUMMARY["conditions"][basis][condition]["by_type"]
+    for attack_type, block in by_type.items():
+        counts = Counter(i[condition]["outcome"] for i in all_items(client, basis=basis, attack_type=attack_type))
+        assert counts == Counter(block["outcomes"]), (basis, condition, attack_type)

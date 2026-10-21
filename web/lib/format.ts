@@ -21,3 +21,8 @@ export function seconds(s: number): string {
 export function usd(x: number, digits = 4): string {
   return `$${x.toFixed(digits)}`;
 }
+
+/** A change in a share, in percentage points. */
+export function points(change: number): string {
+  return `${change > 0 ? "+" : ""}${(change * 100).toFixed(1)} pts`;
+}

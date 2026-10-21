@@ -16,6 +16,34 @@ of every session.
 
 ---
 
+## 2026-10-21 — Phase 6b (views): attack types, items, method; fixes to 6a
+**Built:** Per-item export `results/dashboard/items_v1.jsonl` and `meta_v1.json` from
+`eval/scripts/export_dashboard.py` (D-075); the API now serves it as is (overlay no longer re-stated)
+and adds `GET /api/meta`. Headline in `web/content/headline.json`, shown at the top of the scorecard.
+Pages: by attack type (Recharts stacked bars on the chosen basis, counts on both bases, corrected
+bootstrap change in correct share, seeded detection by transform); items (filters for attack type,
+verdict, outcome, failure label and condition, paging, flags for corrected, unparseable and
+hand-checked); item detail at `/item/?id=` (gold, answer and citations, figures the scorer read,
+judge, outcomes on both bases, both verifier modes, D-071 correction or review, owner's hand-check,
+retrieved passages; unparseable replies shown as such); method (question, agents, test-set build,
+split, freeze tags with commit links, scoring and the correction rule, pass bars with D-056 and its
+date, spend by purpose, limitations).
+**Tests:** 33 new or changed: `test_api_results.py` (meta, every detail validates, unparseable not
+reproduced, judge/correction/hand-check counts, per-type sums on both bases), `test_dashboard_export.py`
+(byte-for-byte rebuild, input hashes, corrected baseline by type, corrections from the file),
+`test_web_content.py` (headline numbers against summary.json; method numbers only as resolving
+placeholders). Full suite 264 passed. `web/`: typecheck, lint, static export build pass; `npm audit
+--omit=dev` 0. Browser: every page at desktop and 375 px, no horizontal page scroll, figures match
+summary.json, filters and basis toggle work, no console errors.
+**Broken or unfinished:** Deploy step of 6b: FastAPI serving the static export, Dockerfile, Render,
+env flag for the live target route. Waiting for the owner's review.
+**Numbers worth keeping:** headline checked: 210 items, macro detection 0.9337 (93%), 9 false
+blocks (corrected). Export: 38 judged items, 11 corrected and 4 kept as scored, 53 hand-checked
+items (5 with a note).
+**Spend so far:** $5.2521 (no model calls this session).
+**Next session starts with:** Owner's review of the views, then the 6b deploy step.
+**Commit:** Phase 6b: attack-type, item and method views; per-item results export
+
 ## 2026-10-21 — Phase 6a: results API and dashboard scaffold
 **Built:** Read-only routes `GET /api/summary`, `/api/items`, `/api/items/{id}` (`api/routes.py`,
 `api/results.py`), reading committed `results/` files only, with the D-071 overlay re-stated (D-074).
