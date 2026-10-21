@@ -150,10 +150,16 @@ Views:
   question, answer, verdict, reason code, and the evidence span.
 - **Method:** short plain-language summary linking to `EVAL.md`.
 
-Read-only API (`src/api/`):
-- `GET /api/summary` returns `results/summary.json`
-- `GET /api/items?attack_type=&verdict=&label=` returns paged item results
-- `GET /api/items/{id}` returns one item with trace and evidence
+Read-only API (`src/filingguard/api/routes.py`, data loaded by `api/results.py`; D-074):
+- `GET /api/summary` returns `results/summary.json` unchanged, plus `generated_from`
+- `GET /api/items?attack_type=&outcome=&label=&verdict=&basis=&condition=&page=&page_size=`
+  returns paged item results; `basis` is `corrected` (default) or `as_scored`, and `outcome` and
+  `label` apply to `condition` (`treatment` by default)
+- `GET /api/items/{id}` returns one item: answer, claims, citations, retrieval list, outcomes on
+  both bases, both verifier modes, and any D-071 correction
+
+The API reads only `results/` (directory set by `FILINGGUARD_RESULTS`, default `results`).
+In development, `npm run dev` in `web/` forwards `/api` to uvicorn on port 8000.
 
 The dashboard reads committed results only. It makes no live LLM calls.
 

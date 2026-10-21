@@ -6,9 +6,11 @@ from fastapi import Depends, FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 from filingguard.agents.schema import TargetAgent
+from filingguard.api.routes import router as results_router
 from filingguard.data.filings import COMPANIES
 
 app = FastAPI(title="FilingGuard")
+app.include_router(results_router)
 
 
 class AnswerRequest(BaseModel):

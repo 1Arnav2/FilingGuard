@@ -16,6 +16,27 @@ of every session.
 
 ---
 
+## 2026-10-21 — Phase 6a: results API and dashboard scaffold
+**Built:** Read-only routes `GET /api/summary`, `/api/items`, `/api/items/{id}` (`api/routes.py`,
+`api/results.py`), reading committed `results/` files only, with the D-071 overlay re-stated (D-074).
+Next.js 15.5 app in `web/`: typed client (`lib/api.ts`, `lib/types.ts`), layout with nav and a
+corrected / as-scored toggle kept in the URL, footer naming the source file and spend. Scorecard: six
+pass bars with both bases side by side and a "bases differ" marker, outcome bars and rates for both
+bases, seeded detection by transform, latency and spend, all seven limitations. Attack-type, item
+and method pages are stubs for 6b.
+**Tests:** `tests/test_api_results.py` (19): summary unchanged; per-item outcomes add up to
+summary.json on both bases and conditions; verdicts 194/13/3 and the blocked and flagged ids;
+filters, paging, 422 and 404; no gold/testset path and no llm/agents/eval import in the new modules;
+no LLM client built. Full suite 250 passed. `web/`: typecheck, lint and static export build pass.
+Checked in the browser on desktop and at 375 px: every figure matches summary.json, no horizontal page
+scroll, toggle and nav keep the basis, no console errors.
+**Broken or unfinished:** 6b: by-attack-type charts, item explorer and drill-down, method page,
+FastAPI serving the static export, Dockerfile, Render deploy, env flag for the live target route.
+**Numbers worth keeping:** none new; the dashboard shows summary.json as is.
+**Spend so far:** $5.2521 (no model calls this session).
+**Next session starts with:** Phase 6b after the owner's go-ahead.
+**Commit:** Phase 6a: read-only results API, dashboard scaffold and scorecard
+
 ## 2026-10-19 — Phase 5 steps 9 and 10: owner's hand-check, pass bars, summary.json (Phase 5 done)
 **Built:** Owner's hand-check recorded (sheet committed): all 63 non-pre-filled rows "ok", none wrong;
 agreement with as-scored outcome: random 30 29/30, other rows 38/48 (the gaps are the 11 D-071

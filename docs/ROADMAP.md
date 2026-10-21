@@ -97,9 +97,9 @@ Phase 5 $2.69–$3.46, project end **$5.01–$5.78**, under the $7 cap (`docs/PH
 
 ## Phase 6 — Dashboard (3 days, two sessions)
 **6a. API and scaffold**
-- [ ] Read-only FastAPI routes: summary, items list, item detail
-- [ ] Next.js app scaffold, typed API client, layout
-- [ ] Scorecard view
+- [x] Read-only FastAPI routes: summary, items list, item detail (D-074)
+- [x] Next.js app scaffold, typed API client, layout
+- [x] Scorecard view: both bases, pass bars, limitations (2026-10-21)
 
 **6b. Views and deploy**
 - [ ] Before/after by attack type (Recharts)

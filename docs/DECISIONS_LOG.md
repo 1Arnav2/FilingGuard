@@ -1474,6 +1474,34 @@ few unsupported claims.
 
 ---
 
+### D-074 — Phase 6a: read-only results API and dashboard scaffold choices
+**Date:** 2026-10-21 · **Phase:** 6a
+**Context:** The dashboard needs per-item results on both bases, a dev setup, and pinned web
+dependencies, with no model calls and nothing frozen touched.
+**Options considered:** import the D-071 overlay from `eval/scripts/summary_test.py`, or re-state it
+in the API; CORS on the API for the dev server, or a dev-only rewrite in Next; Next 15.5 or 16.
+**Decision:** (1) `api/results.py` re-states the overlay (a fix replaces outcome and label unless the
+verifier blocked the answer). The scripts folder is not a package and its imports pull in the target
+agent and LLM client. A test pins the result: per-item outcome counts equal `summary.json` on both
+bases and both conditions. (2) The API reads only `results/` (summary, scores, corrections, natural
+verdicts, the runs file for question text); a test fails on any `data/gold` or `data/testset` path
+or any `llm`, `agents` or `eval` import in the new modules. (3) `GET /api/items` takes `condition`
+(default treatment) so `outcome` and `label` filters say which condition they apply to; labels are
+the EVAL §7 set. (4) No CORS: in development the Next dev server forwards `/api` to uvicorn; the
+production build is a static export (`trailingSlash`) for FastAPI to serve in 6b. (5) Next 15.5.28,
+React 19.2.9, TypeScript 5.9.3, Tailwind 4.3.3, exact pins; an npm override lifts Next's bundled
+postcss to 8.5.31 (advisories on older postcss); the remaining `npm audit` findings are in the lint
+plugin only (dev tooling, not shipped). (6) The live `POST /api/target/answer` route is untouched;
+6b turns it on only behind an env flag, off by default (owner's choice). (7) The corrected basis is
+the default view; the other basis is always shown beside it. `summary.sources` paths are shown as
+written; the API never opens them.
+**Why:** Same numbers as Phase 5 by test, not by trust; the dashboard can never spend money or read
+gold.
+**Trade-off accepted:** The overlay exists in two places; the count test is the guard.
+**Revisit if:** the overlay or `summary.json` changes (neither is planned: both are frozen in effect).
+
+---
+
 ## Hurdles
 
 ### H-001 — 503 "high demand" from Gemini on a test call
