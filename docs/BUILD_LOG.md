@@ -16,6 +16,22 @@ of every session.
 
 ---
 
+## 2026-10-21 — Phase 6b fix: correction evidence display
+**Built:** The item page printed `gold: [object Object]` in the D-071 evidence for FG-0302 and
+FG-0306, whose gold evidence is a `{year: value}` object. New `evidenceText()` in `web/lib/format.ts`
+shows numbers with separators, objects as `key: value` pairs and lists joined. `npm test` runs
+`web/tests/*.test.mjs` with Node's built-in test runner; `web/package.json` now declares
+`"type": "module"` so Node loads `format.ts` without a warning.
+**Tests:** `web/tests/format.test.mjs` (2 tests: nested gold evidence, scalars, lists, missing values)
+pass. Typecheck, lint, static export build pass. Full Python suite 264 passed. Browser: the 11
+corrected items and FG-0307 show no "[object" text; FG-0302 reads "2024: 9,992,000,000; 2025:
+13,762,000,000".
+**Broken or unfinished:** 6b deploy step, after the owner's review.
+**Numbers worth keeping:** none.
+**Spend so far:** $5.2521 (no model calls).
+**Next session starts with:** Owner's review, then the 6b deploy step.
+**Commit:** Item page: show nested correction evidence as text, with a web unit test
+
 ## 2026-10-21 — Phase 6b (views): attack types, items, method; fixes to 6a
 **Built:** Per-item export `results/dashboard/items_v1.jsonl` and `meta_v1.json` from
 `eval/scripts/export_dashboard.py` (D-075); the API now serves it as is (overlay no longer re-stated)

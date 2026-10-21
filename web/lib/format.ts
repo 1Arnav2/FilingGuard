@@ -26,3 +26,16 @@ export function usd(x: number, digits = 4): string {
 export function points(change: number): string {
   return `${change > 0 ? "+" : ""}${(change * 100).toFixed(1)} pts`;
 }
+
+/** Any evidence value as text: numbers with separators, objects as `key: value` pairs, lists joined. */
+export function evidenceText(v: unknown): string {
+  if (v === null || v === undefined) return "—";
+  if (typeof v === "number") return v.toLocaleString("en-US", { maximumFractionDigits: 20 });
+  if (Array.isArray(v)) return v.map(evidenceText).join(", ");
+  if (typeof v === "object") {
+    return Object.entries(v as Record<string, unknown>)
+      .map(([k, x]) => `${k}: ${evidenceText(x)}`)
+      .join("; ");
+  }
+  return String(v);
+}

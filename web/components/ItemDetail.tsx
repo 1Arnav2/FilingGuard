@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { Chip, Section } from "@/components/ui";
 import { BASIS_LABEL } from "@/lib/basis";
+import { evidenceText } from "@/lib/format";
 import type { Basis, Condition, ItemDetail as Item } from "@/lib/types";
 
 const BASES: Basis[] = ["corrected", "as_scored"];
@@ -234,7 +235,7 @@ export default function ItemDetail({ item, basis }: { item: Item; basis: Basis }
                 <ul className="space-y-0.5">
                   {Object.entries(item.correction.evidence).map(([k, v]) => (
                     <li key={k}>
-                      <span className="font-mono text-xs text-slate-500">{k}</span>: {String(v)}
+                      <span className="font-mono text-xs text-slate-500">{k}</span>: {evidenceText(v)}
                     </li>
                   ))}
                 </ul>
