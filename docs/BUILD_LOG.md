@@ -28,7 +28,7 @@ judge, outcomes on both bases, both verifier modes, D-071 correction or review, 
 retrieved passages; unparseable replies shown as such); method (question, agents, test-set build,
 split, freeze tags with commit links, scoring and the correction rule, pass bars with D-056 and its
 date, spend by purpose, limitations).
-**Tests:** 33 new or changed: `test_api_results.py` (meta, every detail validates, unparseable not
+**Tests:** 14 new: `test_api_results.py` (meta, every detail validates, unparseable not
 reproduced, judge/correction/hand-check counts, per-type sums on both bases), `test_dashboard_export.py`
 (byte-for-byte rebuild, input hashes, corrected baseline by type, corrections from the file),
 `test_web_content.py` (headline numbers against summary.json; method numbers only as resolving
