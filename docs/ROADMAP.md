@@ -119,7 +119,12 @@ Phase 5 $2.69–$3.46, project end **$5.01–$5.78**, under the $7 cap (`docs/PH
       labelled landmarks, live regions, text alternatives, reduced motion
 - [x] Item detail in decision-first order with the "what happened" sentence
 - [x] Plain names instead of codes (spec 4.7 copy); light and dark mode with a toggle (2026-10-21)
-- [ ] Should and Could tiers (search, sorting, prev/next, section nav, glossary): later
+- [x] Polish after review: plain limitation summaries on Overview, every rate as a percentage, money
+      in verifier reasons, footer spend, Details chevron, new hero eyebrow (D-077)
+- [x] Should tier: search by ID or company, sortable columns, previous/next within the current list,
+      Jump to on Results, Method and item detail, glossary and definition tooltips, H-034 linked to the
+      False blocks view (2026-10-22)
+- [ ] Could tier: later
 - **Done when:** the public link loads from committed results on desktop and mobile.
 
 ## Phase 7 — Ship (1 day)

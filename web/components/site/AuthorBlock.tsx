@@ -1,10 +1,10 @@
-import { author, copy } from "@/lib/content";
+import { author, copy, linkedinUrl } from "@/lib/content";
 
 /** "Built by" with GitHub and LinkedIn links from web/content/author.json; an empty link is hidden. */
 export function AuthorBlock({ id, compact = false }: { id?: string; compact?: boolean }) {
   const links = [
     { href: author.github, label: "GitHub" },
-    { href: author.linkedin, label: "LinkedIn" },
+    { href: linkedinUrl(), label: "LinkedIn" },
     { href: author.email ? `mailto:${author.email}` : "", label: "Email" },
   ].filter((l) => l.href);
   return (

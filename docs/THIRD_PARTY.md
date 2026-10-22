@@ -38,3 +38,6 @@ hero's grid is a two-line CSS background written for this project (`.hero-grid` 
 | typescript, eslint, eslint-config-next, @eslint/eslintrc, @types/* | see package.json | Apache-2.0 / MIT | Checks (dev) |
 
 Removed in Phase 6c: `recharts` and `react-is` (the outcome bars are plain HTML with text alternatives).
+
+Phase 6c polish and Should tier (D-077): no new packages. The definition tooltip (`web/components/site/Term.tsx`)
+is built on the shadcn Popover already listed; the Disclosure, Jump to and glossary are project code.

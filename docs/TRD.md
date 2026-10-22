@@ -159,8 +159,12 @@ Pages (nav: Overview · Results · Items · Method · Limitations · Code):
 - **Item detail** (`/item/?id=`): what happened (outcome, verdict, outcome, plus a sentence from fixed
   templates), expected vs given answer, verifier reasons in plain words, D-071 correction, owner's
   hand-check, judge, and collapsed technical evidence.
-- **Method** and **Limitations** (`/method/`, `/limitations/`): calm text pages; limitations are
-  grouped by a content file and shown in full.
+- **Method** and **Limitations** (`/method/`, `/limitations/`): calm text pages; Method ends with a
+  glossary of every term; limitations are grouped by a content file and shown in full, and Overview
+  shows a plain one-line summary of each, linking to its full text.
+- Should tier (D-077): search and sortable columns on Items; previous/next on item detail within
+  the list the reader came from; Jump to on Results, Method and item detail; definition tooltips
+  that open on hover, focus or tap, with the definition also given to screen readers.
 
 Plain names for every code come from `web/content/labels.json`; page copy from
 `web/content/copy.json`; the author block from `web/content/author.json`; the demo video from
@@ -170,9 +174,11 @@ Read-only API (`src/filingguard/api/routes.py`, data loaded by `api/results.py`;
 - `GET /api/summary` returns `results/summary.json` unchanged, plus `generated_from`
 - `GET /api/meta` returns `results/dashboard/meta_v1.json` (split counts, freeze tags and commits,
   when the bars were set, the correction rule, input hashes), plus `generated_from`
-- `GET /api/items?attack_type=&outcome=&label=&verdict=&basis=&condition=&corrected=&unparseable=&handchecked=&page=&page_size=`
+- `GET /api/items?attack_type=&outcome=&label=&verdict=&basis=&condition=&corrected=&unparseable=&handchecked=&q=&sort=&order=&page=&page_size=`
   returns paged item results; `basis` is `corrected` (default) or `as_scored`, `outcome` and
-  `label` apply to `condition` (`treatment` by default), and the three flags back the Items presets
+  `label` apply to `condition` (`treatment` by default), the three flags back the Items presets, `q`
+  matches the ID or company ticker, and `sort` (id, company, attack_type, baseline, verdict,
+  treatment; outcomes and verdicts by severity) with `order` (asc, desc) orders the list
 - `GET /api/items/{id}` returns one item: answer, claims, citations, retrieval list, outcomes on
   both bases, both verifier modes, and any D-071 correction
 

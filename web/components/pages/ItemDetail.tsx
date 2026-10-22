@@ -11,7 +11,9 @@ import { Disclosure } from "@/components/data/Disclosure";
 import { ErrorState, LoadingState, Panel } from "@/components/data/layout";
 import { OtherBasis } from "@/components/data/outcomes";
 import { LAST_ITEMS_URL } from "@/components/pages/Items";
-import { getItem } from "@/lib/api";
+import { JumpTo } from "@/components/site/JumpTo";
+import { Term } from "@/components/site/Term";
+import { getItem, getItems } from "@/lib/api";
 import { useBasis } from "@/lib/basis";
 import {
   attackTypeName,
@@ -31,6 +33,7 @@ import {
   verdictName,
 } from "@/lib/content";
 import { evidenceText } from "@/lib/format";
+import { itemHref } from "@/lib/links";
 import type { Basis, ItemDetail as Item, Reason } from "@/lib/types";
 import { useData } from "@/lib/useData";
 
@@ -68,7 +71,7 @@ function whatHappened(item: Item, basis: Basis): string[] {
   return lines.filter(Boolean);
 }
 
-function Step({ label, children }: { label: string; children: React.ReactNode }) {
+function Step({ label, children }: { label: React.ReactNode; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1.5">
       <span className="text-xs font-medium text-muted-foreground">{label}</span>
@@ -83,12 +86,12 @@ function WhatHappened({ item, basis }: { item: Item; basis: Basis }) {
   const theirs = item.outcomes[other];
   const differs = mine.baseline.outcome !== theirs.baseline.outcome || mine.treatment.outcome !== theirs.treatment.outcome;
   return (
-    <section aria-labelledby="what-title" className="rounded-xl border bg-card p-5 sm:p-6">
+    <section id="what" tabIndex={-1} aria-labelledby="what-title" className="scroll-mt-24 rounded-xl border bg-card p-5 focus:outline-none sm:p-6">
       <h2 id="what-title" className="text-sm font-medium text-muted-foreground">
         {T.what_happened}
       </h2>
       <div className="mt-4 flex flex-wrap items-end gap-3 sm:gap-5">
-        <Step label={conditionName("baseline")}>
+        <Step label={<Term source="conditions" code="baseline" className="inline-flex min-h-11 items-center sm:min-h-0">{conditionName("baseline")}</Term>}>
           <OutcomeBadge outcome={mine.baseline.outcome} />
         </Step>
         <ArrowRight aria-hidden="true" className="mb-1 size-4 text-muted-foreground" />
@@ -96,7 +99,7 @@ function WhatHappened({ item, basis }: { item: Item; basis: Basis }) {
           <VerdictBadge verdict={item.verdict.full.decision} />
         </Step>
         <ArrowRight aria-hidden="true" className="mb-1 size-4 text-muted-foreground" />
-        <Step label={conditionName("treatment")}>
+        <Step label={<Term source="conditions" code="treatment" className="inline-flex min-h-11 items-center sm:min-h-0">{conditionName("treatment")}</Term>}>
           <OutcomeBadge outcome={mine.treatment.outcome} />
         </Step>
       </div>
@@ -138,7 +141,7 @@ function Gold({ item }: { item: Item }) {
       ? "Not in the filing"
       : `${String(g.printed_as ?? evidenceText(g.value))}${g.printed_scale ? ` (${String(g.printed_scale)})` : ""}`;
   return (
-    <Panel>
+    <Panel id="expected">
       <h2 className="text-sm font-medium text-muted-foreground">{T.gold_title}</h2>
       <dl className="mt-3 divide-y">
         <Field name="Expected behaviour">{expectedName(item.gold.expected_behavior)}</Field>
@@ -159,7 +162,7 @@ function Gold({ item }: { item: Item }) {
 function Answer({ item }: { item: Item }) {
   const a = item.answer;
   return (
-    <Panel>
+    <Panel id="answer">
       <h2 className="text-sm font-medium text-muted-foreground">{T.answer_title}</h2>
       {a.parse_error ? (
         <div className="mt-3 space-y-2 text-sm">
@@ -185,7 +188,11 @@ function ReasonList({ reasons }: { reasons: Reason[] }) {
       {reasons.map((r, i) => (
         <li key={i} className="text-sm">
           <p>
-            <span className="font-medium">{reasonName(r.code)}</span>{" "}
+            <span className="font-medium">
+              <Term source="reason_codes" code={r.code}>
+                {reasonName(r.code)}
+              </Term>
+            </span>{" "}
             <span className="text-muted-foreground">
               ({reasonBasisName(r.basis)}
               {r.blocking ? ", blocking" : ""})
@@ -205,7 +212,7 @@ function Verifier({ item }: { item: Item }) {
   const off = item.verdict.quote_off;
   const differs = full.decision !== off.decision || full.reasons.map((r) => r.code).join() !== off.reasons.map((r) => r.code).join();
   return (
-    <Panel>
+    <Panel id="verifier">
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-sm font-medium text-muted-foreground">{T.verifier_title}</h2>
         <VerdictBadge verdict={full.decision} />
@@ -231,7 +238,7 @@ function Correction({ item }: { item: Item }) {
   const c = item.correction;
   if (!c) return null;
   return (
-    <Panel>
+    <Panel id="correction">
       <h2 className="text-sm font-medium text-muted-foreground">{T.correction_title}</h2>
       <dl className="mt-3 divide-y">
         <Field name="Status">{c.status === "corrected" ? "Corrected" : "Kept as scored"}</Field>
@@ -260,7 +267,7 @@ function HandCheck({ item }: { item: Item }) {
   const h = item.handcheck;
   if (!h) return null;
   return (
-    <Panel>
+    <Panel id="handcheck">
       <h2 className="text-sm font-medium text-muted-foreground">{T.handcheck_title}</h2>
       <dl className="mt-3 divide-y">
         <Field name="Why it was checked">{handcheckReasons(h.why_listed)}</Field>
@@ -276,7 +283,7 @@ function Judge({ item }: { item: Item }) {
   if (!j) return null;
   const yn = (v: boolean | null) => (v === null ? "—" : v ? "Yes" : "No");
   return (
-    <Panel>
+    <Panel id="judge">
       <h2 className="text-sm font-medium text-muted-foreground">{T.judge_title}</h2>
       <dl className="mt-3 divide-y">
         <Field name="Rejects the premise">{yn(j.rejects_premise)}</Field>
@@ -293,7 +300,7 @@ function Judge({ item }: { item: Item }) {
 function Evidence({ item }: { item: Item }) {
   const yn = (v: boolean | null) => (v === null ? "—" : v ? "Yes" : "No");
   return (
-    <section aria-labelledby="evidence-title" className="space-y-3">
+    <section id="evidence" tabIndex={-1} aria-labelledby="evidence-title" className="scroll-mt-24 space-y-3 focus:outline-none">
       <h2 id="evidence-title" className="text-sm font-medium text-muted-foreground">
         {T.evidence_title}
       </h2>
@@ -342,6 +349,70 @@ function Evidence({ item }: { item: Item }) {
   );
 }
 
+/** The stored Items view (filters and sort) as API filters, or the default list. */
+function storedFilters(): Record<string, string> {
+  try {
+    const url = sessionStorage.getItem(LAST_ITEMS_URL);
+    if (!url) return {};
+    const params = new URLSearchParams(url.split("?")[1] ?? "");
+    params.delete("page");
+    params.delete("preset");
+    params.delete("basis");
+    return Object.fromEntries(params);
+  } catch {
+    return {};
+  }
+}
+
+/** Previous and next question within the list the reader came from (or all questions by ID). */
+function PrevNext({ id, basis }: { id: string; basis: Basis }) {
+  const [ids, setIds] = useState<string[] | null>(null);
+  useEffect(() => {
+    let live = true;
+    const ofPage = (page: { items: { id: string }[] }) => page.items.map((r) => r.id);
+    getItems({ ...storedFilters(), basis, page: 1, page_size: 500 })
+      .then(ofPage)
+      .then((list) => (list.includes(id) ? list : getItems({ basis, page: 1, page_size: 500 }).then(ofPage)))
+      .then(
+        (list) => live && setIds(list),
+        () => live && setIds([]),
+      );
+    return () => {
+      live = false;
+    };
+  }, [id, basis]);
+  if (!ids || !ids.includes(id)) return null;
+  const i = ids.indexOf(id);
+  const prev = i > 0 ? ids[i - 1] : null;
+  const next = i < ids.length - 1 ? ids[i + 1] : null;
+  const link = "inline-flex min-h-11 items-center gap-1.5 rounded-lg border px-3 text-sm font-medium hover:bg-muted sm:min-h-9";
+  return (
+    <nav aria-label="Questions in your list" className="flex flex-wrap items-center justify-between gap-3">
+      {prev ? (
+        <Link href={itemHref(prev, basis)} className={link}>
+          <ArrowLeft aria-hidden="true" className="size-4" />
+          {T.prev}
+          <span className="font-mono text-xs text-muted-foreground">{prev}</span>
+        </Link>
+      ) : (
+        <span />
+      )}
+      <span className="text-sm text-muted-foreground tabular-nums">
+        {template(T.position, { index: String(i + 1), total: String(ids.length) })}
+      </span>
+      {next ? (
+        <Link href={itemHref(next, basis)} className={link}>
+          <span className="font-mono text-xs text-muted-foreground">{next}</span>
+          {T.next}
+          <ArrowRight aria-hidden="true" className="size-4" />
+        </Link>
+      ) : (
+        <span />
+      )}
+    </nav>
+  );
+}
+
 function ItemBody({ item, basis }: { item: Item; basis: Basis }) {
   const [back, setBack] = useState("/items/");
   useEffect(() => {
@@ -369,6 +440,19 @@ function ItemBody({ item, basis }: { item: Item; basis: Basis }) {
         <h1 className="font-mono text-2xl font-semibold tracking-tight">{item.id}</h1>
         <p className="max-w-3xl text-xl leading-relaxed">{item.question}</p>
       </header>
+      <PrevNext id={item.id} basis={basis} />
+      <JumpTo
+        sections={[
+          { id: "what", label: T.what_happened },
+          { id: "expected", label: T.gold_title },
+          { id: "answer", label: T.answer_title },
+          { id: "verifier", label: T.verifier_title },
+          ...(item.correction ? [{ id: "correction", label: T.correction_title }] : []),
+          ...(item.handcheck ? [{ id: "handcheck", label: T.handcheck_title }] : []),
+          ...(item.judge ? [{ id: "judge", label: T.judge_title }] : []),
+          { id: "evidence", label: T.evidence_title },
+        ]}
+      />
       <WhatHappened item={item} basis={basis} />
       <div className="grid gap-6 md:grid-cols-2">
         <Gold item={item} />

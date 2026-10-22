@@ -5,10 +5,16 @@ import { useId, useState } from "react";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { copy, definition, type GlossarySource } from "@/lib/content";
+import { cn } from "@/lib/utils";
 
 /** A dotted-underlined term whose definition opens on hover, focus or tap. Screen readers get the
  * definition as the term's description; focus never leaves the term. */
-export function Term({ source, code, children }: { source: GlossarySource; code: string; children: React.ReactNode }) {
+export function Term({ source, code, className, children }: {
+  source: GlossarySource;
+  code: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
   const [open, setOpen] = useState(false);
   const id = useId();
   const text = definition(source, code);
@@ -23,7 +29,12 @@ export function Term({ source, code, children }: { source: GlossarySource; code:
           onPointerLeave={(e) => e.pointerType === "mouse" && setOpen(false)}
           onFocus={() => setOpen(true)}
           onBlur={() => setOpen(false)}
-          className="cursor-help text-left underline decoration-muted-foreground decoration-dotted underline-offset-4"
+          onClick={(e) => {
+            // A tap focuses (opens) then clicks; the default toggle would close it again at once.
+            e.preventDefault();
+            setOpen(true);
+          }}
+          className={cn("cursor-help text-left underline decoration-muted-foreground decoration-dotted underline-offset-4", className)}
         >
           {children}
         </button>

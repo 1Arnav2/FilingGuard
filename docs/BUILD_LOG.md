@@ -16,6 +16,29 @@ of every session.
 
 ---
 
+## 2026-10-22 — Phase 6c: polish and Should tier
+**Built:** In two commits (the first was the previous session's work, verified and committed before
+any change). Polish: plain limitation summaries on Overview linking to the full text; every rate and
+threshold as a percentage; footer spend "$5.25 of the $7 cap"; verifier reason figures as money;
+Details with a chevron; no empty gap in the first stat card; hero eyebrow "An evaluation of an AI
+finance research agent"; LinkedIn placeholder set as asked (hidden until a real URL), email empty.
+Should tier: API search (`q`) and sorting (`sort`, `order`); Items search box, sortable headers with
+`aria-sort`, sort select on phones; previous/next on item detail within the current list; Jump to on
+Results, Method and item detail; glossary on Method; definition tooltips (hover, focus, tap); H-034
+linked to the False blocks view; anchors scroll after data loads. D-077.
+**Tests:** 284 Python tests pass (search, sorting, default order, limitation summaries, glossary and
+metric labels, formats in placeholders, author links); 4 web tests (money, evidence). Typecheck, lint
+and static export build pass. Production check (API + export on one origin): 6 pages × 1440/375 ×
+light/dark, about 4,300 text elements measured, 0 contrast failures, no horizontal overflow; tap
+targets ≥ 44 px at 375 px except inline FG links inside limitation sentences (inline exception).
+Fixed during the check: tooltips closing on tap; the item-detail step labels at 16 px. Functional:
+preset → sort by company descending → open the 3rd item gives "3 of 9" with the right neighbours.
+**Broken or unfinished:** Could tier. LinkedIn URL for the owner. Deploy step of 6b.
+**Numbers worth keeping:** none new. Screenshots: FilingGuard_screens/v3 (24, outside the repo).
+**Spend so far:** $5.2521 (no model calls).
+**Next session starts with:** Owner's review, then the deploy step.
+**Commit:** Phase 6c polish and Should tier, part 2: item detail navigation and tooltips; docs
+
 ## 2026-10-21 — Phase 6c: dashboard redesign (Must tier)
 **Built:** New look and structure from the owner's DESIGN_SPEC.md, Must tier (D-076). Pages:
 Overview (headline with Border Beam, three Number Ticker stat cards linked to their evidence, an

@@ -106,9 +106,14 @@ export function reasonDetail(detail: string): string {
     .replace(/-?\d+(?:\.\d+)?e[+-]\d+/gi, (m) => money(Number(m)));
 }
 
+/** The LinkedIn URL, or "" while author.json still holds the placeholder text. */
+export function linkedinUrl(): string {
+  return author.linkedin.startsWith("https://") ? author.linkedin : "";
+}
+
 /** "Get in touch": LinkedIn if set, else email, else the author block on the page. */
 export function contactHref(): string {
-  if (author.linkedin) return author.linkedin;
+  if (linkedinUrl()) return linkedinUrl();
   if (author.email) return `mailto:${author.email}`;
   return "#author";
 }

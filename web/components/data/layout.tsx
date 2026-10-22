@@ -37,8 +37,12 @@ export function Section({ id, title, intro, children, className }: {
   );
 }
 
-export function Panel({ className, children }: { className?: string; children: React.ReactNode }) {
-  return <div className={cn("rounded-xl border bg-card p-5", className)}>{children}</div>;
+export function Panel({ id, className, children }: { id?: string; className?: string; children: React.ReactNode }) {
+  return (
+    <div id={id} tabIndex={id ? -1 : undefined} className={cn("scroll-mt-24 rounded-xl border bg-card p-5 focus:outline-none", className)}>
+      {children}
+    </div>
+  );
 }
 
 /** Small label above a large number, Mercury style. */

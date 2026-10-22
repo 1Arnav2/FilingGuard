@@ -1,8 +1,8 @@
 {
-  "note": "Author block on Overview and in the footer. Fill in linkedin with the full profile URL (https://www.linkedin.com/in/...) and, if wanted, email; an empty value hides that link. 'Get in touch' goes to LinkedIn, else email, else the author block.",
+  "note": "Author block on Overview and in the footer. Replace PASTE-YOUR-LINKEDIN-URL-HERE with the full profile URL (https://www.linkedin.com/in/...); until then the LinkedIn link is hidden. Email: leave empty to hide it. 'Get in touch' goes to LinkedIn, else email, else the author block.",
   "name": "Arnav Ambre",
   "github": "https://github.com/1Arnav2",
-  "linkedin": "",
+  "linkedin": "PASTE-YOUR-LINKEDIN-URL-HERE",
   "email": "",
   "repo": "https://github.com/1Arnav2/FilingGuard"
 }

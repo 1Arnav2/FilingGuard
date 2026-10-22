@@ -1569,6 +1569,40 @@ after confirming its licence.
 
 ---
 
+### D-077 — Phase 6c polish and Should tier
+**Date:** 2026-10-22 · **Phase:** 6c
+**Context:** The owner approved the Must tier and asked for a polish pass and the spec's Should tier.
+**Decisions (minor, logged):**
+(1) Overview limitations: plain one-line summaries in `web/content/limitations.json` (no internal
+codes; numbers as placeholders), each linking to `/limitations/#limitation-N`, where the original
+text stays unchanged; a test checks one summary per limitation and no internal codes. The shared
+loader now scrolls to a URL anchor once data has rendered (it also makes `/attack-types/` land on its
+section). (2) Every rate and threshold shown as a percentage (thresholds read from the summary keys
+and multiplied for display: ≥ 85%, ≤ 5%, ≥ 80%); p-values stay as p. (3) Content placeholders take
+display formats (`|usd0`, `|usd2`, `|pct0`, `|pct1`); the footer reads "$5.25 of the $7 cap". (4)
+Verifier reason details: each figure in scientific notation is shown as money ($3,770M) and the
+metric in plain words; every such figure in the verifier's details is a dollar amount (checked
+against all 23 distinct details); the recorded text stays in the element's title. (5) Author: the
+owner set LinkedIn to the placeholder `PASTE-YOUR-LINKEDIN-URL-HERE`; the site treats any value that
+is not an https URL as unset, so no broken link is published; email left empty; "Get in touch" goes
+to LinkedIn, else email, else the author block. (6) Search (`q`, ID or company ticker, case-insensitive,
+at most 40 characters) and sorting (`sort`, `order`) are done in the API, since Items is paged.
+Outcomes and verdicts sort by severity; ties break on the ID. (7) Previous/next on item detail use the
+last Items view (kept in session storage as before): the API returns that filtered, sorted list in
+one call (page size 500); if the item is not in it, the full list by ID is used. (8) Tooltips open on
+hover, focus and tap; a click always opens (a tap fires focus then click, and the default toggle would
+close it again); Escape, tapping elsewhere, blur or the pointer leaving closes it; the definition is
+also the term's accessible description. Definitions come from `labels.json` and `copy.json`; the
+glossary on Method lists them all. (9) Jump to: a sticky link row on wide screens, a select on narrow
+ones. (10) The H-034 limitation links to the "False blocks" Items view.
+**Why:** The owner's polish list and the spec's Should tier, with every number still bound to
+`results/` by test.
+**Trade-off accepted:** Inline FG-xxxx links inside limitation sentences stay below 44 px on phones
+(the inline-text exception in WCAG 2.5.8).
+**Revisit if:** the owner fills in the LinkedIn URL (no code change needed) or wants the Could tier.
+
+---
+
 ## Hurdles
 
 ### H-001 — 503 "high demand" from Gemini on a test call
