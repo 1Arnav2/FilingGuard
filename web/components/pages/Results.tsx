@@ -4,9 +4,12 @@ import Link from "next/link";
 
 import { StatusBadge } from "@/components/data/badges";
 import { DataTable } from "@/components/data/DataTable";
+import { Disclosure } from "@/components/data/Disclosure";
 import { Figure, Load, PageHeader, Panel, Section } from "@/components/data/layout";
 import { OtherBasis, OutcomeBar, OutcomeCounts, OUTCOMES, sameCounts } from "@/components/data/outcomes";
+import { JumpTo } from "@/components/site/JumpTo";
 import { LimitationText } from "@/components/site/LimitationText";
+import { Term } from "@/components/site/Term";
 import { getSummary } from "@/lib/api";
 import { bars, type Bar } from "@/lib/bars";
 import { useBasis } from "@/lib/basis";
@@ -23,7 +26,7 @@ import {
   transformDefinition,
   transformName,
 } from "@/lib/content";
-import { interval, kn, pct, points, seconds, usd } from "@/lib/format";
+import { interval, kn, pct, points, seconds, share, usd } from "@/lib/format";
 import type { Basis, Condition, ConditionSummary, Rate, Summary } from "@/lib/types";
 import { useData } from "@/lib/useData";
 
@@ -80,7 +83,7 @@ function barValue(s: Summary, key: string, basis: Basis): BarValue | null {
     case "seeded_macro":
       return basis === "corrected"
         ? {
-            value: String(seeded.macro_detection_T1_T3_T4_T5_T6_quote_off),
+            value: share(seeded.macro_detection_T1_T3_T4_T5_T6_quote_off),
             sub: ["Average over the planted error kinds below"],
             details: [],
             status: seeded.macro_status,
@@ -123,14 +126,13 @@ function BarCard({ bar, s, basis }: { bar: Bar; s: Summary; basis: Basis }) {
       </div>
       <p className="text-sm leading-relaxed">{bar.explain}</p>
       {mine.details.length > 0 && (
-        <details className="group text-sm">
-          <summary className="inline-flex min-h-11 cursor-pointer items-center font-medium sm:min-h-0">{copy.results.details}</summary>
-          <ul className="mt-2 space-y-1 text-muted-foreground tabular-nums">
+        <Disclosure summary={copy.results.details}>
+          <ul className="space-y-1 text-sm text-muted-foreground tabular-nums">
             {mine.details.map((d) => (
               <li key={d}>{d}</li>
             ))}
           </ul>
-        </details>
+        </Disclosure>
       )}
     </Panel>
   );
@@ -148,7 +150,11 @@ function Outcomes({ s, basis }: { s: Summary; basis: Basis }) {
         const theirs = s.conditions[otherOf(basis)][c].outcomes;
         return (
           <div key={c} className="space-y-2">
-            <h3 className="text-sm font-medium">{conditionName(c)}</h3>
+            <h3 className="text-sm font-medium">
+              <Term source="conditions" code={c}>
+                {conditionName(c)}
+              </Term>
+            </h3>
             <OutcomeBar label={conditionName(c)} counts={mine} n={s.n_items} />
             <OutcomeCounts counts={mine} basis={basis} condition={c} />
             {!sameCounts(mine, theirs) && <OtherBasis basis={basis}>{countsText(theirs)}</OtherBasis>}
@@ -191,8 +197,11 @@ function Metrics({ s, basis }: { s: Summary; basis: Basis }) {
           primary: true,
           cell: (k) => (
             <div>
-              <div className="font-medium">{copy.results.metrics[k].name}</div>
-              <div className="text-xs text-muted-foreground">{copy.results.metrics[k].definition}</div>
+              <div className="font-medium">
+                <Term source="metrics" code={k}>
+                  {copy.results.metrics[k].name}
+                </Term>
+              </div>
             </div>
           ),
         },
@@ -212,7 +221,11 @@ function ByAttackType({ s, basis }: { s: Summary; basis: Basis }) {
         return (
           <li key={t} className="grid gap-4 p-5 lg:grid-cols-[14rem_1fr_14rem]">
             <div>
-              <h3 className="font-medium">{attackTypeName(t)}</h3>
+              <h3 className="font-medium">
+                <Term source="attack_types" code={t}>
+                  {attackTypeName(t)}
+                </Term>
+              </h3>
               <p className="text-sm text-muted-foreground">{attackTypeDefinition(t)}</p>
               <p className="mt-1 text-xs text-muted-foreground tabular-nums">{s.conditions[basis].baseline.by_type[t].n} questions</p>
             </div>
@@ -263,8 +276,8 @@ function Seeded({ s }: { s: Summary }) {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3 text-sm">
         <span>
-          Average detection <span className="font-semibold tabular-nums">{seeded.macro_detection_T1_T3_T4_T5_T6_quote_off}</span>, bar{" "}
-          <span className="tabular-nums">{seeded.macro_threshold}</span>
+          Average detection <span className="font-semibold tabular-nums">{share(seeded.macro_detection_T1_T3_T4_T5_T6_quote_off)}</span>, bar{" "}
+          <span className="tabular-nums">≥ {pct(seeded.macro_threshold, 0)}</span>
         </span>
         <StatusBadge status={seeded.macro_status} />
       </div>
@@ -280,7 +293,10 @@ function Seeded({ s }: { s: Summary }) {
             cell: (k) => (
               <div>
                 <div className="font-medium">
-                  {transformName(k)} <span className="font-mono text-xs text-muted-foreground">{k}</span>
+                  <Term source="transforms" code={k}>
+                    {transformName(k)}
+                  </Term>{" "}
+                  <span className="font-mono text-xs text-muted-foreground">{k}</span>
                 </div>
                 <div className="text-xs text-muted-foreground">{transformDefinition(k)}</div>
               </div>
@@ -315,13 +331,30 @@ function ResultsBody({ s }: { s: Summary }) {
     <div>
       <PageHeader title={r.title}>
         <p>
-          {r.intro} Showing <strong className="font-medium text-foreground">{basisName(basis)}</strong>; the other basis appears
+          {r.intro} Showing{" "}
+          <strong className="font-medium text-foreground">
+            <Term source="bases" code={basis}>
+              {basisName(basis)}
+            </Term>
+          </strong>
+          ; the other basis appears
           only where it differs.{" "}
           <Link href="/method/#scoring" className="underline underline-offset-4">
             {copy.explainer.title}
           </Link>
         </p>
       </PageHeader>
+      <JumpTo
+        sections={[
+          { id: "bars", label: r.bars_title },
+          { id: "outcomes", label: r.outcomes_title },
+          { id: "metrics", label: r.metrics_title },
+          { id: "by-attack-type", label: r.types_title },
+          { id: "seeded", label: r.seeded_title },
+          { id: "latency", label: r.latency_title },
+          { id: "limits", label: copy.limitations.title },
+        ]}
+      />
       <Section id="bars" title={r.bars_title}>
         <div className="grid gap-4 md:grid-cols-2">
           {bars(s).map((b) => (

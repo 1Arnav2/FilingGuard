@@ -24,6 +24,20 @@ Label = Literal["wrong_number", "wrong_unit", "wrong_period", "stale_restated", 
                 "retrieval_miss", "other"]  # EVAL §7
 
 
+SortKey = Literal["id", "company", "attack_type", "baseline", "verdict", "treatment"]
+OUTCOME_RANK = {"correct": 0, "missed": 1, "unsupported": 2}
+VERDICT_RANK = {"pass": 0, "flag": 1, "block": 2}
+# Outcomes and verdicts sort by severity, not alphabetically; ties break on the item ID.
+SORT_KEYS: dict[str, Any] = {
+    "id": lambda r: r.id,
+    "company": lambda r: r.company,
+    "attack_type": lambda r: r.attack_type,
+    "baseline": lambda r: OUTCOME_RANK[r.baseline.outcome],
+    "verdict": lambda r: VERDICT_RANK[r.verdict],
+    "treatment": lambda r: OUTCOME_RANK[r.treatment.outcome],
+}
+
+
 class Open(BaseModel):
     """A summary section: the typed fields the dashboard uses, every other key passed through."""
 
@@ -290,10 +304,15 @@ def meta() -> dict[str, Any]:
 def items(attack_type: AttackType | None = None, outcome: Outcome | None = None, label: Label | None = None,
           verdict: Decision | None = None, basis: Basis = "corrected", condition: Condition = "treatment",
           corrected: bool | None = None, unparseable: bool | None = None, handchecked: bool | None = None,
+          q: str | None = Query(None, max_length=40), sort: SortKey = "id", order: Literal["asc", "desc"] = "asc",
           page: int = Query(1, ge=1), page_size: int = Query(50, ge=1, le=500)) -> ItemPage:
-    """The test items, filtered; `outcome` and `label` apply to `condition` on `basis`; the three flags
-    select D-071 corrected rows, unparseable replies and rows in the owner's hand-check."""
+    """The test items, filtered and sorted; `outcome` and `label` apply to `condition` on `basis`; the three
+    flags select D-071 corrected rows, unparseable replies and rows in the owner's hand-check; `q` matches
+    the ID or the company ticker, ignoring case."""
     rows = [_row(item, basis) for item in load().items.values()]
+    if q and q.strip():
+        needle = q.strip().lower()
+        rows = [r for r in rows if needle in r.id.lower() or needle in r.company.lower()]
     for flag, wanted in (("corrected", corrected), ("unparseable", unparseable), ("handchecked", handchecked)):
         if wanted is not None:
             rows = [r for r in rows if getattr(r, flag) == wanted]
@@ -305,6 +324,7 @@ def items(attack_type: AttackType | None = None, outcome: Outcome | None = None,
         rows = [r for r in rows if getattr(r, condition).outcome == outcome]
     if label:
         rows = [r for r in rows if getattr(r, condition).label == label]
+    rows.sort(key=lambda r: (SORT_KEYS[sort](r), r.id), reverse=order == "desc")
     start = (page - 1) * page_size
     return ItemPage(total=len(rows), page=page, page_size=page_size, basis=basis, items=rows[start:start + page_size])
 

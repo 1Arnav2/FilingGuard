@@ -49,3 +49,11 @@ export function count(n: number): string {
 export function share(rate: number): string {
   return `${(rate * 100).toFixed(1)}%`;
 }
+
+/** A dollar amount: millions with separators at a million and above ($3,770M), whole dollars below. */
+export function money(v: number): string {
+  const sign = v < 0 ? "-" : "";
+  const a = Math.abs(v);
+  if (a >= 1e6) return `${sign}$${(a / 1e6).toLocaleString("en-US", { maximumFractionDigits: a < 1e7 ? 1 : 0 })}M`;
+  return `${sign}$${a.toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
+}

@@ -1,7 +1,19 @@
 {
-  "note": "Groups for results/summary.json limitations, by position in that list. Every position appears exactly once (checked by tests/test_web_content.py). The text itself is never copied here.",
+  "note": "Groups and plain one-line summaries for results/summary.json limitations, by position in that list. Every position appears exactly once in the groups and has exactly one summary (checked by tests/test_web_content.py). Summaries hold no internal codes; their numbers are placeholders. The original text is shown unchanged on the Limitations page.",
   "groups": [
     { "id": "headline", "title": "Affect the headline numbers", "items": [0, 1, 5] },
     { "id": "scope", "title": "Affect scope or single questions", "items": [2, 3, 4, 6] }
-  ]
+  ],
+  "summaries": [
+    "The verifier has known faults, found on the test set and left unfixed; they cause {summary:seeded_errors.false_block_rate.corrected.k} correct answers to be blocked.",
+    "The scorer and the verifier read figures with the same code, so they make the same mistakes.",
+    "One test question is probably mislabelled: it was marked unanswerable, but the filing does give the figure.",
+    "{summary:conditions.corrected.baseline.unparseable} of the agent's replies ran too long to be read; they count as Missed.",
+    "The detector for planted instructions misses notes that do not look like instructions to an AI.",
+    "Planted errors are not the same as the agent's natural mistakes, and the development results were measured on the data used for tuning.",
+    "Latency was measured on {summary:latency.run} of a {summary:latency.sample}-question sample."
+  ],
+  "links": {
+    "0": { "label": "See the false blocks", "preset": "false_blocks" }
+  }
 }

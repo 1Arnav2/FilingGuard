@@ -9,7 +9,6 @@ import { Load, Panel } from "@/components/data/layout";
 import { OtherBasis } from "@/components/data/outcomes";
 import { AuthorBlock } from "@/components/site/AuthorBlock";
 import { ExplainerBody } from "@/components/site/Explainer";
-import { LimitationText } from "@/components/site/LimitationText";
 import { AnimatedBeam } from "@/components/ui/animated-beam";
 import { BentoGrid } from "@/components/ui/bento-grid";
 import { BorderBeam } from "@/components/ui/border-beam";
@@ -17,7 +16,7 @@ import { NumberTicker } from "@/components/ui/number-ticker";
 import { getMeta, getSummary } from "@/lib/api";
 import { bars } from "@/lib/bars";
 import { useBasis } from "@/lib/basis";
-import { basisName, copy, fill, headline, limitationGroups, media, resolvePath, statusName } from "@/lib/content";
+import { basisName, contactHref, copy, fill, headline, limitationGroups, media, resolvePath, statusName } from "@/lib/content";
 import { count, share } from "@/lib/format";
 import { presetHref } from "@/lib/links";
 import type { Basis, Meta, Summary } from "@/lib/types";
@@ -36,7 +35,7 @@ function StatCard({ stat, s, basis }: { stat: Stat; s: Summary; basis: Basis }) 
   const href = stat.preset ? presetHref(stat.preset, basis) : (stat.href ?? "/results/");
   const otherText = `${format(otherValue)}${stat.of ? ` of ${count(resolvePath(s, stat.of, other) as number)}` : ""}`;
   return (
-    <Panel className="flex flex-col justify-between gap-6">
+    <Panel className="flex flex-col gap-4">
       <div>
         <h2 className="text-sm font-medium text-muted-foreground">{stat.label}</h2>
         <p className="mt-3 text-5xl font-semibold tracking-tight">
@@ -52,7 +51,7 @@ function StatCard({ stat, s, basis }: { stat: Stat; s: Summary; basis: Basis }) 
           </div>
         )}
       </div>
-      <div className="space-y-3">
+      <div className="mt-auto space-y-3">
         <p className="text-sm leading-relaxed">{stat.caption}</p>
         <Link href={href} className="inline-flex min-h-11 items-center gap-1 text-sm font-medium underline underline-offset-4 sm:min-h-0">
           {stat.preset ? "See these questions" : "See the results"}
@@ -175,7 +174,10 @@ function Limits({ s }: { s: Summary }) {
       <ul className="mt-4 space-y-3">
         {group?.items.map((i) => (
           <li key={i} className="text-sm leading-relaxed">
-            <LimitationText text={s.limitations[i]} />
+            {fill(limitationGroups.summaries[i], { summary: s })}{" "}
+            <Link href={`/limitations/#limitation-${i}`} className="inline-flex min-h-11 items-center font-medium whitespace-nowrap underline underline-offset-4 sm:min-h-0">
+              {copy.overview.limits_more}
+            </Link>
           </li>
         ))}
       </ul>
@@ -236,7 +238,7 @@ function OverviewBody({ s, m }: { s: Summary; m: Meta }) {
         <Limits s={s} />
         <div className="flex flex-col gap-4">
           <Panel>
-            <a href="#author" className="text-base leading-relaxed font-medium underline underline-offset-4">
+            <a href={contactHref()} className="text-base leading-relaxed font-medium underline underline-offset-4">
               {copy.overview.outreach}
             </a>
           </Panel>

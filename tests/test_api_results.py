@@ -205,3 +205,31 @@ def test_preset_controls_not_answered_matches_summary(client):
 
 def test_bad_flag_is_rejected(client):
     assert client.get("/api/items", params={"corrected": "maybe"}).status_code == 422
+
+
+def test_search_matches_id_or_company_ignoring_case(client):
+    assert [i["id"] for i in all_items(client, q="fg-0302")] == ["FG-0302"]
+    aapl = all_items(client, q="aapl")
+    assert aapl and all(i["company"] == "AAPL" for i in aapl)
+    assert all_items(client, q="  ") == all_items(client)
+    assert all_items(client, q="zzzz") == []
+    assert client.get("/api/items", params={"q": "x" * 41}).status_code == 422
+
+
+def test_sorting(client):
+    by_id_desc = [i["id"] for i in all_items(client, sort="id", order="desc")]
+    assert by_id_desc == sorted(by_id_desc, reverse=True)
+    rank = {"correct": 0, "missed": 1, "unsupported": 2}
+    worst_first = all_items(client, basis="as_scored", sort="baseline", order="desc")
+    ranks = [rank[i["baseline"]["outcome"]] for i in worst_first]
+    assert ranks == sorted(ranks, reverse=True) and worst_first[0]["baseline"]["outcome"] == "unsupported"
+    blocked_first = all_items(client, sort="verdict", order="desc")
+    assert [i["verdict"] for i in blocked_first[:13]] == ["block"] * 13
+    companies = [i["company"] for i in all_items(client, sort="company")]
+    assert companies == sorted(companies)
+    assert client.get("/api/items", params={"sort": "question"}).status_code == 422
+
+
+def test_default_order_is_by_id(client):
+    ids = [i["id"] for i in all_items(client)]
+    assert ids == sorted(ids)

@@ -11,9 +11,10 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "web" / "content"
 SOURCES = {"summary": ROOT / "results" / "summary.json", "meta": ROOT / "results" / "dashboard" / "meta_v1.json"}
 ITEMS = ROOT / "results" / "dashboard" / "items_v1.jsonl"
-PLACEHOLDER = re.compile(r"\{(summary|meta):([A-Za-z0-9_.{}]+?)\}(?!\})")
-# Identifiers that contain digits but are not results: decision and hurdle ids, EVAL sections, 10-K.
-REFERENCE = re.compile(r"\b(?:D|H)-\d{3}\b|§\d+|\b10-K\b")
+PLACEHOLDER = re.compile(r"\{(summary|meta):([A-Za-z0-9_.{}]+?)(?:\|([a-z0-9]+))?\}(?!\})")
+FORMATS = {"usd0", "usd2", "pct0", "pct1"}  # web/lib/content.ts
+# Identifiers that contain digits but are not results: decision and hurdle ids, item ids, EVAL sections, 10-K.
+REFERENCE = re.compile(r"\b(?:D|H)-\d{3}\b|\bFG-\d{4}\b|§\d+|\b10-K\b")
 # Numbers that are definitions, not results: transform names (T4, T6 in docs/SEEDED_ERRORS.md) and the
 # percentile named by a latency label.
 DEFINITIONS = ("Scale shifted by 1,000", "Off by 5%", "95th percentile")
@@ -87,8 +88,10 @@ def test_numbers_are_placeholders_that_resolve(name):
     for text in texts:
         if text.startswith("http") or text.startswith("/"):
             continue  # URLs and in-site links
-        for src, path in PLACEHOLDER.findall(text):
-            resolve(src, path)
+        for src, path, fmt in PLACEHOLDER.findall(text):
+            value = resolve(src, path)
+            if fmt:
+                assert fmt in FORMATS and isinstance(value, (int, float)), (name, path, fmt)
         assert not bare_numbers(text), (name, bare_numbers(text), text)
 
 
@@ -151,5 +154,31 @@ def test_author_and_media_links():
     assert author["name"] and author["github"].startswith("https://github.com/")
     assert author["repo"].startswith(author["github"] + "/")
     assert author["linkedin"] == "" or author["linkedin"].startswith("https://www.linkedin.com/")
+    assert author["email"] == "" or re.fullmatch(r"[^@\s]+@[^@\s]+\.[a-z]+", author["email"])
     url = load("media.json")["demo_video_url"]
     assert url == "" or url.startswith("https://")
+
+
+def test_every_limitation_has_a_plain_summary():
+    limits = load("limitations.json")
+    original = source("summary")["limitations"]
+    assert len(limits["summaries"]) == len(original)
+    internal = re.compile(r"(?:D|H)-\d{3}|EVAL|§|FG-\d{4}|D-0|MAX_TOKENS")
+    for text in limits["summaries"]:
+        assert text.strip() and not internal.search(PLACEHOLDER.sub("", text)), text
+    presets = {p["id"] for p in load("copy.json")["items"]["presets"]}
+    for position, link in limits["links"].items():
+        assert int(position) < len(original) and link["preset"] in presets
+
+
+def test_glossary_sources_and_reason_metrics_have_labels():
+    labels = load("labels.json")
+    copy = load("copy.json")
+    sources = {"outcomes", "verdicts", "conditions", "bases", "attack_types", "transforms", "metrics", "reason_codes"}
+    assert {s["source"] for s in copy["glossary"]["sections"]} <= sources
+    assert set(labels["reason_definitions"]) == set(labels["reason_codes"])
+    assert set(labels["basis_definitions"]) == set(labels["bases"])
+    assert set(labels["condition_definitions"]) == set(labels["conditions"])
+    details = [x["detail"] for r in items() for m in ("full", "quote_off") for x in r["verdict"][m]["reasons"]]
+    metrics = {d.split(" ")[0] for d in details if re.match(r"^[a-z_]+ ", d)}
+    assert metrics <= set(labels["metric_names"]), metrics - set(labels["metric_names"])

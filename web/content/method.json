@@ -44,7 +44,7 @@
       "id": "spend",
       "title": "Spend",
       "paragraphs": [
-        "Every model call and every SEC request was cached to disk, so re-runs cost nothing. Total model spend for the project was {summary:spend.total_usd} USD against a hard cap of {summary:spend.cap_usd} USD enforced in code. This dashboard makes no model calls."
+        "Every model call and every SEC request was cached to disk, so re-runs cost nothing. Total model spend for the project was {summary:spend.total_usd|usd2} against a hard cap of {summary:spend.cap_usd|usd0} enforced in code. This dashboard makes no model calls."
       ]
     }
   ]

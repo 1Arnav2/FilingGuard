@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 import { OutcomeBadge, VerdictBadge } from "@/components/data/badges";
 import { DataTable } from "@/components/data/DataTable";
+import { Disclosure } from "@/components/data/Disclosure";
 import { ErrorState, LoadingState, Panel } from "@/components/data/layout";
 import { OtherBasis } from "@/components/data/outcomes";
 import { LAST_ITEMS_URL } from "@/components/pages/Items";
@@ -23,6 +24,7 @@ import {
   handcheckVerdict,
   outcomeName,
   reasonBasisName,
+  reasonDetail,
   reasonName,
   subtypeName,
   template,
@@ -189,7 +191,9 @@ function ReasonList({ reasons }: { reasons: Reason[] }) {
               {r.blocking ? ", blocking" : ""})
             </span>
           </p>
-          <p className="mt-0.5 font-mono text-xs break-words text-muted-foreground">{r.detail}</p>
+          <p className="mt-0.5 text-sm break-words text-muted-foreground" title={r.detail}>
+            {reasonDetail(r.detail)}
+          </p>
         </li>
       ))}
     </ul>
@@ -286,17 +290,6 @@ function Judge({ item }: { item: Item }) {
   );
 }
 
-function Disclosure({ title, n, children }: { title: string; n: number; children: React.ReactNode }) {
-  return (
-    <details className="rounded-xl border">
-      <summary className="flex min-h-11 cursor-pointer items-center px-5 py-3 text-sm font-medium">
-        {title} <span className="ml-2 text-muted-foreground tabular-nums">({n})</span>
-      </summary>
-      <div className="border-t p-5">{children}</div>
-    </details>
-  );
-}
-
 function Evidence({ item }: { item: Item }) {
   const yn = (v: boolean | null) => (v === null ? "—" : v ? "Yes" : "No");
   return (
@@ -304,7 +297,7 @@ function Evidence({ item }: { item: Item }) {
       <h2 id="evidence-title" className="text-sm font-medium text-muted-foreground">
         {T.evidence_title}
       </h2>
-      <Disclosure title={T.citations} n={item.answer.citations.length}>
+      <Disclosure boxed summary={T.citations} count={item.answer.citations.length}>
         <ul className="space-y-3">
           {item.answer.citations.map((c, i) => (
             <li key={i} className="border-l-2 pl-3 text-sm">
@@ -316,7 +309,7 @@ function Evidence({ item }: { item: Item }) {
           ))}
         </ul>
       </Disclosure>
-      <Disclosure title={T.figures} n={item.figures.length}>
+      <Disclosure boxed summary={T.figures} count={item.figures.length}>
         <DataTable
           caption={T.figures}
           rowKey={(f) => `${f.value}-${f.period}-${f.metric}`}
@@ -331,7 +324,7 @@ function Evidence({ item }: { item: Item }) {
           ]}
         />
       </Disclosure>
-      <Disclosure title={T.passages} n={item.retrieved.length}>
+      <Disclosure boxed summary={T.passages} count={item.retrieved.length}>
         <DataTable
           caption={T.passages}
           rowKey={(r) => String(r.rank)}

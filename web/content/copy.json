@@ -1,12 +1,13 @@
 {
-  "note": "Page copy. Every number is a {summary:path} or {meta:path} placeholder filled from the API (summary = results/summary.json, meta = results/dashboard/meta_v1.json). Stat cards and links name their source paths; {basis} in a path is replaced by the chosen basis. tests/test_web_content.py checks that every placeholder and path resolves and that no other number appears.",
+  "note": "Page copy. Every number is a {summary:path} or {meta:path} placeholder filled from the API, optionally with a display format after a bar ({summary:spend.total_usd|usd2}; formats: usd0, usd2, pct0, pct1) (summary = results/summary.json, meta = results/dashboard/meta_v1.json). Stat cards and links name their source paths; {basis} in a path is replaced by the chosen basis. tests/test_web_content.py checks that every placeholder and path resolves and that no other number appears.",
   "site": {
     "name": "FilingGuard",
     "subtitle": "A stress test and a fact-checker for an AI that answers questions about company annual reports (SEC 10-K filings)",
     "footer": "Every number on this site comes from committed files in results/. This site makes no model calls.",
-    "spend": "Model spend for the whole project: {summary:spend.total_usd} USD of a {summary:spend.cap_usd} USD cap.",
+    "spend": "Model spend for the whole project: {summary:spend.total_usd|usd2} of the {summary:spend.cap_usd|usd0} cap.",
     "skip": "Skip to content",
-    "code_label": "Code"
+    "code_label": "Code",
+    "jump": "Jump to"
   },
   "explainer": {
     "title": "Why two numbers?",
@@ -17,7 +18,7 @@
     "link": "How scoring works"
   },
   "overview": {
-    "eyebrow": "Results on the test split",
+    "eyebrow": "An evaluation of an AI finance research agent",
     "intro": "FilingGuard puts an AI research assistant under adversarial questions about real 10-K filings, then runs every answer through a verifier that blocks any figure it cannot match to the filing. This page shows what changed when the verifier was switched on, on {meta:split.test} questions the system had never seen.",
     "how_title": "How it works",
     "how_nodes": {
@@ -62,16 +63,29 @@
     "bars_link": "All results",
     "honest_title": "How it was kept honest",
     "honest": [
-      { "text": "Pass bars written before any test result ({meta:pass_bars_set.decision}, {meta:pass_bars_set.date}).", "href": "/method/#bars" },
-      { "text": "Test set, answering agent and verifier frozen with git tags; the test split was run once.", "href": "/method/#tags" },
-      { "text": "Owner hand-check of a random sample: {summary:owner_handcheck_test.random_30_agreement_with_as_scored.k} of {summary:owner_handcheck_test.random_30_agreement_with_as_scored.n} agreed with the scorer.", "href": "/method/#scoring" },
-      { "text": "This site reads committed results only and makes no model calls.", "href": "/method/#spend" }
+      {
+        "text": "Pass bars written before any test result ({meta:pass_bars_set.decision}, {meta:pass_bars_set.date}).",
+        "href": "/method/#bars"
+      },
+      {
+        "text": "Test set, answering agent and verifier frozen with git tags; the test split was run once.",
+        "href": "/method/#tags"
+      },
+      {
+        "text": "Owner hand-check of a random sample: {summary:owner_handcheck_test.random_30_agreement_with_as_scored.k} of {summary:owner_handcheck_test.random_30_agreement_with_as_scored.n} agreed with the scorer.",
+        "href": "/method/#scoring"
+      },
+      {
+        "text": "This site reads committed results only and makes no model calls.",
+        "href": "/method/#spend"
+      }
     ],
     "limits_title": "Read these before the numbers",
     "limits_link": "All limitations",
     "video_title": "Demo",
     "outreach": "Want to run this against your own agent? Get in touch.",
-    "author_title": "Built by"
+    "author_title": "Built by",
+    "limits_more": "Read the full text"
   },
   "results": {
     "title": "Results",
@@ -103,11 +117,26 @@
       "false_blocks": "Correct answers wrongly blocked"
     },
     "metrics": {
-      "unsupported_claim_rate": { "name": "Unsupported-claim rate", "definition": "Answers stating something the filing does not support, of answers returned." },
-      "correct_handling": { "name": "Handled correctly", "definition": "Questions scored Correct, of all questions." },
-      "answer_coverage": { "name": "Answer coverage", "definition": "Answerable questions that got a figure." },
-      "abstain_rate_controls": { "name": "Controls left unanswered", "definition": "Plain control questions not answered." },
-      "injection_followed": { "name": "Planted instructions followed", "definition": "Prompt-injection questions where the answer obeyed the planted text." }
+      "unsupported_claim_rate": {
+        "name": "Unsupported-claim rate",
+        "definition": "Answers stating something the filing does not support, of answers returned."
+      },
+      "correct_handling": {
+        "name": "Handled correctly",
+        "definition": "Questions scored Correct, of all questions."
+      },
+      "answer_coverage": {
+        "name": "Answer coverage",
+        "definition": "Answerable questions that got a figure."
+      },
+      "abstain_rate_controls": {
+        "name": "Controls left unanswered",
+        "definition": "Plain control questions not answered."
+      },
+      "injection_followed": {
+        "name": "Planted instructions followed",
+        "definition": "Prompt-injection questions where the answer obeyed the planted text."
+      }
     },
     "latency": {
       "p50": "End to end, median",
@@ -115,7 +144,7 @@
       "sample": "{summary:latency.run} of {summary:latency.sample} sampled questions",
       "rules": "Verifier rules, median",
       "spend": "Model spend",
-      "cap": "Cap {summary:spend.cap_usd} USD"
+      "cap": "Cap {summary:spend.cap_usd|usd0}"
     }
   },
   "items": {
@@ -127,16 +156,86 @@
     "clear": "Clear all",
     "empty": "No questions match these filters.",
     "presets": [
-      { "id": "all", "name": "All", "filters": {} },
-      { "id": "blocked", "name": "Blocked by the verifier", "filters": { "verdict": "block" } },
-      { "id": "false_blocks", "name": "False blocks", "filters": { "condition": "baseline", "outcome": "correct", "verdict": "block" } },
-      { "id": "controls_unanswered", "name": "Controls left unanswered", "filters": { "attack_type": "control", "condition": "treatment", "outcome": "missed" } },
-      { "id": "corrected", "name": "Corrected under D-071", "filters": { "corrected": "true" } },
-      { "id": "unsupported", "name": "Unsupported without the verifier", "filters": { "condition": "baseline", "outcome": "unsupported" } },
-      { "id": "unparseable", "name": "Unreadable replies", "filters": { "unparseable": "true" } },
-      { "id": "handchecked", "name": "Hand-checked", "filters": { "handchecked": "true" } }
+      {
+        "id": "all",
+        "name": "All",
+        "filters": {}
+      },
+      {
+        "id": "blocked",
+        "name": "Blocked by the verifier",
+        "filters": {
+          "verdict": "block"
+        }
+      },
+      {
+        "id": "false_blocks",
+        "name": "False blocks",
+        "filters": {
+          "condition": "baseline",
+          "outcome": "correct",
+          "verdict": "block"
+        }
+      },
+      {
+        "id": "controls_unanswered",
+        "name": "Controls left unanswered",
+        "filters": {
+          "attack_type": "control",
+          "condition": "treatment",
+          "outcome": "missed"
+        }
+      },
+      {
+        "id": "corrected",
+        "name": "Corrected under D-071",
+        "filters": {
+          "corrected": "true"
+        }
+      },
+      {
+        "id": "unsupported",
+        "name": "Unsupported without the verifier",
+        "filters": {
+          "condition": "baseline",
+          "outcome": "unsupported"
+        }
+      },
+      {
+        "id": "unparseable",
+        "name": "Unreadable replies",
+        "filters": {
+          "unparseable": "true"
+        }
+      },
+      {
+        "id": "handchecked",
+        "name": "Hand-checked",
+        "filters": {
+          "handchecked": "true"
+        }
+      }
     ],
-    "flags": { "corrected": "Corrected", "unparseable": "Unreadable reply", "handchecked": "Hand-checked" }
+    "flags": {
+      "corrected": "Corrected",
+      "unparseable": "Unreadable reply",
+      "handchecked": "Hand-checked"
+    },
+    "search_label": "Search by ID or company",
+    "search_placeholder": "FG-0302 or AAPL",
+    "sort_label": "Sort by",
+    "sort": {
+      "id": "ID",
+      "company": "Company",
+      "attack_type": "Attack type",
+      "baseline": "Without verifier",
+      "verdict": "Verifier",
+      "treatment": "With verifier"
+    },
+    "sort_order": {
+      "asc": "Ascending",
+      "desc": "Descending"
+    }
   },
   "item": {
     "back": "All items",
@@ -170,7 +269,10 @@
       "pass_missed": "The agent gave no usable answer, so there was nothing for the verifier to block.",
       "corrected": "The scorer first marked it {as_scored}; the owner corrected it under D-071 because the scorer misread a figure the answer had right.",
       "kept": "The owner reviewed this row for a scorer misread and kept the original score."
-    }
+    },
+    "prev": "Previous question",
+    "next": "Next question",
+    "position": "{index} of {total} in your current list"
   },
   "method": {
     "title": "Method",
@@ -185,5 +287,52 @@
     "error": "Could not load results. The data files may be missing from this build.",
     "retry": "Try again",
     "redirect": "By attack type is now a section of Results."
+  },
+  "glossary": {
+    "title": "Glossary",
+    "intro": "Every term the dashboard uses, in plain words. Definitions also open from any dotted-underlined term.",
+    "more": "Glossary",
+    "sections": [
+      {
+        "id": "outcomes",
+        "title": "Outcomes",
+        "source": "outcomes"
+      },
+      {
+        "id": "verdicts",
+        "title": "Verifier decisions",
+        "source": "verdicts"
+      },
+      {
+        "id": "conditions",
+        "title": "Without and with the verifier",
+        "source": "conditions"
+      },
+      {
+        "id": "bases",
+        "title": "The two bases",
+        "source": "bases"
+      },
+      {
+        "id": "attack_types",
+        "title": "Attack types",
+        "source": "attack_types"
+      },
+      {
+        "id": "transforms",
+        "title": "Planted error kinds",
+        "source": "transforms"
+      },
+      {
+        "id": "metrics",
+        "title": "Metrics",
+        "source": "metrics"
+      },
+      {
+        "id": "reasons",
+        "title": "Verifier reasons",
+        "source": "reason_codes"
+      }
+    ]
   }
 }

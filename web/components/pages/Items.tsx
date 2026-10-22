@@ -3,7 +3,7 @@
 import { X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { FlagBadge, OutcomeBadge, VerdictBadge } from "@/components/data/badges";
 import { DataTable } from "@/components/data/DataTable";
@@ -26,7 +26,8 @@ import { useData } from "@/lib/useData";
 import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 25;
-const FILTER_KEYS = ["attack_type", "verdict", "outcome", "label", "condition", "corrected", "unparseable", "handchecked"] as const;
+const FILTER_KEYS = ["q", "attack_type", "verdict", "outcome", "label", "condition", "corrected", "unparseable", "handchecked"] as const;
+const SORT_KEYS = Object.keys(copy.items.sort);
 type FilterKey = (typeof FILTER_KEYS)[number];
 type Filters = Partial<Record<FilterKey, string>>;
 const PRESETS = copy.items.presets as { id: string; name: string; filters: Filters }[];
@@ -59,6 +60,8 @@ function filterLabel(key: FilterKey, value: string): string {
       return failureLabelName(value);
     case "condition":
       return conditionName(value);
+    case "q":
+      return `“${value}”`;
     default:
       return (copy.items.flags as Record<string, string>)[key] ?? key;
   }
@@ -84,6 +87,35 @@ function Select({ label, value, options, onChange }: {
           </option>
         ))}
       </select>
+    </label>
+  );
+}
+
+/** Search by ID or company; the URL updates a moment after typing stops. */
+function Search({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [text, setText] = useState(value);
+  const input = useRef<HTMLInputElement>(null);
+  // Follow the URL (Clear all, a preset) only when the box is not being typed in.
+  useEffect(() => {
+    if (document.activeElement !== input.current) setText(value);
+  }, [value]);
+  useEffect(() => {
+    if (text === value) return;
+    const t = setTimeout(() => onChange(text.trim()), 300);
+    return () => clearTimeout(t);
+  }, [text, value, onChange]);
+  return (
+    <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
+      {copy.items.search_label}
+      <input
+        ref={input}
+        type="search"
+        value={text}
+        maxLength={40}
+        placeholder={copy.items.search_placeholder}
+        onChange={(e) => setText(e.target.value)}
+        className="min-h-11 rounded-lg border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground sm:min-h-9"
+      />
     </label>
   );
 }
@@ -128,6 +160,8 @@ export default function Items() {
   const meta = useData(getMeta);
   const filters = readFilters(params);
   const page = Math.max(1, Number(params.get("page") ?? "1"));
+  const sortKey = SORT_KEYS.includes(params.get("sort") ?? "") ? (params.get("sort") as string) : "id";
+  const order: "asc" | "desc" = params.get("order") === "desc" ? "desc" : "asc";
   const key = params.toString();
 
   // A shared link with ?preset=... opens that view with its filters spelled out in the URL.
@@ -147,7 +181,7 @@ export default function Items() {
     }
   }, [key]);
 
-  const items = useData(() => getItems({ ...filters, basis, page, page_size: PAGE_SIZE }), [key, basis]);
+  const items = useData(() => getItems({ ...filters, basis, sort: sortKey, order, page, page_size: PAGE_SIZE }), [key, basis]);
 
   const set = (name: string, value: string) => {
     const next = new URLSearchParams(params);
@@ -157,6 +191,19 @@ export default function Items() {
     if (name !== "page") next.delete("page");
     router.replace(`${pathname}${next.size ? `?${next}` : ""}`, { scroll: false });
   };
+  const setSort = (k: string, o: "asc" | "desc") => {
+    const next = new URLSearchParams(params);
+    if (k === "id" && o === "asc") {
+      next.delete("sort");
+      next.delete("order");
+    } else {
+      next.set("sort", k);
+      next.set("order", o);
+    }
+    next.delete("page");
+    router.replace(`${pathname}${next.size ? `?${next}` : ""}`, { scroll: false });
+  };
+  const onSort = (k: string) => setSort(k, k === sortKey && order === "asc" ? "desc" : "asc");
   const clearAll = () => router.replace(`${pathname}${basis === "as_scored" ? "?basis=as_scored" : ""}`, { scroll: false });
 
   const active = PRESETS.find((p) => same(p.filters, filters))?.id ?? null;
@@ -184,6 +231,23 @@ export default function Items() {
           <h2 id="filters-title" className="sr-only">
             {copy.items.filters_label}
           </h2>
+          <div className="mb-3 grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+            <Search value={filters.q ?? ""} onChange={(v) => set("q", v)} />
+            <div className="grid grid-cols-2 gap-3 md:hidden">
+              <Select
+                label={copy.items.sort_label}
+                value={sortKey}
+                options={Object.entries(copy.items.sort)}
+                onChange={(v) => setSort(v, order)}
+              />
+              <Select
+                label="Order"
+                value={order}
+                options={Object.entries(copy.items.sort_order)}
+                onChange={(v) => setSort(sortKey, v as "asc" | "desc")}
+              />
+            </div>
+          </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
             <Select
               label="Attack type"
@@ -261,12 +325,14 @@ export default function Items() {
             caption={`Test questions, ${basisName(basis)} basis`}
             rowKey={(r) => r.id}
             rows={items.data.items}
+            sort={{ key: sortKey, order, onSort }}
             columns={[
               {
                 key: "id",
                 header: "Question",
                 primary: true,
-                className: "w-[45%]",
+                sortKey: "id",
+                className: "w-[38%]",
                 cell: (r) => (
                   <div className="space-y-1">
                     <Link
@@ -280,19 +346,11 @@ export default function Items() {
                   </div>
                 ),
               },
-              {
-                key: "type",
-                header: "Company and type",
-                cell: (r) => (
-                  <span>
-                    {r.company}
-                    <span className="block text-xs text-muted-foreground">{attackTypeName(r.attack_type)}</span>
-                  </span>
-                ),
-              },
-              { key: "baseline", header: conditionName("baseline"), cell: (r) => <OutcomeBadge outcome={r.baseline.outcome} /> },
-              { key: "verdict", header: "Verifier", cell: (r) => <VerdictBadge verdict={r.verdict} /> },
-              { key: "treatment", header: conditionName("treatment"), cell: (r) => <OutcomeBadge outcome={r.treatment.outcome} /> },
+              { key: "company", header: "Company", sortKey: "company", cell: (r) => r.company },
+              { key: "type", header: "Attack type", sortKey: "attack_type", cell: (r) => attackTypeName(r.attack_type) },
+              { key: "baseline", header: conditionName("baseline"), sortKey: "baseline", cell: (r) => <OutcomeBadge outcome={r.baseline.outcome} /> },
+              { key: "verdict", header: "Verifier", sortKey: "verdict", cell: (r) => <VerdictBadge verdict={r.verdict} /> },
+              { key: "treatment", header: conditionName("treatment"), sortKey: "treatment", cell: (r) => <OutcomeBadge outcome={r.treatment.outcome} /> },
               {
                 key: "flags",
                 header: "Notes",

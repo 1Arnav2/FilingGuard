@@ -7,13 +7,19 @@ import type { Basis, PassBars, Summary } from "./types";
 const OPS: Record<string, string> = { lt: "<", le: "≤", ge: "≥" };
 const NAMES = copy.results.bar_names as Record<string, string>;
 
-/** "Control questions left unanswered ≤ 10% (treatment)" from `abstain_rate_controls_le_10pct_treatment`. */
+/** A threshold share (0.85) as a percentage (85%); a value already in percent passes through. */
+function percent(value: number): string {
+  return `${Number((value * 100).toFixed(2))}%`;
+}
+
+/** "Verifier precision (≥ 85%)" from `verifier_precision_ge_0.85`; p-value thresholds stay as p. */
 export function barTitle(key: string): string {
   const m = key.match(/^(.*?)_(p_)?(lt|le|ge)_([\d.]+?)(pct)?(?:_([a-z]+))?$/);
   if (!m) return NAMES[key] ?? key;
   const [, name, p, op, value, isPct, scope] = m;
   const where = scope === "treatment" ? ", with the verifier" : "";
-  return `${NAMES[name] ?? name} (${p ? "p " : ""}${OPS[op]} ${value}${isPct ? "%" : ""}${where})`;
+  const threshold = p ? `p ${OPS[op]} ${value}` : `${OPS[op]} ${isPct ? `${value}%` : percent(Number(value))}`;
+  return `${NAMES[name] ?? name} (${threshold}${where})`;
 }
 
 export interface Bar {
@@ -36,13 +42,13 @@ export function bars(s: Summary): Bar[] {
     })),
     {
       key: "seeded_macro",
-      title: `${NAMES.seeded_macro} (≥ ${seeded.macro_threshold})`,
+      title: `${NAMES.seeded_macro} (≥ ${percent(seeded.macro_threshold)})`,
       explain: explain.seeded_macro,
       status: { corrected: seeded.macro_status, as_scored: null },
     },
     {
       key: "false_blocks",
-      title: `${NAMES.false_blocks} (≤ ${seeded.false_block_rate.threshold})`,
+      title: `${NAMES.false_blocks} (≤ ${percent(seeded.false_block_rate.threshold)})`,
       explain: explain.false_blocks,
       status: { corrected: seeded.false_block_rate.corrected.status, as_scored: seeded.false_block_rate.as_scored.status },
     },

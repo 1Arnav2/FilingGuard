@@ -5,6 +5,7 @@ export function AuthorBlock({ id, compact = false }: { id?: string; compact?: bo
   const links = [
     { href: author.github, label: "GitHub" },
     { href: author.linkedin, label: "LinkedIn" },
+    { href: author.email ? `mailto:${author.email}` : "", label: "Email" },
   ].filter((l) => l.href);
   return (
     <div id={id} className={compact ? "text-sm" : "space-y-2"}>
@@ -16,7 +17,7 @@ export function AuthorBlock({ id, compact = false }: { id?: string; compact?: bo
           <li key={l.label}>
             <a href={l.href} className="inline-flex min-h-11 items-center text-sm font-medium underline underline-offset-4 sm:min-h-0">
               {l.label}
-              <span className="sr-only"> profile of {author.name}</span>
+              <span className="sr-only">{l.label === "Email" ? ` ${author.name}` : ` profile of ${author.name}`}</span>
             </a>
           </li>
         ))}

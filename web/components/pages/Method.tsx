@@ -5,9 +5,10 @@ import Link from "next/link";
 import { StatusBadge } from "@/components/data/badges";
 import { DataTable } from "@/components/data/DataTable";
 import { Load, PageHeader, Section } from "@/components/data/layout";
+import { JumpTo } from "@/components/site/JumpTo";
 import { getMeta, getSummary } from "@/lib/api";
 import { bars } from "@/lib/bars";
-import { copy, fill, method } from "@/lib/content";
+import { copy, fill, glossaryEntries, method, type GlossarySource } from "@/lib/content";
 import { usd } from "@/lib/format";
 import type { Meta, Summary } from "@/lib/types";
 import { useData } from "@/lib/useData";
@@ -27,6 +28,29 @@ function Prose({ id, s, m, children }: { id: string; s: Summary; m: Meta; childr
   );
 }
 
+function Glossary() {
+  const g = copy.glossary;
+  return (
+    <Section id="glossary" title={g.title} intro={g.intro}>
+      <div className="grid gap-8 lg:grid-cols-2">
+        {g.sections.map((section) => (
+          <div key={section.id} id={`glossary-${section.source}`} className="scroll-mt-24">
+            <h3 className="font-medium">{section.title}</h3>
+            <dl className="mt-3 divide-y rounded-xl border">
+              {glossaryEntries(section.source as GlossarySource).map(([code, name, def]) => (
+                <div key={code} className="grid gap-1 px-4 py-3 text-sm">
+                  <dt className="font-medium">{name}</dt>
+                  <dd className="leading-relaxed text-muted-foreground">{def}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
 function MethodBody({ s, m }: { s: Summary; m: Meta }) {
   const tags = Object.entries(m.freeze_tags);
   const spend = Object.entries(s.spend.by_purpose_usd);
@@ -35,6 +59,15 @@ function MethodBody({ s, m }: { s: Summary; m: Meta }) {
       <PageHeader title={copy.method.title}>
         <p>{copy.method.intro}</p>
       </PageHeader>
+      <JumpTo
+        sections={[
+          ...method.sections.slice(0, 3).map((x) => ({ id: x.id, label: x.title })),
+          { id: "tags", label: "Frozen versions" },
+          ...method.sections.slice(3).map((x) => ({ id: x.id, label: x.title })),
+          { id: "glossary", label: copy.glossary.title },
+          { id: "sources", label: "Data sources" },
+        ]}
+      />
       <Prose id="question" s={s} m={m} />
       <Prose id="agents" s={s} m={m} />
       <Prose id="testset" s={s} m={m} />
@@ -86,6 +119,7 @@ function MethodBody({ s, m }: { s: Summary; m: Meta }) {
           ]}
         />
       </Prose>
+      <Glossary />
       <Section id="sources" title="Data sources">
         <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
           Summary numbers come from <code className="font-mono break-all">results/summary.json</code>. Per-question data comes from{" "}

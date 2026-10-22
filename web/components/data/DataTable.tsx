@@ -1,3 +1,5 @@
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 
 export interface Column<T> {
@@ -7,14 +9,23 @@ export interface Column<T> {
   /** Shown as the card title on narrow screens instead of as a labelled field. */
   primary?: boolean;
   className?: string;
+  /** The API sort key, when the column can be sorted. */
+  sortKey?: string;
+}
+
+export interface TableSort {
+  key: string;
+  order: "asc" | "desc";
+  onSort: (key: string) => void;
 }
 
 /** A table on wide screens and one card per row on narrow screens, so no column is ever hidden. */
-export function DataTable<T>({ caption, columns, rows, rowKey }: {
+export function DataTable<T>({ caption, columns, rows, rowKey, sort }: {
   caption: string;
   columns: Column<T>[];
   rows: T[];
   rowKey: (row: T) => string;
+  sort?: TableSort;
 }) {
   const primary = columns.find((c) => c.primary);
   const rest = columns.filter((c) => c !== primary);
@@ -25,11 +36,31 @@ export function DataTable<T>({ caption, columns, rows, rowKey }: {
           <caption className="sr-only">{caption}</caption>
           <thead className="bg-muted/50 text-left text-xs text-muted-foreground">
             <tr>
-              {columns.map((c) => (
-                <th key={c.key} scope="col" className={cn("px-4 py-3 align-bottom font-medium", c.className)}>
-                  {c.header}
-                </th>
-              ))}
+              {columns.map((c) => {
+                const active = sort && c.sortKey && sort.key === c.sortKey;
+                const Icon = active ? (sort.order === "asc" ? ArrowUp : ArrowDown) : ArrowUpDown;
+                return (
+                  <th
+                    key={c.key}
+                    scope="col"
+                    aria-sort={sort && c.sortKey ? (active ? (sort.order === "asc" ? "ascending" : "descending") : "none") : undefined}
+                    className={cn("px-4 py-3 align-bottom font-medium", c.className)}
+                  >
+                    {sort && c.sortKey ? (
+                      <button
+                        type="button"
+                        onClick={() => sort.onSort(c.sortKey as string)}
+                        className={cn("-mx-1.5 inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-left hover:bg-muted hover:text-foreground", active && "text-foreground")}
+                      >
+                        {c.header}
+                        <Icon aria-hidden="true" className="size-3.5 shrink-0" />
+                      </button>
+                    ) : (
+                      c.header
+                    )}
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>

@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { cn } from "@/lib/utils";
 import { copy } from "@/lib/content";
 
@@ -20,7 +22,12 @@ export function Section({ id, title, intro, children, className }: {
   className?: string;
 }) {
   return (
-    <section id={id} aria-labelledby={id ? `${id}-title` : undefined} className={cn("mt-14 scroll-mt-24", className)}>
+    <section
+      id={id}
+      tabIndex={id ? -1 : undefined}
+      aria-labelledby={id ? `${id}-title` : undefined}
+      className={cn("mt-14 scroll-mt-24 focus:outline-none", className)}
+    >
       <h2 id={id ? `${id}-title` : undefined} className="text-xl font-semibold tracking-tight">
         {title}
       </h2>
@@ -68,6 +75,15 @@ export function ErrorState({ error, onRetry }: { error: string; onRetry?: () => 
   );
 }
 
+/** Scroll to the URL's #anchor once the page's data has rendered (the browser tries before it exists). */
+export function useScrollToHash(ready: boolean) {
+  useEffect(() => {
+    if (!ready || !window.location.hash) return;
+    const el = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+    el?.scrollIntoView();
+  }, [ready]);
+}
+
 /** Loading, error or the page: one place for the three states. */
 export function Load<T>({ data, error, retry, children }: {
   data: T | null;
@@ -75,6 +91,7 @@ export function Load<T>({ data, error, retry, children }: {
   retry?: () => void;
   children: (data: T) => React.ReactNode;
 }) {
+  useScrollToHash(data !== null);
   if (error) return <ErrorState error={error} onRetry={retry} />;
   if (data === null) return <LoadingState />;
   return <>{children(data)}</>;
