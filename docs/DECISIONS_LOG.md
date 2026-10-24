@@ -1644,6 +1644,23 @@ model call.
 page and the data is built in; a test keeps the page's filtering equal to the API's.
 **Revisit if:** A live demo of the target is wanted on the public site.
 
+### D-080 — Phase 6e: pre-push checks, fresh-clone build, sixth one-time push
+**Date:** 2026-10-24 · **Phase:** 6e
+**Context:** Phases 6a–6d were local only (every commit after `bf09aeb`). Vercel will build from a
+fresh clone with `web/` as the root.
+**Decision:** Fresh-clone build first: the repo cloned to a temporary folder, `npm ci` and `npm run build`
+in `web/` with no project environment variables; the `prebuild` script runs `npm run sync`
+(`node scripts/sync-results.mjs`), which copies the three tracked results files; 6 pages and 210 item
+pages built; the clone had no untracked file after the build. Node pinned to `24.x` in `engines` (the
+version built with, v24.11.0). Push: a one-time exception approved by the owner; every unpushed commit
+checked (author and committer Arnav Ambre; no Co-Authored-By, no "Generated with", no coding tool
+named; no added line names one; local-only files untracked); all tests pass; `main` pushed, no force.
+No deploy.
+**Why:** The public build must work from what is in git alone.
+**Trade-off accepted:** `package-lock.json` keeps its root without the `engines` copy (`npm ci` accepts
+it); regenerating the lock also added unrelated optional entries, so it was left as it was.
+**Revisit if:** Vercel's build differs from the clone build.
+
 ## Hurdles
 
 ### H-001 — 503 "high demand" from Gemini on a test call

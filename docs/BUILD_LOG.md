@@ -16,6 +16,23 @@ of every session.
 
 ---
 
+## 2026-10-24 — Phase 6e: pre-push checks and push
+**Built:** `.playwright-mcp/` added to `.git/info/exclude` (the folder was already deleted; never tracked
+or committed). Fresh-clone build (what Vercel does): clone to a temporary folder, `npm ci` and
+`npm run build` in `web/` with no project environment variables; `prebuild` → `npm run sync` copied
+the results files; `web/out` held the 6 pages and 210 item pages (8.1 MB); nothing untracked was read.
+Node v24.11.0; `engines.node` pinned to `24.x` and the clone build re-run (pass). Docker ignore test
+now checks the exact allowlist. D-080.
+**Tests:** 311 Python tests, 8 web tests, typecheck and lint pass.
+**Broken or unfinished:** H-036 open (Docker not run). Deploy to Vercel waits for the owner.
+**Numbers worth keeping:** none new.
+**Spend so far:** $5.2521 (no model calls).
+**Push:** one-time exception approved by the owner for this step; every commit after `bf09aeb` checked
+(author Arnav Ambre; no Co-Authored-By, no "Generated with", no coding tool named); `main` pushed, no force.
+**Next session starts with:** Owner creates the Vercel project (root `web/`); check the public link on
+desktop and mobile.
+**Commit:** Phase 6e: fresh-clone build checked; push logged
+
 ## 2026-10-24 — Phase 6d: static site (deploy option B)
 **Built:** D-079: the public site is the static export on Vercel; `render.yaml` removed; FastAPI,
 `/api/health` and the Dockerfile kept and relabelled for local runs; live route unchanged
