@@ -329,7 +329,7 @@ judge False, owner True); 28 rows not rated by either.
 **Built:** D-065 (no pass bar, descriptive only), committed before the owner's file was opened.
 Offline check of the frozen detector on 10 owner-written planted texts, alone and planted in one
 seeded clean chunk; no-text result `results/verifier/detector_check_v1.json`. EVAL §8, dev report,
-plan step 2a and ROADMAP updated. `AGENTS.md` added to `.git/info/exclude` (local only).
+plan step 2a and ROADMAP updated. Another local-only file added to `.git/info/exclude`.
 **Tests:** full offline suite passes.
 **Broken or unfinished:** The judge hand-check, the 90-row spot-check, and the go-ahead for the test
 batch.

@@ -1315,8 +1315,8 @@ D-057 never asked for one.
 **Context:** The standing rule is that the owner pushes. The owner approved one more push by the
 session as a one-time exception, after the pre-batch items were closed.
 **Decision:** Before pushing, every unpushed commit message was printed and checked: no
-Co-Authored-By line, no "Generated with" line, no coding tool named; `CLAUDE.md`, `AGENTS.md` and
-`.claude/` confirmed untracked. Then `main` only was pushed to `origin`, with no force push.
+Co-Authored-By line, no "Generated with" line, no coding tool named; local-only files
+(files excluded from the repo) confirmed untracked. Then `main` only was pushed to `origin`, with no force push.
 **Why:** The owner's instruction.
 **Trade-off accepted:** None; the rule stands for every later push.
 **Revisit if:** —
@@ -1394,8 +1394,8 @@ not model this per-job check.
 **Context:** The standing rule is that the owner pushes. The owner approved one more push by the
 session as a one-time exception, after the test baseline was scored.
 **Decision:** Before pushing, every unpushed commit message was printed and checked: no
-Co-Authored-By line, no "Generated with" line, no coding tool named; `CLAUDE.md`, `AGENTS.md` and
-`.claude/` confirmed untracked. Then `main` only was pushed to `origin`, with no force push.
+Co-Authored-By line, no "Generated with" line, no coding tool named; local-only files
+(files excluded from the repo) confirmed untracked. Then `main` only was pushed to `origin`, with no force push.
 **Why:** The owner's instruction.
 **Trade-off accepted:** None; the rule stands for every later push.
 **Revisit if:** —
@@ -1445,7 +1445,7 @@ rules and seed method; then push so the set is public before the verifier sees i
   `tests/test_seeded_test_frozen.py`. No frozen file changed.
 - Push: a one-time exception approved by the owner, so the set is public before the verifier sees it.
   Every unpushed commit message checked (no Co-Authored-By, no "Generated with", no coding tool named;
-  `CLAUDE.md`, `AGENTS.md`, `.claude/` untracked); `main` pushed, no force.
+  local-only files untracked); `main` pushed, no force.
 **Why:** A set frozen and public before the verifier runs cannot be fitted to the verifier.
 **Trade-off accepted:** The 6 T1 copies that scored `wrong_number` are dropped by the dev gate rule
 (expected label), though they are Unsupported.
@@ -1462,7 +1462,7 @@ verifier precision ≥ 0.85 — not met (3/13); test-set fault rate ≤ 5% — m
 macro detection (quote off) 0.9337 ≥ 0.80 — met; false-block rate 9/197 (0.0457) ≤ 0.05 — met. As
 scored: McNemar exact p 0.0005 — met; precision 12/13 — met; abstain — not met; false blocks 0/186.
 Push: a one-time exception approved by the owner; every unpushed commit message checked (no
-Co-Authored-By, no "Generated with", no coding tool named; `CLAUDE.md`, `AGENTS.md`, `.claude/`
+Co-Authored-By, no "Generated with", no coding tool named; local-only files
 untracked); `main` pushed, no force.
 **Why:** Bars set in advance are reported as they fall; the corrected basis judges the target on
 what it said.
