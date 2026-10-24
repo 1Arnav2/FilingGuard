@@ -10,7 +10,7 @@ import { OtherBasis, OutcomeBar, OutcomeCounts, OUTCOMES, sameCounts } from "@/c
 import { JumpTo } from "@/components/site/JumpTo";
 import { LimitationText } from "@/components/site/LimitationText";
 import { Term } from "@/components/site/Term";
-import { getSummary } from "@/lib/api";
+import { getSummary } from "@/lib/data";
 import { bars, type Bar } from "@/lib/bars";
 import { useBasis } from "@/lib/basis";
 import {

@@ -15,6 +15,12 @@ export function presetHref(id: string, basis: Basis): string {
   return itemsHref(preset ? (preset.filters as Record<string, string>) : {}, basis);
 }
 
-export function itemHref(id: string, basis: Basis): string {
-  return `/item/?id=${encodeURIComponent(id)}${basis === "as_scored" ? "&basis=as_scored" : ""}`;
+/** An item's own page; `view` carries the list's filters and sort, so previous/next and Back keep them. */
+export function itemHref(id: string, basis: Basis, view: Record<string, string> = {}): string {
+  const query = new URLSearchParams(view);
+  query.delete("page");
+  query.delete("preset");
+  query.delete("basis");
+  if (basis === "as_scored") query.set("basis", basis);
+  return `/item/${encodeURIComponent(id)}/${query.size ? `?${query}` : ""}`;
 }

@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { Load, PageHeader, Section } from "@/components/data/layout";
 import { LimitationText } from "@/components/site/LimitationText";
-import { getSummary } from "@/lib/api";
+import { getSummary } from "@/lib/data";
 import { copy, limitationGroups } from "@/lib/content";
 import { presetHref } from "@/lib/links";
 import type { Summary } from "@/lib/types";

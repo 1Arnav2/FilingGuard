@@ -17,5 +17,6 @@ build/
 web/node_modules/
 web/.next/
 web/out/
+web/generated/
 web/dist/
 web/*.tsbuildinfo

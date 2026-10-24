@@ -6,7 +6,7 @@ import { StatusBadge } from "@/components/data/badges";
 import { DataTable } from "@/components/data/DataTable";
 import { Load, PageHeader, Section } from "@/components/data/layout";
 import { JumpTo } from "@/components/site/JumpTo";
-import { getMeta, getSummary } from "@/lib/api";
+import { getMeta, getSummary } from "@/lib/data";
 import { bars } from "@/lib/bars";
 import { copy, fill, glossaryEntries, method, type GlossarySource } from "@/lib/content";
 import { usd } from "@/lib/format";

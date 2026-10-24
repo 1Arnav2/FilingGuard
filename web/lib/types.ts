@@ -1,4 +1,5 @@
-// Response types for the read-only results API; they mirror src/filingguard/api/routes.py.
+// Types of the results built into the site (lib/data.ts); they mirror src/filingguard/api/routes.py,
+// which serves the same files for local runs.
 
 export type Basis = "corrected" | "as_scored";
 export type Condition = "baseline" | "treatment";
@@ -133,6 +134,11 @@ export interface ItemRow {
   corrected: boolean;
   unparseable: boolean;
   handchecked: boolean;
+}
+
+/** One item as the list needs it, on both bases (generated/rows.json). */
+export interface ItemSource extends Omit<ItemRow, "baseline" | "treatment"> {
+  outcomes: Record<Basis, Record<Condition, ScoreView>>;
 }
 
 export interface ItemPage {

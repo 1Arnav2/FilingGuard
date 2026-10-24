@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { FlagBadge, OutcomeBadge, VerdictBadge } from "@/components/data/badges";
 import { DataTable } from "@/components/data/DataTable";
 import { ErrorState, LoadingState, PageHeader } from "@/components/data/layout";
-import { getItems, getMeta } from "@/lib/api";
+import { getItems, getMeta } from "@/lib/data";
 import { useBasis } from "@/lib/basis";
 import {
   attackTypeName,
@@ -25,13 +25,12 @@ import type { Basis, ItemRow } from "@/lib/types";
 import { useData } from "@/lib/useData";
 import { cn } from "@/lib/utils";
 
-const PAGE_SIZE = 25;
+export const PAGE_SIZE = 25;
 const FILTER_KEYS = ["q", "attack_type", "verdict", "outcome", "label", "condition", "corrected", "unparseable", "handchecked"] as const;
 const SORT_KEYS = Object.keys(copy.items.sort);
 type FilterKey = (typeof FILTER_KEYS)[number];
 type Filters = Partial<Record<FilterKey, string>>;
 const PRESETS = copy.items.presets as { id: string; name: string; filters: Filters }[];
-export const LAST_ITEMS_URL = "filingguard:last-items-url";
 
 function readFilters(params: URLSearchParams): Filters {
   const out: Filters = {};
@@ -172,14 +171,6 @@ export default function Items() {
     if (basis === "as_scored") next.set("basis", basis);
     router.replace(`${pathname}${next.size ? `?${next}` : ""}`, { scroll: false });
   }, [params, basis, pathname, router]);
-
-  useEffect(() => {
-    try {
-      sessionStorage.setItem(LAST_ITEMS_URL, `/items/${key ? `?${key}` : ""}`);
-    } catch {
-      // storage can be unavailable; the back link then goes to the plain list
-    }
-  }, [key]);
 
   const items = useData(() => getItems({ ...filters, basis, sort: sortKey, order, page, page_size: PAGE_SIZE }), [key, basis]);
 
@@ -336,7 +327,7 @@ export default function Items() {
                 cell: (r) => (
                   <div className="space-y-1">
                     <Link
-                      href={itemHref(r.id, basis)}
+                      href={itemHref(r.id, basis, Object.fromEntries(params))}
                       aria-label={`${r.id}: ${r.question}`}
                       className="font-mono text-sm font-medium underline underline-offset-4"
                     >

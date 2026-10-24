@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { AuthorBlock } from "@/components/site/AuthorBlock";
-import { getSummary } from "@/lib/api";
+import { getSummary } from "@/lib/data";
 import { author, copy, fill } from "@/lib/content";
 import { useData } from "@/lib/useData";
 

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
-import ItemDetail from "@/components/pages/ItemDetail";
+import ItemRedirect from "@/components/pages/ItemRedirect";
 
 export const metadata: Metadata = { title: "Question" };
 
 export default function Page() {
-  return <ItemDetail />;
+  return <ItemRedirect />;
 }

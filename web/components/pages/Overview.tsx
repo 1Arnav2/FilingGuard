@@ -13,7 +13,7 @@ import { AnimatedBeam } from "@/components/ui/animated-beam";
 import { BentoGrid } from "@/components/ui/bento-grid";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { NumberTicker } from "@/components/ui/number-ticker";
-import { getMeta, getSummary } from "@/lib/api";
+import { getMeta, getSummary } from "@/lib/data";
 import { bars } from "@/lib/bars";
 import { useBasis } from "@/lib/basis";
 import { basisName, contactHref, copy, fill, headline, limitationGroups, media, resolvePath, statusName } from "@/lib/content";

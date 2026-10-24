@@ -3,17 +3,17 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 import { OutcomeBadge, VerdictBadge } from "@/components/data/badges";
 import { DataTable } from "@/components/data/DataTable";
 import { Disclosure } from "@/components/data/Disclosure";
-import { ErrorState, LoadingState, Panel } from "@/components/data/layout";
+import { Panel } from "@/components/data/layout";
 import { OtherBasis } from "@/components/data/outcomes";
-import { LAST_ITEMS_URL } from "@/components/pages/Items";
+import { PAGE_SIZE } from "@/components/pages/Items";
 import { JumpTo } from "@/components/site/JumpTo";
 import { Term } from "@/components/site/Term";
-import { getItem, getItems } from "@/lib/api";
+import { ITEMS } from "@/lib/data";
 import { useBasis } from "@/lib/basis";
 import {
   attackTypeName,
@@ -33,9 +33,9 @@ import {
   verdictName,
 } from "@/lib/content";
 import { evidenceText } from "@/lib/format";
-import { itemHref } from "@/lib/links";
+import { itemHref, itemsHref } from "@/lib/links";
+import { queryItems } from "@/lib/query";
 import type { Basis, ItemDetail as Item, Reason } from "@/lib/types";
-import { useData } from "@/lib/useData";
 
 const T = copy.item;
 const YEAR_FIELDS = new Set(["fiscal_year", "trap_fiscal_year", "calendar_year", "quarter"]);
@@ -349,47 +349,36 @@ function Evidence({ item }: { item: Item }) {
   );
 }
 
-/** The stored Items view (filters and sort) as API filters, or the default list. */
-function storedFilters(): Record<string, string> {
-  try {
-    const url = sessionStorage.getItem(LAST_ITEMS_URL);
-    if (!url) return {};
-    const params = new URLSearchParams(url.split("?")[1] ?? "");
-    params.delete("page");
-    params.delete("preset");
-    params.delete("basis");
-    return Object.fromEntries(params);
-  } catch {
-    return {};
-  }
+/** The list the reader came from: its filters and sort from this page's URL. */
+function useView(): Record<string, string> {
+  const params = useSearchParams();
+  return useMemo(() => {
+    const view = Object.fromEntries(params);
+    for (const k of ["basis", "page", "preset", "id"]) delete view[k];
+    return view;
+  }, [params]);
+}
+
+/** The IDs in that list, or every question by ID when the list does not hold this one. */
+function useList(id: string, basis: Basis, view: Record<string, string>): { ids: string[]; view: Record<string, string> } {
+  return useMemo(() => {
+    const ids = queryItems(ITEMS, { ...view, basis, page_size: 500 }).items.map((r) => r.id);
+    if (ids.includes(id)) return { ids, view };
+    return { ids: queryItems(ITEMS, { basis, page_size: 500 }).items.map((r) => r.id), view: {} };
+  }, [id, basis, view]);
 }
 
 /** Previous and next question within the list the reader came from (or all questions by ID). */
-function PrevNext({ id, basis }: { id: string; basis: Basis }) {
-  const [ids, setIds] = useState<string[] | null>(null);
-  useEffect(() => {
-    let live = true;
-    const ofPage = (page: { items: { id: string }[] }) => page.items.map((r) => r.id);
-    getItems({ ...storedFilters(), basis, page: 1, page_size: 500 })
-      .then(ofPage)
-      .then((list) => (list.includes(id) ? list : getItems({ basis, page: 1, page_size: 500 }).then(ofPage)))
-      .then(
-        (list) => live && setIds(list),
-        () => live && setIds([]),
-      );
-    return () => {
-      live = false;
-    };
-  }, [id, basis]);
-  if (!ids || !ids.includes(id)) return null;
+function PrevNext({ id, basis, ids, view }: { id: string; basis: Basis; ids: string[]; view: Record<string, string> }) {
   const i = ids.indexOf(id);
+  if (i < 0) return null;
   const prev = i > 0 ? ids[i - 1] : null;
   const next = i < ids.length - 1 ? ids[i + 1] : null;
   const link = "inline-flex min-h-11 items-center gap-1.5 rounded-lg border px-3 text-sm font-medium hover:bg-muted sm:min-h-9";
   return (
     <nav aria-label="Questions in your list" className="flex flex-wrap items-center justify-between gap-3">
       {prev ? (
-        <Link href={itemHref(prev, basis)} className={link}>
+        <Link href={itemHref(prev, basis, view)} className={link}>
           <ArrowLeft aria-hidden="true" className="size-4" />
           {T.prev}
           <span className="font-mono text-xs text-muted-foreground">{prev}</span>
@@ -401,7 +390,7 @@ function PrevNext({ id, basis }: { id: string; basis: Basis }) {
         {template(T.position, { index: String(i + 1), total: String(ids.length) })}
       </span>
       {next ? (
-        <Link href={itemHref(next, basis)} className={link}>
+        <Link href={itemHref(next, basis, view)} className={link}>
           <span className="font-mono text-xs text-muted-foreground">{next}</span>
           {T.next}
           <ArrowRight aria-hidden="true" className="size-4" />
@@ -414,15 +403,10 @@ function PrevNext({ id, basis }: { id: string; basis: Basis }) {
 }
 
 function ItemBody({ item, basis }: { item: Item; basis: Basis }) {
-  const [back, setBack] = useState("/items/");
-  useEffect(() => {
-    document.title = `${item.id} · Items · FilingGuard`;
-    try {
-      setBack(sessionStorage.getItem(LAST_ITEMS_URL) ?? "/items/");
-    } catch {
-      // storage can be unavailable; keep the plain list
-    }
-  }, [item.id]);
+  const list = useList(item.id, basis, useView());
+  // Back to the list page that holds this question.
+  const page = Math.floor(Math.max(0, list.ids.indexOf(item.id)) / PAGE_SIZE) + 1;
+  const back = itemsHref({ ...list.view, ...(page > 1 ? { page: String(page) } : {}) }, basis);
   return (
     <div className="space-y-6">
       <Link href={back} className="inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
@@ -440,7 +424,7 @@ function ItemBody({ item, basis }: { item: Item; basis: Basis }) {
         <h1 className="font-mono text-2xl font-semibold tracking-tight">{item.id}</h1>
         <p className="max-w-3xl text-xl leading-relaxed">{item.question}</p>
       </header>
-      <PrevNext id={item.id} basis={basis} />
+      <PrevNext id={item.id} basis={basis} ids={list.ids} view={list.view} />
       <JumpTo
         sections={[
           { id: "what", label: T.what_happened },
@@ -467,23 +451,6 @@ function ItemBody({ item, basis }: { item: Item; basis: Basis }) {
   );
 }
 
-export default function ItemDetail() {
-  const basis = useBasis();
-  const id = useSearchParams().get("id") ?? "";
-  const { data, error, retry } = useData(() => (id ? getItem(id) : Promise.reject(new Error("no id"))), [id]);
-  if (!id) return <p role="alert">{T.no_id} <Link href="/items/" className="underline">{T.back}</Link></p>;
-  if (error?.includes("HTTP 404")) {
-    return (
-      <div role="alert" className="space-y-2">
-        <h1 className="text-2xl font-semibold">{id}</h1>
-        <p>{T.not_found}</p>
-        <Link href="/items/" className="underline underline-offset-4">
-          {T.back}
-        </Link>
-      </div>
-    );
-  }
-  if (error) return <ErrorState error={error} onRetry={retry} />;
-  if (!data) return <LoadingState />;
-  return <ItemBody item={data} basis={basis} />;
+export default function ItemDetail({ item }: { item: Item }) {
+  return <ItemBody item={item} basis={useBasis()} />;
 }
