@@ -1,0 +1,20 @@
+# Allowlist: everything is excluded, then only what the image needs is let back in.
+*
+!Dockerfile
+!pyproject.toml
+!requirements-serve.txt
+!src/
+!results/summary.json
+!results/dashboard/
+!web/
+
+# Never in the build context, even inside an allowed folder
+**/.env
+**/.env.*
+**/__pycache__
+**/*.pyc
+**/*.egg-info
+web/node_modules
+web/.next
+web/out
+web/*.tsbuildinfo

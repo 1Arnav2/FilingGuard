@@ -191,6 +191,21 @@ In development, `npm run dev` in `web/` forwards `/api` to uvicorn on port 8000.
 
 The dashboard reads committed results only. It makes no live LLM calls.
 
+### 2.7 Serving and deploy (`api/main.py`, `Dockerfile`; D-078)
+`create_app()` builds one FastAPI app for one origin: the results routes, `GET /api/health`, a JSON
+404 for any other `/api/*` path, and the static export mounted at `/` (folder from `FILINGGUARD_WEB`,
+default `web/out`; not mounted when missing, so local API work is unchanged). Responses over 1 kB are
+gzipped. The live target route `POST /api/target/answer` lives in `api/live.py` and is included only
+when `FILINGGUARD_LIVE_TARGET` is exactly `1`; off, it is absent (404) and no agent, LLM or data code
+is imported.
+
+The `Dockerfile` builds the export in a pinned Node stage, then installs only
+`requirements-serve.txt` plus the package with `--no-deps` on a pinned Python slim image, copies
+`results/summary.json`, `results/dashboard/` and the export, and runs uvicorn as a non-root user on
+`$PORT`. `.dockerignore` is an allowlist, so `.env`, `data/`, caches and local files never enter the
+build context. `render.yaml` declares one Docker web service with the health check and no environment
+variables. The image holds no key, no index and no gold data.
+
 ## 3. Stack
 | Layer | Choice | Note |
 |---|---|---|
@@ -209,7 +224,8 @@ Section 2 paths such as `src/data/` mean `src/filingguard/data/`.
 
 ```
 FilingGuard/
-  README.md  .env.example  .gitignore  pyproject.toml  Dockerfile
+  README.md  .env.example  .gitignore  pyproject.toml  Dockerfile  .dockerignore
+  requirements-serve.txt  render.yaml
   docs/      PRD.md TRD.md EVAL.md CORPUS.md ROADMAP.md BUILD_LOG.md DECISIONS_LOG.md
   src/
     filingguard/
@@ -218,7 +234,7 @@ FilingGuard/
       redteam/ generators, phrasing, split    (writes data/gold/, D-022)
       eval/    run.py score.py stats.py taxonomy.py
       llm/     client.py cache.py
-      api/     main.py routes.py
+      api/     main.py routes.py results.py live.py
   web/       Next.js app (app/, components/, lib/)
   data/      raw/ (git-ignored)  processed/  gold/  testset/
   results/   runs/*.jsonl  summary.json
@@ -235,6 +251,9 @@ NUMERIC_REL_TOLERANCE=0.005
 CACHE_DIR=.cache
 SPEND_WARN_USD=5.00
 SPEND_CAP_USD=7.00
+# FILINGGUARD_RESULTS=results
+# FILINGGUARD_WEB=web/out
+FILINGGUARD_LIVE_TARGET=0
 ```
 
 `TARGET_MODEL` and `VERIFIER_MODEL` are both pinned to `gemini-3.8-flash` (D-012), to be

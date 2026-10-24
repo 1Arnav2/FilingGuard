@@ -126,8 +126,8 @@ def test_unknown_item_is_404(client):
 
 def test_api_reads_no_gold_or_testset_and_no_llm():
     for path in API_DIR.glob("*.py"):
-        if path.name == "main.py":
-            continue  # the live target route lives there and is gated separately in Phase 6b
+        if path.name == "live.py":
+            continue  # the live target route, off unless FILINGGUARD_LIVE_TARGET=1 (main.create_app)
         source = path.read_text(encoding="utf-8")
         assert "data/gold" not in source and "data/testset" not in source, path.name
         for node in ast.walk(ast.parse(source)):

@@ -16,6 +16,30 @@ of every session.
 
 ---
 
+## 2026-10-24 — Phase 6b: deploy step (serving and image)
+**Built:** `create_app()` in `api/main.py`: results API, `GET /api/health`, JSON 404 for unknown
+`/api/*` paths, gzip, and the static export mounted at `/` (`FILINGGUARD_WEB`, default `web/out`).
+Live target route moved to `api/live.py`, included only when `FILINGGUARD_LIVE_TARGET=1` (off by
+default; absent and not imported otherwise). `Dockerfile` (pinned Node stage builds the export;
+pinned Python slim stage with `requirements-serve.txt` and the package `--no-deps`; non-root; `$PORT`),
+allowlist `.dockerignore`, `render.yaml` (no environment, health check, no auto-deploy).
+`.env.example` and TRD §2.7, §4, §5 updated. D-078, H-036.
+**Tests:** 304 Python tests pass (20 new in `tests/test_serve.py`: pages, redirects, export 404, API
+with the export mounted, JSON 404, gzip, live route off by default and on only for exactly `1`, a
+clean-process import loads no agent/LLM/data code, served modules need only the serve list, pinned
+requirements, `.dockerignore`, Dockerfile, `render.yaml`, `.env.example`); `test_api.py` moved to the
+factory. Web: 4 tests, typecheck, lint, static export build pass. Image-layout check (clean venv with
+the serve list only, folder holding exactly what the Dockerfile copies): 6 pages and the API 200,
+unknown API path JSON 404, unknown page the export's 404, live route 404, `/api/items` gzipped,
+no console errors, no horizontal overflow at 375 px.
+**Broken or unfinished:** `docker build` not run: Docker Desktop crashed at start-up (H-036). Deploy to
+Render waits for the owner's push and go-ahead.
+**Numbers worth keeping:** none new.
+**Spend so far:** $5.2521 (no model calls).
+**Next session starts with:** Build and run the image (after a reboot), then the owner pushes and
+creates the Render service; check the public link on desktop and mobile.
+**Commit:** Phase 6b deploy step: one-origin serving, gated live route, Dockerfile
+
 ## 2026-10-22 — Phase 6c: polish and Should tier
 **Built:** In two commits (the first was the previous session's work, verified and committed before
 any change). Polish: plain limitation summaries on Overview linking to the full text; every rate and

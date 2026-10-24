@@ -108,7 +108,9 @@ Phase 5 $2.69–$3.46, project end **$5.01–$5.78**, under the $7 cap (`docs/PH
 - [x] Item explorer with filters and evidence drill-down (gold, figures read, judge, both bases,
       verdict, D-071 correction, owner's hand-check)
 - [x] Method page (2026-10-21)
-- [ ] Static export served by FastAPI; Dockerfile; deploy to Render (after 6c review)
+- [x] Static export served by FastAPI; Dockerfile; live target route behind `FILINGGUARD_LIVE_TARGET`,
+      off by default (D-078, 2026-10-24)
+- [ ] Deploy to Render (needs the owner's push and go-ahead)
 
 **6c. Redesign (owner's DESIGN_SPEC.md, Must tier; D-076)**
 - [x] Overview page with stat cards, how-it-works diagram, author block, outreach line, video slot

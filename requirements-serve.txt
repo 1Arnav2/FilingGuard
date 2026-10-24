@@ -1,0 +1,6 @@
+# Runtime dependencies of the public image only: the read-only results API and the static export.
+# The package itself is installed with --no-deps; the full pipeline needs pyproject.toml's list.
+fastapi==0.142.2
+pydantic==2.13.5
+starlette==1.7.0
+uvicorn==0.54.0

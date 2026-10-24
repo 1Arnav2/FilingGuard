@@ -1603,6 +1603,30 @@ ones. (10) The H-034 limitation links to the "False blocks" Items view.
 
 ---
 
+### D-078 — Phase 6b deploy step: one-origin serving, live route flag, slim image
+**Date:** 2026-10-24
+**Phase:** 6b
+**Context:** The dashboard needs one public service. The old live target route sat in `main.py`,
+ungated, and the full dependency list (fastembed, genai, pandas) is not needed to serve results.
+**Options considered:** Serve the export from a separate static host vs from FastAPI; gate the live
+route by a 403 check inside the route vs not registering it; install the full package vs a serve-only
+requirements file.
+**Decision:** `create_app()` in `api/main.py` mounts the export at `/` after the API routes, adds
+`GET /api/health` (Render's health check) and a JSON 404 for unknown `/api/*` paths, and gzips
+responses over 1 kB. The live route moves to `api/live.py`, included only when
+`FILINGGUARD_LIVE_TARGET` is exactly `1`; otherwise it is absent and nothing under agents, llm or data
+is imported. The image installs pinned `requirements-serve.txt` (fastapi, pydantic, starlette,
+uvicorn) and the package with `--no-deps`; base images pinned to the local versions (Node 24.11.0,
+Python 3.11.9). `.dockerignore` is an allowlist. `render.yaml` sets no environment and
+`autoDeploy: false`.
+**Why:** One origin keeps the client's same-origin `/api` calls unchanged. An unregistered route
+cannot be reached by a mistake in a check, and the public image cannot make a model call at all.
+A JSON 404 stops a mistyped API path from returning a page with status 200 or a 405.
+**Trade-off accepted:** The live route is local only; the image has no index, so it would fail there
+even if switched on. Two dependency lists to keep in step (a test checks the served modules import
+only the serve list).
+**Revisit if:** A live demo is wanted on the public site (would need the index, a key and a budget).
+
 ## Hurdles
 
 ### H-001 — 503 "high demand" from Gemini on a test call
@@ -2191,3 +2215,21 @@ given the final value throughout. Verdict lookup and the change format fixed.
 **Lesson:** Bind-by-path code needs a test against the real keys; animation code needs a check of the
 final state, not only the motion.
 **Linked decision:** D-076
+
+
+### H-036 — Phase 6b deploy step: Docker Desktop would not start, image not built locally
+**Date:** 2026-10-24
+**Phase:** 6b
+**What happened:** Docker Desktop 4.29 stopped at start-up with "removing stale socket:
+userAnalyticsOtlpHttp.sock: The file cannot be accessed by the system". The engine never came up,
+so `docker build` could not run.
+**Impact:** The Dockerfile was not built or run on this machine in this session.
+**What I tried:** Started Docker Desktop twice; tried to delete the stale socket file (refused by the
+system, usually cleared by a reboot).
+**Resolution:** Checked the image's contents another way: a clean Python 3.11 venv with only
+`requirements-serve.txt` and the package installed `--no-deps`, run from a folder holding exactly what
+the Dockerfile copies (`results/summary.json`, `results/dashboard/`, `web/out`). All six pages and the
+API answered; the live route returned 404; no console errors; no horizontal overflow at 375 px. The
+real image build is still to run (after a reboot, or on Render's first build).
+**Lesson:** Check the container runtime at the start of a deploy step, not at the end.
+**Linked decision:** D-078

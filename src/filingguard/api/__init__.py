@@ -1,1 +1,1 @@
-"""HTTP API: the target agent endpoint now; read-only results routes in Phase 6."""
+"""HTTP API: read-only results routes, the static dashboard export, and the gated live target route."""
