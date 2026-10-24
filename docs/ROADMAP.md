@@ -115,9 +115,9 @@ Phase 5 $2.69–$3.46, project end **$5.01–$5.78**, under the $7 cap (`docs/PH
 **6d. Static deploy (D-079)**
 - [x] Render path dropped (`render.yaml` removed); FastAPI and Docker kept for local runs
 - [x] LinkedIn link set in `web/content/author.json`
-- [ ] Site reads `results/` at build time; filters, search, sort, presets and navigation in the page;
-      one static page per item; no runtime API
-- [ ] Safety tests on the built output
+- [x] Site reads `results/` at build time; filters, search, sort, presets and navigation in the page;
+      one static page per item; no runtime API (2026-10-24)
+- [x] Safety tests on the source and the built output; page filtering checked equal to the API
 - [ ] Deploy to Vercel (owner: push, then create the project with `web/` as the root)
 
 **6c. Redesign (owner's DESIGN_SPEC.md, Must tier; D-076)**

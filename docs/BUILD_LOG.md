@@ -16,6 +16,39 @@ of every session.
 
 ---
 
+## 2026-10-24 — Phase 6d: static site (deploy option B)
+**Built:** D-079: the public site is the static export on Vercel; `render.yaml` removed; FastAPI,
+`/api/health` and the Dockerfile kept and relabelled for local runs; live route unchanged
+(`FILINGGUARD_LIVE_TARGET=1` only). LinkedIn set to the owner's profile. The site reads `results/` at
+build time (`web/scripts/sync-results.mjs` → `web/generated/`, run before dev, build, typecheck and
+test); `web/lib/api.ts` replaced by `web/lib/data.ts`; list filtering in the page (`web/lib/query.ts`);
+one pre-rendered page per item (`/item/FG-xxxx/`, `generateStaticParams`); old `/item/?id=` links
+redirect. Filters and sort now travel in item URLs (previous/next, Back to the right page, shared
+links) instead of session storage. `next.config.ts` has no rewrites and reads no environment variable.
+**Tests:** 311 Python tests pass (new `tests/test_static_site.py`: build data equals the results files;
+page filtering equals the API on every preset, search, sort, filter and page on both bases, 70 queries;
+no fetch, API path, local address, environment variable, `NEXT_PUBLIC_`, rewrite, middleware, route
+handler, server action or live route in the site source; the built output has no API path or local
+address; 210 item pages built). Web: 8 tests, typecheck, lint, build pass. Freeze tests pass; tags
+unchanged.
+Static-server check: `web/out` served by `python -m http.server` with no API running: every page 200,
+`/api/*` 404, no request to any `/api` path, no console errors. Against the b52ac1a build (old export
+plus its API, run locally): main text of Results, Items (filtered), Method and Limitations identical at
+1440 and 375 px; Overview identical except the new LinkedIn link; item page identical when the list
+filter is in its URL. Audit of 6 pages × 1440/375 × light/dark (5,180 text elements): same result as
+b52ac1a — no horizontal overflow; one contrast flag on both, the disabled "Previous" page button (3.71,
+disabled controls are exempt); the same small-target list (inline links and definition buttons, the
+D-077 inline exception).
+**Broken or unfinished:** Docker engine still not running (H-036 open; image not built). The first
+build after the static server ran failed with EBUSY because the server held `web/out`; serving it with
+`--directory` from outside avoids that. Deploy to Vercel waits for the owner.
+**Numbers worth keeping:** `web/out` 8.1 MB (item pages 6.3 MB, `_next` 1.7 MB); first-load JS 104–197 kB
+per route. Screenshots: FilingGuard_screens/v4 (12, outside the repo).
+**Spend so far:** $5.2521 (no model calls).
+**Next session starts with:** Owner pushes and creates the Vercel project (root `web/`); check the
+public link on desktop and mobile; then Phase 7.
+**Commit:** Phase 6d commits (decision and clean-up; site; tests; docs)
+
 ## 2026-10-24 — Phase 6b: deploy step (serving and image)
 **Built:** `create_app()` in `api/main.py`: results API, `GET /api/health`, JSON 404 for unknown
 `/api/*` paths, gzip, and the static export mounted at `/` (`FILINGGUARD_WEB`, default `web/out`).

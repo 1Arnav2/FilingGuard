@@ -140,7 +140,8 @@ detector is run over every clean corpus chunk to count false positives.
 - `taxonomy.py`: assign a failure label to each wrong answer.
 
 ### 2.6 Dashboard (`web/`)
-Next.js (React, TypeScript), built as a static export and served by the same FastAPI service.
+Next.js (React, TypeScript), built as a static export with the results built in, deployed as a static
+site on Vercel with `web/` as the project root (D-079). FastAPI can also serve it for local runs (§2.7).
 Redesigned in Phase 6c (D-076) from `DESIGN_SPEC.md` (kept outside the repo): neutral palette, Geist
 type with tabular figures, light and dark mode (system by default, with a toggle), shadcn/ui base
 components and four Magic UI accents on the Overview only. Sources and licences:
@@ -156,7 +157,8 @@ Pages (nav: Overview · Results · Items · Method · Limitations · Code):
   here), planted errors by kind, latency and cost. Every count links to the matching Items view.
 - **Items** (`/items/`): preset views with live counts, labelled filters, removable filter chips,
   a table on wide screens and cards on narrow ones.
-- **Item detail** (`/item/?id=`): what happened (outcome, verdict, outcome, plus a sentence from fixed
+- **Item detail** (`/item/FG-xxxx/`, one pre-rendered page per item; older `/item/?id=` links
+  redirect there): what happened (outcome, verdict, outcome, plus a sentence from fixed
   templates), expected vs given answer, verifier reasons in plain words, D-071 correction, owner's
   hand-check, judge, and collapsed technical evidence.
 - **Method** and **Limitations** (`/method/`, `/limitations/`): calm text pages; Method ends with a
@@ -187,7 +189,17 @@ Per-item data comes from `results/dashboard/items_v1.jsonl`, written by
 `eval/scripts/export_dashboard.py` (only `eval/` reads gold); the corrected basis in it is applied
 by the Phase 5 summary's own overlay. Fixed prose lives in `web/content/`; every number in it is a declared value or a placeholder filled
 from the API, and every code in the results has a plain label (`tests/test_web_content.py`).
-In development, `npm run dev` in `web/` forwards `/api` to uvicorn on port 8000.
+Build-time data (D-079): `web/scripts/sync-results.mjs` runs before `dev`, `build`, `typecheck` and
+`test`. It copies `results/summary.json`, `results/dashboard/meta_v1.json` and
+`results/dashboard/items_v1.jsonl` into `web/generated/` (git-ignored) unchanged, adding only
+`generated_from` (as the API does) and the list fields of each item. The pages import those files
+(`web/lib/data.ts`); item pages read the full records at build time (`web/lib/items.server.ts`,
+`generateStaticParams`). Search, filters, presets with counts, sorting and paging run in the page
+(`web/lib/query.ts`, a port of the API's `items()`; `tests/test_static_site.py` checks every preset,
+search, sort and page gives the API's exact result on both bases). The current filter and sort live in
+the URL query string; item links carry them, so previous/next, Back and shared links keep the list.
+The site makes no request to any API; tests scan its source and the built `web/out` for API paths,
+local addresses, environment variables and server features.
 
 The dashboard reads committed results only. It makes no live LLM calls.
 
@@ -214,7 +226,7 @@ and the image are for running locally only; the public site is the static export
 | Embeddings + vector store | `jinaai/jina-embeddings-v2-small-en` via fastembed; numpy exact cosine search | D-016 |
 | API | FastAPI | Target agent endpoint |
 | Storage | SQLite + JSONL | |
-| Dashboard | Next.js (React, TypeScript), shadcn/ui, Magic UI accents, Geist, next-themes, static export | Served by FastAPI; D-076, `docs/THIRD_PARTY.md` |
+| Dashboard | Next.js (React, TypeScript), shadcn/ui, Magic UI accents, Geist, next-themes, static export | Vercel static site (D-079); D-076, `docs/THIRD_PARTY.md` |
 | Tests | pytest | Verifier steps 2 to 4 get unit tests |
 | Deploy | Vercel, static site (D-079) | The static export alone; FastAPI and Docker for local runs only |
 

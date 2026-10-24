@@ -18,9 +18,7 @@ export function presetHref(id: string, basis: Basis): string {
 /** An item's own page; `view` carries the list's filters and sort, so previous/next and Back keep them. */
 export function itemHref(id: string, basis: Basis, view: Record<string, string> = {}): string {
   const query = new URLSearchParams(view);
-  query.delete("page");
-  query.delete("preset");
-  query.delete("basis");
+  for (const key of ["page", "preset", "basis", "id"]) query.delete(key);
   if (basis === "as_scored") query.set("basis", basis);
   return `/item/${encodeURIComponent(id)}/${query.size ? `?${query}` : ""}`;
 }
