@@ -149,11 +149,6 @@ def test_dockerfile_has_no_secrets_and_pinned_bases():
     assert "USER app" in text
 
 
-def test_render_blueprint_sets_no_environment():
-    text = (ROOT / "render.yaml").read_text(encoding="utf-8")
-    assert "envVars" not in text and "healthCheckPath: /api/health" in text
-
-
 def test_env_example_documents_the_serve_settings():
     text = (ROOT / ".env.example").read_text(encoding="utf-8")
     assert "FILINGGUARD_LIVE_TARGET=0" in text and "FILINGGUARD_WEB" in text

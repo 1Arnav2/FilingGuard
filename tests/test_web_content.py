@@ -153,8 +153,7 @@ def test_author_and_media_links():
     author = load("author.json")
     assert author["name"] and author["github"].startswith("https://github.com/")
     assert author["repo"].startswith(author["github"] + "/")
-    placeholder = "PASTE-YOUR-LINKEDIN-URL-HERE"  # hidden on the site until replaced (web/lib/content.ts)
-    assert author["linkedin"] in ("", placeholder) or author["linkedin"].startswith("https://www.linkedin.com/")
+    assert author["linkedin"] == "https://www.linkedin.com/in/arnav-ambre/"  # owner's profile (Phase 6d)
     assert author["email"] == "" or re.fullmatch(r"[^@\s]+@[^@\s]+\.[a-z]+", author["email"])
     url = load("media.json")["demo_video_url"]
     assert url == "" or url.startswith("https://")

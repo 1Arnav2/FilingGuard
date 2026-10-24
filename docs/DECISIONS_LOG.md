@@ -1627,6 +1627,23 @@ even if switched on. Two dependency lists to keep in step (a test checks the ser
 only the serve list).
 **Revisit if:** A live demo is wanted on the public site (would need the index, a key and a budget).
 
+### D-079 — Phase 6d: public site is a static export on Vercel (supersedes D-078's Render path)
+**Date:** 2026-10-24
+**Phase:** 6d
+**Context:** D-078 planned one Render service (FastAPI serving the export and the API). Render's free
+tier sleeps and takes about 30–60 s to wake. Recruiters open the link once; a cold start loses them.
+**Options considered:** Render free tier (cold starts); a paid always-on Render plan; a static
+Next.js export on Vercel with all data built in.
+**Decision:** The public site is the static Next.js export on Vercel, with `web/` as the project
+root. FastAPI, `create_app()`, `/api/health` and the Dockerfile stay in the repo for running locally
+only. `render.yaml` is removed. The live target route stays behind `FILINGGUARD_LIVE_TARGET=1`
+exactly as before, and does not exist on the static site.
+**Why:** A static site has no cold start and no server to fail, costs nothing, and cannot make a
+model call.
+**Trade-off accepted:** The site no longer reads the API at run time, so filtering moves into the
+page and the data is built in; a test keeps the page's filtering equal to the API's.
+**Revisit if:** A live demo of the target is wanted on the public site.
+
 ## Hurdles
 
 ### H-001 — 503 "high demand" from Gemini on a test call

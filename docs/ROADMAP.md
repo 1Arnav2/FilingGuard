@@ -110,7 +110,15 @@ Phase 5 $2.69–$3.46, project end **$5.01–$5.78**, under the $7 cap (`docs/PH
 - [x] Method page (2026-10-21)
 - [x] Static export served by FastAPI; Dockerfile; live target route behind `FILINGGUARD_LIVE_TARGET`,
       off by default (D-078, 2026-10-24)
-- [ ] Deploy to Render (needs the owner's push and go-ahead)
+- [ ] ~~Deploy to Render~~ superseded by 6d: static site on Vercel (D-079)
+
+**6d. Static deploy (D-079)**
+- [x] Render path dropped (`render.yaml` removed); FastAPI and Docker kept for local runs
+- [x] LinkedIn link set in `web/content/author.json`
+- [ ] Site reads `results/` at build time; filters, search, sort, presets and navigation in the page;
+      one static page per item; no runtime API
+- [ ] Safety tests on the built output
+- [ ] Deploy to Vercel (owner: push, then create the project with `web/` as the root)
 
 **6c. Redesign (owner's DESIGN_SPEC.md, Must tier; D-076)**
 - [x] Overview page with stat cards, how-it-works diagram, author block, outreach line, video slot

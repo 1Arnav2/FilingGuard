@@ -1,4 +1,5 @@
-# Public dashboard image: the static export and the read-only results API on one origin.
+# Local run: the static export and the read-only results API on one origin (D-078). The public site is
+# the static export alone on Vercel (D-079); this image is not deployed.
 # Holds no secrets, no data/ and no index; the live target route stays off (FILINGGUARD_LIVE_TARGET unset).
 
 FROM node:24.11.0-slim AS web

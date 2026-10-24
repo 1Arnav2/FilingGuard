@@ -38,7 +38,7 @@ def create_app(live_target: bool | None = None, static_dir: Path | None = None) 
 
     @app.get("/api/health")
     def health() -> dict:
-        """Liveness check for the host."""
+        """Liveness check for a local run (the Docker image)."""
         return {"status": "ok"}
 
     @app.api_route("/api/{path:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE"], include_in_schema=False)

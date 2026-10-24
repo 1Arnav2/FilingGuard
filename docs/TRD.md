@@ -203,8 +203,8 @@ The `Dockerfile` builds the export in a pinned Node stage, then installs only
 `requirements-serve.txt` plus the package with `--no-deps` on a pinned Python slim image, copies
 `results/summary.json`, `results/dashboard/` and the export, and runs uvicorn as a non-root user on
 `$PORT`. `.dockerignore` is an allowlist, so `.env`, `data/`, caches and local files never enter the
-build context. `render.yaml` declares one Docker web service with the health check and no environment
-variables. The image holds no key, no index and no gold data.
+build context. The image holds no key, no index and no gold data. FastAPI, `create_app()`, `/api/health`
+and the image are for running locally only; the public site is the static export alone (D-079).
 
 ## 3. Stack
 | Layer | Choice | Note |
@@ -216,7 +216,7 @@ variables. The image holds no key, no index and no gold data.
 | Storage | SQLite + JSONL | |
 | Dashboard | Next.js (React, TypeScript), shadcn/ui, Magic UI accents, Geist, next-themes, static export | Served by FastAPI; D-076, `docs/THIRD_PARTY.md` |
 | Tests | pytest | Verifier steps 2 to 4 get unit tests |
-| Deploy | Render free tier, Docker, one service | FastAPI serves the API and the static dashboard |
+| Deploy | Vercel, static site (D-079) | The static export alone; FastAPI and Docker for local runs only |
 
 ## 4. Repo layout
 All Python code lives in one installable package, `filingguard`, under `src/` (D-009).
@@ -225,7 +225,7 @@ Section 2 paths such as `src/data/` mean `src/filingguard/data/`.
 ```
 FilingGuard/
   README.md  .env.example  .gitignore  pyproject.toml  Dockerfile  .dockerignore
-  requirements-serve.txt  render.yaml
+  requirements-serve.txt
   docs/      PRD.md TRD.md EVAL.md CORPUS.md ROADMAP.md BUILD_LOG.md DECISIONS_LOG.md
   src/
     filingguard/
