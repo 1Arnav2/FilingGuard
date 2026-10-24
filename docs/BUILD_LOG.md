@@ -26,7 +26,7 @@ one pre-rendered page per item (`/item/FG-xxxx/`, `generateStaticParams`); old `
 redirect. Filters and sort now travel in item URLs (previous/next, Back to the right page, shared
 links) instead of session storage. `next.config.ts` has no rewrites and reads no environment variable.
 **Tests:** 311 Python tests pass (new `tests/test_static_site.py`: build data equals the results files;
-page filtering equals the API on every preset, search, sort, filter and page on both bases, 70 queries;
+page filtering equals the API on every preset, search, sort, filter and page on both bases, 58 queries;
 no fetch, API path, local address, environment variable, `NEXT_PUBLIC_`, rewrite, middleware, route
 handler, server action or live route in the site source; the built output has no API path or local
 address; 210 item pages built). Web: 8 tests, typecheck, lint, build pass. Freeze tests pass; tags
