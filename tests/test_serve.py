@@ -132,8 +132,9 @@ def test_dockerignore_keeps_secrets_and_data_out():
              if l.strip() and not l.startswith("#")]
     assert rules[0] == "*"  # allowlist
     allowed = {r[1:] for r in rules if r.startswith("!")}
-    assert not any(a.startswith(("data", ".env", ".cache", "results/runs", "CLAUDE", "AGENTS", "FilingGuard_"))
-                   for a in allowed), allowed
+    # Exactly what the image needs; local files, data/ and secrets can never be let back in.
+    assert allowed == {"Dockerfile", "pyproject.toml", "requirements-serve.txt", "src/", "results/summary.json",
+                       "results/dashboard/", "web/"}, allowed
     assert {"**/.env", "**/.env.*", "web/node_modules", "web/out"} <= set(rules)
 
 
