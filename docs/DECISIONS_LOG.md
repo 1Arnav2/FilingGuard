@@ -1675,6 +1675,18 @@ force.
 pushed history was ruled out.
 **Revisit if:** —
 
+### D-082 — Phase 7a: README pushed; eighth one-time push
+**Date:** 2026-10-24 · **Phase:** 7a
+**Context:** The public README (`7bda053`) was committed locally after the pre-public audit.
+**Decision:** Push as a one-time exception approved by the owner. Checked first: every unpushed commit
+has author and committer Arnav Ambre, no Co-Authored-By, no "Generated with", no coding tool named; a
+search of every tracked file finds no coding-tool or local-only file names; 316 Python and 8 web tests
+pass; working tree clean. `main` pushed, no force. The live site redeploys from the push; it is
+checked for a 200 afterwards. Nothing else deployed.
+**Why:** The README is what a visitor to the repo reads first.
+**Trade-off accepted:** —
+**Revisit if:** —
+
 ## Hurdles
 
 ### H-001 — 503 "high demand" from Gemini on a test call
