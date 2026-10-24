@@ -138,8 +138,10 @@ Phase 5 $2.69–$3.46, project end **$5.01–$5.78**, under the $7 cap (`docs/PH
 - **Done when:** the public link loads from committed results on desktop and mobile.
 
 ## Phase 7 — Ship (1 day)
-- [ ] README: problem, method, results, limits, how to reproduce
-- [ ] Author check on full git history before making the repo public
+- [x] README: problem, method, results, limits, how to reproduce; numbers checked against
+      `results/` by `tests/test_readme.py` (2026-10-24)
+- [x] Author check on full git history before making the repo public (7a audit, 2026-10-24)
+- [ ] Repo topics (GitHub CLI not installed in 7a; owner to add)
 - [ ] Three-minute demo video
 - [ ] Resume bullet with real numbers
 - [ ] Outreach messages sent

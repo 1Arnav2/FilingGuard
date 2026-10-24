@@ -16,6 +16,26 @@ of every session.
 
 ---
 
+## 2026-10-24 — Phase 7a: pre-public audit and README
+**Built:** Pre-public audit of the full history (78 commits), read-only: no key, token or private key
+pattern in any commit (no gitleaks or trufflehog installed; grep over `git log -p --all`); the only
+`.env*` path ever committed is `.env.example` with empty values; no `.pem`, `.key` or credentials file;
+deleted paths are 11 old web and deploy files; largest blob 1.1 MB; `data/` holds processed SEC XBRL
+facts, filing metadata, 10-K excerpts and questions and labels built from them; local-only file names
+appear in 39 commit snapshots (added in 5 commits, removed by the Phase 6f commit), none at HEAD; no
+email but placeholder addresses, no local paths. Verdict: safe to make public. Repo topics skipped:
+the GitHub CLI is not installed. README rewritten for the public repo (live link, headline, Overview
+screenshot in `docs/images/`, what it does, results and pass bars on both bases, main finding, how it
+was kept honest, limitations, local run, layout, author); `tests/test_readme.py` binds every result
+number in it to `results/summary.json` and `results/dashboard/meta_v1.json` and checks both tables.
+**Tests:** 316 Python tests pass (5 new), 8 web tests. A mutation check (two numbers changed) failed
+the README test as it should.
+**Broken or unfinished:** Repo topics (owner, or install the GitHub CLI). H-036 open. Demo video,
+resume bullet and outreach (Phase 7).
+**Spend so far:** $5.2521 (no model calls).
+**Next session starts with:** Owner's review of the README; then the rest of Phase 7.
+**Commit:** README for the public repo, with a test binding its numbers to results
+
 ## 2026-10-24 — Phase 6f: neutral wording for local-only files
 **Built:** Seven doc lines that named local-only files reworded to "local-only files" (`docs/BUILD_LOG.md`
 1, `docs/DECISIONS_LOG.md` 6); search of every tracked file now 0 matches (was 7). Commit ef8ec63. D-081.
