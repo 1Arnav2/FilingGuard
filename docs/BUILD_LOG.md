@@ -16,6 +16,16 @@ of every session.
 
 ---
 
+## 2026-10-24 — Phase 6f: neutral wording for local-only files
+**Built:** Seven doc lines that named local-only files reworded to "local-only files" (`docs/BUILD_LOG.md`
+1, `docs/DECISIONS_LOG.md` 6); search of every tracked file now 0 matches (was 7). Commit ef8ec63. D-081.
+**Tests:** 311 Python tests (freeze tests unchanged, 7 pass), 8 web tests pass.
+**Broken or unfinished:** H-036 open. Deploy to Vercel waits for the owner.
+**Spend so far:** $5.2521 (no model calls).
+**Push:** one-time exception approved by the owner; new commits checked; `main` pushed, no force.
+**Next session starts with:** Owner creates the Vercel project (root `web/`); check the public link.
+**Commit:** Docs: neutral wording for local-only files; Phase 6f: push logged
+
 ## 2026-10-24 — Phase 6e: pre-push checks and push
 **Built:** `.playwright-mcp/` added to `.git/info/exclude` (the folder was already deleted; never tracked
 or committed). Fresh-clone build (what Vercel does): clone to a temporary folder, `npm ci` and

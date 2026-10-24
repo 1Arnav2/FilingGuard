@@ -1661,6 +1661,20 @@ No deploy.
 it); regenerating the lock also added unrelated optional entries, so it was left as it was.
 **Revisit if:** Vercel's build differs from the clone build.
 
+### D-081 — Phase 6f: neutral wording for local-only files; seventh one-time push
+**Date:** 2026-10-24 · **Phase:** 6f
+**Context:** Seven lines in two tracked docs named local-only files by their file names.
+**Decision:** Fixed forward, no history rewrite: the names replaced with "local-only files" (and
+"files excluded from the repo") in `docs/BUILD_LOG.md` (1 line) and `docs/DECISIONS_LOG.md` (6 lines,
+the push records of earlier phases), meaning unchanged. Search of every tracked file afterwards: 0
+matches. Push: a one-time exception approved by the owner; the new commits checked as in D-080
+(author Arnav Ambre; no Co-Authored-By, no "Generated with", no coding tool named); `main` pushed, no
+force.
+**Why:** Committed files never name the coding assistant.
+**Trade-off accepted:** Earlier commits in the public history still hold the old wording; rewriting
+pushed history was ruled out.
+**Revisit if:** —
+
 ## Hurdles
 
 ### H-001 — 503 "high demand" from Gemini on a test call
