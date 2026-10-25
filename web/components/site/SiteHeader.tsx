@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { BasisToggle } from "@/components/site/BasisToggle";
+import { Logo } from "@/components/site/Logo";
 import { ThemeToggle } from "@/components/site/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -57,8 +58,8 @@ export function SiteHeader() {
     <header className="border-b bg-background/90 backdrop-blur supports-backdrop-filter:bg-background/75">
       <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-2 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:py-3">
         <div className="flex items-center justify-between gap-3">
-          <Link href={withBasis("/")} className="flex min-h-11 items-center text-base font-semibold tracking-tight">
-            {copy.site.name}
+          <Link href={withBasis("/")} aria-label={copy.site.name} className="flex min-h-11 items-center">
+            <Logo className="h-6 w-auto" />
           </Link>
           <div className="flex items-center gap-1 lg:hidden">
             <ThemeToggle />
