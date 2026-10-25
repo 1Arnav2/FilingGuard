@@ -16,6 +16,18 @@ of every session.
 
 ---
 
+## 2026-10-25 — Phase 7: demo captions off by default
+**Built:** The demo film's captions track is no longer the default: captions are off on load and available
+from the player's CC control (D-085, amended). New test `test_demo_captions_available_but_off_on_load`.
+Found while adding it: `test_every_limitation_has_a_plain_summary` had stored control characters where its
+regex meant word boundaries (since `9eb300e`), so its D-/H- reference check never matched; restored, and
+the limitation summaries pass it.
+**Tests:** 326 Python tests; 8 web tests; typecheck, lint, build; static-site checks.
+**Spend so far:** $5.2521 (no model calls).
+**Next session starts with:** Phase 7 remainder: repo topics, resume bullet, outreach.
+**Commit:** Demo captions off by default (see git log)
+**Push:** one-time exception approved by the owner (D-087); live Demo section checked once in a browser.
+
 ## 2026-10-25 — Phase 7: demo film on the site
 **Built:** The launch film (made and reviewed outside the repo, in the brand folder) is on the site. Overview:
 a "Watch the 52-second film" button with a small poster and a 0:52 badge under the headline card, linking to

@@ -1741,6 +1741,8 @@ results are unchanged.
 a 360 px phone where the 16:9 one is not.
 **Trade-off accepted:** About 5.5 MB of media in the repo and the deploy.
 **Revisit if:** The film changes; replace the files from the brand folder.
+**Amended 2026-10-25, chosen by the owner:** captions are off by default. The English track stays available
+from the player's CC control; it is no longer the default track (`tests/test_web_content.py` checks this).
 
 ### D-086 — Phase 7: demo film pushed; tenth one-time push
 **Date:** 2026-10-25 · **Phase:** 7
@@ -1751,6 +1753,18 @@ message or added line; only the listed media files come from the brand folder; 3
 pass; tree clean. `main` pushed, no force. After Vercel's redeploy the live site is checked for a 200 on
 /#demo and on both MP4s and the VTT.
 **Why:** The film should be on the live site and the public README together.
+**Trade-off accepted:** —
+**Revisit if:** —
+
+### D-087 — Phase 7: captions off by default pushed; eleventh one-time push
+**Date:** 2026-10-25 · **Phase:** 7
+**Context:** One commit: the demo film's captions off by default (D-085, amended), a test for it, and a repaired
+check in `tests/test_web_content.py` (see the build log).
+**Decision:** Push as a one-time exception approved by the owner. Checked first: author and committer Arnav
+Ambre, no Co-Authored-By, no "Generated with", no coding tool named in the message or added lines; all tests
+pass; tree clean. `main` pushed, no force. The live Demo section is checked once in a browser after the
+redeploy (command-line requests get Vercel's bot checkpoint).
+**Why:** The owner wants the film to start without captions.
 **Trade-off accepted:** —
 **Revisit if:** —
 

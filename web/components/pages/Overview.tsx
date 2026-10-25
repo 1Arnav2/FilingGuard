@@ -224,7 +224,8 @@ function WatchFilm() {
   );
 }
 
-/** The Demo section: the film with controls and captions on, no autoplay, nothing loaded until played. */
+/** The Demo section: the film with controls, no autoplay, nothing loaded until played. Captions are available
+ * from the player's CC control and off until the viewer turns them on. */
 function DemoSection() {
   const tall = useTallFilm();
   return (
@@ -243,7 +244,7 @@ function DemoSection() {
             aria-label={media.demo_video_title}
           >
             <source src={tall ? media.demo_video_url_tall : media.demo_video_url} type="video/mp4" />
-            <track kind="captions" src={media.demo_captions} srcLang="en" label="English" default />
+            <track kind="captions" src={media.demo_captions} srcLang="en" label="English" />
           </video>
         )}
       </div>

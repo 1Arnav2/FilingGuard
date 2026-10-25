@@ -163,11 +163,20 @@ def test_author_and_media_links():
     assert media["demo_captions"].endswith(".vtt") and 0 < media["demo_duration_s"] < 120
 
 
+def test_demo_captions_available_but_off_on_load():
+    """The film offers an English captions track (the player's CC control) but does not show it on load."""
+    overview = (WEB / "components" / "pages" / "Overview.tsx").read_text(encoding="utf-8")
+    tracks = re.findall(r"<track\b[^>]*>", overview)
+    assert len(tracks) == 1 and 'kind="captions"' in tracks[0] and "media.demo_captions" in tracks[0]
+    assert not re.search(r"\bdefault\b", tracks[0]), tracks[0]  # no default track: captions start off
+    assert ".mode" not in overview  # nothing switches the track on in code
+
+
 def test_every_limitation_has_a_plain_summary():
     limits = load("limitations.json")
     original = source("summary")["limitations"]
     assert len(limits["summaries"]) == len(original)
-    internal = re.compile(r"(?:D|H)-\d{3}|EVAL|§|FG-\d{4}|D-0|MAX_TOKENS")
+    internal = re.compile(r"\b(?:D|H)-\d{3}\b|EVAL|§|FG-\d{4}|D-0|MAX_TOKENS")
     for text in limits["summaries"]:
         assert text.strip() and not internal.search(PLACEHOLDER.sub("", text)), text
     presets = {p["id"] for p in load("copy.json")["items"]["presets"]}
