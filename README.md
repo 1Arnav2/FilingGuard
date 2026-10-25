@@ -1,3 +1,10 @@
+<p>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/filingguard-lockup-dark.svg">
+    <img src="docs/images/filingguard-lockup-light.svg" alt="FilingGuard" width="320">
+  </picture>
+</p>
+
 # FilingGuard
 
 A stress test and fact-checker for AI agents that answer questions about SEC 10-K filings.
