@@ -31,6 +31,8 @@ Screenshots: FilingGuard_screens/v5 (headers light/dark at 1440 and 375, og imag
 **Spend so far:** $5.2521 (no model calls).
 **Next session starts with:** Phase 7 remainder: repo topics, demo video, resume bullet, outreach.
 **Commit:** Phase 7b brand commits (see git log)
+**Push:** one-time exception approved by the owner (D-084); new commits checked; `main` pushed, no force;
+live site checked after the redeploy.
 
 ## 2026-10-24 — Phase 7a: push
 **Push:** one-time exception approved by the owner (D-082). Checked: the unpushed commit `7bda053` and

@@ -1707,6 +1707,18 @@ is predictable for link previews.
 **Trade-off accepted:** The OG image does not follow the viewer's theme (link previews are light).
 **Revisit if:** The brand changes; regenerate the files from the brand folder.
 
+### D-084 — Phase 7b: brand pushed; ninth one-time push
+**Date:** 2026-10-24 · **Phase:** 7b
+**Context:** Four brand commits (D-083) ready locally.
+**Decision:** Push as a one-time exception approved by the owner. Checked first: every new commit has
+author and committer Arnav Ambre, no Co-Authored-By, no "Generated with", no coding tool named in any
+message or added line; no tracked file names a coding tool or a local-only file; no video, source or
+review file from the brand folder is tracked; 324 Python and 8 web tests pass; tree clean. `main` pushed,
+no force. After Vercel's redeploy the live site is checked for a 200 and the og:image tag.
+**Why:** The brand should be on the live site and the public README together.
+**Trade-off accepted:** —
+**Revisit if:** —
+
 ## Hurdles
 
 ### H-001 — 503 "high demand" from Gemini on a test call
