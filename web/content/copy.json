@@ -2,6 +2,9 @@
   "note": "Page copy. Every number is a {summary:path} or {meta:path} placeholder filled from the API, optionally with a display format after a bar ({summary:spend.total_usd|usd2}; formats: usd0, usd2, pct0, pct1) (summary = results/summary.json, meta = results/dashboard/meta_v1.json). Stat cards and links name their source paths; {basis} in a path is replaced by the chosen basis. tests/test_web_content.py checks that every placeholder and path resolves and that no other number appears.",
   "site": {
     "name": "FilingGuard",
+    "url": "https://filingguard.vercel.app",
+    "share": "A stress test and fact-checker for AI agents that answer questions about SEC 10-K filings.",
+    "share_image_alt": "FilingGuard logo with the line: a stress test and fact-checker for AI agents that answer questions about SEC 10-K filings.",
     "subtitle": "A stress test and a fact-checker for an AI that answers questions about company annual reports (SEC 10-K filings)",
     "footer": "Every number on this site comes from committed files in results/. This site makes no model calls.",
     "spend": "Model spend for the whole project: {summary:spend.total_usd|usd2} of the {summary:spend.cap_usd|usd0} cap.",
