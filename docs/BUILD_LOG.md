@@ -16,6 +16,22 @@ of every session.
 
 ---
 
+## 2026-10-24 — Phase 7b: brand swap
+**Built:** Logo in the header (`web/components/site/Logo.tsx`, inline, themed), favicon `web/app/icon.svg`
+(light/dark by colour scheme), `web/app/apple-icon.png` (180 x 180), link-preview image `web/public/og.png`
+(1200 x 630) with og/twitter tags and absolute URLs, share copy in `web/content/copy.json`, README lockup
+(`docs/images/filingguard-lockup-{light,dark}.svg` in a `<picture>`). D-083.
+**Tests:** 324 Python tests (7 new in `tests/test_brand.py`: accent only in the logo, favicon colour
+scheme, PNG sizes and no metadata chunks, no tool named in the SVGs, header accessible name, README
+picture, absolute share tags in the built page); 8 web tests; typecheck, lint, build. Audit of 6 pages x
+1440/375 x light/dark (5,156 text elements): same single contrast flag as before (the disabled "Previous"
+page button), no horizontal overflow; header height unchanged (69 px desktop; 118 px at 375 px with the
+basis toggle); logo link 138 x 44 px; logo mark contrast 7.44:1 light, 9.46:1 dark.
+Screenshots: FilingGuard_screens/v5 (headers light/dark at 1440 and 375, og image).
+**Spend so far:** $5.2521 (no model calls).
+**Next session starts with:** Phase 7 remainder: repo topics, demo video, resume bullet, outreach.
+**Commit:** Phase 7b brand commits (see git log)
+
 ## 2026-10-24 — Phase 7a: push
 **Push:** one-time exception approved by the owner (D-082). Checked: the unpushed commit `7bda053` and
 this log commit (author and committer Arnav Ambre; no Co-Authored-By, no "Generated with", no coding

@@ -168,6 +168,12 @@ Pages (nav: Overview · Results · Items · Method · Limitations · Code):
   the list the reader came from; Jump to on Results, Method and item detail; definition tooltips
   that open on hover, focus or tap, with the definition also given to screen readers.
 
+Brand (D-083): the header shows the FilingGuard lockup inline (`components/site/Logo.tsx`), its wordmark in
+the site's foreground colour and its mark in cobalt (`#2D46C8` light, `#98B0FF` dark), the only use of the
+accent on the site (`tests/test_brand.py`). `app/icon.svg` switches light/dark by `prefers-color-scheme`;
+`app/apple-icon.png` is 180 x 180; `public/og.png` (1200 x 630) is the Open Graph and Twitter image, with
+absolute URLs from `metadataBase` (`copy.site.url`).
+
 Plain names for every code come from `web/content/labels.json`; page copy from
 `web/content/copy.json`; the author block from `web/content/author.json`; the demo video from
 `web/content/media.json`.

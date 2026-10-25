@@ -1687,6 +1687,26 @@ checked for a 200 afterwards. Nothing else deployed.
 **Trade-off accepted:** —
 **Revisit if:** —
 
+### D-083 — Phase 7b: brand files in the site and README
+**Date:** 2026-10-24
+**Phase:** 7b
+**Context:** The logo was designed and approved outside the repo (a separate brand folder with its own
+sources, reviews and videos). Only the final static files come into the repo.
+**Options considered:** The lockup as an image file vs inline in the header; file-based Open Graph images
+vs one static file with explicit tags; a favicon pair vs one SVG that switches by colour scheme.
+**Decision:** The header lockup is an inline component, so it follows next-themes: wordmark in the
+foreground colour, mark `#2D46C8` (light) / `#98B0FF` (dark), no glow, `h-6` (24 px) inside the existing
+44 px link with `aria-label="FilingGuard"`. One `icon.svg` switches palettes with an internal
+`prefers-color-scheme` query; `apple-icon.png` is the mark on the light stage at 180 x 180. One static
+`public/og.png` (1200 x 630: lockup and the one-line description, no numbers) is the og:image and
+twitter:image; `metadataBase` makes every URL absolute on https://filingguard.vercel.app. The README opens
+with a `<picture>` of the light and dark lockups above the title heading. The accent appears nowhere else
+(`tests/test_brand.py`). No videos, sources or review files are in the repo.
+**Why:** Inline keeps the logo crisp and theme-aware at any size with no extra request; one static OG file
+is predictable for link previews.
+**Trade-off accepted:** The OG image does not follow the viewer's theme (link previews are light).
+**Revisit if:** The brand changes; regenerate the files from the brand folder.
+
 ## Hurdles
 
 ### H-001 — 503 "high demand" from Gemini on a test call
