@@ -16,6 +16,35 @@ of every session.
 
 ---
 
+## 2026-10-25 — Phase 7: demo film on the site
+**Built:** The launch film (made and reviewed outside the repo, in the brand folder) is on the site. Overview:
+a "Watch the 52-second film" button with a small poster and a 0:52 badge under the headline card, linking to
+a new Demo section (`id="demo"`): heading, one line, and a native `<video>` with controls, playsinline,
+`preload="none"`, a poster and an English captions track on by default; no autoplay. Screens 768 px and
+wider get the 16:9 file (1280 x 720), narrower ones the 9:16 re-layout (720 x 1280); the choice is made once
+on load, so only one file is fetched. "Demo" in the header nav (`/#demo`; the basis query goes before the
+hash). Files in `web/public/media/` (two MP4s, 2.6 and 2.7 MB; two JPEG posters, 49 and 55 KB; one VTT);
+`web/content/media.json` names them and holds the film's length. README: the film GIF
+(`docs/images/filingguard-hero.gif`, 0.6 MB) under the headline sentence, linked to the live Demo section.
+Wording: "six attack types plus a control group" in the README and the Method page; the Results section,
+glossary heading, item column and control definition no longer count control as an attack type. Method: one
+line that the film's numbers come from `results/summary.json`. D-085.
+**Tests:** 325 Python tests (new `tests/test_wording.py`: fails if "7 attack types" appears in README.md or
+web/content/; `test_web_content.py` now checks every media file named in media.json exists;
+`test_readme.py` allows the film's length from media.json); 8 web tests; typecheck, lint, build; static-site
+checks (no API calls, no keys, static export only). Built site served locally: the 16:9 film plays at 1440 px
+(1280 x 720, 52.2 s) with captions showing (17 cues); at 375 px the 9:16 file and poster are chosen; one
+video element, nothing preloaded; no horizontal overflow at 375 px; button 62 px tall; contrast of the new
+text 6.0:1 or better in light and dark. Screenshots: FilingGuard_screens/v6 (Overview at 1440 and 375, Demo
+section at both).
+**Broken or unfinished:** Repo topics, resume bullet and outreach remain (Phase 7).
+**Numbers worth keeping:** film 52.2 s; web MP4s 2.6 / 2.7 MB at -16 LUFS.
+**Spend so far:** $5.2521 (no model calls).
+**Next session starts with:** Phase 7 remainder: repo topics, resume bullet, outreach.
+**Commit:** Phase 7 demo-film commits (see git log)
+**Push:** one-time exception approved by the owner (D-086); new commits checked; `main` pushed, no force;
+live site checked after the redeploy.
+
 ## 2026-10-24 — Phase 7b: brand swap
 **Built:** Logo in the header (`web/components/site/Logo.tsx`, inline, themed), favicon `web/app/icon.svg`
 (light/dark by colour scheme), `web/app/apple-icon.png` (180 x 180), link-preview image `web/public/og.png`

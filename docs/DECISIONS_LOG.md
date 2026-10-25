@@ -1719,6 +1719,41 @@ no force. After Vercel's redeploy the live site is checked for a 200 and the og:
 **Trade-off accepted:** —
 **Revisit if:** —
 
+### D-085 — Phase 7: the demo film on the site; six attack types plus a control group
+**Date:** 2026-10-25
+**Phase:** 7
+**Context:** A 52-second launch film (a replay of test item FG-0159 with a planted error, then the results,
+with a voice-over and captions) was made and approved outside the repo, in the brand folder. Its numbers are
+the site's: 210 questions, 93.4% of planted errors caught, 9 of 197 correct answers wrongly blocked (as scored
+0 of 186), all from `results/summary.json`. Separately, the README and the Method page counted control
+questions as one of "7 attack types".
+**Options considered:** A YouTube embed vs self-hosted files; one 16:9 file for every screen vs a 9:16
+re-layout for phones; autoplay vs click to play.
+**Decision:** Self-host small web versions in `web/public/media/` (H.264 + AAC, 30 fps, faststart) with
+posters and a WebVTT captions file; the Overview's Demo section picks the 16:9 or the 9:16 file by viewport
+once, plays only on request (`preload="none"`, no autoplay) and shows captions by default. A button under
+the headline card links to the section; "Demo" is added to the header. The README shows the film as a GIF
+linked to the live section. The film's length lives in `web/content/media.json` as a number, and the README
+test accepts it as media, not a result. Wording: six attack types plus a control group, everywhere;
+`tests/test_wording.py` guards the README and the site copy. The frozen test set, labels in data files and
+results are unchanged.
+**Why:** No third-party player, no tracking and no API call on a static site; the 9:16 version is legible on
+a 360 px phone where the 16:9 one is not.
+**Trade-off accepted:** About 5.5 MB of media in the repo and the deploy.
+**Revisit if:** The film changes; replace the files from the brand folder.
+
+### D-086 — Phase 7: demo film pushed; tenth one-time push
+**Date:** 2026-10-25 · **Phase:** 7
+**Context:** The demo-film and wording commits (D-085) ready locally.
+**Decision:** Push as a one-time exception approved by the owner. Checked first: every new commit has
+author and committer Arnav Ambre, no Co-Authored-By, no "Generated with", no coding tool named in any
+message or added line; only the listed media files come from the brand folder; 325 Python and 8 web tests
+pass; tree clean. `main` pushed, no force. After Vercel's redeploy the live site is checked for a 200 on
+/#demo and on both MP4s and the VTT.
+**Why:** The film should be on the live site and the public README together.
+**Trade-off accepted:** —
+**Revisit if:** —
+
 ## Hurdles
 
 ### H-001 — 503 "high demand" from Gemini on a test call

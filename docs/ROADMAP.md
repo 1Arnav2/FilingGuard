@@ -143,7 +143,8 @@ Phase 5 $2.69–$3.46, project end **$5.01–$5.78**, under the $7 cap (`docs/PH
 - [x] Author check on full git history before making the repo public (7a audit, 2026-10-24)
 - [ ] Repo topics (GitHub CLI not installed in 7a; owner to add)
 - [x] Brand: logo in the header, favicon, touch icon, link-preview image, README lockup (7b, D-083)
-- [ ] Three-minute demo video
+- [x] Demo video: a 52-second film with captions in a Demo section on the Overview, and a GIF in the README
+      (2026-10-25, D-085)
 - [ ] Resume bullet with real numbers
 - [ ] Outreach messages sent
 - **Done when:** repo is public and the first five messages are out.
