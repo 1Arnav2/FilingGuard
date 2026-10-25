@@ -44,7 +44,7 @@
   "attack_types": {
     "control": {
       "name": "Control",
-      "definition": "A plain question the filing answers."
+      "definition": "The control group, not an attack: a plain question the filing answers."
     },
     "unanswerable": {
       "name": "Unanswerable",

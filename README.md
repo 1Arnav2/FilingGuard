@@ -14,6 +14,10 @@ calls; every number on it comes from files in `results/`.
 
 On 210 unseen test questions, the verifier caught 93% of planted errors, but it also blocked 9 correct answers, because it reads figures with the same code as the scorer. The agent's real weakness is refusing questions it could answer, not stating unsupported figures.
 
+[![A replay from the film: a planted wrong figure is checked against the filing and blocked](docs/images/filingguard-hero.gif)](https://filingguard.vercel.app/#demo)
+
+Watch the 52-second film (with voice-over) on the live site.
+
 ![FilingGuard dashboard, Overview page](docs/images/overview-light-1440.png)
 
 ## What it does
@@ -23,7 +27,7 @@ Three agents, one measured before/after result.
 | Part | What it does |
 |---|---|
 | Target agent | Answers questions about one company's 10-K with retrieval over the filing (RAG), citing the passages it used. |
-| Red-team | Writes adversarial questions from the filings and their XBRL facts, in 7 attack types: control, unanswerable, unit trap, period mismatch, false premise, prompt injection and restated figure. |
+| Red-team | Writes adversarial questions from the filings and their XBRL facts, in six attack types plus a control group: unanswerable, unit trap, period mismatch, false premise, prompt injection and restated figure, plus plain control questions. |
 | Verifier | Checks every figure in an answer against the filing text and the XBRL facts, then passes, flags or blocks it. A blocked answer counts as a refusal. |
 
 The same questions are answered twice, without and with the verifier, and both runs are scored by the

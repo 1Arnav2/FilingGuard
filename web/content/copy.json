@@ -85,7 +85,6 @@
     ],
     "limits_title": "Read these before the numbers",
     "limits_link": "All limitations",
-    "video_title": "Demo",
     "outreach": "Want to run this against your own agent? Get in touch.",
     "author_title": "Built by",
     "limits_more": "Read the full text"
@@ -97,7 +96,7 @@
     "details": "Details",
     "outcomes_title": "Without and with the verifier",
     "metrics_title": "Metrics",
-    "types_title": "By attack type",
+    "types_title": "By attack type, plus controls",
     "types_intro": "Outcomes for each kind of question. Bars show each type's own share, so small types compare fairly.",
     "seeded_title": "Planted errors",
     "seeded_intro": "Errors copied into correct answers, one kind at a time. Detection means the verifier blocked the copy. The bar is judged with the quote check off.",
@@ -230,7 +229,7 @@
     "sort": {
       "id": "ID",
       "company": "Company",
-      "attack_type": "Attack type",
+      "attack_type": "Question type",
       "baseline": "Without verifier",
       "verdict": "Verifier",
       "treatment": "With verifier"
@@ -318,7 +317,7 @@
       },
       {
         "id": "attack_types",
-        "title": "Attack types",
+        "title": "Attack types and the control group",
         "source": "attack_types"
       },
       {

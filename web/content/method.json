@@ -14,7 +14,7 @@
       "title": "The three agents",
       "paragraphs": [
         "Target: a retrieval agent over the 10-K filings of {meta:companies} companies. It answers with citations to the filing text, or abstains.",
-        "Red-team: one generator per attack type, built from XBRL facts the filings report (the gold labels), then phrased as plain questions. Attack types are controls, unanswerable questions, unit traps, period mismatches, restated figures, false premises and prompt injections planted in retrieved passages.",
+        "Red-team: one generator per attack type, built from XBRL facts the filings report (the gold labels), then phrased as plain questions. There are six attack types (unanswerable questions, unit traps, period mismatches, restated figures, false premises and prompt injections planted in retrieved passages) plus a control group of plain questions.",
         "Verifier: rules first. It extracts the figures in an answer, checks each against the XBRL facts and the cited passage, checks the fiscal period, looks for planted instructions, and checks the premise of the question. A model is called only when rules cannot settle a claim. It never sees gold labels, item IDs or attack types."
       ]
     },
@@ -30,7 +30,8 @@
       "title": "Scoring",
       "paragraphs": [
         "A deterministic scorer compares each answer with its gold label and gives one outcome: Correct, Missed (abstained or gave no usable figure) or Unsupported (stated a figure, period or premise the filing does not support). A model judge reads only the answers to premise questions, and only the answer itself.",
-        "Both bases are shown everywhere. As scored is the frozen scorer alone. Corrected adds an overlay of owner-approved fixes for parsing faults only (D-071): the scorer misread a figure that the answer itself got right. The scorer and the as-scored files are never changed. The rule as recorded: {meta:corrections.rule}. {meta:corrections.corrected} rows were corrected and {meta:corrections.kept_as_scored} reviewed rows were kept as scored. Bars are judged on the corrected basis, with as scored beside."
+        "Both bases are shown everywhere. As scored is the frozen scorer alone. Corrected adds an overlay of owner-approved fixes for parsing faults only (D-071): the scorer misread a figure that the answer itself got right. The scorer and the as-scored files are never changed. The rule as recorded: {meta:corrections.rule}. {meta:corrections.corrected} rows were corrected and {meta:corrections.kept_as_scored} reviewed rows were kept as scored. Bars are judged on the corrected basis, with as scored beside.",
+        "The demo film on the Overview shows numbers from results/summary.json, the same file as this site."
       ]
     },
     {

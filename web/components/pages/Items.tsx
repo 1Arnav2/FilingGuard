@@ -241,7 +241,7 @@ export default function Items() {
           </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
             <Select
-              label="Attack type"
+              label="Question type"
               value={filters.attack_type ?? ""}
               options={[any, ...Object.keys(meta.data?.attack_types_test ?? {}).map((t): [string, string] => [t, attackTypeName(t)])]}
               onChange={(v) => set("attack_type", v)}
@@ -338,7 +338,7 @@ export default function Items() {
                 ),
               },
               { key: "company", header: "Company", sortKey: "company", cell: (r) => r.company },
-              { key: "type", header: "Attack type", sortKey: "attack_type", cell: (r) => attackTypeName(r.attack_type) },
+              { key: "type", header: "Question type", sortKey: "attack_type", cell: (r) => attackTypeName(r.attack_type) },
               { key: "baseline", header: conditionName("baseline"), sortKey: "baseline", cell: (r) => <OutcomeBadge outcome={r.baseline.outcome} /> },
               { key: "verdict", header: "Verifier", sortKey: "verdict", cell: (r) => <VerdictBadge verdict={r.verdict} /> },
               { key: "treatment", header: conditionName("treatment"), sortKey: "treatment", cell: (r) => <OutcomeBadge outcome={r.treatment.outcome} /> },
