@@ -1,0 +1,78 @@
+WEBVTT
+
+1
+00:00:00.230 --> 00:00:03.750
+AI agents now answer questions
+about company filings.
+
+2
+00:00:03.930 --> 00:00:05.610
+Some of their answers are wrong.
+
+3
+00:00:06.350 --> 00:00:08.920
+Here's a replay from
+FilingGuard's test set:
+
+4
+00:00:09.240 --> 00:00:11.790
+a question about Microsoft's
+earnings per share.
+
+5
+00:00:13.430 --> 00:00:16.360
+The agent's real answer
+was thirteen sixty-four.
+
+6
+00:00:16.690 --> 00:00:19.840
+For the test, FilingGuard
+swapped in a wrong number:
+
+7
+00:00:19.920 --> 00:00:21.190
+fourteen thirty-two.
+
+8
+00:00:21.940 --> 00:00:24.200
+Then it checks the answer
+against the filing.
+
+9
+00:00:24.410 --> 00:00:27.210
+The numbers don't match,
+so the answer is blocked.
+
+10
+00:00:29.640 --> 00:00:31.210
+The real answer passes.
+
+11
+00:00:32.630 --> 00:00:35.150
+On two hundred ten unseen questions,
+
+12
+00:00:35.230 --> 00:00:38.090
+it caught ninety-three
+percent of planted errors.
+
+13
+00:00:38.340 --> 00:00:41.720
+But it also blocked nine answers
+that were actually correct.
+
+14
+00:00:42.060 --> 00:00:43.830
+Automatic scoring missed that.
+
+15
+00:00:44.060 --> 00:00:45.850
+Only a human review found it.
+
+16
+00:00:48.460 --> 00:00:49.470
+FilingGuard.
+
+17
+00:00:49.610 --> 00:00:51.960
+Live at filingguard dot vercel dot app.

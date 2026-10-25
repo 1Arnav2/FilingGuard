@@ -15,6 +15,7 @@ import { author, copy } from "@/lib/content";
 
 const NAV = [
   { href: "/", label: "Overview" },
+  { href: "/#demo", label: "Demo" },
   { href: "/results/", label: "Results" },
   { href: "/items/", label: "Items" },
   { href: "/method/", label: "Method" },
@@ -33,8 +34,14 @@ export function SiteHeader() {
   const basis = useBasis();
   const [open, setOpen] = useState(false);
   const showBasis = BASIS_PAGES.includes(pathname);
-  const withBasis = (href: string) => (basis === "as_scored" ? `${href}?basis=as_scored` : href);
+  // The basis query goes before any #section, so "/#demo" becomes "/?basis=as_scored#demo".
+  const withBasis = (href: string) => {
+    if (basis !== "as_scored") return href;
+    const [path, hash] = href.split("#");
+    return `${path}?basis=as_scored${hash ? `#${hash}` : ""}`;
+  };
   const active = (href: string) => {
+    if (href.includes("#")) return false; // a section of a page, never the current page
     const h = trim(href);
     return h === "/" ? pathname === "/" : pathname === h || (h === "/items" && pathname === "/item");
   };

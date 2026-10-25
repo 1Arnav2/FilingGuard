@@ -1,5 +1,13 @@
 {
-  "note": "Phase 7 demo video. Set demo_video_url to a YouTube embed URL (https://www.youtube.com/embed/...) or a direct .mp4/.webm file; leave it empty to hide the slot.",
-  "demo_video_url": "",
-  "demo_video_title": "FilingGuard demo"
+  "note": "The demo film (Phase 7). Files are in web/public/media/: a 16:9 version for screens 768 px and wider, a 9:16 version below that, a poster for each, and captions. demo_duration_s is the film's length (media, not a result); {seconds} and {clock} in the strings below are filled from it.",
+  "demo_video_url": "/media/filingguard-film-16x9.mp4",
+  "demo_video_url_tall": "/media/filingguard-film-9x16.mp4",
+  "demo_poster": "/media/filingguard-film-poster-16x9.jpg",
+  "demo_poster_tall": "/media/filingguard-film-poster-9x16.jpg",
+  "demo_captions": "/media/filingguard-film.vtt",
+  "demo_duration_s": 52.2,
+  "demo_video_title": "FilingGuard: a replay of one test item, then the results",
+  "demo_button": "Watch the {seconds}-second film",
+  "demo_heading": "Demo",
+  "demo_line": "A replay of one real test item, then the results. {seconds} seconds, with captions."
 }

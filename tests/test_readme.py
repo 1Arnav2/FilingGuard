@@ -9,6 +9,7 @@ README = (ROOT / "README.md").read_text(encoding="utf-8")
 SUMMARY = json.loads((ROOT / "results" / "summary.json").read_text(encoding="utf-8"))
 META = json.loads((ROOT / "results" / "dashboard" / "meta_v1.json").read_text(encoding="utf-8"))
 HEADLINE = json.loads((ROOT / "web" / "content" / "headline.json").read_text(encoding="utf-8"))
+MEDIA = json.loads((ROOT / "web" / "content" / "media.json").read_text(encoding="utf-8"))
 # Sections whose numbers are results; setup sections hold versions and ports, not results.
 CHECKED = ("FilingGuard", "What it does", "Results", "The main finding", "How it was kept honest", "Limitations")
 REFERENCE = re.compile(r"\b(?:D|H)-\d{3}\b|\bFG-\d{4}\b|\b10-Ks?\b|\b\d{4}-\d{2}-\d{2}\b|overview-light-1440")
@@ -58,6 +59,7 @@ def bound_values() -> set[str]:
     values |= {str(h["k"]), str(h["n"]), str(s["conditions"]["corrected"]["baseline"]["unparseable"]),
                str(s["latency"]["run"]), str(s["latency"]["sample"])}
     values |= {"2", "10"}  # the owner's offline detector check: "2 of 10" (summary limitation 4)
+    values.add(str(round(MEDIA["demo_duration_s"])))  # the demo film's length (media, not a result)
     # Bar thresholds, from the summary's key names and fields as web/lib/bars.ts reads them.
     for key in bars["corrected"]:
         _, p, value, is_pct = re.match(r"^(.*?)_(p_)?(?:lt|le|ge)_([\d.]+?)(pct)?(?:_[a-z]+)?$", key).groups()

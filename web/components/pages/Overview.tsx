@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowRight, Bot, CircleCheck, CircleX, MessageSquareText, ShieldCheck } from "lucide-react";
+import { ArrowRight, Bot, CircleCheck, CircleX, MessageSquareText, Play, ShieldCheck } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { StatusBadge } from "@/components/data/badges";
 import { Load, Panel } from "@/components/data/layout";
@@ -189,21 +190,64 @@ function Limits({ s }: { s: Summary }) {
   );
 }
 
-function DemoVideo() {
-  const url = media.demo_video_url;
-  if (!url) return null;
-  const file = /\.(mp4|webm)(\?|$)/i.test(url);
+/** The film's length, from media.json: "52" for {seconds}, "0:52" for {clock}. */
+function filmText(text: string): string {
+  const s = Math.round(media.demo_duration_s);
+  return text.replace("{seconds}", String(s)).replace("{clock}", `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`);
+}
+
+/** Wide screens get the 16:9 film, narrow ones the 9:16 re-layout; decided once, so only one file loads. */
+function useTallFilm(): boolean | null {
+  const [tall, setTall] = useState<boolean | null>(null);
+  useEffect(() => setTall(window.matchMedia("(max-width: 767px)").matches), []);
+  return tall;
+}
+
+/** Under the headline: a button to the Demo section, with a small poster and the film's length. */
+function WatchFilm() {
   return (
-    <Panel className="md:col-span-3">
-      <h2 className="text-sm font-medium text-muted-foreground">{copy.overview.video_title}</h2>
-      <div className="mt-4 aspect-video overflow-hidden rounded-lg border">
-        {file ? (
-          <video src={url} controls preload="metadata" className="size-full" aria-label={media.demo_video_title} />
-        ) : (
-          <iframe src={url} title={media.demo_video_title} className="size-full" allow="encrypted-media; picture-in-picture" allowFullScreen />
+    <a
+      href="#demo"
+      className="group mt-4 inline-flex min-h-11 items-center gap-3 rounded-lg border bg-card p-2 pr-4 text-sm font-medium shadow-sm hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+    >
+      <span className="relative block h-11 w-[78px] shrink-0 overflow-hidden rounded-md border">
+        <Image src={media.demo_poster} alt="" width={78} height={44} className="size-full object-cover" />
+        <span className="absolute inset-0 flex items-center justify-center bg-foreground/25">
+          <Play aria-hidden="true" className="size-4 fill-background text-background" />
+        </span>
+      </span>
+      <span>{filmText(media.demo_button)}</span>
+      <span className="rounded-md border bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground tabular-nums">
+        {filmText("{clock}")}
+      </span>
+    </a>
+  );
+}
+
+/** The Demo section: the film with controls and captions on, no autoplay, nothing loaded until played. */
+function DemoSection() {
+  const tall = useTallFilm();
+  return (
+    <section id="demo" aria-labelledby="demo-heading" className="mt-10 scroll-mt-24">
+      <h2 id="demo-heading" className="text-2xl font-semibold tracking-tight">{media.demo_heading}</h2>
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{filmText(media.demo_line)}</p>
+      <div className={cn("mt-4 overflow-hidden rounded-xl border bg-card", tall ? "mx-auto aspect-[9/16] max-w-sm" : "aspect-video")}>
+        {tall !== null && (
+          <video
+            key={tall ? "tall" : "wide"}
+            controls
+            playsInline
+            preload="none"
+            poster={tall ? media.demo_poster_tall : media.demo_poster}
+            className="size-full"
+            aria-label={media.demo_video_title}
+          >
+            <source src={tall ? media.demo_video_url_tall : media.demo_video_url} type="video/mp4" />
+            <track kind="captions" src={media.demo_captions} srcLang="en" label="English" default />
+          </video>
         )}
       </div>
-    </Panel>
+    </section>
   );
 }
 
@@ -224,6 +268,7 @@ function OverviewBody({ s, m }: { s: Summary; m: Meta }) {
         <p className="text-xl leading-relaxed font-medium tracking-tight sm:text-2xl">{headline.text}</p>
         <BorderBeam size={120} duration={10} colorFrom="var(--foreground)" colorTo="var(--muted-foreground)" />
       </div>
+      <WatchFilm />
 
       <BentoGrid className="mt-4">
         {(copy.overview.stats as Stat[]).map((stat) => (
@@ -246,8 +291,8 @@ function OverviewBody({ s, m }: { s: Summary; m: Meta }) {
             <AuthorBlock id="author" />
           </Panel>
         </div>
-        <DemoVideo />
       </BentoGrid>
+      <DemoSection />
     </div>
   );
 }

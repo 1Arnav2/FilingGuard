@@ -9,6 +9,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "web" / "content"
+WEB = ROOT / "web"
 SOURCES = {"summary": ROOT / "results" / "summary.json", "meta": ROOT / "results" / "dashboard" / "meta_v1.json"}
 ITEMS = ROOT / "results" / "dashboard" / "items_v1.jsonl"
 PLACEHOLDER = re.compile(r"\{(summary|meta):([A-Za-z0-9_.{}]+?)(?:\|([a-z0-9]+))?\}(?!\})")
@@ -155,8 +156,11 @@ def test_author_and_media_links():
     assert author["repo"].startswith(author["github"] + "/")
     assert author["linkedin"] == "https://www.linkedin.com/in/arnav-ambre/"  # owner's profile (Phase 6d)
     assert author["email"] == "" or re.fullmatch(r"[^@\s]+@[^@\s]+\.[a-z]+", author["email"])
-    url = load("media.json")["demo_video_url"]
-    assert url == "" or url.startswith("https://")
+    media = load("media.json")
+    # The demo film is served from web/public/media/; every file the Overview names must be there.
+    for key in ("demo_video_url", "demo_video_url_tall", "demo_poster", "demo_poster_tall", "demo_captions"):
+        assert media[key].startswith("/media/") and (WEB / "public" / media[key].lstrip("/")).is_file(), key
+    assert media["demo_captions"].endswith(".vtt") and 0 < media["demo_duration_s"] < 120
 
 
 def test_every_limitation_has_a_plain_summary():
